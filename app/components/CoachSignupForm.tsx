@@ -1,6 +1,5 @@
 import { useState } from "react";
 import supabase from "../utils/supabaseClient";
-import "../globals.css";
 
 const CoachSignupForm = () => {
   const [email, setEmail] = useState("");
