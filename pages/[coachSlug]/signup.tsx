@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import "../../app/globals.css";
+import "@/app/globals.css";
 import supabase from "@/app/utils/supabaseClient";
 
 export default function ClientSignUpForm() {
@@ -38,8 +38,44 @@ export default function ClientSignUpForm() {
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
+    setLoading(true);
 
-    // Your client sign-up logic here
+    try {
+      // Sign up the client as a user
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      // Insert the client entry with a link to the coach
+      const { data, error: insertError } = await supabase
+        .from("clients")
+        .insert([
+          {
+            full_name: fullName,
+            user_id: user.id,
+            email,
+            coach_id: (coach as any).id,
+          },
+        ]);
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      // Redirect the client to a success page or any other page you want
+      router.push(`/${coachSlug}/success`);
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+      setLoading(false);
+    }
   };
 
   return (
