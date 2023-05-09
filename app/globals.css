@@ -39,7 +39,8 @@
   border-color: #7c9efc;
 }
 
-.form button {
+.form button,
+button.get-started {
   background-color: #7c9efc;
   color: white;
   padding: 10px;
@@ -50,8 +51,14 @@
   margin-top: 10px;
 }
 
-.form button:hover {
+.form button:hover,
+button.get-started:hover {
   background-color: #5683d7;
+}
+
+button.get-started {
+  margin-top: 20px;
+  width: 250px;
 }
 
 .form button:disabled {

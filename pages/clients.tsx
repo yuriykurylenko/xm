@@ -5,14 +5,31 @@ import supabase from "@/app/utils/supabaseClient";
 const ClientsList = () => {
   const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
-
-  const coachId = "af5fd20b-6468-465a-b5ec-c50d7dbcea7a";
+  const [coachId, setCoachId] = useState(null);
 
   useEffect(() => {
-    fetchClients();
+    fetchUser();
   }, []);
 
-  async function fetchClients() {
+  async function fetchUser() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data } = await supabase
+        .from("coaches")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (data[0]?.id) {
+        setCoachId(data[0]?.id);
+        await fetchClients(data[0]?.id);
+      }
+    }
+  }
+
+  async function fetchClients(coachId: any) {
     const { data, error } = await supabase
       .from("clients")
       .select("*")

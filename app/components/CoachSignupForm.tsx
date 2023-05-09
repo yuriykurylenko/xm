@@ -1,3 +1,4 @@
+import router from "next/router";
 import { useState } from "react";
 import supabase from "../utils/supabaseClient";
 
@@ -6,6 +7,7 @@ const CoachSignupForm = () => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [signedUp, setSignedUp] = useState(false);
 
   async function createCoach(userId: any, email: any, fullName: any) {
     const { error: insertError } = await supabase.from("coaches").insert([
@@ -35,8 +37,8 @@ const CoachSignupForm = () => {
       data: { user },
       error: signUpError,
     } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email,
+      password,
     });
 
     if (signUpError) {
@@ -48,42 +50,60 @@ const CoachSignupForm = () => {
       await createCoach(user?.id, email, fullName);
     }
 
+    await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
     setLoading(false);
+    setSignedUp(true);
   }
 
   return (
     <div className="form-container">
-      <form onSubmit={handleSubmit} className="form">
-        <h2>Sign Up as a Coach</h2>
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={fullName}
-          onChange={(event) => setFullName(event.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
-          title="Please enter a valid email address"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-          pattern=".{8,}"
-          title="Password must be at least 8 characters long"
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Signing up..." : "Sign Up"}
-        </button>
-      </form>
+      {signedUp ? (
+        <>
+          Please check your inbox to verify your email.
+          <button
+            className="get-started"
+            onClick={() => router.push("/clients")}
+          >
+            Get started
+          </button>
+        </>
+      ) : (
+        <form onSubmit={handleSubmit} className="form">
+          <h2>Sign Up as a Coach</h2>
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={fullName}
+            onChange={(event) => setFullName(event.target.value)}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
+            title="Please enter a valid email address"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            pattern=".{8,}"
+            title="Password must be at least 8 characters long"
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? "Signing up..." : "Sign Up"}
+          </button>
+        </form>
+      )}
     </div>
   );
 };
