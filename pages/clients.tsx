@@ -5,7 +5,7 @@ import supabase from "@/app/utils/supabaseClient";
 const ClientsList = () => {
   const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
-  const [coachId, setCoachId] = useState(null);
+  const [coach, setCoach] = useState(null);
 
   useEffect(() => {
     fetchUser();
@@ -23,7 +23,7 @@ const ClientsList = () => {
         .eq("user_id", user.id);
 
       if (data[0]?.id) {
-        setCoachId(data[0]?.id);
+        setCoach(data[0]);
         await fetchClients(data[0]?.id);
       }
     }
@@ -81,19 +81,34 @@ const ClientsList = () => {
         </div>
       </div>
       <div className={styles["clients-container"]}>
-        {filteredClients.map((client) => (
-          <div key={(client as any).id} className={styles["client-item"]}>
-            <div className={styles["avatar"]}>
-              {(client as any).full_name.charAt(0)}
-            </div>
-            <div className={styles["client-name"]}>
-              {(client as any).full_name}
-            </div>
-            {(client as any).status === "lead" && (
-              <button className={styles.btn}>Send Offer</button>
+        {clients.length > 0
+          ? filteredClients.map((client) => (
+              <div key={(client as any).id} className={styles["client-item"]}>
+                <div className={styles["avatar"]}>
+                  {(client as any).full_name.charAt(0)}
+                </div>
+                <div className={styles["client-name"]}>
+                  {(client as any).full_name}
+                </div>
+                {(client as any).status === "lead" && (
+                  <button className={styles.btn}>Send Offer</button>
+                )}
+              </div>
+            ))
+          : coach && (
+              <div className={styles["no-clients-container"]}>
+                Please share this link to get your clients to sign up:
+                <br />
+                <a
+                  href={`${window.location.protocol}//${window.location.host}/${
+                    (coach as any).slug
+                  }/signup`}
+                >
+                  {window.location.protocol}//
+                  {window.location.host}/{(coach as any).slug}/signup
+                </a>
+              </div>
             )}
-          </div>
-        ))}
       </div>
     </>
   );
