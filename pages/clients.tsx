@@ -1,20 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "@/app/styles/clientsList.module.css";
+import supabase from "@/app/utils/supabaseClient";
 
 const ClientsList = () => {
-  const clients = [
-    { id: 1, name: "John Doe", status: "lead" },
-    { id: 2, name: "Jane Smith", status: "client" },
-    { id: 3, name: "Bill Johnson", status: "lead" },
-  ];
-
+  const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
+
+  const coachId = "af5fd20b-6468-465a-b5ec-c50d7dbcea7a";
+
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  async function fetchClients() {
+    const { data, error } = await supabase
+      .from("clients")
+      .select("*")
+      .eq("coach_id", coachId);
+
+    if (error) {
+      console.error("Error fetching clients:", error);
+    } else {
+      setClients(data);
+    }
+  }
 
   const filteredClients = clients.filter((client) => {
     if (filterStatus === "all") {
       return true;
     }
-    return client.status === filterStatus;
+    return (client as any).status === filterStatus;
   });
 
   return (
@@ -50,10 +65,14 @@ const ClientsList = () => {
       </div>
       <div className={styles["clients-container"]}>
         {filteredClients.map((client) => (
-          <div key={client.id} className={styles["client-item"]}>
-            <div className={styles["avatar"]}>{client.name.charAt(0)}</div>
-            <div className={styles["client-name"]}>{client.name}</div>
-            {client.status === "lead" && (
+          <div key={(client as any).id} className={styles["client-item"]}>
+            <div className={styles["avatar"]}>
+              {(client as any).full_name.charAt(0)}
+            </div>
+            <div className={styles["client-name"]}>
+              {(client as any).full_name}
+            </div>
+            {(client as any).status === "lead" && (
               <button className={styles.btn}>Send Offer</button>
             )}
           </div>
