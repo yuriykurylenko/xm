@@ -25,7 +25,8 @@
 
 .form input[type="text"],
 .form input[type="email"],
-.form input[type="password"] {
+.form input[type="password"],
+.form input[type="number"] {
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -57,4 +58,22 @@
 .form button:disabled {
   background-color: #bbb;
   cursor: not-allowed;
+}
+
+.input-group .price-input {
+  position: relative;
+  width: 100%;
+}
+
+.input-group .price-input::before {
+  content: "$";
+  position: absolute;
+  left: 10px;
+  top: 35%;
+  transform: translateY(-40%);
+}
+
+.input-group .price-input input {
+  padding-left: 25px;
+  width: calc(100% - 36px);
 }

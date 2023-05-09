@@ -8,6 +8,7 @@ const CoachSignupForm = () => {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [signedUp, setSignedUp] = useState(false);
+  const [monthlyAmount, setMonthlyAmount] = useState("");
 
   useEffect(() => {
     fetchUser();
@@ -30,12 +31,19 @@ const CoachSignupForm = () => {
     }
   }
 
-  async function createCoach(userId: any, email: any, fullName: any) {
+  async function createCoach(
+    userId: any,
+    email: any,
+    fullName: any,
+    monthlyAmount: any
+  ) {
     const { error: insertError } = await supabase.from("coaches").insert([
       {
         user_id: userId,
         email,
         full_name: fullName,
+        monthly_subscription_amount: monthlyAmount * 100,
+        subscription_currency: "USD",
       },
     ]);
 
@@ -68,7 +76,7 @@ const CoachSignupForm = () => {
     }
 
     if (user) {
-      await createCoach(user?.id, email, fullName);
+      await createCoach(user?.id, email, fullName, monthlyAmount);
     }
 
     await supabase.auth.signInWithPassword({
@@ -110,6 +118,19 @@ const CoachSignupForm = () => {
           pattern=".{8,}"
           title="Password must be at least 8 characters long"
         />
+        <div className="input-group">
+          <div className="price-input">
+            <input
+              type="number"
+              placeholder="Monthly price"
+              id="monthlyPrice"
+              name="monthlyPrice"
+              min="0"
+              step="1"
+              onChange={(event) => setMonthlyAmount(event.target.value)}
+            />
+          </div>
+        </div>
         <button type="submit" disabled={loading}>
           {loading ? "Signing up..." : "Sign Up"}
         </button>
