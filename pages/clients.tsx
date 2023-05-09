@@ -104,8 +104,8 @@ const ClientsList = () => {
                     (coach as any).slug
                   }/signup`}
                 >
-                  {window.location.protocol}//
-                  {window.location.host}/{(coach as any).slug}/signup
+                  {`${window.location.protocol}//
+                  ${window.location.host}/${(coach as any).slug}/signup`}
                 </a>
               </div>
             )}
