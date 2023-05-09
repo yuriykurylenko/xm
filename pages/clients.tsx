@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "@/app/styles/clientsList.module.css";
 import supabase from "@/app/utils/supabaseClient";
+import Router from "next/router";
+import router from "next/router";
 
 const ClientsList = () => {
   const [clients, setClients] = useState([]);
@@ -26,6 +28,8 @@ const ClientsList = () => {
         setCoach(data[0]);
         await fetchClients(data[0]?.id);
       }
+    } else {
+      router.push("/signup");
     }
   }
 
