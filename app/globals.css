@@ -36,11 +36,11 @@
 
 .form input[type="text"]:focus,
 .form input[type="email"]:focus,
-.form input[type="password"]:focus {
+.form input[type="password"]:focus .form input[type="number"] {
   border-color: #7c9efc;
 }
 
-.form button {
+.form button.submit-btn {
   background-color: #7c9efc;
   color: white;
   padding: 10px;
@@ -51,11 +51,11 @@
   margin-top: 10px;
 }
 
-.form button:hover {
+.form button.submit-btn:hover {
   background-color: #5683d7;
 }
 
-.form button:disabled {
+.form button.submit-btn:disabled {
   background-color: #bbb;
   cursor: not-allowed;
 }

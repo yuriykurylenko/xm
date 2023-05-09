@@ -131,7 +131,7 @@ const CoachSignupForm = () => {
             />
           </div>
         </div>
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Signing up..." : "Sign Up"}
         </button>
       </form>

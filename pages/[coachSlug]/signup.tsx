@@ -107,7 +107,7 @@ export default function ClientSignUpForm() {
           pattern=".{8,}"
           title="Password must be at least 8 characters long"
         />
-        <button type="submit" disabled={loading}>
+        <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Signing up..." : "Sign Up"}
         </button>
       </form>

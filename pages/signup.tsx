@@ -1,5 +1,5 @@
 import CoachSignupForm from "../app/components/CoachSignupForm";
-import "../app/globals.css";
+import "@/app/globals.css";
 
 const Signup = () => {
   return (

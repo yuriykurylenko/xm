@@ -2,15 +2,29 @@ import { useEffect, useState } from "react";
 import styles from "@/app/styles/clientsList.module.css";
 import supabase from "@/app/utils/supabaseClient";
 import router from "next/router";
+import Modal from "react-modal";
+import "@/app/globals.css";
 
 const ClientsList = () => {
   const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
   const [coach, setCoach] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState(null);
 
   useEffect(() => {
     fetchUser();
   }, []);
+
+  function openModal(client: any) {
+    setIsModalOpen(true);
+    setSelectedClient(client);
+  }
+
+  function closeModal() {
+    setIsModalOpen(false);
+    setSelectedClient(null);
+  }
 
   async function fetchUser() {
     const {
@@ -94,7 +108,12 @@ const ClientsList = () => {
                   {(client as any).full_name}
                 </div>
                 {(client as any).status === "lead" && (
-                  <button className={styles.btn}>Send Offer</button>
+                  <button
+                    className={styles.btn}
+                    onClick={() => openModal(client)}
+                  >
+                    Send Offer
+                  </button>
                 )}
               </div>
             ))
@@ -114,6 +133,66 @@ const ClientsList = () => {
               </div>
             )}
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Send Offer Modal"
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+          },
+          content: {
+            maxWidth: "300px",
+            maxHeight: "150px",
+            margin: "0 auto",
+            padding: "2rem",
+            textAlign: "center",
+            backgroundColor: "#f8f8f8",
+            border: "1px solid #ddd",
+            borderRadius: "4px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.05)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: "Arial, sans-serif",
+          },
+        }}
+      >
+        <div className="modal-container form-container">
+          <form onSubmit={() => {}} className="form">
+            <h2>Send offer to {(selectedClient as any)?.full_name}</h2>
+
+            <div className="input-group">
+              <div className="price-input">
+                <input
+                  type="number"
+                  placeholder="Monthly price"
+                  id="monthlyPrice"
+                  name="monthlyPrice"
+                  min="0"
+                  step="1"
+                  // onChange={(event) => setMonthlyAmount(event.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <button
+                className={`${styles["filter-btn"]} ${styles["filter-btn-modal"]}`}
+                onClick={closeModal}
+              >
+                Close
+              </button>
+              <button
+                className={`${styles.btn} ${styles["btn-modal"]}`}
+                type="submit"
+              >
+                Send Offer
+              </button>
+            </div>
+          </form>
+        </div>
+      </Modal>
     </>
   );
 };
