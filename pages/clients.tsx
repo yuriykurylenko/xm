@@ -220,7 +220,7 @@ const ClientsList = () => {
           },
           content: {
             maxWidth: "300px",
-            maxHeight: "150px",
+            maxHeight: "250px",
             margin: "0 auto",
             padding: "2rem",
             textAlign: "center",
@@ -239,7 +239,10 @@ const ClientsList = () => {
         <div className="modal-container form-container">
           <form onSubmit={onSendOffer} className="form">
             <h2>Send offer to {(selectedClient as any)?.full_name}</h2>
-
+            <p>
+              {(selectedClient as any)?.full_name} will receive an email with
+              the link to subscribe and pay your specified amount monthly.
+            </p>
             <div className="input-group">
               <div className="price-input">
                 <input

@@ -23,6 +23,10 @@
   text-align: center;
 }
 
+.form p {
+  font-size: 11px;
+}
+
 .form input[type="text"],
 .form input[type="email"],
 .form input[type="password"],
