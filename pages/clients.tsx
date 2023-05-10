@@ -220,7 +220,6 @@ const ClientsList = () => {
           },
           content: {
             maxWidth: "300px",
-            maxHeight: "250px",
             margin: "0 auto",
             padding: "2rem",
             textAlign: "center",
