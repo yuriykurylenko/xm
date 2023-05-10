@@ -5,12 +5,15 @@ import router from "next/router";
 import Modal from "react-modal";
 import "@/app/globals.css";
 
+Modal.setAppElement("#__next");
+
 const ClientsList = () => {
   const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
   const [coach, setCoach] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
+  const [monthlyAmount, setMonthlyAmount] = useState(null);
 
   useEffect(() => {
     fetchUser();
@@ -24,6 +27,34 @@ const ClientsList = () => {
   function closeModal() {
     setIsModalOpen(false);
     setSelectedClient(null);
+  }
+
+  async function createSubscription(clientId: any, monthlyAmount: any) {
+    try {
+      const { data, error } = await supabase.from("subscriptions").insert([
+        {
+          client_id: clientId,
+          monthly_amount: monthlyAmount,
+        },
+      ]);
+
+      if (error) {
+        console.error("Error creating subscription:", error);
+      } else {
+        const { error: updateError } = await supabase
+          .from("clients")
+          .update({ status: "offerSent" })
+          .eq("id", clientId);
+
+        if (updateError) {
+          console.error("Error updating client status:", updateError);
+        }
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Error creating subscription:", error);
+    }
   }
 
   async function fetchUser() {
@@ -40,6 +71,7 @@ const ClientsList = () => {
       if (data[0]?.id) {
         setCoach(data[0]);
         await fetchClients(data[0]?.id);
+        setMonthlyAmount((data[0] as any)?.monthly_subscription_amount);
       }
     } else {
       router.push("/signup");
@@ -57,6 +89,20 @@ const ClientsList = () => {
     } else {
       setClients(data);
     }
+  }
+
+  async function onSendOffer(event: any) {
+    event.preventDefault();
+    await createSubscription(
+      (selectedClient as any)?.id,
+      Number(monthlyAmount) * 100
+    );
+
+    closeModal();
+    setMonthlyAmount((coach as any)?.monthly_subscription_amount);
+
+    setFilterStatus("offerSent");
+    await fetchClients((coach as any)?.id);
   }
 
   const filteredClients = clients.filter((client) => {
@@ -89,6 +135,15 @@ const ClientsList = () => {
           </button>
           <button
             className={`${styles["filter-btn"]} ${
+              filterStatus === "offerSent" && styles["filter-btn-active"]
+            }`}
+            onClick={() => setFilterStatus("offerSent")}
+          >
+            Offer Sent
+          </button>
+
+          <button
+            className={`${styles["filter-btn"]} ${
               filterStatus === "client" && styles["filter-btn-active"]
             }`}
             onClick={() => setFilterStatus("client")}
@@ -99,7 +154,7 @@ const ClientsList = () => {
       </div>
       <div className={styles["clients-container"]}>
         {clients.length > 0
-          ? filteredClients.map((client) => (
+          ? (filteredClients as any).map((client: any) => (
               <div key={(client as any).id} className={styles["client-item"]}>
                 <div className={styles["avatar"]}>
                   {(client as any).full_name.charAt(0)}
@@ -114,6 +169,23 @@ const ClientsList = () => {
                   >
                     Send Offer
                   </button>
+                )}
+                {(client as any).status === "offerSent" && (
+                  <div className={styles["offer-sent"]}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="green"
+                      className={styles["check-icon"]}
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    Offer sent
+                  </div>
                 )}
               </div>
             ))
@@ -147,8 +219,8 @@ const ClientsList = () => {
             margin: "0 auto",
             padding: "2rem",
             textAlign: "center",
-            backgroundColor: "#f8f8f8",
-            border: "1px solid #ddd",
+            backgroundColor: "transparent",
+            border: "none",
             borderRadius: "4px",
             boxShadow: "0 0 10px rgba(0, 0, 0, 0.05)",
             display: "flex",
@@ -160,7 +232,7 @@ const ClientsList = () => {
         }}
       >
         <div className="modal-container form-container">
-          <form onSubmit={() => {}} className="form">
+          <form onSubmit={onSendOffer} className="form">
             <h2>Send offer to {(selectedClient as any)?.full_name}</h2>
 
             <div className="input-group">
@@ -171,8 +243,11 @@ const ClientsList = () => {
                   id="monthlyPrice"
                   name="monthlyPrice"
                   min="0"
-                  step="1"
-                  // onChange={(event) => setMonthlyAmount(event.target.value)}
+                  step="0.01"
+                  value={parseFloat(monthlyAmount as any)}
+                  onChange={(event) => {
+                    setMonthlyAmount(parseFloat(event.target.value) as any);
+                  }}
                 />
               </div>
             </div>
@@ -186,6 +261,7 @@ const ClientsList = () => {
               <button
                 className={`${styles.btn} ${styles["btn-modal"]}`}
                 type="submit"
+                disabled={isNaN(parseFloat(monthlyAmount as any))}
               >
                 Send Offer
               </button>

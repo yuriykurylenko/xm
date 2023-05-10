@@ -11,6 +11,11 @@
   background-color: #5683d7;
 }
 
+.btn:disabled {
+  background-color: #bbb;
+  cursor: not-allowed;
+}
+
 .clients-container-header {
   /* Add display: flex; and justify-content: space-between; */
   max-width: 800px;
@@ -93,4 +98,16 @@
   justify-content: center;
   font-family: Arial, sans-serif;
   line-height: 2rem;
+}
+
+.offer-sent {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem; /* adjust this value to control the space between the icon and the text */
+  color: green; /* add this line */
+}
+
+.check-icon {
+  width: 16px; /* adjust this value to control the width of the icon */
+  height: 16px; /* adjust this value to control the height of the icon */
 }
