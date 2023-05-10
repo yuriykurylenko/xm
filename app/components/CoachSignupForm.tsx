@@ -90,7 +90,7 @@ const CoachSignupForm = () => {
   }
 
   return (
-    <div className="form-container">
+    <div className="form-container signup">
       <form onSubmit={handleSubmit} className="form">
         <h2>Sign Up as a Coach</h2>
         <input

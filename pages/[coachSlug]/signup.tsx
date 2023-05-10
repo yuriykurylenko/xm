@@ -79,7 +79,7 @@ export default function ClientSignUpForm() {
   };
 
   return (
-    <div className="form-container">
+    <div className="form-container signup">
       <form onSubmit={handleSignUp} className="form">
         <h2>Sign Up to work with {(coach as any)?.full_name || coachSlug}</h2>
         <input
