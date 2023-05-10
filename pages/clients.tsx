@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import styles from "@/app/styles/clientsList.module.css";
 import supabase from "@/app/utils/supabaseClient";
 import router from "next/router";
@@ -13,7 +13,8 @@ const ClientsList = () => {
   const [coach, setCoach] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
-  const [monthlyAmount, setMonthlyAmount] = useState(null);
+  const [monthlyAmount, setMonthlyAmount] =
+    useState<SetStateAction<null | number>>(null);
 
   useEffect(() => {
     fetchUser();
@@ -71,7 +72,7 @@ const ClientsList = () => {
       if (data[0]?.id) {
         setCoach(data[0]);
         await fetchClients(data[0]?.id);
-        setMonthlyAmount((data[0] as any)?.monthly_subscription_amount);
+        setMonthlyAmount((data[0] as any)?.monthly_subscription_amount / 100);
       }
     } else {
       router.push("/signup");
@@ -99,7 +100,11 @@ const ClientsList = () => {
     );
 
     closeModal();
-    setMonthlyAmount((coach as any)?.monthly_subscription_amount);
+    const coachMonthlySubscriptionAmount = (coach as any)
+      ?.monthly_subscription_amount;
+    if (coachMonthlySubscriptionAmount) {
+      setMonthlyAmount(coachMonthlySubscriptionAmount / 100);
+    }
 
     setFilterStatus("offerSent");
     await fetchClients((coach as any)?.id);
