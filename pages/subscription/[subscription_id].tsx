@@ -1,4 +1,5 @@
 import { SetStateAction, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/subscriptionPage.module.css";
 import "@/app/globals.css";
@@ -21,8 +22,10 @@ function CheckoutForm({
   client: any;
   subscription: any;
 }) {
+  const router = useRouter();
   const stripe = useStripe();
   const elements = useElements();
+
   const [error, setError] =
     useState<SetStateAction<null | undefined | string>>(null);
   const [loading, setLoading] = useState(false);
@@ -87,6 +90,7 @@ function CheckoutForm({
 
         if (status === "succeeded") {
           updateSubscriptionInDatabase(response.data.id);
+          router.push(`/subscription/${subscription.id}/success`);
         } else if (last_payment_error) {
           setError(last_payment_error.message);
         }
