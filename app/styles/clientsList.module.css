@@ -104,10 +104,17 @@
   display: flex;
   align-items: center;
   gap: 0.2rem; /* adjust this value to control the space between the icon and the text */
+  color: orange; /* add this line */
+}
+
+.active {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem; /* adjust this value to control the space between the icon and the text */
   color: green; /* add this line */
 }
 
-.check-icon {
+.icon {
   width: 16px; /* adjust this value to control the width of the icon */
   height: 16px; /* adjust this value to control the height of the icon */
 }
