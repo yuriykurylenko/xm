@@ -38,20 +38,19 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
     <div className={styles["subscription-page"]}>
       <div className={styles["subscription-container"]}>
         <h1 className={styles["header"]}>Coaching Subscription</h1>
-        <p className={styles["content"]}>
+        <div className={styles["content"]}>
           Dear <b>{(client as any)?.full_name}</b>, you will now start a
           coaching subscription with me. Please enter your payment details in
-          the form below. You will pay{" "}
+          the form below. You will be paying{" "}
           <b>
             {formatAmount(subscription?.monthly_amount, subscription.currency)}
           </b>{" "}
-          monthly. Can't wait to get started!
-          <br />
+          monthly. Can&apos;t wait to get started!
           <p className={styles["signature"]}>
             Sincerely, <br />
             {(coach as any)?.full_name}
           </p>
-        </p>
+        </div>
       </div>
     </div>
   );
