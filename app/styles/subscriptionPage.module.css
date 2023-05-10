@@ -38,3 +38,9 @@
   border: 2px solid #424770;
   background-color: #f0f8ff;
 }
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}

@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/subscriptionPage.module.css";
 import "@/app/globals.css";
+
+import axios from "axios";
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe, StripeCardElement } from "@stripe/stripe-js";
@@ -12,30 +14,89 @@ const stripePromise = loadStripe(
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
-function CheckoutForm() {
+function CheckoutForm({
+  client,
+  subscription,
+}: {
+  client: any;
+  subscription: any;
+}) {
   const stripe = useStripe();
   const elements = useElements();
+  const [error, setError] =
+    useState<SetStateAction<null | undefined | string>>(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
+  const updateSubscriptionInDatabase = async (stripeSubscriptionId: any) => {
+    // Update subscription in Supabase
+    const { error: subscriptionError } = await supabase
+      .from("subscriptions")
+      .update({
+        stripe_subscription_id: stripeSubscriptionId,
+        status: "active",
+      })
+      .eq("id", subscription.id);
 
-    if (!stripe || !elements) {
+    if (subscriptionError) {
       return;
     }
 
-    const cardElement = elements.getElement(CardElement);
+    // Update client status in Supabase
+    await supabase
+      .from("clients")
+      .update({ status: "client" })
+      .eq("id", client.id);
+  };
 
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement as StripeCardElement,
+  async function handleSubmit(event: any) {
+    event.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    // Get the client secret from the server
+    const {
+      data: { client_secret, customer_id },
+    } = await axios.post("/api/setup_intents", {
+      email: (client as any).email,
     });
 
-    if (error) {
-      console.log("[error]", error);
+    // Confirm card setup
+    const result = await stripe?.confirmCardSetup(client_secret, {
+      payment_method: {
+        card: elements?.getElement(CardElement) as StripeCardElement,
+        billing_details: {
+          name: client.full_name,
+        },
+      },
+    });
+
+    if (result?.error) {
+      setError(result?.error?.message);
+      setLoading(false);
     } else {
-      console.log("[PaymentMethod]", paymentMethod);
+      try {
+        const response = await axios.post("/api/subscription", {
+          customerId: customer_id,
+          paymentMethodId: result?.setupIntent?.payment_method,
+          priceId: "price_1N6JeAA4j0lnvK9GaP833Peg",
+          quantity: subscription.monthly_amount / 100,
+        });
+
+        const { status, last_payment_error } =
+          response.data.latest_invoice.payment_intent;
+
+        if (status === "succeeded") {
+          updateSubscriptionInDatabase(response.data.id);
+        } else if (last_payment_error) {
+          setError(last_payment_error.message);
+        }
+      } catch (error) {
+        setError("Error creating subscription");
+      } finally {
+        setLoading(false);
+      }
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -58,10 +119,18 @@ function CheckoutForm() {
           }}
         />
       </div>
-
-      <button type="submit" className="submit-btn pay-btn" disabled={!stripe}>
-        Pay
+      <button
+        type="submit"
+        className="submit-btn pay-btn"
+        disabled={!stripe || loading}
+      >
+        {loading ? "Processing..." : "Pay"}
       </button>
+      {error && (
+        <div className={styles["error-message"]}>
+          <>{error}</>
+        </div>
+      )}
     </form>
   );
 }
@@ -119,7 +188,7 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
               {(coach as any)?.full_name}
             </p>
           </div>
-          <CheckoutForm />
+          <CheckoutForm client={client} subscription={subscription} />
         </div>
       </div>
     </Elements>
