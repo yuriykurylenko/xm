@@ -7,7 +7,11 @@ import "@/app/globals.css";
 import axios from "axios";
 
 import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe, StripeCardElement } from "@stripe/stripe-js";
+import {
+  loadStripe,
+  PaymentMethod,
+  StripeCardElement,
+} from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(
   "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
@@ -51,6 +55,47 @@ function CheckoutForm({
       .eq("id", client.id);
   };
 
+  async function createSubscription(
+    customerId: string,
+    paymentMethodId: string | PaymentMethod | null
+  ) {
+    try {
+      const response = await axios.post("/api/subscription", {
+        customerId,
+        paymentMethodId,
+        priceId: "price_1N6JeAA4j0lnvK9GaP833Peg",
+        quantity: subscription.monthly_amount / 100,
+      });
+
+      const paymentIntent = response.data.latest_invoice.payment_intent;
+
+      if (paymentIntent.status === "succeeded") {
+        updateSubscriptionInDatabase(response.data.id);
+        router.push(`/subscription/${subscription.id}/success`);
+      } else if (paymentIntent.status === "requires_action") {
+        const paymentIntentResult = await stripe?.confirmCardPayment(
+          paymentIntent.client_secret
+        );
+        if (paymentIntentResult?.error) {
+          setError(paymentIntentResult.error.message);
+          setLoading(false);
+        } else if (
+          paymentIntentResult?.paymentIntent &&
+          paymentIntentResult.paymentIntent.status === "succeeded"
+        ) {
+          updateSubscriptionInDatabase(response.data.id);
+          router.push(`/subscription/${subscription.id}/success`);
+        }
+      } else if (paymentIntent.last_payment_error) {
+        setError(paymentIntent.last_payment_error.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setError("Error creating subscription");
+      setLoading(false);
+    }
+  }
+
   async function handleSubmit(event: any) {
     event.preventDefault();
     setError(null);
@@ -63,42 +108,33 @@ function CheckoutForm({
       email: (client as any).email,
     });
 
-    // Confirm card setup
-    const result = await stripe?.confirmCardSetup(client_secret, {
-      payment_method: {
-        card: elements?.getElement(CardElement) as StripeCardElement,
-        billing_details: {
-          name: client.full_name,
+    try {
+      const result = await stripe?.confirmCardSetup(client_secret, {
+        payment_method: {
+          card: elements?.getElement(CardElement) as StripeCardElement,
+          billing_details: {
+            name: client.full_name,
+          },
         },
-      },
-    });
+      });
 
-    if (result?.error) {
-      setError(result?.error?.message);
-      setLoading(false);
-    } else {
-      try {
-        const response = await axios.post("/api/subscription", {
-          customerId: customer_id,
-          paymentMethodId: result?.setupIntent?.payment_method,
-          priceId: "price_1N6JeAA4j0lnvK9GaP833Peg",
-          quantity: subscription.monthly_amount / 100,
-        });
-
-        const { status, last_payment_error } =
-          response.data.latest_invoice.payment_intent;
-
-        if (status === "succeeded") {
-          updateSubscriptionInDatabase(response.data.id);
-          router.push(`/subscription/${subscription.id}/success`);
-        } else if (last_payment_error) {
-          setError(last_payment_error.message);
-        }
-      } catch (error) {
-        setError("Error creating subscription");
-      } finally {
+      if (result?.error) {
+        // Display error.message in your UI.
+        setError(result.error.message);
         setLoading(false);
+        return;
       }
+
+      if (result?.setupIntent && result.setupIntent.status === "succeeded") {
+        await createSubscription(
+          customer_id,
+          result.setupIntent.payment_method
+        );
+      }
+    } catch (error) {
+      // Handle any other errors.
+      setError("Error creating subscription");
+      setLoading(false);
     }
   }
 
