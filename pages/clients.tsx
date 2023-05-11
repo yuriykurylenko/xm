@@ -4,6 +4,7 @@ import supabase from "@/app/utils/supabaseClient";
 import router from "next/router";
 import Modal from "react-modal";
 import "@/app/globals.css";
+import axios from "axios";
 
 Modal.setAppElement("#__next");
 
@@ -32,12 +33,15 @@ const ClientsList = () => {
 
   async function createSubscription(clientId: any, monthlyAmount: any) {
     try {
-      const { data, error } = await supabase.from("subscriptions").insert([
-        {
-          client_id: clientId,
-          monthly_amount: monthlyAmount,
-        },
-      ]);
+      const { data, error } = await supabase
+        .from("subscriptions")
+        .insert([
+          {
+            client_id: clientId,
+            monthly_amount: monthlyAmount,
+          },
+        ])
+        .select();
 
       if (error) {
         console.error("Error creating subscription:", error);
@@ -52,7 +56,7 @@ const ClientsList = () => {
         }
       }
 
-      return data;
+      return data?.[0];
     } catch (error) {
       console.error("Error creating subscription:", error);
     }
@@ -96,10 +100,23 @@ const ClientsList = () => {
 
   async function onSendOffer(event: any) {
     event.preventDefault();
-    await createSubscription(
+    const subscription = await createSubscription(
       (selectedClient as any)?.id,
       Number(monthlyAmount) * 100
     );
+
+    if (subscription) {
+      try {
+        await axios.post("/api/send_payment_link", {
+          coach,
+          client: selectedClient,
+          subscription,
+          domain: `${window.location.protocol}//${window.location.host}`,
+        });
+      } catch (error) {
+        console.error("Error sending offer: ", error);
+      }
+    }
 
     closeModal();
     const coachMonthlySubscriptionAmount = (coach as any)
@@ -108,7 +125,7 @@ const ClientsList = () => {
       setMonthlyAmount(coachMonthlySubscriptionAmount / 100);
     }
 
-    setFilterStatus("offerSent");
+    // setFilterStatus("offerSent");
     await fetchClients((coach as any)?.id);
   }
 
