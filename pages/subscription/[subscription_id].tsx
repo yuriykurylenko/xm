@@ -209,7 +209,22 @@ export async function getServerSideProps(context: {
     .select("*")
     .eq("id", subscription_id);
 
-  const subscription = subscriptionData[0];
+  const subscription = subscriptionData?.[0];
+
+  if (!subscription) {
+    return {
+      notFound: true,
+    };
+  }
+
+  if (subscription.status === "active") {
+    return {
+      redirect: {
+        destination: `/subscription/${subscription_id}/success`,
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {
