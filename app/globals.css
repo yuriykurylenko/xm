@@ -89,3 +89,53 @@ button.submit-btn:disabled {
   padding-left: 25px;
   width: calc(100% - 36px);
 }
+
+.header-content {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px;
+}
+
+.user-avatar {
+  background: #7c9efc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+.popover {
+  position: absolute;
+  top: 65px;
+  right: 10px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  z-index: 1;
+}
+.popover p {
+  margin: 10px 0;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #222222;
+}
+
+.popover button {
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ddd;
+  color: black;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}

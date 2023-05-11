@@ -5,6 +5,7 @@ import router from "next/router";
 import Modal from "react-modal";
 import "@/app/globals.css";
 import axios from "axios";
+import Header from "@/app/components/Header";
 
 Modal.setAppElement("#__next");
 
@@ -138,6 +139,7 @@ const ClientsList = () => {
 
   return (
     <>
+      <Header />
       <div className={styles["clients-container-header"]}>
         <h1>Clients</h1>
         <div>
