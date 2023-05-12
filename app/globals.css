@@ -139,3 +139,10 @@ button.submit-btn:disabled {
   font-family: Arial, sans-serif;
   font-size: 14px;
 }
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+}

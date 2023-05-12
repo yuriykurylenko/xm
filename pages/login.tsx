@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import supabase from "@/app/utils/supabaseClient";
 import { useRouter } from "next/router";
 import "@/app/globals.css";
@@ -8,6 +8,37 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<SetStateAction<null | string>>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const fetchUser = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      await fetchCoach(user);
+    }
+  };
+
+  const fetchCoach = async (user: any) => {
+    // Check if the user is a coach
+    const { data: coach, error } = await supabase
+      .from("coaches")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+
+    if (error) {
+      setError(error.message);
+    } else if (coach) {
+      // Redirect to the /clients page if the user is a coach
+      router.push("/clients");
+    } else {
+      setError("You are not a coach.");
+    }
+  };
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
@@ -24,20 +55,7 @@ export default function Login() {
       setError(error.message);
     } else if (user) {
       // Check if the user is a coach
-      const { data: coach, error } = await supabase
-        .from("coaches")
-        .select("*")
-        .eq("user_id", user.id)
-        .single();
-
-      if (error) {
-        setError(error.message);
-      } else if (coach) {
-        // Redirect to the /clients page if the user is a coach
-        router.push("/clients");
-      } else {
-        setError("You are not a coach.");
-      }
+      await fetchCoach(user);
     }
   };
 
