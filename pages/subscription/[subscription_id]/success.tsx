@@ -1,22 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/success.module.css";
 import Head from "next/head";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 export default function Success({
   coach,
   client,
-  subscription_id,
 }: {
   coach: any;
   client: any;
-  subscription_id: any;
 }) {
   const router = useRouter();
-  const { coachSlug } = router.query;
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  async function fetchUser() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data: clients } = await supabase
+        .from("clients")
+        .select("*")
+        .eq("user_id", user.id);
+
+      if (clients?.[0]?.id) {
+        router.push("/");
+      }
+    }
+  }
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
@@ -41,7 +59,7 @@ export default function Success({
         .from("clients")
         .update({
           user_id: user.id,
-          status: "active",
+          status: "client",
         })
         .eq("id", client.id);
 
@@ -49,7 +67,13 @@ export default function Success({
         throw updateError;
       }
 
+      await supabase.auth.signInWithPassword({
+        email: client.email,
+        password,
+      });
+
       setLoading(false);
+      router.push("/");
     } catch (error) {
       console.error("Error during sign-up:", error);
       setLoading(false);
@@ -143,7 +167,6 @@ export async function getServerSideProps(context: any) {
 
   return {
     props: {
-      subscription_id,
       coach: coachData,
       client: clientData,
     },

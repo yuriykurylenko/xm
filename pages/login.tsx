@@ -22,24 +22,36 @@ export default function Login() {
     } = await supabase.auth.getUser();
     if (user) {
       await fetchCoach(user);
+      await fetchClient(user);
     }
   };
 
   const fetchCoach = async (user: any) => {
     // Check if the user is a coach
-    const { data: coach, error } = await supabase
+    const { data: coachData, error } = await supabase
       .from("coaches")
       .select("*")
-      .eq("user_id", user.id)
-      .single();
+      .eq("user_id", user.id);
 
     if (error) {
       setError(error.message);
-    } else if (coach) {
+    } else if (coachData[0]?.id) {
       // Redirect to the /clients page if the user is a coach
       router.push("/clients");
-    } else {
-      setError("You are not a coach.");
+    }
+  };
+
+  const fetchClient = async (user: any) => {
+    // Check if the user is a client
+    const { data: clientData, error } = await supabase
+      .from("clients")
+      .select("*")
+      .eq("user_id", user.id);
+
+    if (error) {
+      setError(error.message);
+    } else if (clientData[0]?.id) {
+      router.push("/");
     }
   };
 
@@ -61,6 +73,7 @@ export default function Login() {
     } else if (user) {
       // Check if the user is a coach
       await fetchCoach(user);
+      await fetchClient(user);
       setLoading(false);
     }
   };
