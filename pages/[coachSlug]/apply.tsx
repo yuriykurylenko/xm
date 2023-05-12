@@ -8,7 +8,6 @@ export default function ClientSignUpForm() {
   const router = useRouter();
   const { coachSlug } = router.query;
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [coach, setCoach] = useState(null);
@@ -42,26 +41,12 @@ export default function ClientSignUpForm() {
     setLoading(true);
 
     try {
-      // Sign up the client as a user
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-
-      if (error) {
-        throw error;
-      }
-
       // Insert the client entry with a link to the coach
       const { data, error: insertError } = await supabase
         .from("clients")
         .insert([
           {
             full_name: fullName,
-            user_id: user.id,
             email,
             coach_id: (coach as any).id,
           },
@@ -84,12 +69,12 @@ export default function ClientSignUpForm() {
       <Head>
         <title>
           {(coach as any)?.full_name || coachSlug
-            ? `${(coach as any)?.full_name || coachSlug} | Sign up`
+            ? `${(coach as any)?.full_name || coachSlug} | Application`
             : "Loading..."}
         </title>
       </Head>
       <form onSubmit={handleSignUp} className="form">
-        <h2>Sign Up to work with {(coach as any)?.full_name || coachSlug}</h2>
+        <h2>Apply to work with {(coach as any)?.full_name || coachSlug}</h2>
         <input
           type="text"
           placeholder="Full Name"
@@ -106,17 +91,8 @@ export default function ClientSignUpForm() {
           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
           title="Please enter a valid email address"
         />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-          pattern=".{8,}"
-          title="Password must be at least 8 characters long"
-        />
         <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? "Signing up..." : "Sign up"}
+          {loading ? "Submitting..." : "Apply"}
         </button>
       </form>
     </div>

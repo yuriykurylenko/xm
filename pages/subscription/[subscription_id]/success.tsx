@@ -1,27 +1,102 @@
-import React from "react";
+import React, { useState } from "react";
 import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/success.module.css";
 import Head from "next/head";
+import router, { useRouter } from "next/router";
 
 export default function Success({
-  coachName,
-  clientName,
+  coach,
+  client,
+  subscription_id,
 }: {
-  coachName: any;
-  clientName: any;
+  coach: any;
+  client: any;
+  subscription_id: any;
 }) {
+  const router = useRouter();
+  const { coachSlug } = router.query;
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSignUp = async (event: any) => {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      // Sign up the client as a user
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.signUp({
+        email: client.email,
+        password,
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      // Insert the client entry with a link to the coach
+      const { data, error: updateError } = await supabase
+        .from("clients")
+        .update({
+          user_id: user.id,
+          status: "active",
+        })
+        .eq("id", client.id);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error during sign-up:", error);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={styles["parent-container"]}>
       <Head>
-        <title>{coachName ? `${coachName} | Get started` : "Loading..."}</title>
+        <title>
+          {coach.full_name ? `${coach.full_name} | Get started` : "Loading..."}
+        </title>
       </Head>
       <div className={styles["success-container"]}>
-        <h1 className={styles["success-title"]}>Thank you, {clientName}!</h1>
+        <h1 className={styles["success-title"]}>
+          Thank you, {client.full_name}!
+        </h1>
         <p className={styles["success-text"]}>
           Your payment has been processed successfully and you have signed up to
-          work with {coachName}. We appreciate your business and look forward to
-          supporting you on your coaching journey.
+          work with <b>{coach.full_name}</b>. We appreciate your business and
+          look forward to supporting you on your coaching journey.
         </p>
+        <p className={styles["success-text"]}>
+          Now you can create your account and get access to exclusive materials.
+        </p>
+
+        <div className={`${styles["form-container"]}`}>
+          <form onSubmit={handleSignUp} className={styles["form"]}>
+            <input type="email" value={client.email} disabled />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+              pattern=".{8,}"
+              title="Password must be at least 8 characters long"
+            />
+            <button
+              type="submit"
+              className={styles["submit-btn"]}
+              disabled={loading}
+            >
+              {loading ? "Creating account..." : "Create account"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -32,11 +107,11 @@ export async function getServerSideProps(context: any) {
 
   const { data: subscriptionData, error: subscriptionError } = await supabase
     .from("subscriptions")
-    .select("client_id")
+    .select("*")
     .eq("id", subscription_id)
     .single();
 
-  if (subscriptionError) {
+  if (subscriptionError || !subscriptionData.stripe_subscription_id) {
     return {
       notFound: true,
     };
@@ -68,8 +143,9 @@ export async function getServerSideProps(context: any) {
 
   return {
     props: {
-      coachName: coachData.full_name,
-      clientName: clientData.full_name,
+      subscription_id,
+      coach: coachData,
+      client: clientData,
     },
   };
 }

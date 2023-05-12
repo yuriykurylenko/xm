@@ -10,10 +10,10 @@ export default function Success({ coachName }: { coachName: any }) {
         <title>{coachName ? `${coachName} | Success` : "Loading..."}</title>
       </Head>
       <div className={styles["success-container"]}>
-        <h1 className={styles["success-title"]}>Success!</h1>
+        <h1 className={styles["success-title"]}>Congratulations!</h1>
         <p className={styles["success-text"]}>
-          You have signed up to work with {coachName}. You will receive an email
-          with the payment link shortly.
+          You have succesfully applied to work with <b>{coachName}</b>. You will
+          hear from us shortly.
         </p>
       </div>
     </div>
