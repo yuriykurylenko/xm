@@ -15,6 +15,7 @@ const ClientsList = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [coach, setCoach] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
   const [monthlyAmount, setMonthlyAmount] =
     useState<SetStateAction<null | number>>(null);
@@ -46,6 +47,7 @@ const ClientsList = () => {
         .select();
 
       if (error) {
+        setIsSubmitting(false);
         console.error("Error creating subscription:", error);
       } else {
         const { error: updateError } = await supabase
@@ -55,12 +57,14 @@ const ClientsList = () => {
 
         if (updateError) {
           console.error("Error updating client status:", updateError);
+          setIsSubmitting(false);
         }
       }
 
       return data?.[0];
     } catch (error) {
       console.error("Error creating subscription:", error);
+      setIsSubmitting(false);
     }
   }
 
@@ -101,6 +105,7 @@ const ClientsList = () => {
   }
 
   async function onSendOffer(event: any) {
+    setIsSubmitting(true);
     event.preventDefault();
     const subscription = await createSubscription(
       (selectedClient as any)?.id,
@@ -116,17 +121,20 @@ const ClientsList = () => {
           domain: `${window.location.protocol}//${window.location.host}`,
         });
       } catch (error) {
+        setIsSubmitting(false);
         console.error("Error sending offer: ", error);
       }
     }
 
     closeModal();
+
     const coachMonthlySubscriptionAmount = (coach as any)
       ?.monthly_subscription_amount;
     if (coachMonthlySubscriptionAmount) {
       setMonthlyAmount(coachMonthlySubscriptionAmount / 100);
     }
 
+    setIsSubmitting(false);
     setFilterStatus("offerSent");
     await fetchClients((coach as any)?.id);
   }
@@ -312,9 +320,11 @@ const ClientsList = () => {
               <button
                 className={`${styles.btn} ${styles["btn-modal"]}`}
                 type="submit"
-                disabled={isNaN(parseFloat(monthlyAmount as any))}
+                disabled={
+                  isNaN(parseFloat(monthlyAmount as any)) || isSubmitting
+                }
               >
-                Send Offer
+                {isSubmitting ? "Sending..." : "Send Offer"}
               </button>
             </div>
           </form>
