@@ -10,6 +10,7 @@ const CoachSignupForm = () => {
   const [loading, setLoading] = useState(false);
   const [signedUp, setSignedUp] = useState(false);
   const [monthlyAmount, setMonthlyAmount] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchUser();
@@ -49,10 +50,7 @@ const CoachSignupForm = () => {
     ]);
 
     if (insertError) {
-      console.error(
-        'Error during insertion into "coaches" table:',
-        insertError.message
-      );
+      setError(insertError.message);
     } else {
       console.log('User added to "coaches" table successfully');
     }
@@ -72,22 +70,22 @@ const CoachSignupForm = () => {
     });
 
     if (signUpError) {
-      console.error("Error during sign up:", signUpError.message);
+      setError(signUpError.message);
       setLoading(false);
     }
 
     if (user) {
       await createCoach(user?.id, email, fullName, monthlyAmount);
-    }
 
-    await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      router.push("/clients");
+    }
 
     setLoading(false);
     setSignedUp(true);
-    router.push("/clients");
   }
 
   return (
@@ -127,11 +125,16 @@ const CoachSignupForm = () => {
               id="monthlyPrice"
               name="monthlyPrice"
               min="0"
-              step="1"
+              step="0.01"
               onChange={(event) => setMonthlyAmount(event.target.value)}
             />
           </div>
         </div>
+        {error && (
+          <div className="error-message">
+            <>{error}</>
+          </div>
+        )}
         <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Signing up..." : "Sign up"}
         </button>
