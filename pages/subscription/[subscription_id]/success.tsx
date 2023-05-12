@@ -32,7 +32,11 @@ export default function Success({
 
       if (clients?.[0]?.id) {
         router.push("/");
+      } else if (client?.user_id) {
+        router.push("/login");
       }
+    } else if (client?.user_id) {
+      router.push("/login");
     }
   }
 

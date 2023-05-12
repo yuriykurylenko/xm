@@ -239,7 +239,8 @@ const ClientsList = () => {
             ))
           : coach && (
               <div className={styles["no-clients-container"]}>
-                Please share this link to get your clients to sign up:
+                Please share this link to get your clients to apply for
+                coaching:
                 <br />
                 <a
                   href={`${window.location.protocol}//${window.location.host}/${
