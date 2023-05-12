@@ -44,7 +44,7 @@
 .form input[type="text"]:focus,
 .form input[type="email"]:focus,
 .form input[type="password"]:focus,
-.form input[type="number"] {
+.form input[type="number"]:focus {
   border-color: #7c9efc;
 }
 
@@ -142,7 +142,15 @@ button.submit-btn:disabled {
 
 .error-message {
   color: red;
-  margin-top: 10px;
-  font-size: 14px;
+  font-size: 13px;
   text-align: center;
+}
+
+.log-in {
+  color: #222222;
+  text-align: center;
+}
+
+.log-in a {
+  color: #5683d7;
 }
