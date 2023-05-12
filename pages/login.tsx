@@ -8,6 +8,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<SetStateAction<null | string>>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -43,6 +44,7 @@ export default function Login() {
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
+    setLoading(true);
 
     const {
       error,
@@ -54,9 +56,11 @@ export default function Login() {
 
     if (error) {
       setError(error.message);
+      setLoading(false);
     } else if (user) {
       // Check if the user is a coach
       await fetchCoach(user);
+      setLoading(false);
     }
   };
 
@@ -85,8 +89,8 @@ export default function Login() {
             <>{error}</>
           </div>
         )}
-        <button type="submit" className="submit-btn">
-          Log in
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading ? "Logging in..." : "Log in"}
         </button>
         <p className="log-in">
           Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>

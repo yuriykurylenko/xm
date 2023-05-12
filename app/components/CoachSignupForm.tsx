@@ -93,7 +93,7 @@ const CoachSignupForm = () => {
   return (
     <div className="form-container signup">
       <form onSubmit={handleSubmit} className="form">
-        <h2>Sign Up as a Coach</h2>
+        <h2>Sign up as a Coach</h2>
         <input
           type="text"
           placeholder="Full Name"
@@ -133,7 +133,7 @@ const CoachSignupForm = () => {
           </div>
         </div>
         <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? "Signing up..." : "Sign Up"}
+          {loading ? "Signing up..." : "Sign up"}
         </button>
         <p className="log-in">
           Already have an account? <Link href="/login">Log in</Link>
