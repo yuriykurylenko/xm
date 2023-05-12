@@ -127,7 +127,7 @@ const ClientsList = () => {
       setMonthlyAmount(coachMonthlySubscriptionAmount / 100);
     }
 
-    // setFilterStatus("offerSent");
+    setFilterStatus("offerSent");
     await fetchClients((coach as any)?.id);
   }
 
