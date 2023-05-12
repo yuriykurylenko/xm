@@ -46,7 +46,7 @@ const Header = () => {
     if (error) {
       console.log("Error logging out:", error.message);
     } else {
-      router.push("/signup");
+      router.push("/login");
     }
   };
 
