@@ -1,3 +1,4 @@
+import Link from "next/link";
 import router from "next/router";
 import { useEffect, useState } from "react";
 import supabase from "../utils/supabaseClient";
@@ -135,7 +136,7 @@ const CoachSignupForm = () => {
           {loading ? "Signing up..." : "Sign Up"}
         </button>
         <p className="log-in">
-          Already have an account? <a href="/login">Log in</a>
+          Already have an account? <Link href="/login">Log in</Link>
         </p>
       </form>
     </div>
