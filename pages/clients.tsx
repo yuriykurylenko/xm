@@ -79,10 +79,10 @@ const ClientsList = () => {
         await fetchClients(data[0]?.id);
         setMonthlyAmount((data[0] as any)?.monthly_subscription_amount / 100);
       } else {
-        router.push("/signup");
+        router.push("/login");
       }
     } else {
-      router.push("/signup");
+      router.push("/login");
     }
   }
 
