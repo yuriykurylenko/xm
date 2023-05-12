@@ -244,11 +244,11 @@ const ClientsList = () => {
                 <a
                   href={`${window.location.protocol}//${window.location.host}/${
                     (coach as any).slug
-                  }/signup`}
+                  }/apply`}
                 >
                   {`${window.location.protocol}//${window.location.host}/${
                     (coach as any).slug
-                  }/signup`}
+                  }/apply`}
                 </a>
               </div>
             )}
