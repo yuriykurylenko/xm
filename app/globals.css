@@ -57,6 +57,7 @@ button.submit-btn {
   cursor: pointer;
   font-weight: bold;
   margin-top: 10px;
+  font-size: 13px;
 }
 
 button.submit-btn:hover {
@@ -137,7 +138,7 @@ button.submit-btn:disabled {
   color: black;
   cursor: pointer;
   font-family: Arial, sans-serif;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .error-message {

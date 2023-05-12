@@ -31,7 +31,7 @@
 .clients-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem 2rem;
   padding-bottom: 0.2rem;
   font-family: Arial, sans-serif;
 }
@@ -68,6 +68,7 @@
   border-radius: 4px;
   background-color: #ddd;
   cursor: pointer;
+  font-size: 13px;
 }
 
 .filter-btn-modal {
@@ -86,7 +87,7 @@
 
 .no-clients-container {
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem 2rem;
   text-align: center;
   background-color: #f8f8f8;
   border: 1px solid #ddd;
