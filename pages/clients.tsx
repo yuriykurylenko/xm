@@ -6,6 +6,7 @@ import Modal from "react-modal";
 import "@/app/globals.css";
 import axios from "axios";
 import Header from "@/app/components/Header";
+import Head from "next/head";
 
 Modal.setAppElement("#__next");
 
@@ -139,6 +140,9 @@ const ClientsList = () => {
 
   return (
     <>
+      <Head>
+        <title>Coaching | Clients</title>
+      </Head>
       <Header />
       <div className={styles["clients-container-header"]}>
         <h1>Clients</h1>

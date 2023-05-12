@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import "@/app/globals.css";
 import supabase from "@/app/utils/supabaseClient";
+import Head from "next/head";
 
 export default function ClientSignUpForm() {
   const router = useRouter();
@@ -80,6 +81,13 @@ export default function ClientSignUpForm() {
 
   return (
     <div className="form-container signup">
+      <Head>
+        <title>
+          {(coach as any)?.full_name || coachSlug
+            ? `${(coach as any)?.full_name || coachSlug} | Sign up`
+            : "Loading..."}
+        </title>
+      </Head>
       <form onSubmit={handleSignUp} className="form">
         <h2>Sign Up to work with {(coach as any)?.full_name || coachSlug}</h2>
         <input

@@ -1,6 +1,7 @@
 import React from "react";
 import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/success.module.css";
+import Head from "next/head";
 
 export default function Success({
   coachName,
@@ -11,6 +12,9 @@ export default function Success({
 }) {
   return (
     <div className={styles["parent-container"]}>
+      <Head>
+        <title>{coachName ? `${coachName} | Get started` : "Loading..."}</title>
+      </Head>
       <div className={styles["success-container"]}>
         <h1 className={styles["success-title"]}>Thank you, {clientName}!</h1>
         <p className={styles["success-text"]}>

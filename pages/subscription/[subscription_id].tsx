@@ -18,6 +18,7 @@ const stripePromise = loadStripe(
 );
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import Head from "next/head";
 
 function CheckoutForm({
   client,
@@ -209,6 +210,13 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
 
   return (
     <Elements stripe={stripePromise}>
+      <Head>
+        <title>
+          {(coach as any)?.full_name
+            ? `${(coach as any)?.full_name} | Confirm subscription`
+            : "Loading..."}
+        </title>
+      </Head>
       <div className={styles["subscription-page"]}>
         <div className={styles["subscription-container"]}>
           <h1 className={styles["header"]}>Coaching Subscription</h1>

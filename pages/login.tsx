@@ -3,6 +3,7 @@ import supabase from "@/app/utils/supabaseClient";
 import { useRouter } from "next/router";
 import "@/app/globals.css";
 import Link from "next/link";
+import Head from "next/head";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -66,6 +67,9 @@ export default function Login() {
 
   return (
     <div className="form-container signup">
+      <Head>
+        <title>Coaching | Log in</title>
+      </Head>
       <form onSubmit={handleLogin} className="form">
         <h2>Log in</h2>
         <input
