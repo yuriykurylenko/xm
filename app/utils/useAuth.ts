@@ -5,13 +5,30 @@ export default function useAuth() {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState<SetStateAction<null | string>>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const clearError = () => setError(null);
 
   async function logIn(email: any, password: any) {
-    const { user, error } = await supabase.auth.signInWithPassword({
+    setLoading(true);
+    clearError();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    if (error) throw error;
+    setLoading(false);
+
+    if (error) {
+      setError(error.message);
+      return null;
+    }
+
+    const profile = await getRoleAndProfile(user.id);
+    setUser({ ...user, ...profile });
+
     return user;
   }
 
@@ -88,9 +105,10 @@ export default function useAuth() {
   return {
     user,
     role,
+    loading,
+    error,
     logIn,
     coachSignUp,
     clientSignUp,
-    loading, // expose loading state
   };
 }

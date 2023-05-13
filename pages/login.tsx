@@ -1,81 +1,30 @@
-import { SetStateAction, useEffect, useState } from "react";
-import supabase from "@/app/utils/supabaseClient";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import "@/app/globals.css";
 import Link from "next/link";
 import Head from "next/head";
+import useAuth from "@/app/utils/useAuth";
+import "@/app/globals.css";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<SetStateAction<null | string>>(null);
-  const [loading, setLoading] = useState(false);
+  const { user, role, logIn, loading, error } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    fetchUser();
-  }, []);
-
-  const fetchUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
     if (user) {
-      await fetchCoach(user);
-      await fetchClient(user);
+      if (role === "coach") {
+        router.push("/clients");
+      } else if (role === "client") {
+        router.push("/");
+      }
     }
-  };
-
-  const fetchCoach = async (user: any) => {
-    // Check if the user is a coach
-    const { data: coachData, error } = await supabase
-      .from("coaches")
-      .select("*")
-      .eq("user_id", user.id);
-
-    if (error) {
-      setError(error.message);
-    } else if (coachData[0]?.id) {
-      // Redirect to the /clients page if the user is a coach
-      router.push("/clients");
-    }
-  };
-
-  const fetchClient = async (user: any) => {
-    // Check if the user is a client
-    const { data: clientData, error } = await supabase
-      .from("clients")
-      .select("*")
-      .eq("user_id", user.id);
-
-    if (error) {
-      setError(error.message);
-    } else if (clientData[0]?.id) {
-      router.push("/");
-    }
-  };
+  }, [user, role]);
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
-    setLoading(true);
+    const email = event.target.elements.email.value;
+    const password = event.target.elements.password.value;
 
-    const {
-      error,
-      data: { user },
-    } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    } else if (user) {
-      // Check if the user is a coach
-      await fetchCoach(user);
-      await fetchClient(user);
-      setLoading(false);
-    }
+    await logIn(email, password);
   };
 
   return (
@@ -88,18 +37,16 @@ export default function Login() {
         <input
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
           required
           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
           title="Please enter a valid email address"
+          name="email"
         />
         <input
           type="password"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           required
+          name="password"
         />
         {error && (
           <div className="error-message">
