@@ -32,16 +32,65 @@ export default function useAuth() {
     return user;
   }
 
-  async function coachSignUp(email: any, password: any, full_name: any) {
-    const { user, error } = await supabase.auth.signUp({ email, password });
-    if (error) throw error;
-    if (user) {
-      const { error: insertError } = await supabase
-        .from("coaches")
-        .insert({ user_id: user.id, full_name, email });
-      if (insertError) throw insertError;
+  async function coachSignUp({
+    email,
+    password,
+    full_name,
+    monthly_subscription_amount,
+  }: {
+    email: any;
+    password: any;
+    full_name: any;
+    monthly_subscription_amount: any;
+  }) {
+    clearError();
+
+    const {
+      data: { user },
+      error: signUpError,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (signUpError) {
+      setError(signUpError.message);
+      return null;
     }
-    return user;
+
+    if (user) {
+      const { data: profile, error: insertError } = await supabase
+        .from("coaches")
+        .insert({
+          user_id: user.id,
+          full_name,
+          email,
+          monthly_subscription_amount,
+          subscription_currency: "USD",
+        });
+
+      console.log(profile);
+
+      if (insertError) {
+        setError(insertError.message);
+        return null;
+      }
+
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setError(signInError.message);
+        return null;
+      }
+
+      setUser({ ...user, ...profile });
+      setRole("coach");
+
+      return user;
+    }
   }
 
   async function clientSignUp(email: any, password: any, full_name: any) {

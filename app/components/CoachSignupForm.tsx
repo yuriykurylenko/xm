@@ -1,92 +1,44 @@
 import Link from "next/link";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import supabase from "../utils/supabaseClient";
+import useAuth from "../utils/useAuth";
 
 const CoachSignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [signedUp, setSignedUp] = useState(false);
   const [monthlyAmount, setMonthlyAmount] = useState("");
-  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const { user, role, loading, error, coachSignUp } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    fetchUser();
-  }, []);
-
-  async function fetchUser() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
     if (user) {
-      const { data } = await supabase
-        .from("coaches")
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (data[0]?.id) {
+      if (role === "coach") {
         router.push("/clients");
+      } else if (role === "client") {
+        router.push("/");
       }
     }
-  }
+  }, [user, role]);
 
-  async function createCoach(
-    userId: any,
-    email: any,
-    fullName: any,
-    monthlyAmount: any
-  ) {
-    const { error: insertError } = await supabase.from("coaches").insert([
-      {
-        user_id: userId,
-        email,
-        full_name: fullName,
-        monthly_subscription_amount: monthlyAmount * 100,
-        subscription_currency: "USD",
-      },
-    ]);
-
-    if (insertError) {
-      setError(insertError.message);
-    } else {
-      console.log('User added to "coaches" table successfully');
-    }
-  }
-
-  async function handleSubmit(e: any) {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    setSubmitting(true);
     e.preventDefault();
-    setLoading(true);
 
-    // Sign up the user
-    const {
-      data: { user },
-      error: signUpError,
-    } = await supabase.auth.signUp({
+    await coachSignUp({
       email,
       password,
+      full_name: fullName,
+      monthly_subscription_amount: Number(monthlyAmount) * 100,
     });
 
-    if (signUpError) {
-      setError(signUpError.message);
-      setLoading(false);
-    }
-
-    if (user) {
-      await createCoach(user?.id, email, fullName, monthlyAmount);
-
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    if (user && role === "coach") {
       router.push("/clients");
+      setSubmitting(false);
     }
-
-    setLoading(false);
-    setSignedUp(true);
-  }
+  };
 
   return (
     <div className="form-container signup">
@@ -135,8 +87,8 @@ const CoachSignupForm = () => {
             <>{error}</>
           </div>
         )}
-        <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? "Signing up..." : "Sign up"}
+        <button type="submit" className="submit-btn" disabled={submitting}>
+          {submitting ? "Signing up..." : "Sign up"}
         </button>
         <p className="log-in">
           Already have an account? <Link href="/login">Log in</Link>
