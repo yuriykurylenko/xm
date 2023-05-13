@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useAuth from "../utils/useAuth";
+import Loading from "./Loading";
 
 const CoachSignupForm = () => {
   const [email, setEmail] = useState("");
@@ -40,7 +41,9 @@ const CoachSignupForm = () => {
     }
   };
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <div className="form-container signup">
       <form onSubmit={handleSubmit} className="form">
         <h2>Sign up as a Coach</h2>

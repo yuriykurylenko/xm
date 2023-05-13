@@ -4,6 +4,7 @@ import Link from "next/link";
 import Head from "next/head";
 import useAuth from "@/app/utils/useAuth";
 import "@/app/globals.css";
+import Loading from "@/app/components/Loading";
 
 export default function Login() {
   const { user, role, logIn, loading, error } = useAuth();
@@ -27,7 +28,9 @@ export default function Login() {
     await logIn(email, password);
   };
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <div className="form-container signup">
       <Head>
         <title>Coaching | Log in</title>
