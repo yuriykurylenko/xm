@@ -34,7 +34,7 @@ export default function Login() {
     setSubmitting(false);
   };
 
-  return loading ? (
+  return loading || role ? (
     <Loading />
   ) : (
     <div className="form-container signup">
