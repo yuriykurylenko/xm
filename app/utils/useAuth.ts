@@ -89,15 +89,55 @@ export default function useAuth() {
     }
   }
 
-  async function clientSignUp(email: any, password: any, full_name: any) {
-    const { user, error } = await supabase.auth.signUp({ email, password });
-    if (error) throw error;
-    if (user) {
-      const { error: insertError } = await supabase
-        .from("clients")
-        .insert({ user_id: user.id, full_name, email });
-      if (insertError) throw insertError;
+  async function clientSignUp({ 
+    email, 
+    password, 
+    clientId 
+  }: { 
+    email: any, 
+    password: any, 
+    clientId: any 
+  }) {
+    const {
+      data: { user },
+      error: signupError,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (signupError) {
+      setError(signupError.message);
+      return null;
     }
+
+    // Insert the client entry with a link to the coach
+    const { data: profile, error: updateError } = await supabase
+      .from("clients")
+      .update({
+        user_id: user.id,
+        status: "client",
+      })
+      .eq("id", clientId);
+
+    if (updateError) {
+      setError(updateError.message);
+      return null;
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      setError(signInError.message);
+      return null;
+    }
+
+    setRole("client");
+    setUser({ ...user, ...profile });
+
     return user;
   }
 

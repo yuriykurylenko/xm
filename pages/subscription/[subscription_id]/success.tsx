@@ -3,6 +3,7 @@ import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/success.module.css";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import useAuth from "@/app/utils/useAuth";
 
 export default function Success({
   coach,
@@ -11,76 +12,41 @@ export default function Success({
   coach: any;
   client: any;
 }) {
+  const { role, loading, error, clientSignUp } = useAuth();
+
   const router = useRouter();
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    if (!loading) {
+      fetchUser();
+    }
+  }, [loading, role]);
 
-  async function fetchUser() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+  function fetchUser() {
+    if (role === "client") {
+      router.push("/");
+      return;
+    }
 
-    if (user) {
-      const { data: clients } = await supabase
-        .from("clients")
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (clients?.[0]?.id) {
-        router.push("/");
-      } else if (client?.user_id) {
-        router.push("/login");
-      }
-    } else if (client?.user_id) {
-      router.push("/login");
+    if (role === "coach") {
+      router.push("/clients");
+      return;
     }
   }
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
 
     try {
       // Sign up the client as a user
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.signUp({
-        email: client.email,
-        password,
-      });
-
-      if (error) {
-        throw error;
-      }
-
-      // Insert the client entry with a link to the coach
-      const { data, error: updateError } = await supabase
-        .from("clients")
-        .update({
-          user_id: user.id,
-          status: "client",
-        })
-        .eq("id", client.id);
-
-      if (updateError) {
-        throw updateError;
-      }
-
-      await supabase.auth.signInWithPassword({
-        email: client.email,
-        password,
-      });
-
-      setLoading(false);
-      router.push("/");
+      await clientSignUp({ email: client.email, password, clientId: client.id })
+      setSubmitting(false);
     } catch (error) {
       console.error("Error during sign-up:", error);
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -116,12 +82,17 @@ export default function Success({
               pattern=".{8,}"
               title="Password must be at least 8 characters long"
             />
+            {error && (
+              <div className={styles["error-message"]}>
+                <>{error}</>
+              </div>
+            )}
             <button
               type="submit"
               className={styles["submit-btn"]}
-              disabled={loading}
+              disabled={submitting}
             >
-              {loading ? "Creating account..." : "Create account"}
+              {submitting ? "Creating account..." : "Create account"}
             </button>
           </form>
         </div>

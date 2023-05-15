@@ -87,3 +87,9 @@
 .form input[type="number"]:focus {
   border-color: #7c9efc;
 }
+
+.error-message {
+  color: red;
+  font-size: 13px;
+  text-align: center;
+}
