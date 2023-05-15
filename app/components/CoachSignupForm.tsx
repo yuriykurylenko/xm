@@ -11,18 +11,16 @@ const CoachSignupForm = () => {
   const [monthlyAmount, setMonthlyAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const { user, role, loading, error, coachSignUp } = useAuth();
+  const { role, loading, error, coachSignUp } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (user) {
-      if (role === "coach") {
-        router.push("/clients");
-      } else if (role === "client") {
-        router.push("/");
-      }
+    if (role === "coach") {
+      router.push("/clients");
+    } else if (role === "client") {
+      router.push("/");
     }
-  }, [user, role]);
+  }, [role]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     setSubmitting(true);
@@ -35,10 +33,7 @@ const CoachSignupForm = () => {
       monthly_subscription_amount: Number(monthlyAmount) * 100,
     });
 
-    if (user && role === "coach") {
-      router.push("/clients");
-      setSubmitting(false);
-    }
+    setSubmitting(false);
   };
 
   return loading || role ? (
