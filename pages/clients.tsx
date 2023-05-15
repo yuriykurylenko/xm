@@ -7,10 +7,13 @@ import "@/app/globals.css";
 import axios from "axios";
 import Header from "@/app/components/Header";
 import Head from "next/head";
+import useAuth from "@/app/utils/useAuth";
 
 Modal.setAppElement("#__next");
 
 const ClientsList = () => {
+  const { user, role, loading } = useAuth();
+
   const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
   const [coach, setCoach] = useState(null);
@@ -21,8 +24,29 @@ const ClientsList = () => {
     useState<SetStateAction<null | number>>(null);
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    if (!loading) {
+      fetchUser();
+    }
+  }, [loading]);
+
+  async function fetchUser() {
+    if (!user) {
+      router.push("/signup");
+      return;
+    }
+
+    if (role === "client") {
+      router.push("/");
+      return;
+    }
+
+    if (role === "coach") {
+      setCoach(user);
+
+      await fetchClients((user as any).id);
+      setMonthlyAmount((user as any).monthly_subscription_amount / 100);
+    }
+  }
 
   function openModal(client: any) {
     setIsModalOpen(true);
@@ -65,29 +89,6 @@ const ClientsList = () => {
     } catch (error) {
       console.error("Error creating subscription:", error);
       setIsSubmitting(false);
-    }
-  }
-
-  async function fetchUser() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (user) {
-      const { data } = await supabase
-        .from("coaches")
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (data[0]?.id) {
-        setCoach(data[0]);
-        await fetchClients(data[0]?.id);
-        setMonthlyAmount((data[0] as any)?.monthly_subscription_amount / 100);
-      } else {
-        router.push("/login");
-      }
-    } else {
-      router.push("/login");
     }
   }
 
