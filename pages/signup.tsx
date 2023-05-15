@@ -1,3 +1,4 @@
+import withAuth from "@/app/components/withAuth";
 import CoachSignupForm from "../app/components/CoachSignupForm";
 import "@/app/globals.css";
 import Head from "next/head";
@@ -13,4 +14,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default withAuth(Signup, ["anonymous"]);

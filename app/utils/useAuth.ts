@@ -3,7 +3,7 @@ import supabase from "./supabaseClient";
 
 export default function useAuth() {
   const [user, setUser] = useState(null);
-  const [role, setRole] = useState<SetStateAction<null | string>>(null);
+  const [role, setRole] = useState<SetStateAction<string>>("anonymous");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 

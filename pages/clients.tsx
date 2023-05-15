@@ -1,22 +1,17 @@
 import { SetStateAction, useEffect, useState } from "react";
 import styles from "@/app/styles/clientsList.module.css";
 import supabase from "@/app/utils/supabaseClient";
-import router from "next/router";
 import Modal from "react-modal";
 import "@/app/globals.css";
 import axios from "axios";
-import Header from "@/app/components/Header";
 import Head from "next/head";
-import useAuth from "@/app/utils/useAuth";
+import withAuth from "@/app/components/withAuth";
 
 Modal.setAppElement("#__next");
 
-const ClientsList = () => {
-  const { user, role, loading } = useAuth();
-
+const ClientsList = ({ user }: { user: any }) => {
   const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
-  const [coach, setCoach] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null);
@@ -24,29 +19,9 @@ const ClientsList = () => {
     useState<SetStateAction<null | number>>(null);
 
   useEffect(() => {
-    if (!loading) {
-      fetchUser();
-    }
-  }, [loading]);
-
-  async function fetchUser() {
-    if (!user) {
-      router.push("/signup");
-      return;
-    }
-
-    if (role === "client") {
-      router.push("/");
-      return;
-    }
-
-    if (role === "coach") {
-      setCoach(user);
-
-      await fetchClients((user as any).id);
-      setMonthlyAmount((user as any).monthly_subscription_amount / 100);
-    }
-  }
+    fetchClients((user as any).id);
+    setMonthlyAmount((user as any).monthly_subscription_amount / 100);
+  }, [user]);
 
   function openModal(client: any) {
     setIsModalOpen(true);
@@ -116,7 +91,7 @@ const ClientsList = () => {
     if (subscription) {
       try {
         await axios.post("/api/send_payment_link", {
-          coach,
+          coach: user,
           client: selectedClient,
           subscription,
           domain: `${window.location.protocol}//${window.location.host}`,
@@ -129,7 +104,7 @@ const ClientsList = () => {
 
     closeModal();
 
-    const coachMonthlySubscriptionAmount = (coach as any)
+    const coachMonthlySubscriptionAmount = (user as any)
       ?.monthly_subscription_amount;
     if (coachMonthlySubscriptionAmount) {
       setMonthlyAmount(coachMonthlySubscriptionAmount / 100);
@@ -137,7 +112,7 @@ const ClientsList = () => {
 
     setIsSubmitting(false);
     setFilterStatus("offerSent");
-    await fetchClients((coach as any)?.id);
+    await fetchClients((user as any)?.id);
   }
 
   const filteredClients = clients.filter((client) => {
@@ -152,7 +127,6 @@ const ClientsList = () => {
       <Head>
         <title>Coaching | Clients</title>
       </Head>
-      <Header />
       <div className={styles["clients-container-header"]}>
         <h1>Clients</h1>
         <div>
@@ -246,18 +220,18 @@ const ClientsList = () => {
                 )}
               </div>
             ))
-          : coach && (
+          : user && (
               <div className={styles["no-clients-container"]}>
                 Please share this link to get your clients to apply for
                 coaching:
                 <br />
                 <a
                   href={`${window.location.protocol}//${window.location.host}/${
-                    (coach as any).slug
+                    (user as any).slug
                   }/apply`}
                 >
                   {`${window.location.protocol}//${window.location.host}/${
-                    (coach as any).slug
+                    (user as any).slug
                   }/apply`}
                 </a>
               </div>
@@ -335,4 +309,4 @@ const ClientsList = () => {
   );
 };
 
-export default ClientsList;
+export default withAuth(ClientsList, ["coach"]);

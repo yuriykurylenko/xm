@@ -4,37 +4,29 @@ import styles from "@/app/styles/success.module.css";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import useAuth from "@/app/utils/useAuth";
+import withAuth from "@/app/components/withAuth";
 
-export default function Success({
+const Success = ({
   coach,
   client,
 }: {
   coach: any;
   client: any;
-}) {
-  const { role, loading, error, clientSignUp } = useAuth();
-
+}) => {
+  const { user, error, clientSignUp } = useAuth();
   const router = useRouter();
+
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!loading) {
-      fetchUser();
+    if (user) {
+      router.reload();
     }
-  }, [loading, role]);
-
-  function fetchUser() {
-    if (role === "client") {
-      router.push("/");
-      return;
+    if (error) {
+      setSubmitting(false);
     }
-
-    if (role === "coach") {
-      router.push("/clients");
-      return;
-    }
-  }
+  }, [user, error])
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
@@ -100,6 +92,8 @@ export default function Success({
     </div>
   );
 }
+
+export default withAuth(Success, ["anonymous"])
 
 export async function getServerSideProps(context: any) {
   const { subscription_id } = context.params;
