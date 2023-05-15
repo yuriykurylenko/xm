@@ -67,8 +67,6 @@ export default function useAuth() {
           subscription_currency: "USD",
         });
 
-      console.log(profile);
-
       if (insertError) {
         setError(insertError.message);
         return null;
