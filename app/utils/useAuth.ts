@@ -10,7 +10,6 @@ export default function useAuth() {
   const clearError = () => setError(null);
 
   async function logIn(email: any, password: any) {
-    setLoading(true);
     clearError();
     const {
       data: { user },
@@ -19,7 +18,6 @@ export default function useAuth() {
       email,
       password,
     });
-    setLoading(false);
 
     if (error) {
       setError(error.message);

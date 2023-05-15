@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
@@ -9,6 +9,9 @@ import Loading from "@/app/components/Loading";
 export default function Login() {
   const { user, role, logIn, loading, error } = useAuth();
   const router = useRouter();
+
+  const [submitting, setSubmitting] = useState(false);
+
 
   useEffect(() => {
     if (user) {
@@ -22,10 +25,13 @@ export default function Login() {
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
+    setSubmitting(true);
+
     const email = event.target.elements.email.value;
     const password = event.target.elements.password.value;
 
     await logIn(email, password);
+    setSubmitting(false);
   };
 
   return loading ? (
@@ -56,8 +62,8 @@ export default function Login() {
             <>{error}</>
           </div>
         )}
-        <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? "Logging in..." : "Log in"}
+        <button type="submit" className="submit-btn" disabled={submitting}>
+          {submitting ? "Logging in..." : "Log in"}
         </button>
         <p className="log-in">
           Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
