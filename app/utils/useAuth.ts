@@ -125,6 +125,16 @@ export default function useAuth() {
     throw new Error("Role not found.");
   }
 
+  const logOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error signing out:", error.message);
+      return error.message;
+    }
+    setUser(null);
+    setRole("");
+  };
+
   useEffect(() => {
     const fetchUserAndRole = async () => {
       setLoading(true); // set loading to true at the start of the operation
@@ -153,6 +163,7 @@ export default function useAuth() {
     loading,
     error,
     logIn,
+    logOut,
     coachSignUp,
     clientSignUp,
   };

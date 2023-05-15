@@ -1,18 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import supabase from "@/app/utils/supabaseClient";
 import { useRouter } from "next/router";
 import "@/app/globals.css";
+import useAuth from "@/app/utils/useAuth"; // Import the useAuth hook
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const { user, logOut } = useAuth(); // Use the user and logOut function from useAuth
 
   const router = useRouter();
   const node = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside);
@@ -29,20 +25,13 @@ const Header = () => {
     }
   };
 
-  const fetchUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    setUser(user);
-  };
-
   const toggle = (e: any) => {
     e.stopPropagation();
     setIsOpen(!isOpen);
   };
 
   const logout = async () => {
-    const { error } = await supabase.auth.signOut();
+    const error = await logOut(); // Use logOut function from useAuth
     if (error) {
       console.log("Error logging out:", error.message);
     } else {
