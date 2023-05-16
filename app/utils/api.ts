@@ -1,12 +1,12 @@
 import supabase from "@/app/utils/supabaseClient";
 
-export const fetchCoachById = async (id: any) => await supabase
+export const fetchCoachById = (id: any) => supabase
     .from("coaches")
     .select("*")
     .eq("id", id)
     .single();
 
-export const fetchCoachBySlug = async (slug: any) => await supabase
+export const fetchCoachBySlug = (slug: any) => supabase
     .from("coaches")
     .select("*")
     .eq("slug", slug)
