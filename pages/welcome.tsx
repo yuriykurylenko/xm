@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Header from "@/app/components/Header";
 import "@/app/globals.css";
 import supabase from "@/app/utils/supabaseClient";
 import { useEffect, useState } from "react";
