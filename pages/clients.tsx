@@ -6,6 +6,7 @@ import "@/app/globals.css";
 import axios from "axios";
 import Head from "next/head";
 import withAuth from "@/app/components/withAuth";
+import { fetchClientsByCoachId } from "@/app/utils/api";
 
 Modal.setAppElement("#__next");
 
@@ -19,9 +20,12 @@ const ClientsList = ({ user }: { user: any }) => {
     useState<SetStateAction<null | number>>(null);
 
   useEffect(() => {
-    fetchClients((user as any).id);
+    (async () => {
+      const { data } = await fetchClientsByCoachId((user as any).id);
+      setClients(data);
+    })();
     setMonthlyAmount((user as any).monthly_subscription_amount / 100);
-  }, [user]);
+  }, [user, filterStatus]);
 
   function openModal(client: any) {
     setIsModalOpen(true);
@@ -67,19 +71,6 @@ const ClientsList = ({ user }: { user: any }) => {
     }
   }
 
-  async function fetchClients(coachId: any) {
-    const { data, error } = await supabase
-      .from("clients")
-      .select("*")
-      .eq("coach_id", coachId);
-
-    if (error) {
-      console.error("Error fetching clients:", error);
-    } else {
-      setClients(data);
-    }
-  }
-
   async function onSendOffer(event: any) {
     setIsSubmitting(true);
     event.preventDefault();
@@ -112,7 +103,6 @@ const ClientsList = ({ user }: { user: any }) => {
 
     setIsSubmitting(false);
     setFilterStatus("offerSent");
-    await fetchClients((user as any)?.id);
   }
 
   const filteredClients = clients.filter((client) => {

@@ -11,3 +11,8 @@ export const fetchCoachBySlug = (slug: any) => supabase
     .select("*")
     .eq("slug", slug)
     .single();
+
+export const fetchClientsByCoachId = (coachId: any) => supabase
+    .from("clients")
+    .select("*")
+    .eq("coach_id", coachId);
