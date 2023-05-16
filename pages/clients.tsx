@@ -1,12 +1,11 @@
 import { SetStateAction, useEffect, useState } from "react";
 import styles from "@/app/styles/clientsList.module.css";
-import supabase from "@/app/utils/supabaseClient";
 import Modal from "react-modal";
 import "@/app/globals.css";
 import axios from "axios";
 import Head from "next/head";
 import withAuth from "@/app/components/withAuth";
-import { fetchClientsByCoachId } from "@/app/utils/api";
+import { fetchClientsByCoachId, sendClientOffer } from "@/app/utils/api";
 
 Modal.setAppElement("#__next");
 
@@ -38,42 +37,19 @@ const ClientsList = ({ user }: { user: any }) => {
   }
 
   async function createSubscription(clientId: any, monthlyAmount: any) {
-    try {
-      const { data, error } = await supabase
-        .from("subscriptions")
-        .insert([
-          {
-            client_id: clientId,
-            monthly_amount: monthlyAmount,
-          },
-        ])
-        .select();
-
-      if (error) {
-        setIsSubmitting(false);
-        console.error("Error creating subscription:", error);
-      } else {
-        const { error: updateError } = await supabase
-          .from("clients")
-          .update({ status: "offerSent" })
-          .eq("id", clientId);
-
-        if (updateError) {
-          console.error("Error updating client status:", updateError);
-          setIsSubmitting(false);
-        }
-      }
-
-      return data?.[0];
-    } catch (error) {
-      console.error("Error creating subscription:", error);
-      setIsSubmitting(false);
-    }
+    const { data, error } = await sendClientOffer(clientId, { 
+      monthlyAmount, 
+      currency: "USD" 
+    });
+    if (error) { setIsSubmitting(false) }
+  
+    return data?.[0]
   }
 
   async function onSendOffer(event: any) {
     setIsSubmitting(true);
     event.preventDefault();
+
     const subscription = await createSubscription(
       (selectedClient as any)?.id,
       Number(monthlyAmount) * 100
