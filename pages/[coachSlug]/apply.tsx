@@ -16,8 +16,8 @@ export default function ClientSignUpForm() {
   useEffect(() => {
     (async () => {
       if (coachSlug) {
-        const coachData = await fetchCoachBySlug(coachSlug);
-        setCoach(coachData);
+        const { data } = await fetchCoachBySlug(coachSlug);
+        setCoach(data);
       }
     })()
   }, [coachSlug]);

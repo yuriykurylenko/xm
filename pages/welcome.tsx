@@ -9,8 +9,8 @@ const Welcome = ({ user }: { user: any }) => {
 
   useEffect(() => {
     (async () => {
-      const coachData = await fetchCoachById(user.coach_id);
-      setCoach(coachData);
+      const { data } = await fetchCoachById(user.coach_id);
+      setCoach(data);
     })
   }, []);
 
