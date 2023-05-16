@@ -1,25 +1,18 @@
 import Head from "next/head";
 import "@/app/globals.css";
-import supabase from "@/app/utils/supabaseClient";
 import { useEffect, useState } from "react";
 import withAuth from "@/app/components/withAuth";
+import { fetchCoachById } from "@/app/utils/api";
 
 const Welcome = ({ user }: { user: any }) => {
-  const [coach, setCoach] = useState(null);
+  const [coach, setCoach] = useState(null);3
 
   useEffect(() => {
-    fetchCoach();
+    (async () => {
+      const coachData = await fetchCoachById(user.coach_id);
+      setCoach(coachData);
+    })
   }, []);
-
-  async function fetchCoach() {
-    const { data: coachData } = await supabase
-      .from("coaches")
-      .select("*")
-      .eq("id", (user as any).coach_id)
-      .single();
-
-    setCoach(coachData);
-  }
 
   return (
     <div>

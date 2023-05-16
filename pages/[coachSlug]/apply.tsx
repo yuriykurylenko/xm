@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import "@/app/globals.css";
 import supabase from "@/app/utils/supabaseClient";
 import Head from "next/head";
+import { fetchCoachBySlug } from "@/app/utils/api";
 
 export default function ClientSignUpForm() {
   const router = useRouter();
@@ -12,28 +13,13 @@ export default function ClientSignUpForm() {
   const [loading, setLoading] = useState(false);
   const [coach, setCoach] = useState(null);
 
-  async function fetchCoach() {
-    try {
-      const { data, error } = await supabase
-        .from("coaches")
-        .select("*")
-        .eq("slug", coachSlug)
-        .single();
-
-      if (error) {
-        throw error;
-      }
-
-      setCoach(data);
-    } catch (error) {
-      console.error("Error fetching coach:", error);
-    }
-  }
-
   useEffect(() => {
-    if (coachSlug) {
-      fetchCoach();
-    }
+    (async () => {
+      if (coachSlug) {
+        const coachData = await fetchCoachBySlug(coachSlug);
+        setCoach(coachData);
+      }
+    })()
   }, [coachSlug]);
 
   const handleSignUp = async (event: any) => {
