@@ -2,7 +2,6 @@ import { SetStateAction, useEffect, useState } from "react";
 import styles from "@/app/styles/clientsList.module.css";
 import Modal from "react-modal";
 import "@/app/globals.css";
-import axios from "axios";
 import Head from "next/head";
 import withAuth from "@/app/components/withAuth";
 import { fetchClientsByCoachId, sendClientOffer } from "@/app/utils/api";
@@ -50,24 +49,10 @@ const ClientsList = ({ user }: { user: any }) => {
     setIsSubmitting(true);
     event.preventDefault();
 
-    const subscription = await createSubscription(
+    await createSubscription(
       (selectedClient as any)?.id,
       Number(monthlyAmount) * 100
     );
-
-    if (subscription) {
-      try {
-        await axios.post("/api/send_payment_link", {
-          coach: user,
-          client: selectedClient,
-          subscription,
-          domain: `${window.location.protocol}//${window.location.host}`,
-        });
-      } catch (error) {
-        setIsSubmitting(false);
-        console.error("Error sending offer: ", error);
-      }
-    }
 
     closeModal();
 

@@ -1,4 +1,5 @@
 import supabase from "@/app/utils/supabaseClient";
+import axios from "axios";
 import { UUID } from "crypto";
 
 export const fetchCoachById = (id: string) => supabase
@@ -12,6 +13,18 @@ export const fetchCoachBySlug = (slug: string) => supabase
     .select("*")
     .eq("slug", slug)
     .single();
+
+export const fetchClientById = (clientId: UUID) => supabase
+    .from("clients")
+    .select("*")
+    .eq("id", clientId)
+    .single();
+
+export const fetchCoachByClientId = async (clientId: UUID) => {
+    const { data, error } = await fetchClientById(clientId);
+    if (error) { return { data, error }; }
+    return fetchCoachById(data.coach_id);
+}
 
 export const fetchClientsByCoachId = (coachId: UUID) => supabase
     .from("clients")
@@ -43,6 +56,17 @@ const updateClientById = (clientId: UUID, data: any) => supabase
     .update(data)
     .eq("id", clientId);
 
+const sendClientPaymentLink = ({
+    subscription,
+    domain
+}: {
+    subscription: any,
+    domain: string
+}) => axios.post("/api/send_payment_link", {
+    subscription,
+    domain,
+});
+
 export const sendClientOffer = async (
     clientId: UUID,
     { 
@@ -62,5 +86,11 @@ export const sendClientOffer = async (
     )
 
     if (error) { return { data, error }; }
+    if (data) {
+        sendClientPaymentLink({
+            subscription: data[0],
+            domain: `${window.location.protocol}//${window.location.host}`
+        });
+    }
     return updateClientById(clientId, { status: "offerSent" })
 }
