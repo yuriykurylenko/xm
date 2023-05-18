@@ -1,0 +1,135 @@
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { useRouter } from "next/router";
+import { SetStateAction, useState } from "react";
+import {
+  activateClientSubscription,
+  confirmStripeCardSetup,
+  createStripeSetupIntent,
+  createSubscription,
+  updateClientById,
+} from "../utils/api";
+
+import styles from "@/app/styles/subscriptionPage.module.css";
+
+const CheckoutForm = ({
+  client,
+  subscription,
+}: {
+  client: any;
+  subscription: any;
+}) => {
+  const router = useRouter();
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const [error, setError] =
+    useState<SetStateAction<null | undefined | string>>(null);
+  const [loading, setLoading] = useState(false);
+
+  const updateSubscriptionInDatabase = async (stripeSubscriptionId: any) => {
+    // Update subscription in Supabase
+    const { error } = await activateClientSubscription(
+      subscription.id,
+      stripeSubscriptionId
+    );
+
+    if (error) {
+      return;
+    }
+
+    // Update client status in Supabase
+    await updateClientById(client.id, { status: "client" });
+  };
+
+  async function handleSubmit(event: any) {
+    event.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    // Get the client secret from the server
+    const {
+      data: { client_secret, customer_id },
+    } = await createStripeSetupIntent({
+      email: (client as any).email,
+    });
+
+    try {
+      const { data: setupIntent, error } = await confirmStripeCardSetup(
+        stripe,
+        elements?.getElement(CardElement),
+        client_secret,
+        {
+          name: client.full_name,
+        }
+      );
+
+      if (error) {
+        // Display error.message in your UI.
+        setError(error.message);
+        setLoading(false);
+        return;
+      }
+
+      if (setupIntent && setupIntent.status === "succeeded") {
+        const { data: subscriptionData, error } = await createSubscription(
+          stripe,
+          customer_id,
+          setupIntent.payment_method,
+          { monthly_amount: subscription.monthly_amount }
+        );
+
+        if (subscriptionData?.success) {
+          updateSubscriptionInDatabase(subscriptionData.stripeSubscriptionId);
+          router.push(`/subscription/${subscription.id}/success`);
+        }
+
+        if (error) {
+          setError(error.message);
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      // Handle any other errors.
+      setError("Error creating subscription");
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className={styles["card-element-container"]}>
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: "16px",
+                color: "#424770",
+                "::placeholder": {
+                  color: "#707070",
+                },
+                backgroundColor: "#F0F8FF",
+              },
+              invalid: {
+                color: "#9e2146",
+              },
+            },
+          }}
+        />
+      </div>
+      <button
+        type="submit"
+        className="submit-btn pay-btn"
+        disabled={!stripe || loading}
+      >
+        {loading ? "Processing..." : "Pay"}
+      </button>
+      {error && (
+        <div className={styles["error-message"]}>
+          <>{error}</>
+        </div>
+      )}
+    </form>
+  );
+};
+
+export default CheckoutForm;
