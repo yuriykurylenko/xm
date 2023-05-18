@@ -196,7 +196,6 @@ export const activateClient = async (
     subscriptionId,
     stripeSubscriptionId
   );
-  console.log(subscription);
 
   if (error) {
     return { data: subscription, error };
