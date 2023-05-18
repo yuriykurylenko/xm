@@ -6,7 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { JSX, SetStateAction, useState } from "react";
-import { handleStripeCardAndSubscriptionSetup } from "../utils/api";
+import { handleStripeCardAndSubscriptionSetup } from "../utils/api/stripe";
 
 import styles from "@/app/styles/subscriptionPage.module.css";
 
