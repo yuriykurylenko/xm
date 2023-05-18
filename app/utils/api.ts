@@ -141,7 +141,7 @@ export const createStripeSubscription = ({
     priceId: "price_1N6JeAA4j0lnvK9GaP833Peg",
   });
 
-export const createSubscription = async (
+export const createAndConfirmStripeSubscription = async (
   stripe: any,
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,

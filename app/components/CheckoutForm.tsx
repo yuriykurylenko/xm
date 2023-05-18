@@ -8,8 +8,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { JSX, SetStateAction, useState } from "react";
 import {
   confirmStripeCardSetup,
+  createAndConfirmStripeSubscription,
   createStripeSetupIntent,
-  createSubscription,
 } from "../utils/api";
 
 import styles from "@/app/styles/subscriptionPage.module.css";
@@ -76,12 +76,13 @@ const CheckoutFormContent = ({
       }
 
       if (setupIntent && setupIntent.status === "succeeded") {
-        const { data: subscriptionData, error } = await createSubscription(
-          stripe,
-          customer_id,
-          setupIntent.payment_method,
-          { monthly_amount: subscription.monthly_amount }
-        );
+        const { data: subscriptionData, error } =
+          await createAndConfirmStripeSubscription(
+            stripe,
+            customer_id,
+            setupIntent.payment_method,
+            { monthly_amount: subscription.monthly_amount }
+          );
 
         if (subscriptionData?.success) {
           onSubscriptionSuccess(subscriptionData.stripeSubscriptionId);
