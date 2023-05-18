@@ -3,14 +3,8 @@ import { useRouter } from "next/router";
 import styles from "@/app/styles/subscriptionPage.module.css";
 import "@/app/globals.css";
 
-import axios from "axios";
-
 import { Elements } from "@stripe/react-stripe-js";
-import {
-  loadStripe,
-  PaymentMethod,
-  StripeCardElement,
-} from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(
   "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
@@ -20,7 +14,10 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Head from "next/head";
 import {
   activateClientSubscription,
+  confirmStripeCardSetup,
+  createStripeSetupIntent,
   createStripeSubscription,
+  createSubscription,
   fetchClientById,
   fetchCoachById,
   fetchSubscriptionById,
@@ -57,51 +54,6 @@ function CheckoutForm({
     await updateClientById(client.id, { status: "client" });
   };
 
-  async function createSubscription(
-    customerId: string,
-    paymentMethodId: string | PaymentMethod | null
-  ) {
-    try {
-      const { data: stripeSubscription } = await createStripeSubscription({
-        customerId,
-        paymentMethodId,
-        quantity: subscription.monthly_amount / 100,
-      });
-
-      const paymentIntent = stripeSubscription.latest_invoice.payment_intent;
-
-      if (paymentIntent.status === "succeeded") {
-        return {
-          data: { success: true, stripeSubscriptionId: stripeSubscription.id },
-          error: null,
-        };
-      } else if (paymentIntent.status === "requires_action") {
-        const paymentIntentResult = await stripe?.confirmCardPayment(
-          paymentIntent.client_secret
-        );
-        if (paymentIntentResult?.error) {
-          return { data: null, error: paymentIntentResult.error };
-        } else if (
-          paymentIntentResult?.paymentIntent &&
-          paymentIntentResult.paymentIntent.status === "succeeded"
-        ) {
-          return {
-            data: {
-              success: true,
-              stripeSubscriptionId: stripeSubscription.id,
-            },
-            error: null,
-          };
-        }
-      } else if (paymentIntent.last_payment_error) {
-        return { data: null, error: paymentIntent.last_payment_error };
-      }
-    } catch (error) {
-      return { data: null, error: { message: "Error creating subscription" } };
-    }
-    return { data: null, error: null };
-  }
-
   async function handleSubmit(event: any) {
     event.preventDefault();
     setError(null);
@@ -110,31 +62,33 @@ function CheckoutForm({
     // Get the client secret from the server
     const {
       data: { client_secret, customer_id },
-    } = await axios.post("/api/setup_intents", {
+    } = await createStripeSetupIntent({
       email: (client as any).email,
     });
 
     try {
-      const result = await stripe?.confirmCardSetup(client_secret, {
-        payment_method: {
-          card: elements?.getElement(CardElement) as StripeCardElement,
-          billing_details: {
-            name: client.full_name,
-          },
-        },
-      });
+      const { data: setupIntent, error } = await confirmStripeCardSetup(
+        stripe,
+        elements?.getElement(CardElement),
+        client_secret,
+        {
+          name: client.full_name,
+        }
+      );
 
-      if (result?.error) {
+      if (error) {
         // Display error.message in your UI.
-        setError(result.error.message);
+        setError(error.message);
         setLoading(false);
         return;
       }
 
-      if (result?.setupIntent && result.setupIntent.status === "succeeded") {
+      if (setupIntent && setupIntent.status === "succeeded") {
         const { data: subscriptionData, error } = await createSubscription(
+          stripe,
           customer_id,
-          result.setupIntent.payment_method
+          setupIntent.payment_method,
+          { monthly_amount: subscription.monthly_amount }
         );
 
         if (subscriptionData?.success) {

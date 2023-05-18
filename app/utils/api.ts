@@ -101,6 +101,28 @@ export const activateClientSubscription = (
     })
     .eq("id", subscriptionId);
 
+export const createStripeSetupIntent = ({ email }: { email: string }) =>
+  axios.post("/api/setup_intents", { email });
+
+export const confirmStripeCardSetup = async (
+  stripe: any,
+  StripeCardElementInstance: any,
+  stripeClientSecret: string,
+  billingDetails: { name: string }
+) => {
+  const { setupIntent, error } = await stripe?.confirmCardSetup(
+    stripeClientSecret,
+    {
+      payment_method: {
+        card: StripeCardElementInstance,
+        billing_details: billingDetails,
+      },
+    }
+  );
+
+  return { data: setupIntent, error };
+};
+
 export const createStripeSubscription = ({
   customerId,
   paymentMethodId,
@@ -116,3 +138,50 @@ export const createStripeSubscription = ({
     quantity,
     priceId: "price_1N6JeAA4j0lnvK9GaP833Peg",
   });
+
+export const createSubscription = async (
+  stripe: any,
+  customerId: string,
+  paymentMethodId: string | PaymentMethod | null,
+  { monthly_amount }: { monthly_amount: number }
+) => {
+  try {
+    const { data: stripeSubscription } = await createStripeSubscription({
+      customerId,
+      paymentMethodId,
+      quantity: monthly_amount / 100,
+    });
+
+    const paymentIntent = stripeSubscription.latest_invoice.payment_intent;
+
+    if (paymentIntent.status === "succeeded") {
+      return {
+        data: { success: true, stripeSubscriptionId: stripeSubscription.id },
+        error: null,
+      };
+    } else if (paymentIntent.status === "requires_action") {
+      const paymentIntentResult = await stripe?.confirmCardPayment(
+        paymentIntent.client_secret
+      );
+      if (paymentIntentResult?.error) {
+        return { data: null, error: paymentIntentResult.error };
+      } else if (
+        paymentIntentResult?.paymentIntent &&
+        paymentIntentResult.paymentIntent.status === "succeeded"
+      ) {
+        return {
+          data: {
+            success: true,
+            stripeSubscriptionId: stripeSubscription.id,
+          },
+          error: null,
+        };
+      }
+    } else if (paymentIntent.last_payment_error) {
+      return { data: null, error: paymentIntent.last_payment_error };
+    }
+  } catch (error) {
+    return { data: null, error: { message: "Error creating subscription" } };
+  }
+  return { data: null, error: null };
+};
