@@ -16,12 +16,10 @@ export default async (req: any, res: any) => {
       });
 
       // Send the client secret to the client to set up the payment method
-      res
-        .status(200)
-        .send({
-          client_secret: setupIntent.client_secret,
-          customer_id: customer.id,
-        });
+      res.status(200).send({
+        client_secret: setupIntent.client_secret,
+        customer_id: customer.id,
+      });
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: (err as any).message });
     }

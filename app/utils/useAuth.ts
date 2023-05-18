@@ -89,14 +89,14 @@ export default function useAuth() {
     }
   }
 
-  async function clientSignUp({ 
-    email, 
-    password, 
-    clientId 
-  }: { 
-    email: any, 
-    password: any, 
-    clientId: any 
+  async function clientSignUp({
+    email,
+    password,
+    clientId,
+  }: {
+    email: any;
+    password: any;
+    clientId: any;
   }) {
     const {
       data: { user },

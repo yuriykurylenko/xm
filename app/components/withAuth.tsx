@@ -9,7 +9,7 @@ const DEFAULT_ROUTES = {
   anonymous: "/signup",
   coach: "/clients",
   client: "/welcome",
-}
+};
 
 export default function withAuth(Component: any, supprotedRoles: String[]) {
   const Wrapper = (props: any) => {
@@ -17,30 +17,36 @@ export default function withAuth(Component: any, supprotedRoles: String[]) {
     const router = useRouter();
 
     if (loading) {
-      return <Loading />
+      return <Loading />;
     }
 
     if (!supprotedRoles.includes(role as string) || router.pathname === "/") {
-      router.push((DEFAULT_ROUTES as any)[role as any])
-      return <Loading />
+      router.push((DEFAULT_ROUTES as any)[role as any]);
+      return <Loading />;
     }
 
     if (role === "coach" && supprotedRoles.includes("coach")) {
-      return <CoachLayout>
-        <Component {...props} user={user} />
-      </CoachLayout>
+      return (
+        <CoachLayout>
+          <Component {...props} user={user} />
+        </CoachLayout>
+      );
     }
 
     if (role === "client" && supprotedRoles.includes("client")) {
-      return <ClientLayout>
-        <Component {...props} user={user} />
-      </ClientLayout>
+      return (
+        <ClientLayout>
+          <Component {...props} user={user} />
+        </ClientLayout>
+      );
     }
 
-    return <AnonymousLayout>
-      <Component {...props} />
-    </AnonymousLayout>
-  }
+    return (
+      <AnonymousLayout>
+        <Component {...props} />
+      </AnonymousLayout>
+    );
+  };
 
   return Wrapper;
 }

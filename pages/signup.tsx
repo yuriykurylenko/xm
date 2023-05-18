@@ -23,7 +23,7 @@ const Signup = () => {
     if (error) {
       setSubmitting(false);
     }
-  }, [user, error])
+  }, [user, error]);
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     setSubmitting(true);

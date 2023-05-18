@@ -6,13 +6,7 @@ import { useRouter } from "next/router";
 import useAuth from "@/app/utils/useAuth";
 import withAuth from "@/app/components/withAuth";
 
-const Success = ({
-  coach,
-  client,
-}: {
-  coach: any;
-  client: any;
-}) => {
+const Success = ({ coach, client }: { coach: any; client: any }) => {
   const { user, error, clientSignUp } = useAuth();
   const router = useRouter();
 
@@ -26,7 +20,7 @@ const Success = ({
     if (error) {
       setSubmitting(false);
     }
-  }, [user, error])
+  }, [user, error]);
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
@@ -34,7 +28,11 @@ const Success = ({
 
     try {
       // Sign up the client as a user
-      await clientSignUp({ email: client.email, password, clientId: client.id })
+      await clientSignUp({
+        email: client.email,
+        password,
+        clientId: client.id,
+      });
       setSubmitting(false);
     } catch (error) {
       console.error("Error during sign-up:", error);
@@ -91,9 +89,9 @@ const Success = ({
       </div>
     </div>
   );
-}
+};
 
-export default withAuth(Success, ["anonymous"])
+export default withAuth(Success, ["anonymous"]);
 
 export async function getServerSideProps(context: any) {
   const { subscription_id } = context.params;

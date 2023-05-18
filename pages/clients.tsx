@@ -36,13 +36,15 @@ const ClientsList = ({ user }: { user: any }) => {
   }
 
   async function createSubscription(clientId: any, monthlyAmount: any) {
-    const { data, error } = await sendClientOffer(clientId, { 
-      monthlyAmount, 
-      currency: "USD" 
+    const { data, error } = await sendClientOffer(clientId, {
+      monthlyAmount,
+      currency: "USD",
     });
-    if (error) { setIsSubmitting(false) }
-  
-    return data?.[0]
+    if (error) {
+      setIsSubmitting(false);
+    }
+
+    return data?.[0];
   }
 
   async function onSendOffer(event: any) {

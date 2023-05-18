@@ -19,7 +19,7 @@ export default function ClientSignUpForm() {
         const { data } = await fetchCoachBySlug(coachSlug as string);
         setCoach(data);
       }
-    })()
+    })();
   }, [coachSlug]);
 
   const handleSignUp = async (event: any) => {

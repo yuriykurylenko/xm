@@ -24,8 +24,12 @@ export default async function handler(
   );
 
   try {
-    const { data: client, error: clientError } = await fetchClientById(subscription.client_id);
-    const { data: coach, error: coachError } = await fetchCoachByClientId(subscription.client_id);
+    const { data: client, error: clientError } = await fetchClientById(
+      subscription.client_id
+    );
+    const { data: coach, error: coachError } = await fetchCoachByClientId(
+      subscription.client_id
+    );
 
     const msg = {
       to: client.email,
