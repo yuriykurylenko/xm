@@ -6,11 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { JSX, SetStateAction, useState } from "react";
-import {
-  confirmStripeCardSetup,
-  createAndConfirmStripeSubscription,
-  createStripeSetupIntent,
-} from "../utils/api";
+import { handleStripeCardAndSubscriptionSetup } from "../utils/api";
 
 import styles from "@/app/styles/subscriptionPage.module.css";
 
@@ -51,50 +47,24 @@ const CheckoutFormContent = ({
     setError(null);
     setLoading(true);
 
-    // Get the client secret from the server
-    const {
-      data: { client_secret, customer_id },
-    } = await createStripeSetupIntent({
-      email: (client as any).email,
-    });
-
     try {
-      const { data: setupIntent, error } = await confirmStripeCardSetup(
-        stripe,
-        elements?.getElement(CardElement),
-        client_secret,
-        {
-          name: client.full_name,
-        }
-      );
+      const { data: subscriptionData, error } =
+        await handleStripeCardAndSubscriptionSetup(
+          stripe,
+          elements?.getElement(CardElement),
+          { email: client.email, full_name: client.full_name },
+          { monthly_amount: subscription.monthly_amount }
+        );
+
+      if (subscriptionData?.success) {
+        onSubscriptionSuccess(subscriptionData.stripeSubscriptionId);
+      }
 
       if (error) {
-        // Display error.message in your UI.
         setError(error.message);
         setLoading(false);
-        return;
-      }
-
-      if (setupIntent && setupIntent.status === "succeeded") {
-        const { data: subscriptionData, error } =
-          await createAndConfirmStripeSubscription(
-            stripe,
-            customer_id,
-            setupIntent.payment_method,
-            { monthly_amount: subscription.monthly_amount }
-          );
-
-        if (subscriptionData?.success) {
-          onSubscriptionSuccess(subscriptionData.stripeSubscriptionId);
-        }
-
-        if (error) {
-          setError(error.message);
-          setLoading(false);
-        }
       }
     } catch (error) {
-      // Handle any other errors.
       setError("Error creating subscription");
       setLoading(false);
     }

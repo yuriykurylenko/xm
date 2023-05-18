@@ -202,3 +202,43 @@ export const activateClient = async (
   }
   await updateClientById(subscription.client_id, { status: "client" });
 };
+
+export const handleStripeCardAndSubscriptionSetup = async (
+  stripe: any,
+  StripeCardElementInstance: any,
+  { email, full_name }: { email: string; full_name: string },
+  { monthly_amount }: { monthly_amount: number }
+) => {
+  const {
+    data: { client_secret, customer_id },
+  } = await createStripeSetupIntent({
+    email,
+  });
+
+  const { data: setupIntentData, error } = await confirmStripeCardSetup(
+    stripe,
+    StripeCardElementInstance,
+    client_secret,
+    {
+      name: full_name,
+    }
+  );
+
+  if (error) {
+    return { data: setupIntentData, error };
+  }
+
+  if (setupIntentData && setupIntentData.status === "succeeded") {
+    const { data: subscriptionData, error } =
+      await createAndConfirmStripeSubscription(
+        stripe,
+        customer_id,
+        setupIntentData.payment_method,
+        { monthly_amount }
+      );
+
+    return { data: subscriptionData, error };
+  }
+
+  return { data: null, error };
+};
