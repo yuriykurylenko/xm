@@ -1,5 +1,4 @@
 import supabase from "@/app/utils/supabaseClient";
-import { PaymentMethod } from "@stripe/stripe-js";
 import axios from "axios";
 import { UUID } from "crypto";
 
