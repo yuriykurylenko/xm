@@ -1,6 +1,5 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/subscriptionPage.module.css";
 import "@/app/globals.css";
 
@@ -19,7 +18,13 @@ const stripePromise = loadStripe(
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Head from "next/head";
-import { activateClientSubscription, updateClientById } from "@/app/utils/api";
+import {
+  activateClientSubscription,
+  fetchClientById,
+  fetchCoachById,
+  fetchSubscriptionById,
+  updateClientById,
+} from "@/app/utils/api";
 
 function CheckoutForm({
   client,
@@ -180,18 +185,11 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
   }, []);
 
   async function fetchClientAndCoach() {
-    const { data: clientData } = await supabase
-      .from("clients")
-      .select("*")
-      .eq("id", subscription.client_id);
+    const { data: clientData } = await fetchClientById(subscription.client_id);
+    const { data: coachData } = await fetchCoachById(clientData.coach_id);
 
-    const { data: coachData } = await supabase
-      .from("coaches")
-      .select("*")
-      .eq("id", clientData[0]?.coach_id);
-
-    setClient(clientData[0]);
-    setCoach(coachData[0]);
+    setClient(clientData);
+    setCoach(coachData);
   }
 
   // Helper function to format the subscription amount
@@ -242,13 +240,7 @@ export async function getServerSideProps(context: {
   params: { subscription_id: any };
 }) {
   const { subscription_id } = context.params;
-
-  const { data: subscriptionData } = await supabase
-    .from("subscriptions")
-    .select("*")
-    .eq("id", subscription_id);
-
-  const subscription = subscriptionData?.[0];
+  const { data: subscription } = await fetchSubscriptionById(subscription_id);
 
   if (!subscription) {
     return {

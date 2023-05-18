@@ -22,6 +22,9 @@ export const fetchCoachByClientId = async (clientId: UUID) => {
 export const fetchClientsByCoachId = (coachId: UUID) =>
   supabase.from("clients").select("*").eq("coach_id", coachId);
 
+export const fetchSubscriptionById = (subscriptionId: UUID) =>
+  supabase.from("subscriptions").select("*").eq("id", subscriptionId).single();
+
 const createClientSubscription = (
   clientId: UUID,
   {
