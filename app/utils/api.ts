@@ -43,7 +43,7 @@ const createClientSubscription = (
     ])
     .select();
 
-const updateClientById = (clientId: UUID, data: any) =>
+export const updateClientById = (clientId: UUID, data: any) =>
   supabase.from("clients").update(data).eq("id", clientId);
 
 const sendClientPaymentLink = ({
@@ -84,3 +84,15 @@ export const sendClientOffer = async (
   }
   return updateClientById(clientId, { status: "offerSent" });
 };
+
+export const confirmClientSubscription = (
+  subscriptionId: UUID,
+  stripeSubscriptionId: string
+) =>
+  supabase
+    .from("subscriptions")
+    .update({
+      stripe_subscription_id: stripeSubscriptionId,
+      status: "active",
+    })
+    .eq("id", subscriptionId);

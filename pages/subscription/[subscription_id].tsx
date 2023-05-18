@@ -19,6 +19,7 @@ const stripePromise = loadStripe(
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Head from "next/head";
+import { confirmClientSubscription, updateClientById } from "@/app/utils/api";
 
 function CheckoutForm({
   client,
@@ -37,23 +38,17 @@ function CheckoutForm({
 
   const updateSubscriptionInDatabase = async (stripeSubscriptionId: any) => {
     // Update subscription in Supabase
-    const { error: subscriptionError } = await supabase
-      .from("subscriptions")
-      .update({
-        stripe_subscription_id: stripeSubscriptionId,
-        status: "active",
-      })
-      .eq("id", subscription.id);
+    const { error } = await confirmClientSubscription(
+      subscription.id,
+      stripeSubscriptionId
+    );
 
-    if (subscriptionError) {
+    if (error) {
       return;
     }
 
     // Update client status in Supabase
-    await supabase
-      .from("clients")
-      .update({ status: "client" })
-      .eq("id", client.id);
+    await updateClientById(client.id, { status: "client" });
   };
 
   async function createSubscription(
