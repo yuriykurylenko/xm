@@ -89,7 +89,7 @@ export const sendClientOffer = async (
   return updateClientById(clientId, { status: "offerSent" });
 };
 
-export const activateClientSubscription = (
+const activateClientSubscription = (
   subscriptionId: UUID,
   stripeSubscriptionId: string
 ) =>
@@ -103,10 +103,10 @@ export const activateClientSubscription = (
     .select()
     .single();
 
-export const createStripeSetupIntent = ({ email }: { email: string }) =>
+const createStripeSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/setup_intents", { email });
 
-export const confirmStripeCardSetup = async (
+const confirmStripeCardSetup = async (
   stripe: any,
   StripeCardElementInstance: any,
   stripeClientSecret: string,
@@ -125,7 +125,7 @@ export const confirmStripeCardSetup = async (
   return { data: setupIntent, error };
 };
 
-export const createStripeSubscription = ({
+const createStripeSubscription = ({
   customerId,
   paymentMethodId,
   quantity,
@@ -141,7 +141,7 @@ export const createStripeSubscription = ({
     priceId: "price_1N6JeAA4j0lnvK9GaP833Peg",
   });
 
-export const createAndConfirmStripeSubscription = async (
+const createAndConfirmStripeSubscription = async (
   stripe: any,
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,
