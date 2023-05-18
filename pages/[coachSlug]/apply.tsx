@@ -3,50 +3,35 @@ import { useRouter } from "next/router";
 import "@/app/globals.css";
 import supabase from "@/app/utils/supabaseClient";
 import Head from "next/head";
-import { fetchCoachBySlug } from "@/app/utils/api";
+import { createClient, fetchCoachBySlug } from "@/app/utils/api";
 
-export default function ClientSignUpForm() {
+export default function ClientSignUpForm({ coach }: { coach: any }) {
   const router = useRouter();
-  const { coachSlug } = router.query;
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [coach, setCoach] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      if (coachSlug) {
-        const { data } = await fetchCoachBySlug(coachSlug as string);
-        setCoach(data);
-      }
-    })();
-  }, [coachSlug]);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
-    setLoading(true);
+    setSubmitting(true);
 
     try {
-      // Insert the client entry with a link to the coach
-      const { data, error: insertError } = await supabase
-        .from("clients")
-        .insert([
-          {
-            full_name: fullName,
-            email,
-            coach_id: (coach as any).id,
-          },
-        ]);
+      const { data: client, error } = await createClient({
+        full_name: fullName,
+        email,
+        coach_id: coach.id,
+      });
 
-      if (insertError) {
-        throw insertError;
+      if (error) {
+        setError(error.message);
+        setSubmitting(false);
+      } else if (client) {
+        router.push(`/${coach.slug}/success`);
       }
-
-      // Redirect the client to a success page or any other page you want
-      router.push(`/${coachSlug}/success`);
     } catch (error) {
-      console.error("Error during sign-up:", error);
-      setLoading(false);
+      setError("Something went wrong. Please try again.");
+      setSubmitting(false);
     }
   };
 
@@ -54,13 +39,11 @@ export default function ClientSignUpForm() {
     <div className="form-container signup">
       <Head>
         <title>
-          {(coach as any)?.full_name || coachSlug
-            ? `${(coach as any)?.full_name || coachSlug} | Application`
-            : "Loading..."}
+          {coach.full_name ? `${coach.full_name} | Application` : "Loading..."}
         </title>
       </Head>
       <form onSubmit={handleSignUp} className="form">
-        <h2>Apply to work with {(coach as any)?.full_name || coachSlug}</h2>
+        <h2>Apply to work with {coach?.full_name}</h2>
         <input
           type="text"
           placeholder="Full Name"
@@ -77,10 +60,32 @@ export default function ClientSignUpForm() {
           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
           title="Please enter a valid email address"
         />
-        <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? "Submitting..." : "Apply"}
+        {error && (
+          <div className="error-message">
+            <>{error}</>
+          </div>
+        )}
+        <button type="submit" className="submit-btn" disabled={submitting}>
+          {submitting ? "Submitting..." : "Apply"}
         </button>
       </form>
     </div>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  const { coachSlug } = context.params;
+  const { data: coach, error } = await fetchCoachBySlug(coachSlug);
+
+  if (error) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      coach,
+    },
+  };
 }

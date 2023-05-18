@@ -25,6 +25,26 @@ export const fetchClientsByCoachId = (coachId: UUID) =>
 export const fetchSubscriptionById = (subscriptionId: UUID) =>
   supabase.from("subscriptions").select("*").eq("id", subscriptionId).single();
 
+export const createClient = ({
+  full_name,
+  email,
+  coach_id,
+}: {
+  full_name: string;
+  email: string;
+  coach_id: UUID;
+}) =>
+  supabase
+    .from("clients")
+    .insert([
+      {
+        full_name,
+        email,
+        coach_id,
+      },
+    ])
+    .select();
+
 const createClientSubscription = (
   clientId: UUID,
   {

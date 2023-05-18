@@ -1,7 +1,7 @@
 import React from "react";
-import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/success.module.css";
 import Head from "next/head";
+import { fetchCoachBySlug } from "@/app/utils/api";
 
 export default function Success({ coachName }: { coachName: any }) {
   return (
@@ -22,12 +22,7 @@ export default function Success({ coachName }: { coachName: any }) {
 
 export async function getServerSideProps(context: any) {
   const { coachSlug } = context.params;
-
-  const { data, error } = await supabase
-    .from("coaches")
-    .select("full_name")
-    .eq("slug", coachSlug)
-    .single();
+  const { data, error } = await fetchCoachBySlug(coachSlug);
 
   if (error) {
     return {
