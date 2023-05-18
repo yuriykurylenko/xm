@@ -8,7 +8,7 @@ import ClientLayout from "../layouts/Client";
 const DEFAULT_ROUTES = {
   anonymous: "/signup",
   coach: "/clients",
-  client: "/welcome",
+  client: "/home",
 };
 
 export default function withAuth(Component: any, supprotedRoles: String[]) {

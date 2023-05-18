@@ -4,15 +4,14 @@ import { useEffect, useState } from "react";
 import withAuth from "@/app/components/withAuth";
 import { fetchCoachById } from "@/app/utils/api";
 
-const Welcome = ({ user }: { user: any }) => {
+const Home = ({ user }: { user: any }) => {
   const [coach, setCoach] = useState(null);
-  3;
 
   useEffect(() => {
-    async () => {
+    (async () => {
       const { data } = await fetchCoachById(user.coach_id);
       setCoach(data);
-    };
+    })();
   }, []);
 
   return (
@@ -36,4 +35,4 @@ const Welcome = ({ user }: { user: any }) => {
   );
 };
 
-export default withAuth(Welcome, ["client"]);
+export default withAuth(Home, ["client"]);
