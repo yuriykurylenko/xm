@@ -62,39 +62,44 @@ function CheckoutForm({
     paymentMethodId: string | PaymentMethod | null
   ) {
     try {
-      const { data } = await createStripeSubscription({
+      const { data: stripeSubscription } = await createStripeSubscription({
         customerId,
         paymentMethodId,
         quantity: subscription.monthly_amount / 100,
       });
 
-      const paymentIntent = data.latest_invoice.payment_intent;
+      const paymentIntent = stripeSubscription.latest_invoice.payment_intent;
 
       if (paymentIntent.status === "succeeded") {
-        updateSubscriptionInDatabase(data.id);
-        router.push(`/subscription/${subscription.id}/success`);
+        return {
+          data: { success: true, stripeSubscriptionId: stripeSubscription.id },
+          error: null,
+        };
       } else if (paymentIntent.status === "requires_action") {
         const paymentIntentResult = await stripe?.confirmCardPayment(
           paymentIntent.client_secret
         );
         if (paymentIntentResult?.error) {
-          setError(paymentIntentResult.error.message);
-          setLoading(false);
+          return { data: null, error: paymentIntentResult.error };
         } else if (
           paymentIntentResult?.paymentIntent &&
           paymentIntentResult.paymentIntent.status === "succeeded"
         ) {
-          updateSubscriptionInDatabase(data.id);
-          router.push(`/subscription/${subscription.id}/success`);
+          return {
+            data: {
+              success: true,
+              stripeSubscriptionId: stripeSubscription.id,
+            },
+            error: null,
+          };
         }
       } else if (paymentIntent.last_payment_error) {
-        setError(paymentIntent.last_payment_error.message);
-        setLoading(false);
+        return { data: null, error: paymentIntent.last_payment_error };
       }
     } catch (error) {
-      setError("Error creating subscription");
-      setLoading(false);
+      return { data: null, error: { message: "Error creating subscription" } };
     }
+    return { data: null, error: null };
   }
 
   async function handleSubmit(event: any) {
@@ -127,10 +132,20 @@ function CheckoutForm({
       }
 
       if (result?.setupIntent && result.setupIntent.status === "succeeded") {
-        await createSubscription(
+        const { data: subscriptionData, error } = await createSubscription(
           customer_id,
           result.setupIntent.payment_method
         );
+
+        if (subscriptionData?.success) {
+          updateSubscriptionInDatabase(subscriptionData.stripeSubscriptionId);
+          router.push(`/subscription/${subscription.id}/success`);
+        }
+
+        if (error) {
+          setError(error.message);
+          setLoading(false);
+        }
       }
     } catch (error) {
       // Handle any other errors.
