@@ -85,7 +85,7 @@ export const sendClientOffer = async (
   return updateClientById(clientId, { status: "offerSent" });
 };
 
-export const confirmClientSubscription = (
+export const activateClientSubscription = (
   subscriptionId: UUID,
   stripeSubscriptionId: string
 ) =>

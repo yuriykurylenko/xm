@@ -19,7 +19,7 @@ const stripePromise = loadStripe(
 
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Head from "next/head";
-import { confirmClientSubscription, updateClientById } from "@/app/utils/api";
+import { activateClientSubscription, updateClientById } from "@/app/utils/api";
 
 function CheckoutForm({
   client,
@@ -38,7 +38,7 @@ function CheckoutForm({
 
   const updateSubscriptionInDatabase = async (stripeSubscriptionId: any) => {
     // Update subscription in Supabase
-    const { error } = await confirmClientSubscription(
+    const { error } = await activateClientSubscription(
       subscription.id,
       stripeSubscriptionId
     );
