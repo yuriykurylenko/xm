@@ -1,4 +1,5 @@
 import supabase from "@/app/utils/supabaseClient";
+import { PaymentMethod } from "@stripe/stripe-js";
 import axios from "axios";
 import { UUID } from "crypto";
 
@@ -99,3 +100,19 @@ export const activateClientSubscription = (
       status: "active",
     })
     .eq("id", subscriptionId);
+
+export const createStripeSubscription = ({
+  customerId,
+  paymentMethodId,
+  quantity,
+}: {
+  customerId: string;
+  paymentMethodId: string | PaymentMethod | null;
+  quantity: number;
+}) =>
+  axios.post("/api/subscription", {
+    customerId,
+    paymentMethodId,
+    quantity,
+    priceId: "price_1N6JeAA4j0lnvK9GaP833Peg",
+  });

@@ -20,6 +20,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Head from "next/head";
 import {
   activateClientSubscription,
+  createStripeSubscription,
   fetchClientById,
   fetchCoachById,
   fetchSubscriptionById,
@@ -61,17 +62,16 @@ function CheckoutForm({
     paymentMethodId: string | PaymentMethod | null
   ) {
     try {
-      const response = await axios.post("/api/subscription", {
+      const { data } = await createStripeSubscription({
         customerId,
         paymentMethodId,
-        priceId: "price_1N6JeAA4j0lnvK9GaP833Peg",
         quantity: subscription.monthly_amount / 100,
       });
 
-      const paymentIntent = response.data.latest_invoice.payment_intent;
+      const paymentIntent = data.latest_invoice.payment_intent;
 
       if (paymentIntent.status === "succeeded") {
-        updateSubscriptionInDatabase(response.data.id);
+        updateSubscriptionInDatabase(data.id);
         router.push(`/subscription/${subscription.id}/success`);
       } else if (paymentIntent.status === "requires_action") {
         const paymentIntentResult = await stripe?.confirmCardPayment(
@@ -84,7 +84,7 @@ function CheckoutForm({
           paymentIntentResult?.paymentIntent &&
           paymentIntentResult.paymentIntent.status === "succeeded"
         ) {
-          updateSubscriptionInDatabase(response.data.id);
+          updateSubscriptionInDatabase(data.id);
           router.push(`/subscription/${subscription.id}/success`);
         }
       } else if (paymentIntent.last_payment_error) {
