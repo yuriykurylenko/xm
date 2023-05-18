@@ -99,7 +99,9 @@ export const activateClientSubscription = (
       stripe_subscription_id: stripeSubscriptionId,
       status: "active",
     })
-    .eq("id", subscriptionId);
+    .eq("id", subscriptionId)
+    .select()
+    .single();
 
 export const createStripeSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/setup_intents", { email });
@@ -184,4 +186,20 @@ export const createSubscription = async (
     return { data: null, error: { message: "Error creating subscription" } };
   }
   return { data: null, error: null };
+};
+
+export const activateClient = async (
+  subscriptionId: UUID,
+  stripeSubscriptionId: string
+) => {
+  const { data: subscription, error } = await activateClientSubscription(
+    subscriptionId,
+    stripeSubscriptionId
+  );
+  console.log(subscription);
+
+  if (error) {
+    return { data: subscription, error };
+  }
+  await updateClientById(subscription.client_id, { status: "client" });
 };

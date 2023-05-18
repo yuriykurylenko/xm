@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
 import styles from "@/app/styles/subscriptionPage.module.css";
 import "@/app/globals.css";
 
 import Head from "next/head";
 import {
-  activateClientSubscription,
+  activateClient,
   fetchClientById,
   fetchCoachById,
   fetchSubscriptionById,
-  updateClientById,
 } from "@/app/utils/api";
 import CheckoutForm from "@/app/components/CheckoutForm";
 import router from "next/router";
@@ -22,23 +20,6 @@ const SubscriptionPage = ({
   client: any;
   coach: any;
 }) => {
-  const updateSubscriptionInDatabase = async (stripeSubscriptionId: any) => {
-    const { error } = await activateClientSubscription(
-      subscription.id,
-      stripeSubscriptionId
-    );
-
-    if (error) {
-      return;
-    }
-    await updateClientById((client as any)?.id, { status: "client" });
-  };
-
-  async function onSubscriptionSuccess(stripeSubscriptionId: string) {
-    await updateSubscriptionInDatabase(stripeSubscriptionId);
-    router.push(`/subscription/${subscription.id}/success`);
-  }
-
   // Helper function to format the subscription amount
   const formatAmount = (amount: number, currency: string) => {
     const formattedAmount = Number((amount / 100).toFixed(2));
@@ -47,6 +28,11 @@ const SubscriptionPage = ({
       currency,
     }).format(formattedAmount);
   };
+
+  async function onSubscriptionSuccess(stripeSubscriptionId: string) {
+    await activateClient(subscription.id, stripeSubscriptionId);
+    router.push(`/subscription/${subscription.id}/success`);
+  }
 
   return (
     <div>
