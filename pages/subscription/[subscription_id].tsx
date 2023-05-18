@@ -13,16 +13,16 @@ import {
 import CheckoutForm from "@/app/components/CheckoutForm";
 import router from "next/router";
 
-const SubscriptionPage = ({ subscription }: { subscription: any }) => {
-  const [client, setClient] = useState(null);
-  const [coach, setCoach] = useState(null);
-
-  useEffect(() => {
-    fetchClientAndCoach();
-  }, []);
-
+const SubscriptionPage = ({
+  subscription,
+  client,
+  coach,
+}: {
+  subscription: any;
+  client: any;
+  coach: any;
+}) => {
   const updateSubscriptionInDatabase = async (stripeSubscriptionId: any) => {
-    // Update subscription in Supabase
     const { error } = await activateClientSubscription(
       subscription.id,
       stripeSubscriptionId
@@ -31,22 +31,12 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
     if (error) {
       return;
     }
-
-    // Update client status in Supabase
     await updateClientById((client as any)?.id, { status: "client" });
   };
 
   async function onSubscriptionSuccess(stripeSubscriptionId: string) {
     await updateSubscriptionInDatabase(stripeSubscriptionId);
     router.push(`/subscription/${subscription.id}/success`);
-  }
-
-  async function fetchClientAndCoach() {
-    const { data: clientData } = await fetchClientById(subscription.client_id);
-    const { data: coachData } = await fetchCoachById(clientData.coach_id);
-
-    setClient(clientData);
-    setCoach(coachData);
   }
 
   // Helper function to format the subscription amount
@@ -118,9 +108,14 @@ export async function getServerSideProps(context: {
     };
   }
 
+  const { data: client } = await fetchClientById(subscription.client_id);
+  const { data: coach } = await fetchCoachById(client.coach_id);
+
   return {
     props: {
       subscription,
+      client,
+      coach,
     },
   };
 }
