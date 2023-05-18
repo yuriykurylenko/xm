@@ -2,13 +2,6 @@ import { useEffect, useState } from "react";
 import styles from "@/app/styles/subscriptionPage.module.css";
 import "@/app/globals.css";
 
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(
-  "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
-);
-
 import Head from "next/head";
 import {
   activateClientSubscription,
@@ -66,7 +59,7 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
   };
 
   return (
-    <Elements stripe={stripePromise}>
+    <div>
       <Head>
         <title>
           {(coach as any)?.full_name
@@ -100,7 +93,7 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
           />
         </div>
       </div>
-    </Elements>
+    </div>
   );
 };
 

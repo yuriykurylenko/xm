@@ -1,6 +1,11 @@
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { useRouter } from "next/router";
-import { SetStateAction, useState } from "react";
+import {
+  CardElement,
+  Elements,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { JSX, SetStateAction, useState } from "react";
 import {
   confirmStripeCardSetup,
   createStripeSetupIntent,
@@ -9,7 +14,23 @@ import {
 
 import styles from "@/app/styles/subscriptionPage.module.css";
 
-const CheckoutForm = ({
+const stripePromise = loadStripe(
+  "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
+);
+
+const CheckoutForm = (
+  props: JSX.IntrinsicAttributes & {
+    client: any;
+    subscription: any;
+    onSubscriptionSuccess: (stripeSubscritionId: string) => void;
+  }
+) => (
+  <Elements stripe={stripePromise}>
+    <CheckoutFormContent {...props} />
+  </Elements>
+);
+
+const CheckoutFormContent = ({
   client,
   subscription,
   onSubscriptionSuccess,
@@ -18,7 +39,6 @@ const CheckoutForm = ({
   subscription: any;
   onSubscriptionSuccess: (stripeSubscritionId: string) => void;
 }) => {
-  const router = useRouter();
   const stripe = useStripe();
   const elements = useElements();
 
