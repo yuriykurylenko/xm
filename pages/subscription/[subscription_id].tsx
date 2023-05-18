@@ -11,11 +11,14 @@ const stripePromise = loadStripe(
 
 import Head from "next/head";
 import {
+  activateClientSubscription,
   fetchClientById,
   fetchCoachById,
   fetchSubscriptionById,
+  updateClientById,
 } from "@/app/utils/api";
 import CheckoutForm from "@/app/components/CheckoutForm";
+import router from "next/router";
 
 const SubscriptionPage = ({ subscription }: { subscription: any }) => {
   const [client, setClient] = useState(null);
@@ -24,6 +27,26 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
   useEffect(() => {
     fetchClientAndCoach();
   }, []);
+
+  const updateSubscriptionInDatabase = async (stripeSubscriptionId: any) => {
+    // Update subscription in Supabase
+    const { error } = await activateClientSubscription(
+      subscription.id,
+      stripeSubscriptionId
+    );
+
+    if (error) {
+      return;
+    }
+
+    // Update client status in Supabase
+    await updateClientById((client as any)?.id, { status: "client" });
+  };
+
+  async function onSubscriptionSuccess(stripeSubscriptionId: string) {
+    await updateSubscriptionInDatabase(stripeSubscriptionId);
+    router.push(`/subscription/${subscription.id}/success`);
+  }
 
   async function fetchClientAndCoach() {
     const { data: clientData } = await fetchClientById(subscription.client_id);
@@ -70,7 +93,11 @@ const SubscriptionPage = ({ subscription }: { subscription: any }) => {
               {(coach as any)?.full_name}
             </p>
           </div>
-          <CheckoutForm client={client} subscription={subscription} />
+          <CheckoutForm
+            client={client}
+            subscription={subscription}
+            onSubscriptionSuccess={onSubscriptionSuccess}
+          />
         </div>
       </div>
     </Elements>

@@ -2,11 +2,9 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useRouter } from "next/router";
 import { SetStateAction, useState } from "react";
 import {
-  activateClientSubscription,
   confirmStripeCardSetup,
   createStripeSetupIntent,
   createSubscription,
-  updateClientById,
 } from "../utils/api";
 
 import styles from "@/app/styles/subscriptionPage.module.css";
@@ -14,9 +12,11 @@ import styles from "@/app/styles/subscriptionPage.module.css";
 const CheckoutForm = ({
   client,
   subscription,
+  onSubscriptionSuccess,
 }: {
   client: any;
   subscription: any;
+  onSubscriptionSuccess: (stripeSubscritionId: string) => void;
 }) => {
   const router = useRouter();
   const stripe = useStripe();
@@ -25,21 +25,6 @@ const CheckoutForm = ({
   const [error, setError] =
     useState<SetStateAction<null | undefined | string>>(null);
   const [loading, setLoading] = useState(false);
-
-  const updateSubscriptionInDatabase = async (stripeSubscriptionId: any) => {
-    // Update subscription in Supabase
-    const { error } = await activateClientSubscription(
-      subscription.id,
-      stripeSubscriptionId
-    );
-
-    if (error) {
-      return;
-    }
-
-    // Update client status in Supabase
-    await updateClientById(client.id, { status: "client" });
-  };
 
   async function handleSubmit(event: any) {
     event.preventDefault();
@@ -79,8 +64,7 @@ const CheckoutForm = ({
         );
 
         if (subscriptionData?.success) {
-          updateSubscriptionInDatabase(subscriptionData.stripeSubscriptionId);
-          router.push(`/subscription/${subscription.id}/success`);
+          onSubscriptionSuccess(subscriptionData.stripeSubscriptionId);
         }
 
         if (error) {
