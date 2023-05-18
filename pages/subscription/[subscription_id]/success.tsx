@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import supabase from "@/app/utils/supabaseClient";
 import styles from "@/app/styles/success.module.css";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import useAuth from "@/app/utils/useAuth";
 import withAuth from "@/app/components/withAuth";
+import {
+  fetchClientById,
+  fetchCoachById,
+  fetchSubscriptionById,
+} from "@/app/utils/api";
 
 const Success = ({ coach, client }: { coach: any; client: any }) => {
   const { user, error, clientSignUp } = useAuth();
@@ -96,11 +100,8 @@ export default withAuth(Success, ["anonymous"]);
 export async function getServerSideProps(context: any) {
   const { subscription_id } = context.params;
 
-  const { data: subscriptionData, error: subscriptionError } = await supabase
-    .from("subscriptions")
-    .select("*")
-    .eq("id", subscription_id)
-    .single();
+  const { data: subscriptionData, error: subscriptionError } =
+    await fetchSubscriptionById(subscription_id);
 
   if (subscriptionError || !subscriptionData.stripe_subscription_id) {
     return {
@@ -108,11 +109,9 @@ export async function getServerSideProps(context: any) {
     };
   }
 
-  const { data: clientData, error: clientError } = await supabase
-    .from("clients")
-    .select("*")
-    .eq("id", subscriptionData.client_id)
-    .single();
+  const { data: clientData, error: clientError } = await fetchClientById(
+    subscriptionData.client_id
+  );
 
   if (clientError) {
     return {
@@ -120,11 +119,9 @@ export async function getServerSideProps(context: any) {
     };
   }
 
-  const { data: coachData, error: coachError } = await supabase
-    .from("coaches")
-    .select("*")
-    .eq("id", clientData.coach_id)
-    .single();
+  const { data: coachData, error: coachError } = await fetchCoachById(
+    clientData.coach_id
+  );
 
   if (coachError) {
     return {
