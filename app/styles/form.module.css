@@ -101,7 +101,7 @@ button.submit-btn:disabled {
 }
 
 .error-message {
-    color: red;
-    font-size: 13px;
-    text-align: center;
-  }
+  color: red;
+  font-size: 13px;
+  text-align: center;
+}

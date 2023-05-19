@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
-import "@/app/globals.css";
-import supabase from "@/app/utils/supabaseClient";
 import Head from "next/head";
 import { createClient, fetchCoachBySlug } from "@/app/utils/api";
+
+import styles from "@/app/styles/form.module.css";
 
 export default function ClientSignUpForm({ coach }: { coach: any }) {
   const router = useRouter();
@@ -36,13 +36,13 @@ export default function ClientSignUpForm({ coach }: { coach: any }) {
   };
 
   return (
-    <div className="form-container signup">
+    <div className={`${styles["form-container"]} ${styles["signup"]}`}>
       <Head>
         <title>
           {coach.full_name ? `${coach.full_name} | Application` : "Loading..."}
         </title>
       </Head>
-      <form onSubmit={handleSignUp} className="form">
+      <form onSubmit={handleSignUp} className={styles["form"]}>
         <h2>Apply to work with {coach?.full_name}</h2>
         <input
           type="text"
@@ -65,7 +65,11 @@ export default function ClientSignUpForm({ coach }: { coach: any }) {
             <>{error}</>
           </div>
         )}
-        <button type="submit" className="submit-btn" disabled={submitting}>
+        <button
+          type="submit"
+          className={styles["submit-btn"]}
+          disabled={submitting}
+        >
           {submitting ? "Submitting..." : "Apply"}
         </button>
       </form>

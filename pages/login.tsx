@@ -57,7 +57,11 @@ const Login = () => {
             <>{error}</>
           </div>
         )}
-        <button type="submit" className={styles["submit-btn"]} disabled={submitting}>
+        <button
+          type="submit"
+          className={styles["submit-btn"]}
+          disabled={submitting}
+        >
           {submitting ? "Logging in..." : "Log in"}
         </button>
         <p className={styles["sign-up-log-in"]}>
