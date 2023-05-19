@@ -18,9 +18,11 @@ const OfferModal: React.FC<OfferModalProps> = ({
   closeModal,
   selectedClient,
   user,
-  onOfferSent
+  onOfferSent,
 }) => {
-  const [monthlyAmount, setMonthlyAmount] = useState(user.monthly_subscription_amount / 100);
+  const [monthlyAmount, setMonthlyAmount] = useState(
+    user.monthly_subscription_amount / 100
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function sendOffer(event: React.FormEvent) {
@@ -31,7 +33,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
       monthlyAmount: Number(monthlyAmount) * 100,
       currency: "USD",
     });
-    
+
     if (error) {
       setIsSubmitting(false);
     }
@@ -118,4 +120,3 @@ const OfferModal: React.FC<OfferModalProps> = ({
 };
 
 export default OfferModal;
-
