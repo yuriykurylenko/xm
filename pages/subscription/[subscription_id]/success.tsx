@@ -31,7 +31,6 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
     setSubmitting(true);
 
     try {
-      // Sign up the client as a user
       await clientSignUp({
         email: client.email,
         password,
