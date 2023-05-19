@@ -3,8 +3,9 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
 import useAuth from "@/app/utils/useAuth";
-import "@/app/globals.css";
 import withAuth from "@/app/components/withAuth";
+
+import styles from "@/app/styles/form.module.css";
 
 const Login = () => {
   const { logIn, user, error } = useAuth();
@@ -31,11 +32,11 @@ const Login = () => {
   };
 
   return (
-    <div className="form-container signup">
+    <div className={`${styles["form-container"]} ${styles["signup"]}`}>
       <Head>
         <title>Coaching | Log in</title>
       </Head>
-      <form onSubmit={handleLogin} className="form">
+      <form onSubmit={handleLogin} className={styles["form"]}>
         <h2>Log in</h2>
         <input
           type="email"
@@ -52,14 +53,14 @@ const Login = () => {
           name="password"
         />
         {error && (
-          <div className="error-message">
+          <div className={styles["error-message"]}>
             <>{error}</>
           </div>
         )}
-        <button type="submit" className="submit-btn" disabled={submitting}>
+        <button type="submit" className={styles["submit-btn"]} disabled={submitting}>
           {submitting ? "Logging in..." : "Log in"}
         </button>
-        <p className="log-in">
+        <p className={styles["sign-up-log-in"]}>
           Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
         </p>
       </form>

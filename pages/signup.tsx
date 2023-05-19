@@ -1,10 +1,11 @@
 import withAuth from "@/app/components/withAuth";
-import "@/app/globals.css";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import useAuth from "@/app/utils/useAuth";
+
+import styles from "@/app/styles/form.module.css";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -42,7 +43,7 @@ const Signup = () => {
       <Head>
         <title>Coaching | Sign up</title>
       </Head>
-      <div className="form-container signup">
+      <div className={`${styles["form-container"]} ${styles["signup"]}`}>
         <form onSubmit={handleSubmit} className="form">
           <h2>Sign up as a Coach</h2>
           <input
@@ -70,8 +71,8 @@ const Signup = () => {
             pattern=".{8,}"
             title="Password must be at least 8 characters long"
           />
-          <div className="input-group">
-            <div className="price-input">
+          <div className={styles["input-group"]}>
+            <div className={styles["price-input"]}>
               <input
                 type="number"
                 placeholder="Monthly price"
@@ -84,14 +85,18 @@ const Signup = () => {
             </div>
           </div>
           {error && (
-            <div className="error-message">
+            <div className={styles["error-message"]}>
               <>{error}</>
             </div>
           )}
-          <button type="submit" className="submit-btn" disabled={submitting}>
+          <button
+            type="submit"
+            className={styles["submit-btn"]}
+            disabled={submitting}
+          >
             {submitting ? "Signing up..." : "Sign up"}
           </button>
-          <p className="log-in">
+          <p className={styles["sign-up-log-in"]}>
             Already have an account? <Link href="/login">Log in</Link>
           </p>
         </form>
