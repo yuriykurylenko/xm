@@ -1,6 +1,5 @@
 import { SetStateAction, useEffect, useState } from "react";
 import styles from "@/app/styles/clientsList.module.css";
-import "@/app/globals.css";
 import Head from "next/head";
 import withAuth from "@/app/components/withAuth";
 import { fetchClientsByCoachId, sendClientOffer } from "@/app/utils/api";
