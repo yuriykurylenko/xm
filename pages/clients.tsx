@@ -6,10 +6,11 @@ import Head from "next/head";
 import withAuth from "@/app/components/withAuth";
 import { fetchClientsByCoachId, sendClientOffer } from "@/app/utils/api";
 import FilterBar from "@/app/components/clients/FilterBar";
+import ClientList from "@/app/components/clients/ClientList";
 
 Modal.setAppElement("#__next");
 
-const ClientsList = ({ user }: { user: any }) => {
+const Clients = ({ user }: { user: any }) => {
   const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -88,78 +89,11 @@ const ClientsList = ({ user }: { user: any }) => {
           setFilterStatus={setFilterStatus}
         />
       </div>
-      <div className={styles["clients-container"]}>
-        {clients.length > 0
-          ? (filteredClients as any).map((client: any) => (
-              <div key={(client as any).id} className={styles["client-item"]}>
-                <div className={styles["avatar"]}>
-                  {(client as any).full_name.charAt(0)}
-                </div>
-                <div className={styles["client-name"]}>
-                  {(client as any).full_name}
-                </div>
-                {(client as any).status === "lead" && (
-                  <button
-                    className={styles.btn}
-                    onClick={() => openModal(client)}
-                  >
-                    Send Offer
-                  </button>
-                )}
-                {(client as any).status === "offerSent" && (
-                  <div className={styles["offer-sent"]}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="orange"
-                      className={styles["icon"]}
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"
-                      />
-                    </svg>
-                    Offer sent
-                  </div>
-                )}
-                {(client as any).status === "client" && (
-                  <div className={styles["active"]}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="green"
-                      className={styles["icon"]}
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    Active
-                  </div>
-                )}
-              </div>
-            ))
-          : user && (
-              <div className={styles["no-clients-container"]}>
-                Please share this link to get your clients to apply for
-                coaching:
-                <br />
-                <a
-                  href={`${window.location.protocol}//${window.location.host}/${
-                    (user as any).slug
-                  }/apply`}
-                >
-                  {`${window.location.protocol}//${window.location.host}/${
-                    (user as any).slug
-                  }/apply`}
-                </a>
-              </div>
-            )}
-      </div>
+      <ClientList
+        clients={filteredClients}
+        user={user}
+        onSendOfferClick={openModal}
+      />
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -232,4 +166,4 @@ const ClientsList = ({ user }: { user: any }) => {
   );
 };
 
-export default withAuth(ClientsList, ["coach"]);
+export default withAuth(Clients, ["coach"]);
