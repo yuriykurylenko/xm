@@ -3,6 +3,6 @@ interface ClientProps {
   onClick: (client: any) => void;
 }
 
-const ClientCard: React.FC<ClientProps> = ({ client, onClick }) => {};
+const ClientCard: React.FC<ClientProps> = ({ client, onClick }) => <></>;
 
 export default ClientCard;

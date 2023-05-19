@@ -17,7 +17,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
   setMonthlyAmount,
   isSubmitting,
 }) => {
-  // ...same as before
+  return <></>
 };
 
 export default OfferModal;

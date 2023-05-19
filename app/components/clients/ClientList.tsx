@@ -4,7 +4,7 @@ interface ClientListProps {
 }
 
 const ClientList: React.FC<ClientListProps> = ({ clients, onClick }) => {
-  // ...same as before
+  return <></>
 };
 
 export default ClientList;
