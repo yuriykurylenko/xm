@@ -5,6 +5,7 @@ import "@/app/globals.css";
 import Head from "next/head";
 import withAuth from "@/app/components/withAuth";
 import { fetchClientsByCoachId, sendClientOffer } from "@/app/utils/api";
+import FilterBar from "@/app/components/clients/FilterBar";
 
 Modal.setAppElement("#__next");
 
@@ -82,41 +83,10 @@ const ClientsList = ({ user }: { user: any }) => {
       </Head>
       <div className={styles["clients-container-header"]}>
         <h1>Clients</h1>
-        <div>
-          <button
-            className={`${styles["filter-btn"]} ${
-              filterStatus === "all" && styles["filter-btn-active"]
-            }`}
-            onClick={() => setFilterStatus("all")}
-          >
-            All
-          </button>
-          <button
-            className={`${styles["filter-btn"]} ${
-              filterStatus === "lead" && styles["filter-btn-active"]
-            }`}
-            onClick={() => setFilterStatus("lead")}
-          >
-            Leads
-          </button>
-          <button
-            className={`${styles["filter-btn"]} ${
-              filterStatus === "offerSent" && styles["filter-btn-active"]
-            }`}
-            onClick={() => setFilterStatus("offerSent")}
-          >
-            Offer Sent
-          </button>
-
-          <button
-            className={`${styles["filter-btn"]} ${
-              filterStatus === "client" && styles["filter-btn-active"]
-            }`}
-            onClick={() => setFilterStatus("client")}
-          >
-            Clients
-          </button>
-        </div>
+        <FilterBar
+          filterStatus={filterStatus}
+          setFilterStatus={setFilterStatus}
+        />
       </div>
       <div className={styles["clients-container"]}>
         {clients.length > 0
