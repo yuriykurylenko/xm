@@ -17,6 +17,7 @@ const ClientList: React.FC<ClientListProps> = ({
       {clients.length > 0
         ? clients.map((client) => (
             <ClientCard
+              key={client.id}
               client={client}
               onSendOfferClick={() => onSendOfferClick(client)}
             />

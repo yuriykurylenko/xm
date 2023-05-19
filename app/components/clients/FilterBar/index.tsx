@@ -15,7 +15,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
         { status: "all", name: "All" },
         { status: "lead", name: "Leads" },
         { status: "offerSent", name: "Offer sent" },
-        { status: "client", name: "Client" },
+        { status: "client", name: "Clients" },
       ].map((item) => (
         <FilterButton
           key={item.status}

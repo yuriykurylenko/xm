@@ -1,0 +1,36 @@
+.btn {
+  padding: 0.5rem 1rem;
+  background-color: #7c9efc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #5683d7;
+}
+
+.btn:disabled {
+  background-color: #bbb;
+  cursor: not-allowed;
+}
+
+.btn-modal {
+  float: right;
+}
+
+.filter-btn {
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #ddd;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.filter-btn-modal {
+  float: left;
+  margin-left: 0;
+}
