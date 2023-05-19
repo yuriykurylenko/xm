@@ -1,27 +1,52 @@
 import Modal from "react-modal";
+import { useState } from "react";
 import styles from "./styles.module.css";
+import { sendClientOffer } from "@/app/utils/api";
 
 Modal.setAppElement("#__next");
 
 interface OfferModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  onSendOffer: (event: React.FormEvent) => Promise<void>;
   selectedClient: any;
-  monthlyAmount: number | null;
-  setMonthlyAmount: (amount: number) => void;
-  isSubmitting: boolean;
+  user: any;
+  onOfferSent?: () => void;
 }
 
 const OfferModal: React.FC<OfferModalProps> = ({
   isOpen,
   closeModal,
-  onSendOffer,
   selectedClient,
-  monthlyAmount,
-  setMonthlyAmount,
-  isSubmitting,
+  user,
+  onOfferSent
 }) => {
+  const [monthlyAmount, setMonthlyAmount] = useState(user.monthly_subscription_amount / 100);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function sendOffer(event: React.FormEvent) {
+    setIsSubmitting(true);
+    event.preventDefault();
+
+    const { data, error } = await sendClientOffer((selectedClient as any)?.id, {
+      monthlyAmount: Number(monthlyAmount) * 100,
+      currency: "USD",
+    });
+    
+    if (error) {
+      setIsSubmitting(false);
+    }
+
+    closeModal();
+
+    const coachMonthlySubscriptionAmount = user.monthly_subscription_amount;
+    if (coachMonthlySubscriptionAmount) {
+      setMonthlyAmount(coachMonthlySubscriptionAmount / 100);
+    }
+
+    setIsSubmitting(false);
+    onOfferSent && onOfferSent();
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -49,7 +74,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
       }}
     >
       <div className="modal-container form-container">
-        <form onSubmit={onSendOffer} className="form">
+        <form onSubmit={sendOffer} className="form">
           <h2>Send offer to {selectedClient.full_name}</h2>
           <p>
             {selectedClient.full_name} will receive an email with the link to
@@ -93,3 +118,4 @@ const OfferModal: React.FC<OfferModalProps> = ({
 };
 
 export default OfferModal;
+
