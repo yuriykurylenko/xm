@@ -25,11 +25,16 @@ const OfferModal: React.FC<OfferModalProps> = ({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  async function onModalClose() {
+    closeModal();
+    setMonthlyAmount(user.monthly_subscription_amount / 100);
+  }
+
   async function sendOffer(event: React.FormEvent) {
     setIsSubmitting(true);
     event.preventDefault();
 
-    const { data, error } = await sendClientOffer((selectedClient as any)?.id, {
+    const { error } = await sendClientOffer((selectedClient as any)?.id, {
       monthlyAmount: Number(monthlyAmount) * 100,
       currency: "USD",
     });
@@ -38,12 +43,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
       setIsSubmitting(false);
     }
 
-    closeModal();
-
-    const coachMonthlySubscriptionAmount = user.monthly_subscription_amount;
-    if (coachMonthlySubscriptionAmount) {
-      setMonthlyAmount(coachMonthlySubscriptionAmount / 100);
-    }
+    onModalClose();
 
     setIsSubmitting(false);
     onOfferSent && onOfferSent();
