@@ -1,11 +1,12 @@
-import { SetStateAction, useEffect, useState } from "react";
-import styles from "@/app/styles/clientsList.module.css";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import withAuth from "@/app/components/withAuth";
 import { fetchClientsByCoachId } from "@/app/utils/api";
 import FilterBar from "@/app/components/clients/FilterBar";
 import ClientList from "@/app/components/clients/ClientList";
 import OfferModal from "@/app/components/clients/OfferModal";
+
+import styles from "@/app/styles/clients.module.css";
 
 const Clients = ({ user }: { user: any }) => {
   const [clients, setClients] = useState([]);

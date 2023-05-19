@@ -8,7 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { JSX, SetStateAction, useState } from "react";
 import { handleStripeCardAndSubscriptionSetup } from "../utils/api/stripe";
 
-import styles from "@/app/styles/subscriptionPage.module.css";
+import styles from "@/app/styles/subscription.module.css";
 
 const stripePromise = loadStripe(
   "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
