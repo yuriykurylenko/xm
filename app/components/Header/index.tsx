@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import "@/app/globals.css";
-import useAuth from "@/app/utils/useAuth"; // Import the useAuth hook
+import useAuth from "@/app/utils/useAuth";
+
+import styles from "./styles.module.css"
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logOut } = useAuth(); // Use the user and logOut function from useAuth
+  const { user, logOut } = useAuth();
 
   const router = useRouter();
   const node = useRef<HTMLDivElement>(null);
@@ -18,9 +19,7 @@ const Header = () => {
   }, []);
 
   const handleClickOutside = (e: MouseEvent) => {
-    // Check if the click is outside the dropdown
     if (node.current && !node.current.contains(e.target as Node)) {
-      // Cast e.target to Node
       setIsOpen(false);
     }
   };
@@ -31,7 +30,7 @@ const Header = () => {
   };
 
   const logout = async () => {
-    const error = await logOut(); // Use logOut function from useAuth
+    const error = await logOut();
     if (error) {
       console.log("Error logging out:", error.message);
     } else {
@@ -41,12 +40,12 @@ const Header = () => {
 
   return user ? (
     <header>
-      <div className="header-content">
-        <div className="user-avatar" onClick={(e) => toggle(e)}>
+      <div className={styles["header-content"]}>
+        <div className={styles["user-avatar"]} onClick={(e) => toggle(e)}>
           {(user as any)?.email?.charAt(0).toUpperCase()}
         </div>
         {isOpen && (
-          <div className="popover" ref={node}>
+          <div className={styles["popover"]} ref={node}>
             <p>{(user as any)?.email}</p>
             <button onClick={logout}>Log Out</button>
           </div>

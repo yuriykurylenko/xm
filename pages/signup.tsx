@@ -44,7 +44,7 @@ const Signup = () => {
         <title>Coaching | Sign up</title>
       </Head>
       <div className={`${styles["form-container"]} ${styles["signup"]}`}>
-        <form onSubmit={handleSubmit} className="form">
+        <form onSubmit={handleSubmit} className={styles["form"]}>
           <h2>Sign up as a Coach</h2>
           <input
             type="text"

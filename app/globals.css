@@ -122,6 +122,7 @@ button.submit-btn:disabled {
   width: 200px;
   z-index: 1;
 }
+
 .popover p {
   margin: 10px 0;
   font-family: Arial, sans-serif;
