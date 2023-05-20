@@ -105,3 +105,11 @@ button.submit-btn:disabled {
   font-size: 13px;
   text-align: center;
 }
+
+.card-element-container {
+  padding: 10px;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  border: 2px solid #424770;
+  background-color: #f0f8ff;
+}

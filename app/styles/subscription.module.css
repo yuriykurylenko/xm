@@ -31,16 +31,3 @@
   color: #666;
   margin-top: 1.5rem;
 }
-
-.card-element-container {
-  padding: 10px;
-  margin-top: 25px;
-  border: 2px solid #424770;
-  background-color: #f0f8ff;
-}
-
-.error-message {
-  color: red;
-  margin-top: 10px;
-  font-size: 13px;
-}

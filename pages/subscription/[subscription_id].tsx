@@ -1,5 +1,4 @@
 import styles from "@/app/styles/subscription.module.css";
-import "@/app/globals.css";
 
 import Head from "next/head";
 import {
