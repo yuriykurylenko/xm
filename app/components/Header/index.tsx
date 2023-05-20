@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import useAuth from "@/app/utils/useAuth";
 
-import styles from "./styles.module.css"
+import styles from "./styles.module.css";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import withAuth from "@/app/components/withAuth";
 import { fetchCoachById } from "@/app/utils/api";
-import styles from "@/app/styles/home.module.css"
+import styles from "@/app/styles/home.module.css";
 
 const Home = ({ user }: { user: any }) => {
   const [coach, setCoach] = useState(null);

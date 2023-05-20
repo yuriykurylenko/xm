@@ -75,7 +75,9 @@ const OfferModal: React.FC<OfferModalProps> = ({
         },
       }}
     >
-      <div className={`${styles["modal-container"]} ${styles["form-container"]}`}>
+      <div
+        className={`${styles["modal-container"]} ${styles["form-container"]}`}
+      >
         <form onSubmit={sendOffer} className={styles["form"]}>
           <h2>Send offer to {selectedClient.full_name}</h2>
           <p>
