@@ -1,8 +1,8 @@
 import Head from "next/head";
-import "@/app/globals.css";
 import { useEffect, useState } from "react";
 import withAuth from "@/app/components/withAuth";
 import { fetchCoachById } from "@/app/utils/api";
+import styles from "@/app/styles/home.module.css"
 
 const Home = ({ user }: { user: any }) => {
   const [coach, setCoach] = useState(null);
@@ -23,7 +23,7 @@ const Home = ({ user }: { user: any }) => {
             : "Loading..."}
         </title>
       </Head>
-      <div className="form-container">
+      <div className={styles["main-container"]}>
         <h1>Welcome, {(user as any)?.full_name}!</h1>
         <p>
           This is your space with {(coach as any)?.full_name}. <br />

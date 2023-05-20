@@ -75,15 +75,15 @@ const OfferModal: React.FC<OfferModalProps> = ({
         },
       }}
     >
-      <div className="modal-container form-container">
-        <form onSubmit={sendOffer} className="form">
+      <div className={`${styles["modal-container"]} ${styles["form-container"]}`}>
+        <form onSubmit={sendOffer} className={styles["form"]}>
           <h2>Send offer to {selectedClient.full_name}</h2>
           <p>
             {selectedClient.full_name} will receive an email with the link to
             subscribe and pay your specified amount monthly.
           </p>
-          <div className="input-group">
-            <div className="price-input">
+          <div className={styles["input-group"]}>
+            <div className={styles["price-input"]}>
               <input
                 type="number"
                 placeholder="Monthly price"

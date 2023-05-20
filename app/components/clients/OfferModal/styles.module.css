@@ -1,3 +1,16 @@
+.modal-container {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .btn {
   padding: 0.5rem 1rem;
   background-color: #7c9efc;
@@ -33,4 +46,32 @@
 .filter-btn-modal {
   float: left;
   margin-left: 0;
+}
+
+.input-group .price-input {
+  position: relative;
+  width: 100%;
+  padding: 5px 0;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.input-group .price-input::before {
+  content: "$";
+  position: absolute;
+  left: 10px;
+  top: 35%;
+  transform: translateY(-40%);
+}
+
+.input-group .price-input input {
+  border: none;
+  padding-left: 25px;
+  width: calc(100% - 36px);
+}
+
+.input-group .price-input input:focus-visible {
+  outline: none;
 }
