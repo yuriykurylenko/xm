@@ -6,7 +6,7 @@ import {
   useFormContext,
 } from "react-hook-form";
 
-import styles from "@/app/styles/form.module.css";
+import styles from "@/app/components/Form/styles.module.css";
 
 interface FormProps extends UseFormProps {
   children: React.ReactNode;
@@ -18,7 +18,7 @@ export const Form: FC<FormProps> = ({ children, onSubmit, ...formProps }) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className={styles["form"]}>{children}</form>
     </FormProvider>
   );
 };
@@ -44,6 +44,7 @@ export const Input: FC<InputProps> = ({
   return (
     <>
       <input
+        className={styles["input"]}
         type={type}
         placeholder={placeholder}
         {...register(name, validation)}
