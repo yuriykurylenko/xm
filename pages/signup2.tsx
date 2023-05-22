@@ -24,22 +24,23 @@ function Signup() {
 
   const onSubmit = async (data: any) => {
     setSubmitting(true);
+    const { email, password, full_name, monthly_subscription_amount } = data
 
     await coachSignUp({
-      email: data.email,
-      password: data.password,
-      full_name: data.fullName,
-      monthly_subscription_amount: Number(data.monthlyAmount) * 100,
+      email,
+      password,
+      full_name,
+      monthly_subscription_amount: Number(monthly_subscription_amount) * 100,
     });
     setSubmitting(false);
   };
 
   return (
-    <div className={`${styles["form-container"]} ${styles["signup"]}`}>
+    <div>
       <Head>
         <title>Coaching | Sign up</title>
       </Head>
-      <div className={styles["form"]}>
+      <div>
         <h2>Sign up as a Coach</h2>
         <Form onSubmit={onSubmit}>
           <Input
@@ -58,10 +59,10 @@ function Signup() {
             type="password"
             validation={{ required: "Password is required" }}
           />
-          <div className={styles["input-group"]}>
+          <div>
             <div className={styles["price-input"]}>
               <Input
-                name="monthly_price"
+                name="monthly_subscription_amount"
                 placeholder="Monthly price"
                 type="number"
                 validation={{ required: "Monthly price is required" }}
@@ -75,7 +76,6 @@ function Signup() {
           )}
           <button
             type="submit"
-            className={styles["submit-btn"]}
             disabled={submitting}
           >
             {submitting ? "Signing up..." : "Sign up"}
