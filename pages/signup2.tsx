@@ -1,49 +1,49 @@
-import withAuth from "@/app/components/withAuth";
-import Head from "next/head";
-import Form from "@/app/components/Form";
-import Input from "@/app/components/Form/Input";
-import useAuth from "@/app/utils/useAuth";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-
+import Form, { Input } from "@/app/components/Form";
 import styles from "@/app/styles/form.module.css";
+
+import useAuth from "@/app/utils/useAuth";
+import withAuth from "@/app/components/withAuth";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
 function Signup() {
   const { user, error, coachSignUp } = useAuth();
-  const router = useRouter();
-
   const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
       router.reload();
     }
-  }, [user]);
-
-  const handleSubmit = async (data: any) => {
-    setSubmitting(true);
-    try {
-      await coachSignUp({
-        email: data.email,
-        password: data.password,
-        full_name: data.fullName,
-        monthly_subscription_amount: Number(data.monthlyAmount) * 100,
-      });
-    } finally {
+    if (error) {
       setSubmitting(false);
     }
+  }, [user, error]);
+
+  const onSubmit = async (data: any) => {
+    setSubmitting(true);
+
+    await coachSignUp({
+      email: data.email,
+      password: data.password,
+      full_name: data.fullName,
+      monthly_subscription_amount: Number(data.monthlyAmount) * 100,
+    });
+    setSubmitting(false);
   };
 
   return (
-    <div>
+    <div className={`${styles["form-container"]} ${styles["signup"]}`}>
       <Head>
         <title>Coaching | Sign up</title>
       </Head>
-      <div className={`${styles["form-container"]} ${styles["signup"]}`}>
-        <Form onSubmit={handleSubmit} className={styles["form"]}>
-          <h2>Sign up as a Coach</h2>
+      <div className={styles["form"]}>
+        <h2>Sign up as a Coach</h2>
+        <Form onSubmit={onSubmit}>
           <Input
-            name="fullName"
+            name="full_name"
             placeholder="Full Name"
             validation={{ required: "Full Name is required" }}
           />
@@ -58,12 +58,21 @@ function Signup() {
             type="password"
             validation={{ required: "Password is required" }}
           />
-          <Input
-            name="monthlyAmount"
-            placeholder="Monthly price"
-            type="number"
-            validation={{ required: "Monthly price is required" }}
-          />
+          <div className={styles["input-group"]}>
+            <div className={styles["price-input"]}>
+              <Input
+                name="monthly_price"
+                placeholder="Monthly price"
+                type="number"
+                validation={{ required: "Monthly price is required" }}
+              />
+            </div>
+          </div>
+          {error && (
+            <div className={styles["error-message"]}>
+              <>{error}</>
+            </div>
+          )}
           <button
             type="submit"
             className={styles["submit-btn"]}
@@ -71,11 +80,9 @@ function Signup() {
           >
             {submitting ? "Signing up..." : "Sign up"}
           </button>
-          {error && (
-            <div className={styles["error-message"]}>
-              <>{error}</>
-            </div>
-          )}
+          <p className={styles["sign-up-log-in"]}>
+            Already have an account? <Link href="/login">Log in</Link>
+          </p>{" "}
         </Form>
       </div>
     </div>
