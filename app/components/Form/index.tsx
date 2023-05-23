@@ -52,7 +52,7 @@ export const Input: FC<InputProps> = ({
     <>
       <div className={`${styles["input-container"]} ${className || ""}`}>
         <input
-          className={`${styles["input"]}`}
+          className={`${styles["input"]} ${errors[name] ? styles["error"] : ""}`}
           type={type}
           placeholder={placeholder}
           {...register(name, validation)}
@@ -64,5 +64,21 @@ export const Input: FC<InputProps> = ({
     </>
   );
 };
+
+interface ButtonProps {
+  type: "button" | "reset" | "submit";
+  disabled: boolean;
+  children: React.ReactNode;
+  error: string
+}
+
+export const Button: FC<ButtonProps> = ({ children, type, disabled, error, ...props }) => {
+  return <>
+    <button className={styles["submit-btn"]} disabled={disabled} {...props}>{children}</button>
+          <p className={styles["error-message"]}>
+          <>{error || ""}</>
+        </p>
+  </>
+}
 
 export default Form;

@@ -1,4 +1,4 @@
-import Form, { Input } from "@/app/components/Form";
+import Form, { Button, Input } from "@/app/components/Form";
 import styles from "@/app/components/Form/styles.module.css";
 
 import useAuth from "@/app/utils/useAuth";
@@ -41,8 +41,8 @@ function Signup() {
         <title>Coaching | Sign up</title>
       </Head>
       <div>
-        <h2>Sign up as a Coach</h2>
         <Form onSubmit={onSubmit}>
+        <h2>Sign up as a Coach</h2>
           <Input
             name="full_name"
             placeholder="Full Name"
@@ -66,9 +66,9 @@ function Signup() {
             type="number"
             validation={{ required: "Monthly price is required" }}
           />
-          <button type="submit" disabled={submitting}>
+          <Button type="submit" disabled={submitting} error={error}>
             {submitting ? "Signing up..." : "Sign up"}
-          </button>
+          </Button>
           <p className={styles["sign-up-log-in"]}>
             Already have an account? <Link href="/login">Log in</Link>
           </p>{" "}
