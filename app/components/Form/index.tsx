@@ -18,7 +18,12 @@ export const Form: FC<FormProps> = ({ children, onSubmit, ...formProps }) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)} className={styles["form"]}>{children}</form>
+      <form
+        onSubmit={methods.handleSubmit(onSubmit)}
+        className={styles["form"]}
+      >
+        {children}
+      </form>
     </FormProvider>
   );
 };
@@ -45,18 +50,17 @@ export const Input: FC<InputProps> = ({
 
   return (
     <>
-    <div className={`${styles["input-container"]} ${className || ""}`}>
-      <input
-        className={`${styles["input"]}`}
-        type={type}
-        placeholder={placeholder}
-        {...register(name, validation)}
-      />
-    {(
-        // @ts-ignore
-        <p className={styles["error-message"]}>{errors[name] ? errors[name].message : ""}</p>
-)}
-    </div>
+      <div className={`${styles["input-container"]} ${className || ""}`}>
+        <input
+          className={`${styles["input"]}`}
+          type={type}
+          placeholder={placeholder}
+          {...register(name, validation)}
+        />
+        <p className={styles["error-message"]}>
+          {errors[name] ? errors[name].message : ""}
+        </p>
+      </div>
     </>
   );
 };

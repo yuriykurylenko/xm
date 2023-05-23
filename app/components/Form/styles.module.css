@@ -1,73 +1,72 @@
 .form {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-  .input-container {
-    width: calc(100% - 30px);
-    display: flex;
-    margin-bottom: 10px;
-  }
-  
-  .input {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
+.input-container {
+  width: calc(100% - 30px);
+  display: flex;
+  margin-bottom: 10px;
+}
 
-  .price-input::before {
-    content: "$";
-    margin-right: 6px;
-    font-weight: 600;
-    padding-top: 12px;
+.input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.price-input::before {
+  content: "$";
+  margin-right: 6px;
+  font-weight: 600;
+  padding-top: 12px;
+}
+
+.error-message {
+  margin: 2px 0;
+  color: red;
+  font-size: 11px;
+  min-height: 11px;
+}
+
+.submit-btn {
+  padding: 10px 20px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.submit-btn:disabled {
+  background-color: #ccc;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.sign-up-log-in {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.sign-up-log-in a {
+  color: #007bff;
+}
+
+@media (max-width: 768px) {
+  .form {
+    padding: 10px;
   }
-  
-  .error-message {
-    margin: 2px 0;
-    color: red;
-    font-size: 11px;
-    min-height: 11px
-  }
-  
-  .submit-btn {
-    padding: 10px 20px;
-    color: white;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-  }
-  
-  .submit-btn:disabled {
-    background-color: #ccc;
-  }
-  
-  .submit-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .sign-up-log-in {
-    margin-top: 20px;
-    font-size: 14px;
-  }
-  
-  .sign-up-log-in a {
-    color: #007BFF;
-  }
-  
-  @media (max-width: 768px) {
-    .form {
-      padding: 10px;
-    }
-  }
-  
+}

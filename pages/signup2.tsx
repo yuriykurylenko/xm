@@ -24,7 +24,7 @@ function Signup() {
 
   const onSubmit = async (data: any) => {
     setSubmitting(true);
-    const { email, password, full_name, monthly_subscription_amount } = data
+    const { email, password, full_name, monthly_subscription_amount } = data;
 
     await coachSignUp({
       email,
@@ -59,17 +59,14 @@ function Signup() {
             type="password"
             validation={{ required: "Password is required" }}
           />
-              <Input
-                className={styles["price-input"]}
-                name="monthly_subscription_amount"
-                placeholder="Monthly price"
-                type="number"
-                validation={{ required: "Monthly price is required" }}
-              />
-          <button
-            type="submit"
-            disabled={submitting}
-          >
+          <Input
+            className={styles["price-input"]}
+            name="monthly_subscription_amount"
+            placeholder="Monthly price"
+            type="number"
+            validation={{ required: "Monthly price is required" }}
+          />
+          <button type="submit" disabled={submitting}>
             {submitting ? "Signing up..." : "Sign up"}
           </button>
           <p className={styles["sign-up-log-in"]}>
