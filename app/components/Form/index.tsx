@@ -58,7 +58,7 @@ export const Input: FC<InputProps> = ({
           {...register(name, validation)}
         />
         <p className={styles["error-message"]}>
-          {errors[name] ? errors[name].message : ""}
+          <>{errors[name] ? errors[name]?.message : ""}</>
         </p>
       </div>
     </>
