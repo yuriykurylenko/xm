@@ -71,7 +71,7 @@ interface ButtonProps {
   type: "button" | "reset" | "submit";
   disabled: boolean;
   children: React.ReactNode;
-  error: string;
+  error?: string;
 }
 
 export const Button: FC<ButtonProps> = ({

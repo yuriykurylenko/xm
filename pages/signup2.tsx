@@ -66,7 +66,7 @@ function Signup() {
             type="number"
             validation={{ required: "Monthly price is required" }}
           />
-          <Button type="submit" disabled={submitting} error={error}>
+          <Button type="submit" disabled={submitting} error={error || ""}>
             {submitting ? "Signing up..." : "Sign up"}
           </Button>
           <p className={styles["sign-up-log-in"]}>
