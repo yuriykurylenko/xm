@@ -42,7 +42,7 @@ function Signup() {
       </Head>
       <div>
         <Form onSubmit={onSubmit}>
-        <h2>Sign up as a Coach</h2>
+          <h2>Sign up as a Coach</h2>
           <Input
             name="full_name"
             placeholder="Full Name"

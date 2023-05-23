@@ -30,8 +30,8 @@
   appearance: none;
 }
 .input.error {
-    border-color: #ff9999;
-  }
+  border-color: #ff9999;
+}
 
 .input:focus {
   border: 1.5px solid #7c9efc;
@@ -70,9 +70,9 @@
 }
 
 .submit-btn:disabled {
-    background-color: #ccc;
-    color: black;
-  }
+  background-color: #ccc;
+  color: black;
+}
 
 .sign-up-log-in {
   margin-top: 20px;
