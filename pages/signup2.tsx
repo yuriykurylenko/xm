@@ -1,5 +1,5 @@
 import Form, { Input } from "@/app/components/Form";
-import styles from "@/app/styles/form.module.css";
+import styles from "@/app/components/Form/styles.module.css";
 
 import useAuth from "@/app/utils/useAuth";
 import withAuth from "@/app/components/withAuth";
@@ -59,21 +59,13 @@ function Signup() {
             type="password"
             validation={{ required: "Password is required" }}
           />
-          <div>
-            <div className={styles["price-input"]}>
               <Input
+                className={styles["price-input"]}
                 name="monthly_subscription_amount"
                 placeholder="Monthly price"
                 type="number"
                 validation={{ required: "Monthly price is required" }}
               />
-            </div>
-          </div>
-          {error && (
-            <div className={styles["error-message"]}>
-              <>{error}</>
-            </div>
-          )}
           <button
             type="submit"
             disabled={submitting}

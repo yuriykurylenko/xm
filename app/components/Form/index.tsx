@@ -28,6 +28,7 @@ interface InputProps {
   type?: string;
   placeholder?: string;
   validation?: any;
+  className?: string;
 }
 
 export const Input: FC<InputProps> = ({
@@ -35,6 +36,7 @@ export const Input: FC<InputProps> = ({
   type = "text",
   placeholder,
   validation,
+  className,
 }) => {
   const {
     register,
@@ -43,16 +45,18 @@ export const Input: FC<InputProps> = ({
 
   return (
     <>
+    <div className={`${styles["input-container"]} ${className || ""}`}>
       <input
-        className={styles["input"]}
+        className={`${styles["input"]}`}
         type={type}
         placeholder={placeholder}
         {...register(name, validation)}
       />
-      {errors[name] && (
+    {(
         // @ts-ignore
-        <p className={styles["error-message"]}>{errors[name].message}</p>
-      )}
+        <p className={styles["error-message"]}>{errors[name] ? errors[name].message : ""}</p>
+)}
+    </div>
     </>
   );
 };
