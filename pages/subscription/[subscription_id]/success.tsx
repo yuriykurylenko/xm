@@ -53,36 +53,38 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
         </title>
       </Head>
       <div className={styles["form-container"]}>
-        <Form onSubmit={onSubmit}>
-          <h1 className={styles["form-header"]}>
-            Thank you, {client.full_name}!
-          </h1>
-          <p>
-            Your payment has been processed successfully and you have signed up
-            to work with <b>{coach.full_name}</b>. We appreciate your business
-            and look forward to supporting you on your coaching journey.
-          </p>
-          <p>
-            Now you can create your account and get access to exclusive
-            materials.
-          </p>
-          <Input name="email" type="email" value={client.email} disabled />
-          <Input
-            name="password"
-            placeholder="Password"
-            type="password"
-            required
-            validation={{
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters long",
-              },
-            }}
-          />
-          <Button type="submit" disabled={submitting} error={error || ""}>
-            {submitting ? "Creating account..." : "Create account"}
-          </Button>
-        </Form>
+        <div className={styles["form-wrapper"]}>
+          <Form onSubmit={onSubmit}>
+            <h1 className={styles["form-header"]}>
+              Thank you, {client.full_name}!
+            </h1>
+            <p>
+              Your payment has been processed successfully and you have signed up
+              to work with <b>{coach.full_name}</b>. We appreciate your business
+              and look forward to supporting you on your coaching journey.
+            </p>
+            <p>
+              Now you can create your account and get access to exclusive
+              materials.
+            </p>
+            <Input name="email" type="email" value={client.email} disabled />
+            <Input
+              name="password"
+              placeholder="Password"
+              type="password"
+              required
+              validation={{
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters long",
+                },
+              }}
+            />
+            <Button type="submit" disabled={submitting} error={error || ""}>
+              {submitting ? "Creating account..." : "Create account"}
+            </Button>
+          </Form>
+        </div>
       </div>
     </div>
   );

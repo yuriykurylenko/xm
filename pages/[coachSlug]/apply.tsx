@@ -43,16 +43,18 @@ const ClientApplication = ({ coach }: { coach: any }) => {
         </title>
       </Head>
       <div className={styles["form-container"]}>
-        <Form onSubmit={onSubmit}>
-          <h2 className={styles["form-header"]}>
-            Apply to work with {coach?.full_name}
-          </h2>
-          <Input name="full_name" placeholder="Full Name" required />
-          <Input name="email" placeholder="Email" type="email" required />
-          <Button type="submit" disabled={submitting} error={error || ""}>
-            {submitting ? "Submitting..." : "Apply"}
-          </Button>
-        </Form>
+        <div className={styles["form-wrapper"]}>
+          <Form onSubmit={onSubmit}>
+            <h2 className={styles["form-header"]}>
+              Apply to work with {coach?.full_name}
+            </h2>
+            <Input name="full_name" placeholder="Full Name" required />
+            <Input name="email" placeholder="Email" type="email" required />
+            <Button type="submit" disabled={submitting} error={error || ""}>
+              {submitting ? "Submitting..." : "Apply"}
+            </Button>
+          </Form>
+        </div>
       </div>
     </div>
   );

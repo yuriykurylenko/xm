@@ -93,7 +93,7 @@ const CheckoutFormContent = ({
           />
         </div>
       </div>
-      <Button type="submit" disabled={submitting} error={error || ""}>
+      <Button type="submit" disabled={submitting} error={(error as string) || ""}>
         {submitting ? "Processing..." : "Pay"}
       </Button>
     </Form>

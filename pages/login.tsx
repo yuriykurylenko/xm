@@ -37,22 +37,24 @@ const Login = () => {
         <title>Coaching | Log in</title>
       </Head>
       <div className={styles["form-container"]}>
-        <Form onSubmit={onSubmit}>
-          <h2 className={styles["form-header"]}>Log in</h2>
-          <Input name="email" placeholder="Email" type="email" required />
-          <Input
-            name="password"
-            placeholder="Password"
-            type="password"
-            required
-          />
-          <Button type="submit" disabled={submitting} error={error || ""}>
-            {submitting ? "Logging in..." : "Log in"}
-          </Button>
-          <p className={styles["sign-up-log-in"]}>
-            Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
-          </p>
-        </Form>
+        <div className={styles["form-wrapper"]}>
+          <Form onSubmit={onSubmit}>
+            <h2 className={styles["form-header"]}>Log in</h2>
+            <Input name="email" placeholder="Email" type="email" required />
+            <Input
+              name="password"
+              placeholder="Password"
+              type="password"
+              required
+            />
+            <Button type="submit" disabled={submitting} error={error || ""}>
+              {submitting ? "Logging in..." : "Log in"}
+            </Button>
+            <p className={styles["sign-up-log-in"]}>
+              Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
+            </p>
+          </Form>
+        </div>
       </div>
     </div>
   );

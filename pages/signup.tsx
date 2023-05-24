@@ -41,36 +41,38 @@ const Signup = () => {
         <title>Coaching | Sign up</title>
       </Head>
       <div className={styles["form-container"]}>
-        <Form onSubmit={onSubmit}>
-          <h2 className={styles["form-header"]}>Sign up as a Coach</h2>
-          <Input name="full_name" placeholder="Full Name" required />
-          <Input name="email" placeholder="Email" type="email" required />
-          <Input
-            name="password"
-            placeholder="Password"
-            type="password"
-            required
-            validation={{
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters long",
-              },
-            }}
-          />
-          <Input
-            className={styles["price-input"]}
-            name="monthly_subscription_amount"
-            placeholder="Monthly price"
-            type="number"
-            required
-          />
-          <Button type="submit" disabled={submitting} error={error || ""}>
-            {submitting ? "Signing up..." : "Sign up"}
-          </Button>
-          <p className={styles["sign-up-log-in"]}>
-            Already have an account? <Link href="/login">Log in</Link>
-          </p>{" "}
-        </Form>
+        <div className={styles["form-wrapper"]}>
+          <Form onSubmit={onSubmit}>
+            <h2 className={styles["form-header"]}>Sign up as a Coach</h2>
+            <Input name="full_name" placeholder="Full Name" required />
+            <Input name="email" placeholder="Email" type="email" required />
+            <Input
+              name="password"
+              placeholder="Password"
+              type="password"
+              required
+              validation={{
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters long",
+                },
+              }}
+            />
+            <Input
+              className={styles["price-input"]}
+              name="monthly_subscription_amount"
+              placeholder="Monthly price"
+              type="number"
+              required
+            />
+            <Button type="submit" disabled={submitting} error={error || ""}>
+              {submitting ? "Signing up..." : "Sign up"}
+            </Button>
+            <p className={styles["sign-up-log-in"]}>
+              Already have an account? <Link href="/login">Log in</Link>
+            </p>{" "}
+          </Form>
+        </div>
       </div>
     </div>
   );

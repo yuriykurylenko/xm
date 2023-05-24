@@ -1,4 +1,4 @@
-import styles from "@/app/styles/subscription.module.css";
+import styles from "@/app/components/Form/styles.module.css";
 
 import Head from "next/head";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/app/utils/api";
 import CheckoutForm from "@/app/components/CheckoutForm";
 import router from "next/router";
+import withAuth from "@/app/components/withAuth";
 
 const SubscriptionPage = ({
   subscription,
@@ -37,16 +38,16 @@ const SubscriptionPage = ({
     <div>
       <Head>
         <title>
-          {(coach as any)?.full_name
-            ? `${(coach as any)?.full_name} | Confirm subscription`
+          {coach?.full_name
+            ? `${coach?.full_name} | Confirm subscription`
             : "Loading..."}
         </title>
       </Head>
-      <div className={styles["subscription-page"]}>
-        <div className={styles["subscription-container"]}>
-          <h1 className={styles["header"]}>Coaching Subscription</h1>
-          <div className={styles["content"]}>
-            Dear <b>{(client as any)?.full_name}</b>, you will now start a
+      <div className={styles["form-container"]}>
+        <div className={styles["form-wrapper"]}>
+          <h1 className={styles["form-header"]}>Coaching Subscription</h1>
+          <div>
+            Dear <b>{client?.full_name}</b>, you will now start a
             coaching subscription with me. Please enter your payment details in
             the form below. You will be paying{" "}
             <b>
@@ -56,9 +57,9 @@ const SubscriptionPage = ({
               )}
             </b>{" "}
             monthly. Can&apos;t wait to get started!
-            <p className={styles["signature"]}>
+            <p>
               Sincerely, <br />
-              {(coach as any)?.full_name}
+              {coach?.full_name}
             </p>
           </div>
           <CheckoutForm
@@ -105,4 +106,4 @@ export async function getServerSideProps(context: {
   };
 }
 
-export default SubscriptionPage;
+export default withAuth(SubscriptionPage, ["anonymous"]);
