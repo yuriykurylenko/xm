@@ -1,20 +1,16 @@
-import withAuth from "@/app/components/withAuth";
-import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import Form, { Button, Input } from "@/app/components/Form";
+import styles from "@/app/components/Form/styles.module.css";
+
 import useAuth from "@/app/utils/useAuth";
+import withAuth from "@/app/components/withAuth";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
-import styles from "@/app/styles/form.module.css";
-
-const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [monthlyAmount, setMonthlyAmount] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
+function Signup() {
   const { user, error, coachSignUp } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -26,16 +22,17 @@ const Signup = () => {
     }
   }, [user, error]);
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
+  const onSubmit = async (data: any) => {
     setSubmitting(true);
-    e.preventDefault();
+    const { email, password, full_name, monthly_subscription_amount } = data;
 
     await coachSignUp({
       email,
       password,
-      full_name: fullName,
-      monthly_subscription_amount: Number(monthlyAmount) * 100,
+      full_name,
+      monthly_subscription_amount: Number(monthly_subscription_amount) * 100,
     });
+    setSubmitting(false);
   };
 
   return (
@@ -43,66 +40,54 @@ const Signup = () => {
       <Head>
         <title>Coaching | Sign up</title>
       </Head>
-      <div className={`${styles["form-container"]} ${styles["signup"]}`}>
-        <form onSubmit={handleSubmit} className={styles["form"]}>
-          <h2>Sign up as a Coach</h2>
-          <input
-            type="text"
+      <div className={styles["form-container"]}>
+        <Form onSubmit={onSubmit}>
+          <h2 className={styles["form-header"]}>Sign up as a Coach</h2>
+          <Input
+            name="full_name"
             placeholder="Full Name"
-            value={fullName}
-            onChange={(event) => setFullName(event.target.value)}
-            required
+            validation={{ required: "Full Name is required" }}
           />
-          <input
-            type="email"
+          <Input
+            name="email"
             placeholder="Email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
-            title="Please enter a valid email address"
+            validation={{
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                message: "Invalid email address",
+              },
+            }}
           />
-          <input
-            type="password"
+          <Input
+            name="password"
             placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-            pattern=".{8,}"
-            title="Password must be at least 8 characters long"
+            type="password"
+            validation={{
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters long",
+              },
+            }}
           />
-          <div className={styles["input-group"]}>
-            <div className={styles["price-input"]}>
-              <input
-                type="number"
-                placeholder="Monthly price"
-                id="monthlyPrice"
-                name="monthlyPrice"
-                min="0"
-                step="0.01"
-                onChange={(event) => setMonthlyAmount(event.target.value)}
-              />
-            </div>
-          </div>
-          {error && (
-            <div className={styles["error-message"]}>
-              <>{error}</>
-            </div>
-          )}
-          <button
-            type="submit"
-            className={styles["submit-btn"]}
-            disabled={submitting}
-          >
+          <Input
+            className={styles["price-input"]}
+            name="monthly_subscription_amount"
+            placeholder="Monthly price"
+            type="number"
+            validation={{ required: "Monthly price is required" }}
+          />
+          <Button type="submit" disabled={submitting} error={error || ""}>
             {submitting ? "Signing up..." : "Sign up"}
-          </button>
+          </Button>
           <p className={styles["sign-up-log-in"]}>
             Already have an account? <Link href="/login">Log in</Link>
-          </p>
-        </form>
+          </p>{" "}
+        </Form>
       </div>
     </div>
   );
-};
+}
 
 export default withAuth(Signup, ["anonymous"]);
