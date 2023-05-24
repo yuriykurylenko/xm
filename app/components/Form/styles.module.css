@@ -100,7 +100,7 @@
 
 .submit-btn:disabled {
   background-color: #ccc;
-  color: black;
+  color: #808080;
 }
 
 .sign-up-log-in {
