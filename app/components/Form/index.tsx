@@ -28,11 +28,19 @@ export const Form: FC<FormProps> = ({ children, onSubmit, ...formProps }) => {
   );
 };
 
+type ValidationRule = {
+  required?: string | boolean;
+  minLength?: { value: number; message: string };
+  pattern?: { value: RegExp; message: string };
+};
+
+type InputType = "email" | "password" | "number" | "text";
+
 interface InputProps {
   name: string;
-  type?: string;
+  type?: InputType;
   placeholder?: string;
-  validation?: any;
+  required?: boolean;
   className?: string;
 }
 
@@ -40,13 +48,35 @@ export const Input: FC<InputProps> = ({
   name,
   type = "text",
   placeholder,
-  validation,
+  required,
   className,
 }) => {
+  const validations: Record<InputType, ValidationRule> = {
+    email: {
+      pattern: {
+        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+        message: "Invalid email address",
+      },
+    },
+    password: {
+      minLength: {
+        value: 8,
+        message: "Password must be at least 8 characters long",
+      },
+    },
+    text: {},
+    number: {},
+  };
+
   const {
     register,
     formState: { errors },
   } = useFormContext();
+
+  const validation = {
+    ...validations[type],
+    ...(required ? { required: `${placeholder} is required` } : {}),
+  };
 
   return (
     <>

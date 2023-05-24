@@ -43,40 +43,20 @@ function Signup() {
       <div className={styles["form-container"]}>
         <Form onSubmit={onSubmit}>
           <h2 className={styles["form-header"]}>Sign up as a Coach</h2>
-          <Input
-            name="full_name"
-            placeholder="Full Name"
-            validation={{ required: "Full Name is required" }}
-          />
-          <Input
-            name="email"
-            placeholder="Email"
-            validation={{
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: "Invalid email address",
-              },
-            }}
-          />
+          <Input name="full_name" placeholder="Full Name" required />
+          <Input name="email" placeholder="Email" type="email" required />
           <Input
             name="password"
             placeholder="Password"
             type="password"
-            validation={{
-              required: "Password is required",
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters long",
-              },
-            }}
+            required
           />
           <Input
             className={styles["price-input"]}
             name="monthly_subscription_amount"
             placeholder="Monthly price"
             type="number"
-            validation={{ required: "Monthly price is required" }}
+            required
           />
           <Button type="submit" disabled={submitting} error={error || ""}>
             {submitting ? "Signing up..." : "Sign up"}
