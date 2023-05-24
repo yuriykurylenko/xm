@@ -43,7 +43,6 @@ function Signup() {
       <div className={styles["form-container"]}>
         <Form onSubmit={onSubmit}>
           <h2 className={styles["form-header"]}>Sign up as a Coach</h2>
-          <div className={styles["divider"]} />
           <Input
             name="full_name"
             placeholder="Full Name"

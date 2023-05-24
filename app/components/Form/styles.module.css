@@ -10,12 +10,14 @@
   /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
   background-color: #f8faff;
   border: 1.5px solid #d6e0fd;
-  color: #385bb7;
+  color: #222222;
 }
 
 .form-header {
   margin: 25px auto;
   margin-top: 6px;
+  font-size: 22px;
+  font-weight: 400;
 }
 
 .input-container {
@@ -122,8 +124,8 @@
 }
 
 .divider {
-  height: 1.5px;
-  background-color: #d6e0fd;
+  height: 1px;
+  background-color: #7c9efc;
   width: 100%;
   margin-top: 0;
   margin-bottom: 25px;
