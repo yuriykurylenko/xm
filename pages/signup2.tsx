@@ -63,7 +63,13 @@ function Signup() {
             name="password"
             placeholder="Password"
             type="password"
-            validation={{ required: "Password is required" }}
+            validation={{
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters long",
+              },
+            }}
           />
           <Input
             className={styles["price-input"]}
