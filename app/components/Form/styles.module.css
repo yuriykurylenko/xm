@@ -48,6 +48,10 @@
   border: 1.5px solid #7c9efc;
 }
 
+.input:disabled {
+  background-color: #e9e9e9;
+}
+
 .price-input::before {
   content: "$";
   position: absolute;

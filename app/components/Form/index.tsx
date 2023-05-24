@@ -43,6 +43,8 @@ interface InputProps {
   required?: boolean;
   validation?: ValidationRule;
   className?: string;
+  value?: string;
+  disabled?: boolean;
 }
 
 export const Input: FC<InputProps> = ({
@@ -52,6 +54,8 @@ export const Input: FC<InputProps> = ({
   required,
   validation,
   className,
+  value,
+  disabled,
 }) => {
   const validations: Record<InputType, ValidationRule> = {
     email: {
@@ -85,6 +89,8 @@ export const Input: FC<InputProps> = ({
           }`}
           type={type}
           placeholder={placeholder}
+          value={value}
+          disabled={disabled}
           {...register(name, inputValidation)}
         />
         <p className={styles["error-message"]}>

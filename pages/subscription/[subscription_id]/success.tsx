@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import styles from "@/app/styles/success.module.css";
 import Head from "next/head";
 import { useRouter } from "next/router";
+
+import Form, { Button, Input } from "@/app/components/Form";
+import styles from "@/app/components/Form/styles.module.css";
+
 import useAuth from "@/app/utils/useAuth";
 import withAuth from "@/app/components/withAuth";
 import {
@@ -14,7 +17,6 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
   const { user, error, clientSignUp } = useAuth();
   const router = useRouter();
 
-  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -26,11 +28,11 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
     }
   }, [user, error]);
 
-  const handleSignUp = async (event: any) => {
-    event.preventDefault();
+  const onSubmit = async (data: any) => {
     setSubmitting(true);
 
     try {
+      const { password } = data;
       await clientSignUp({
         email: client.email,
         password,
@@ -44,51 +46,43 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
   };
 
   return (
-    <div className={styles["parent-container"]}>
+    <div>
       <Head>
         <title>
           {coach.full_name ? `${coach.full_name} | Get started` : "Loading..."}
         </title>
       </Head>
-      <div className={styles["success-container"]}>
-        <h1 className={styles["success-title"]}>
-          Thank you, {client.full_name}!
-        </h1>
-        <p className={styles["success-text"]}>
-          Your payment has been processed successfully and you have signed up to
-          work with <b>{coach.full_name}</b>. We appreciate your business and
-          look forward to supporting you on your coaching journey.
-        </p>
-        <p className={styles["success-text"]}>
-          Now you can create your account and get access to exclusive materials.
-        </p>
-
-        <div className={`${styles["form-container"]}`}>
-          <form onSubmit={handleSignUp} className={styles["form"]}>
-            <input type="email" value={client.email} disabled />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              pattern=".{8,}"
-              title="Password must be at least 8 characters long"
-            />
-            {error && (
-              <div className={styles["error-message"]}>
-                <>{error}</>
-              </div>
-            )}
-            <button
-              type="submit"
-              className={styles["submit-btn"]}
-              disabled={submitting}
-            >
-              {submitting ? "Creating account..." : "Create account"}
-            </button>
-          </form>
-        </div>
+      <div className={styles["form-container"]}>
+        <Form onSubmit={onSubmit}>
+          <h1 className={styles["form-header"]}>
+            Thank you, {client.full_name}!
+          </h1>
+          <p>
+            Your payment has been processed successfully and you have signed up
+            to work with <b>{coach.full_name}</b>. We appreciate your business
+            and look forward to supporting you on your coaching journey.
+          </p>
+          <p>
+            Now you can create your account and get access to exclusive
+            materials.
+          </p>
+          <Input name="email" type="email" value={client.email} disabled />
+          <Input
+            name="password"
+            placeholder="Password"
+            type="password"
+            required
+            validation={{
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters long",
+              },
+            }}
+          />
+          <Button type="submit" disabled={submitting} error={error || ""}>
+            {submitting ? "Creating account..." : "Create account"}
+          </Button>
+        </Form>
       </div>
     </div>
   );
