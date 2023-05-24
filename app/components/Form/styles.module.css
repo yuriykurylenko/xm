@@ -7,16 +7,16 @@
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
-  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
-  background-color: #f8faff;
-  border: 1.5px solid #d6e0fd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border: 1.5px solid #555555;
   color: #222222;
 }
 
 .form-header {
   margin: 25px auto;
   margin-top: 6px;
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 800;
 }
 
