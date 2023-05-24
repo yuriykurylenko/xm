@@ -40,9 +40,9 @@ function Signup() {
       <Head>
         <title>Coaching | Sign up</title>
       </Head>
-      <div>
+      <div className={styles["form-container"]}>
         <Form onSubmit={onSubmit}>
-          <h2>Sign up as a Coach</h2>
+          <h2 className={styles["form-header"]}>Sign up as a Coach</h2>
           <Input
             name="full_name"
             placeholder="Full Name"
