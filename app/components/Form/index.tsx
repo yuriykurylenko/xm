@@ -86,9 +86,11 @@ export const Button: FC<ButtonProps> = ({
       <button className={styles["submit-btn"]} disabled={disabled} {...props}>
         {children}
       </button>
-      <p className={styles["submit-error-message"]}>
-        <>{error || ""}</>
-      </p>
+      {error && (
+        <p className={styles["submit-error-message"]}>
+          <>{error || ""}</>
+        </p>
+      )}
     </>
   );
 };
