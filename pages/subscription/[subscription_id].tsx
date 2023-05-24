@@ -47,9 +47,9 @@ const SubscriptionPage = ({
         <div className={styles["form-wrapper"]}>
           <h1 className={styles["form-header"]}>Coaching Subscription</h1>
           <div>
-            Dear <b>{client?.full_name}</b>, you will now start a
-            coaching subscription with me. Please enter your payment details in
-            the form below. You will be paying{" "}
+            Dear <b>{client?.full_name}</b>, you will now start a coaching
+            subscription with me. Please enter your payment details in the form
+            below. You will be paying{" "}
             <b>
               {formatAmount(
                 subscription?.monthly_amount,

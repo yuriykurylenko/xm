@@ -51,7 +51,8 @@ const Login = () => {
               {submitting ? "Logging in..." : "Log in"}
             </Button>
             <p className={styles["sign-up-log-in"]}>
-              Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
+              Don&apos;t have an account yet?{" "}
+              <Link href="/signup">Sign up</Link>
             </p>
           </Form>
         </div>

@@ -59,9 +59,10 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
               Thank you, {client.full_name}!
             </h1>
             <p>
-              Your payment has been processed successfully and you have signed up
-              to work with <b>{coach.full_name}</b>. We appreciate your business
-              and look forward to supporting you on your coaching journey.
+              Your payment has been processed successfully and you have signed
+              up to work with <b>{coach.full_name}</b>. We appreciate your
+              business and look forward to supporting you on your coaching
+              journey.
             </p>
             <p>
               Now you can create your account and get access to exclusive
