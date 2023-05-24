@@ -8,7 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { JSX, SetStateAction, useState } from "react";
 import { handleStripeCardAndSubscriptionSetup } from "../utils/api/stripe";
 
-import styles from "@/app/Components/Form/styles.module.css";
+import styles from "@/app/components/Form/styles.module.css";
 import Form, { Button } from "./Form";
 
 const stripePromise = loadStripe(
