@@ -8,7 +8,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { JSX, SetStateAction, useState } from "react";
 import { handleStripeCardAndSubscriptionSetup } from "../utils/api/stripe";
 
-import styles from "@/app/styles/form.module.css";
+import styles from "@/app/Components/Form/styles.module.css";
+import Form, { Button } from "./Form";
 
 const stripePromise = loadStripe(
   "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
@@ -40,12 +41,11 @@ const CheckoutFormContent = ({
 
   const [error, setError] =
     useState<SetStateAction<null | undefined | string>>(null);
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  async function handleSubmit(event: any) {
-    event.preventDefault();
+  async function onSubmit() {
     setError(null);
-    setLoading(true);
+    setSubmitting(true);
 
     try {
       const { data: subscriptionData, error } =
@@ -62,48 +62,41 @@ const CheckoutFormContent = ({
 
       if (error) {
         setError(error.message);
-        setLoading(false);
+        setSubmitting(false);
       }
     } catch (error) {
       setError("Error creating subscription");
-      setLoading(false);
+      setSubmitting(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className={styles["card-element-container"]}>
-        <CardElement
-          options={{
-            style: {
-              base: {
-                fontSize: "16px",
-                color: "#424770",
-                "::placeholder": {
-                  color: "#707070",
+    <Form onSubmit={onSubmit}>
+      <div className={styles["input-container"]}>
+        <div className={styles["input"]}>
+          <CardElement
+            options={{
+              style: {
+                base: {
+                  fontSize: "16px",
+                  color: "#424770",
+                  "::placeholder": {
+                    color: "#707070",
+                  },
+                  backgroundColor: "#fafafa",
                 },
-                backgroundColor: "#F0F8FF",
+                invalid: {
+                  color: "#9e2146",
+                },
               },
-              invalid: {
-                color: "#9e2146",
-              },
-            },
-          }}
-        />
-      </div>
-      {error && (
-        <div className={styles["error-message"]}>
-          <>{error}</>
+            }}
+          />
         </div>
-      )}
-      <button
-        type="submit"
-        className={`${styles["submit-btn"]} ${styles["pay-btn"]}`}
-        disabled={!stripe || loading}
-      >
-        {loading ? "Processing..." : "Pay"}
-      </button>
-    </form>
+      </div>
+      <Button type="submit" disabled={submitting} error={error || ""}>
+        {submitting ? "Processing..." : "Pay"}
+      </Button>
+    </Form>
   );
 };
 
