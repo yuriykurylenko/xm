@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-function Signup() {
+const Signup = () => {
   const { user, error, coachSignUp } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
@@ -50,6 +50,12 @@ function Signup() {
             placeholder="Password"
             type="password"
             required
+            validation={{
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters long",
+              },
+            }}
           />
           <Input
             className={styles["price-input"]}
@@ -68,6 +74,6 @@ function Signup() {
       </div>
     </div>
   );
-}
+};
 
 export default withAuth(Signup, ["anonymous"]);

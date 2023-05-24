@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import Head from "next/head";
+import Form, { Button, Input } from "@/app/components/Form";
+import styles from "@/app/components/Form/styles.module.css";
+
 import useAuth from "@/app/utils/useAuth";
 import withAuth from "@/app/components/withAuth";
-
-import styles from "@/app/styles/form.module.css";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
 const Login = () => {
   const { logIn, user, error } = useAuth();
@@ -21,53 +22,38 @@ const Login = () => {
     }
   }, [user, error]);
 
-  const handleLogin = async (event: any) => {
-    event.preventDefault();
+  const onSubmit = async (data: any) => {
     setSubmitting(true);
 
-    const email = event.target.elements.email.value;
-    const password = event.target.elements.password.value;
-
+    const { email, password } = data;
     await logIn(email, password);
+
+    setSubmitting(false);
   };
 
   return (
-    <div className={`${styles["form-container"]} ${styles["signup"]}`}>
+    <div>
       <Head>
         <title>Coaching | Log in</title>
       </Head>
-      <form onSubmit={handleLogin} className={styles["form"]}>
-        <h2>Log in</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          required
-          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}"
-          title="Please enter a valid email address"
-          name="email"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          required
-          name="password"
-        />
-        {error && (
-          <div className={styles["error-message"]}>
-            <>{error}</>
-          </div>
-        )}
-        <button
-          type="submit"
-          className={styles["submit-btn"]}
-          disabled={submitting}
-        >
-          {submitting ? "Logging in..." : "Log in"}
-        </button>
-        <p className={styles["sign-up-log-in"]}>
-          Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
-        </p>
-      </form>
+      <div className={styles["form-container"]}>
+        <Form onSubmit={onSubmit}>
+          <h2 className={styles["form-header"]}>Log in</h2>
+          <Input name="email" placeholder="Email" type="email" required />
+          <Input
+            name="password"
+            placeholder="Password"
+            type="password"
+            required
+          />
+          <Button type="submit" disabled={submitting} error={error || ""}>
+            {submitting ? "Logging in..." : "Log in"}
+          </Button>
+          <p className={styles["sign-up-log-in"]}>
+            Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
+          </p>
+        </Form>
+      </div>
     </div>
   );
 };

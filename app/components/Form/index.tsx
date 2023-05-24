@@ -41,6 +41,7 @@ interface InputProps {
   type?: InputType;
   placeholder?: string;
   required?: boolean;
+  validation?: ValidationRule;
   className?: string;
 }
 
@@ -49,6 +50,7 @@ export const Input: FC<InputProps> = ({
   type = "text",
   placeholder,
   required,
+  validation,
   className,
 }) => {
   const validations: Record<InputType, ValidationRule> = {
@@ -58,12 +60,7 @@ export const Input: FC<InputProps> = ({
         message: "Invalid email address",
       },
     },
-    password: {
-      minLength: {
-        value: 8,
-        message: "Password must be at least 8 characters long",
-      },
-    },
+    password: {},
     text: {},
     number: {},
   };
@@ -73,9 +70,10 @@ export const Input: FC<InputProps> = ({
     formState: { errors },
   } = useFormContext();
 
-  const validation = {
+  const inputValidation = {
     ...validations[type],
     ...(required ? { required: `${placeholder} is required` } : {}),
+    ...validation,
   };
 
   return (
@@ -87,7 +85,7 @@ export const Input: FC<InputProps> = ({
           }`}
           type={type}
           placeholder={placeholder}
-          {...register(name, validation)}
+          {...register(name, inputValidation)}
         />
         <p className={styles["error-message"]}>
           <>{errors[name] ? errors[name]?.message : ""}</>
