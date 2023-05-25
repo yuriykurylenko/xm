@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import {
   useForm,
   UseFormProps,
@@ -43,7 +43,7 @@ interface InputProps {
   required?: boolean;
   validation?: ValidationRule;
   className?: string;
-  value?: string;
+  value?: string | number;
   disabled?: boolean;
 }
 
@@ -57,6 +57,11 @@ export const Input: FC<InputProps> = ({
   value,
   disabled,
 }) => {
+  const [inputValue, setInputValue] = useState(value);
+  const handleChange = (event: { target: { value: any } }) => {
+    setInputValue(event.target.value);
+  };
+
   const validations: Record<InputType, ValidationRule> = {
     email: {
       pattern: {
@@ -89,9 +94,10 @@ export const Input: FC<InputProps> = ({
           }`}
           type={type}
           placeholder={placeholder}
-          value={value}
+          value={inputValue}
           disabled={disabled}
           {...register(name, inputValidation)}
+          onChange={handleChange}
         />
         <p className={styles["error-message"]}>
           <>{errors[name] ? errors[name]?.message : ""}</>

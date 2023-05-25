@@ -1,7 +1,9 @@
 import Modal from "react-modal";
 import { useState } from "react";
-import styles from "./styles.module.css";
 import { sendClientOffer } from "@/app/utils/api";
+
+import Form, { Button, Input } from "@/app/components/Form";
+import styles from "@/app/components/Form/styles.module.css";
 
 Modal.setAppElement("#__next");
 
@@ -24,16 +26,18 @@ const OfferModal: React.FC<OfferModalProps> = ({
     user.monthly_subscription_amount / 100
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function onModalClose() {
     closeModal();
     setMonthlyAmount(user.monthly_subscription_amount / 100);
+    setError(null);
   }
 
-  async function sendOffer(event: React.FormEvent) {
+  async function onSubmit(data: any) {
     setIsSubmitting(true);
-    event.preventDefault();
 
+    const { monthlyAmount } = data;
     const { error } = await sendClientOffer((selectedClient as any)?.id, {
       monthlyAmount: Number(monthlyAmount) * 100,
       currency: "USD",
@@ -41,10 +45,11 @@ const OfferModal: React.FC<OfferModalProps> = ({
 
     if (error) {
       setIsSubmitting(false);
+      setError(error);
+      return;
     }
 
     onModalClose();
-
     setIsSubmitting(false);
     onOfferSent && onOfferSent();
   }
@@ -59,63 +64,45 @@ const OfferModal: React.FC<OfferModalProps> = ({
           backgroundColor: "rgba(0, 0, 0, 0.75)",
         },
         content: {
-          maxWidth: "300px",
+          maxWidth: "510px",
+          height: "fit-content",
           margin: "0 auto",
-          padding: "2rem",
-          textAlign: "center",
           backgroundColor: "transparent",
           border: "none",
           borderRadius: "4px",
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.05)",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "Arial, sans-serif",
         },
       }}
     >
-      <div
-        className={`${styles["modal-container"]} ${styles["form-container"]}`}
-      >
-        <form onSubmit={sendOffer} className={styles["form"]}>
-          <h2>Send offer to {selectedClient.full_name}</h2>
-          <p>
-            {selectedClient.full_name} will receive an email with the link to
-            subscribe and pay your specified amount monthly.
-          </p>
-          <div className={styles["input-group"]}>
-            <div className={styles["price-input"]}>
-              <input
-                type="number"
-                placeholder="Monthly price"
-                id="monthlyPrice"
-                name="monthlyPrice"
-                min="0"
-                step="0.01"
-                value={parseFloat(monthlyAmount as any)}
-                onChange={(event) => {
-                  setMonthlyAmount(parseFloat(event.target.value) as any);
-                }}
-              />
-            </div>
-          </div>
-          <div>
-            <button
-              className={`${styles["filter-btn"]} ${styles["filter-btn-modal"]}`}
-              onClick={closeModal}
-            >
-              Close
-            </button>
-            <button
-              className={`${styles.btn} ${styles["btn-modal"]}`}
+      <div className={styles["form-container"]}>
+        <div className={styles["form-wrapper"]}>
+          <Form onSubmit={onSubmit}>
+            <h2 className={styles["form-header"]}>
+              Send offer to {selectedClient.full_name}
+            </h2>
+            <p>
+              {selectedClient.full_name} will receive an email with the link to
+              subscribe and pay your specified amount monthly.
+            </p>
+            <Input
+              type="number"
+              placeholder="Monthly price"
+              name="monthlyAmount"
+              value={user.monthly_subscription_amount / 100}
+              className={styles["price-input"]}
+              required
+            />
+            <Button
               type="submit"
               disabled={isNaN(parseFloat(monthlyAmount as any)) || isSubmitting}
+              error={error || ""}
             >
               {isSubmitting ? "Sending..." : "Send Offer"}
-            </button>
-          </div>
-        </form>
+            </Button>
+          </Form>
+        </div>
       </div>
     </Modal>
   );
