@@ -90,7 +90,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
               type="number"
               placeholder="Monthly price"
               name="monthlyAmount"
-              value={user.monthly_subscription_amount / 100}
+              defaultValue={user.monthly_subscription_amount / 100}
               className={styles["price-input"]}
               required
             />

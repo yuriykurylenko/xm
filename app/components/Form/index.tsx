@@ -43,7 +43,7 @@ interface InputProps {
   required?: boolean;
   validation?: ValidationRule;
   className?: string;
-  value?: string | number;
+  defaultValue?: string | number;
   disabled?: boolean;
 }
 
@@ -54,14 +54,9 @@ export const Input: FC<InputProps> = ({
   required,
   validation,
   className,
-  value,
+  defaultValue,
   disabled,
 }) => {
-  const [inputValue, setInputValue] = useState(value);
-  const handleChange = (event: { target: { value: any } }) => {
-    setInputValue(event.target.value);
-  };
-
   const validations: Record<InputType, ValidationRule> = {
     email: {
       pattern: {
@@ -94,10 +89,9 @@ export const Input: FC<InputProps> = ({
           }`}
           type={type}
           placeholder={placeholder}
-          value={inputValue}
           disabled={disabled}
+          defaultValue={defaultValue}
           {...register(name, inputValidation)}
-          onChange={handleChange}
         />
         <p className={styles["error-message"]}>
           <>{errors[name] ? errors[name]?.message : ""}</>

@@ -68,7 +68,12 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
               Now you can create your account and get access to exclusive
               materials.
             </p>
-            <Input name="email" type="email" value={client.email} disabled />
+            <Input
+              name="email"
+              type="email"
+              defaultValue={client.email}
+              disabled
+            />
             <Input
               name="password"
               placeholder="Password"
