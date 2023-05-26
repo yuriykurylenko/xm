@@ -11,7 +11,7 @@ export const PageContainer: FC<PageContainerProps> = ({ title, children }) => {
     <div className={styles["page-container"]}>
       <div className={styles["page-wrapper"]}>
         <h2 className={styles["page-header"]}>{title}</h2>
-        {children}
+        <div className={styles["page-content"]}>{children}</div>
       </div>
     </div>
   );

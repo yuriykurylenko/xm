@@ -10,6 +10,7 @@ import {
 import CheckoutForm from "@/app/components/CheckoutForm";
 import router from "next/router";
 import withAuth from "@/app/components/withAuth";
+import PageContainer from "@/app/components/PageContainer";
 
 const SubscriptionPage = ({
   subscription,
@@ -43,32 +44,24 @@ const SubscriptionPage = ({
             : "Loading..."}
         </title>
       </Head>
-      <div className={styles["form-container"]}>
-        <div className={styles["form-wrapper"]}>
-          <h1 className={styles["form-header"]}>Coaching Subscription</h1>
-          <div>
-            Dear <b>{client?.full_name}</b>, you will now start a coaching
-            subscription with me. Please enter your payment details in the form
-            below. You will be paying{" "}
-            <b>
-              {formatAmount(
-                subscription?.monthly_amount,
-                subscription.currency
-              )}
-            </b>{" "}
-            monthly. Can&apos;t wait to get started!
-            <p>
-              Sincerely, <br />
-              {coach?.full_name}
-            </p>
-          </div>
-          <CheckoutForm
-            client={client}
-            subscription={subscription}
-            onSubscriptionSuccess={onSubscriptionSuccess}
-          />
-        </div>
-      </div>
+      <PageContainer title="Coaching Subscription">
+        Dear <b>{client?.full_name}</b>, you will now start a coaching
+        subscription with me. Please enter your payment details in the form
+        below. You will be paying{" "}
+        <b>
+          {formatAmount(subscription?.monthly_amount, subscription.currency)}
+        </b>{" "}
+        monthly. Can&apos;t wait to get started!
+        <p>
+          Sincerely, <br />
+          {coach?.full_name}
+        </p>
+        <CheckoutForm
+          client={client}
+          subscription={subscription}
+          onSubscriptionSuccess={onSubscriptionSuccess}
+        />
+      </PageContainer>
     </div>
   );
 };
