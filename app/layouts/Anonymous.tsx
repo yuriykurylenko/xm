@@ -1,5 +1,5 @@
-import "@/app/styles/anonymous.layout.css";
+import styles from "@/app/styles/anonymous.module.css";
 
 export default function AnonymousLayout({ children }: { children: any }) {
-  return <div>{children}</div>;
+  return <div className={styles["blue-background"]}>{children}</div>;
 }
