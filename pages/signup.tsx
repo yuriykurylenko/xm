@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import PriceInput from "@/app/components/Form/PriceInput";
 
 const Signup = () => {
   const { user, error, coachSignUp } = useAuth();
@@ -58,14 +59,10 @@ const Signup = () => {
                 },
               }}
             />
-            <Input
-              className={styles["price-input"]}
+            <PriceInput
               name="monthly_subscription_amount"
               placeholder="Monthly price"
-              type="number"
               required
-              min={0}
-              step={1}
             />
             <Button type="submit" disabled={submitting} error={error || ""}>
               {submitting ? "Signing up..." : "Sign up"}

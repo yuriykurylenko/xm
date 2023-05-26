@@ -4,6 +4,7 @@ import { sendClientOffer } from "@/app/utils/api";
 
 import Form, { Button, Input } from "@/app/components/Form";
 import styles from "@/app/components/Form/styles.module.css";
+import PriceInput from "@/app/components/Form/PriceInput";
 
 Modal.setAppElement("#__next");
 
@@ -86,15 +87,11 @@ const OfferModal: React.FC<OfferModalProps> = ({
               {selectedClient.full_name} will receive an email with the link to
               subscribe and pay your specified amount monthly.
             </p>
-            <Input
-              type="number"
-              placeholder="Monthly price"
+            <PriceInput
               name="monthlyAmount"
-              defaultValue={user.monthly_subscription_amount / 100}
-              className={styles["price-input"]}
+              placeholder="Monthly price"
               required
-              min={0}
-              step={1}
+              defaultValue={user.monthly_subscription_amount / 100}
             />
             <Button
               type="submit"

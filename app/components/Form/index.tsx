@@ -37,7 +37,7 @@ type ValidationRule = {
 
 type InputType = "email" | "password" | "number" | "text";
 
-interface InputProps {
+export interface InputProps {
   name: string;
   type?: InputType;
   placeholder?: string;
