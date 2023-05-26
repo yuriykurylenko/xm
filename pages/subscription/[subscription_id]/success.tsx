@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-import Form, { Button, Input } from "@/app/components/Form";
+import Form from "@/app/components/Form";
 import styles from "@/app/components/Form/styles.module.css";
 
 import useAuth from "@/app/utils/useAuth";
@@ -12,6 +12,8 @@ import {
   fetchCoachById,
   fetchSubscriptionById,
 } from "@/app/utils/api";
+import Input from "@/app/components/Form/Input";
+import Button from "@/app/components/Form/Button";
 
 const Success = ({ coach, client }: { coach: any; client: any }) => {
   const { user, error, clientSignUp } = useAuth();

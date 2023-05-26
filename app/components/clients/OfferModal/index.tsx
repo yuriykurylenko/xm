@@ -2,9 +2,10 @@ import Modal from "react-modal";
 import { useState } from "react";
 import { sendClientOffer } from "@/app/utils/api";
 
-import Form, { Button, Input } from "@/app/components/Form";
+import Form from "@/app/components/Form";
 import styles from "@/app/components/Form/styles.module.css";
 import PriceInput from "@/app/components/Form/PriceInput";
+import Button from "@/app/components/Form/Button";
 
 Modal.setAppElement("#__next");
 

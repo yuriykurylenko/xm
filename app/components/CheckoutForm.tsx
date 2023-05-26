@@ -9,7 +9,8 @@ import { JSX, SetStateAction, useState } from "react";
 import { handleStripeCardAndSubscriptionSetup } from "../utils/api/stripe";
 
 import styles from "@/app/components/Form/styles.module.css";
-import Form, { Button } from "./Form";
+import Form from "@/app/components/Form";
+import Button from "@/app/components/Form/Button";
 
 const stripePromise = loadStripe(
   "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"

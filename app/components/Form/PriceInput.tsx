@@ -1,5 +1,6 @@
-import { Input, InputProps } from "@/app/components/Form";
+import Input from "@/app/components/Form/Input";
 import styles from "@/app/components/Form/styles.module.css";
+import { InputProps } from "./types";
 
 interface PriceInputProps extends Omit<InputProps, "type" | "min" | "step"> {}
 

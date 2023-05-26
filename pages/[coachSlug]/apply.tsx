@@ -3,9 +3,11 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { createClient, fetchCoachBySlug } from "@/app/utils/api";
 
-import Form, { Button, Input } from "@/app/components/Form";
+import Form from "@/app/components/Form";
 import styles from "@/app/components/Form/styles.module.css";
 import withAuth from "@/app/components/withAuth";
+import Input from "@/app/components/Form/Input";
+import Button from "@/app/components/Form/Button";
 
 const ClientApplication = ({ coach }: { coach: any }) => {
   const router = useRouter();

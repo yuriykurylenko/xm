@@ -1,4 +1,7 @@
-import Form, { Button, Input } from "@/app/components/Form";
+import Form from "@/app/components/Form";
+import Input from "@/app/components/Form/Input";
+import Button from "@/app/components/Form/Button";
+
 import styles from "@/app/components/Form/styles.module.css";
 
 import useAuth from "@/app/utils/useAuth";
