@@ -45,13 +45,15 @@ const SubscriptionPage = ({
         </title>
       </Head>
       <PageContainer title="Coaching Subscription">
-        Dear <b>{client?.full_name}</b>, you will now start a coaching
-        subscription with me. Please enter your payment details in the form
-        below. You will be paying{" "}
-        <b>
-          {formatAmount(subscription?.monthly_amount, subscription.currency)}
-        </b>{" "}
-        monthly. Can&apos;t wait to get started!
+        <p>
+          Dear <b>{client?.full_name}</b>, you will now start a coaching
+          subscription with me. Please enter your payment details in the form
+          below. You will be paying{" "}
+          <b>
+            {formatAmount(subscription?.monthly_amount, subscription.currency)}
+          </b>{" "}
+          monthly. Can&apos;t wait to get started!
+        </p>
         <p>
           Sincerely, <br />
           {coach?.full_name}
