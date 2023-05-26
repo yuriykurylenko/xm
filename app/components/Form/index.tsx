@@ -21,6 +21,7 @@ export const Form: FC<FormProps> = ({ children, onSubmit, ...formProps }) => {
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
         className={styles["form"]}
+        noValidate
       >
         {children}
       </form>
