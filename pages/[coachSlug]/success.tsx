@@ -18,7 +18,7 @@ const Success = ({ coachName }: { coachName: any }) => {
       </PageContainer>
     </div>
   );
-}
+};
 
 export async function getServerSideProps(context: any) {
   const { coachSlug } = context.params;
@@ -37,4 +37,4 @@ export async function getServerSideProps(context: any) {
   };
 }
 
-export default withAuth(Success, ["anonymous"])
+export default withAuth(Success, ["anonymous"]);

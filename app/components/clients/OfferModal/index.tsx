@@ -3,9 +3,9 @@ import { useState } from "react";
 import { sendClientOffer } from "@/app/utils/api";
 
 import Form from "@/app/components/Form";
-import styles from "@/app/components/Form/styles.module.css";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Button from "@/app/components/Form/Button";
+import PageContainer from "@/app/components/PageContainer";
 
 Modal.setAppElement("#__next");
 
@@ -78,32 +78,27 @@ const OfferModal: React.FC<OfferModalProps> = ({
         },
       }}
     >
-      <div className={styles["form-container"]}>
-        <div className={styles["form-wrapper"]}>
-          <Form onSubmit={onSubmit}>
-            <h2 className={styles["form-header"]}>
-              Send offer to {selectedClient.full_name}
-            </h2>
-            <p>
-              {selectedClient.full_name} will receive an email with the link to
-              subscribe and pay your specified amount monthly.
-            </p>
-            <PriceInput
-              name="monthlyAmount"
-              placeholder="Monthly price"
-              required
-              defaultValue={user.monthly_subscription_amount / 100}
-            />
-            <Button
-              type="submit"
-              disabled={isNaN(parseFloat(monthlyAmount as any)) || isSubmitting}
-              error={error || ""}
-            >
-              {isSubmitting ? "Sending..." : "Send Offer"}
-            </Button>
-          </Form>
-        </div>
-      </div>
+      <PageContainer title={`Send offer to ${selectedClient.full_name}`}>
+        <Form onSubmit={onSubmit}>
+          <p>
+            {selectedClient.full_name} will receive an email with the link to
+            subscribe and pay your specified amount monthly.
+          </p>
+          <PriceInput
+            name="monthlyAmount"
+            placeholder="Monthly price"
+            required
+            defaultValue={user.monthly_subscription_amount / 100}
+          />
+          <Button
+            type="submit"
+            disabled={isNaN(parseFloat(monthlyAmount as any)) || isSubmitting}
+            error={error || ""}
+          >
+            {isSubmitting ? "Sending..." : "Send Offer"}
+          </Button>
+        </Form>
+      </PageContainer>
     </Modal>
   );
 };
