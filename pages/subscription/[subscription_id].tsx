@@ -1,5 +1,3 @@
-import styles from "@/app/components/Form/styles.module.css";
-
 import Head from "next/head";
 import {
   activateClient,

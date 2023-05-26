@@ -3,7 +3,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 
 import Form from "@/app/components/Form";
-import styles from "@/app/components/Form/styles.module.css";
 
 import useAuth from "@/app/utils/useAuth";
 import withAuth from "@/app/components/withAuth";
