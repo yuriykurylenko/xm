@@ -6,7 +6,7 @@ import FilterBar from "@/app/components/clients/FilterBar";
 import ClientList from "@/app/components/clients/ClientList";
 import OfferModal from "@/app/components/clients/OfferModal";
 
-import styles from "@/app/styles/clients.module.css";
+import styles from "@/app/components/clients/ClientList/styles.module.css";
 
 const Clients = ({ user }: { user: any }) => {
   const [clients, setClients] = useState([]);
