@@ -1,21 +1,21 @@
 import React from "react";
-import styles from "@/app/styles/success.module.css";
 import Head from "next/head";
 import { fetchCoachBySlug } from "@/app/utils/api";
+import PageContainer from "@/app/components/PageContainer";
+import withAuth from "@/app/components/withAuth";
 
-export default function Success({ coachName }: { coachName: any }) {
+const Success = ({ coachName }: { coachName: any }) => {
   return (
-    <div className={styles["parent-container"]}>
+    <div>
       <Head>
         <title>{coachName ? `${coachName} | Success` : "Loading..."}</title>
       </Head>
-      <div className={styles["success-container"]}>
-        <h1 className={styles["success-title"]}>Congratulations!</h1>
-        <p className={styles["success-text"]}>
+      <PageContainer title="Congratulations!">
+        <p>
           You have succesfully applied to work with <b>{coachName}</b>. You will
           hear from us shortly.
         </p>
-      </div>
+      </PageContainer>
     </div>
   );
 }
@@ -36,3 +36,5 @@ export async function getServerSideProps(context: any) {
     },
   };
 }
+
+export default withAuth(Success, ["anonymous"])
