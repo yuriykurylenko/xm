@@ -45,6 +45,9 @@ interface InputProps {
   className?: string;
   defaultValue?: string | number;
   disabled?: boolean;
+  min?: number;
+  max?: number;
+  step?: number;
 }
 
 export const Input: FC<InputProps> = ({
@@ -56,6 +59,9 @@ export const Input: FC<InputProps> = ({
   className,
   defaultValue,
   disabled,
+  min,
+  max,
+  step,
 }) => {
   const validations: Record<InputType, ValidationRule> = {
     email: {
@@ -92,6 +98,9 @@ export const Input: FC<InputProps> = ({
           disabled={disabled}
           defaultValue={defaultValue}
           {...register(name, inputValidation)}
+          min={min}
+          max={max}
+          step={step}
         />
         <p className={styles["error-message"]}>
           <>{errors[name] ? errors[name]?.message : ""}</>

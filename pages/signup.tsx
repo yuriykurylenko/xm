@@ -64,6 +64,8 @@ const Signup = () => {
               placeholder="Monthly price"
               type="number"
               required
+              min={0}
+              step={1}
             />
             <Button type="submit" disabled={submitting} error={error || ""}>
               {submitting ? "Signing up..." : "Sign up"}

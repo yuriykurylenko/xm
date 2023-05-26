@@ -93,6 +93,8 @@ const OfferModal: React.FC<OfferModalProps> = ({
               defaultValue={user.monthly_subscription_amount / 100}
               className={styles["price-input"]}
               required
+              min={0}
+              step={1}
             />
             <Button
               type="submit"
