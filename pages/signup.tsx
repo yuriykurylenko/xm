@@ -8,27 +8,22 @@ import styles from "@/app/components/Form/styles.module.css";
 import useAuth from "@/app/utils/useAuth";
 import withAuth from "@/app/components/withAuth";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
 
 const Signup = () => {
   const { user, error, coachSignUp } = useAuth();
-  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     if (user) {
       router.reload();
     }
-    if (error) {
-      setSubmitting(false);
-    }
-  }, [user, error]);
+  }, [user]);
 
   const onSubmit = async (data: any) => {
-    setSubmitting(true);
     const { email, password, full_name, monthly_subscription_amount } = data;
 
     await coachSignUp({
@@ -37,7 +32,6 @@ const Signup = () => {
       full_name,
       monthly_subscription_amount: Number(monthly_subscription_amount) * 100,
     });
-    setSubmitting(false);
   };
 
   return (
@@ -66,12 +60,16 @@ const Signup = () => {
             placeholder="Monthly price"
             required
           />
-          <Button type="submit" disabled={submitting} error={error || ""}>
-            {submitting ? "Signing up..." : "Sign up"}
+          <Button
+            type="submit"
+            submittingText="Signing up..."
+            error={error || ""}
+          >
+            Sign up
           </Button>
           <p className={styles["sign-up-log-in"]}>
             Already have an account? <Link href="/login">Log in</Link>
-          </p>{" "}
+          </p>
         </Form>
       </PageContainer>
     </div>

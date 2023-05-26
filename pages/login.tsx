@@ -7,7 +7,7 @@ import styles from "@/app/components/Form/styles.module.css";
 import useAuth from "@/app/utils/useAuth";
 import withAuth from "@/app/components/withAuth";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
@@ -15,24 +15,16 @@ import PageContainer from "@/app/components/PageContainer";
 const Login = () => {
   const { logIn, user, error } = useAuth();
   const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (user) {
       router.reload();
     }
-    if (error) {
-      setSubmitting(false);
-    }
-  }, [user, error]);
+  }, [user]);
 
   const onSubmit = async (data: any) => {
-    setSubmitting(true);
-
     const { email, password } = data;
     await logIn(email, password);
-
-    setSubmitting(false);
   };
 
   return (
@@ -49,8 +41,12 @@ const Login = () => {
             type="password"
             required
           />
-          <Button type="submit" disabled={submitting} error={error || ""}>
-            {submitting ? "Logging in..." : "Log in"}
+          <Button
+            type="submit"
+            submittingText="Logging in..."
+            error={error || ""}
+          >
+            Log in
           </Button>
           <p className={styles["sign-up-log-in"]}>
             Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>

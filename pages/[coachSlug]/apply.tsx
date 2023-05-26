@@ -11,12 +11,9 @@ import PageContainer from "@/app/components/PageContainer";
 
 const ClientApplication = ({ coach }: { coach: any }) => {
   const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   const onSubmit = async (data: any) => {
-    setSubmitting(true);
-
     try {
       const { full_name, email } = data;
       const { data: client, error } = await createClient({
@@ -27,13 +24,11 @@ const ClientApplication = ({ coach }: { coach: any }) => {
 
       if (error) {
         setError(error.message);
-        setSubmitting(false);
       } else if (client) {
         router.push(`/${coach.slug}/success`);
       }
     } catch (error) {
       setError("Something went wrong. Please try again.");
-      setSubmitting(false);
     }
   };
 
@@ -48,8 +43,12 @@ const ClientApplication = ({ coach }: { coach: any }) => {
         <Form onSubmit={onSubmit}>
           <Input name="full_name" placeholder="Full Name" required />
           <Input name="email" placeholder="Email" type="email" required />
-          <Button type="submit" disabled={submitting} error={error || ""}>
-            {submitting ? "Submitting..." : "Apply"}
+          <Button
+            type="submit"
+            submittingText="Submitting.."
+            error={error || ""}
+          >
+            Apply
           </Button>
         </Form>
       </PageContainer>

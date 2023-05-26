@@ -19,20 +19,13 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
   const { user, error, clientSignUp } = useAuth();
   const router = useRouter();
 
-  const [submitting, setSubmitting] = useState(false);
-
   useEffect(() => {
     if (user) {
       router.reload();
     }
-    if (error) {
-      setSubmitting(false);
-    }
-  }, [user, error]);
+  }, [user]);
 
   const onSubmit = async (data: any) => {
-    setSubmitting(true);
-
     try {
       const { password } = data;
       await clientSignUp({
@@ -40,10 +33,8 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
         password,
         clientId: client.id,
       });
-      setSubmitting(false);
     } catch (error) {
       console.error("Error during sign-up:", error);
-      setSubmitting(false);
     }
   };
 
@@ -83,8 +74,12 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
               },
             }}
           />
-          <Button type="submit" disabled={submitting} error={error || ""}>
-            {submitting ? "Creating account..." : "Create account"}
+          <Button
+            type="submit"
+            submittingText="Creating account..."
+            error={error || ""}
+          >
+            Create account
           </Button>
         </Form>
       </PageContainer>
