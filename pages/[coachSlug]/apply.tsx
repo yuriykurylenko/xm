@@ -4,10 +4,10 @@ import Head from "next/head";
 import { createClient, fetchCoachBySlug } from "@/app/utils/api";
 
 import Form from "@/app/components/Form";
-import styles from "@/app/components/Form/styles.module.css";
 import withAuth from "@/app/components/withAuth";
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
+import PageContainer from "@/app/components/PageContainer";
 
 const ClientApplication = ({ coach }: { coach: any }) => {
   const router = useRouter();
@@ -44,20 +44,15 @@ const ClientApplication = ({ coach }: { coach: any }) => {
           {coach.full_name ? `${coach.full_name} | Application` : "Loading..."}
         </title>
       </Head>
-      <div className={styles["form-container"]}>
-        <div className={styles["form-wrapper"]}>
-          <Form onSubmit={onSubmit}>
-            <h2 className={styles["form-header"]}>
-              Apply to work with {coach?.full_name}
-            </h2>
-            <Input name="full_name" placeholder="Full Name" required />
-            <Input name="email" placeholder="Email" type="email" required />
-            <Button type="submit" disabled={submitting} error={error || ""}>
-              {submitting ? "Submitting..." : "Apply"}
-            </Button>
-          </Form>
-        </div>
-      </div>
+      <PageContainer title={`Apply to work with ${coach?.full_name}`}>
+        <Form onSubmit={onSubmit}>
+          <Input name="full_name" placeholder="Full Name" required />
+          <Input name="email" placeholder="Email" type="email" required />
+          <Button type="submit" disabled={submitting} error={error || ""}>
+            {submitting ? "Submitting..." : "Apply"}
+          </Button>
+        </Form>
+      </PageContainer>
     </div>
   );
 };
