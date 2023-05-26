@@ -1,7 +1,28 @@
 import React, { FC } from "react";
 import { useFormContext } from "react-hook-form";
 import styles from "@/app/components/Form/styles.module.css";
-import { InputProps, InputType, ValidationRule } from "./types";
+
+export type ValidationRule = {
+  required?: string | boolean;
+  minLength?: { value: number; message: string };
+  pattern?: { value: RegExp; message: string };
+};
+
+export type InputType = "email" | "password" | "number" | "text";
+
+export interface InputProps {
+  name: string;
+  type?: InputType;
+  placeholder?: string;
+  required?: boolean;
+  validation?: ValidationRule;
+  className?: string;
+  defaultValue?: string | number;
+  disabled?: boolean;
+  min?: number;
+  max?: number;
+  step?: number;
+}
 
 export const Input: FC<InputProps> = ({
   name,
