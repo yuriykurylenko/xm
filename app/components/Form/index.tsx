@@ -74,9 +74,10 @@ const FormInner: FC<FormInnerProps> = ({
 
   const handleSubmitInner = async (data: any) => {
     setIsSubmitting(true);
-    console.log(await onSubmit(data));
     const { error } = await onSubmit(data);
-    setErrorMessage(error.message);
+    if (error?.message) {
+      setErrorMessage(error.message);
+    }
     setIsSubmitting(false);
   };
 
@@ -89,7 +90,9 @@ export const Form: FC<FormProps> = ({ children, onSubmit, ...formProps }) => {
   return (
     <FormProvider {...methods}>
       <FormStatusProvider>
-        <FormInner onSubmit={onSubmit} children={children} {...formProps} />
+        <FormInner onSubmit={onSubmit} {...formProps}>
+          {children}
+        </FormInner>
       </FormStatusProvider>
     </FormProvider>
   );
