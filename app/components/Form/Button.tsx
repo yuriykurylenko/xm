@@ -1,6 +1,6 @@
 import React, { FC, useContext } from "react";
 import styles from "@/app/components/Form/styles.module.css";
-import { SubmittingContext } from ".";
+import { useFormStatus } from "@/app/components/Form";
 
 interface ButtonProps {
   type: "button" | "reset" | "submit";
@@ -18,20 +18,20 @@ export const Button: FC<ButtonProps> = ({
   submittingText,
   ...props
 }) => {
-  const submitting = useContext(SubmittingContext);
+  const { isSubmitting, errorMessage } = useFormStatus();
 
   return (
     <>
       <button
         className={styles["submit-btn"]}
-        disabled={disabled || submitting}
+        disabled={isSubmitting}
         {...props}
       >
-        {submitting && submittingText ? submittingText : children}
+        {isSubmitting ? "Submitting..." : children}
       </button>
-      {error && (
+      {errorMessage && (
         <p className={styles["submit-error-message"]}>
-          <>{error || ""}</>
+          <>{errorMessage || ""}</>
         </p>
       )}
     </>
