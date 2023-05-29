@@ -23,7 +23,7 @@ const Signup = () => {
     }
   }, [user]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = (data: any) => {
     const { email, password, full_name, monthly_subscription_amount } = data;
 
     return coachSignUp({
