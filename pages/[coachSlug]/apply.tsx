@@ -24,7 +24,7 @@ const ClientApplication = ({ coach }: { coach: any }) => {
       router.push(`/${coach.slug}/success`);
     }
 
-    return { data: client, error }
+    return { data: client, error };
   };
 
   return (
@@ -38,10 +38,7 @@ const ClientApplication = ({ coach }: { coach: any }) => {
         <Form onSubmit={onSubmit}>
           <Input name="full_name" placeholder="Full Name" required />
           <Input name="email" placeholder="Email" type="email" required />
-          <Button
-            type="submit"
-            submittingText="Submitting.."
-          >
+          <Button type="submit" submittingText="Submitting..">
             Apply
           </Button>
         </Form>

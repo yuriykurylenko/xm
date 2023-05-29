@@ -70,10 +70,7 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
               },
             }}
           />
-          <Button
-            type="submit"
-            submittingText="Creating account..."
-          >
+          <Button type="submit" submittingText="Creating account...">
             Create account
           </Button>
         </Form>
