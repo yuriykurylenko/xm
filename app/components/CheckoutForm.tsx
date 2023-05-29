@@ -5,7 +5,7 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { JSX, SetStateAction, useState } from "react";
+import { JSX } from "react";
 import { handleStripeCardAndSubscriptionSetup } from "../utils/api/stripe";
 
 import styles from "@/app/components/Form/styles.module.css";
@@ -40,14 +40,7 @@ const CheckoutFormContent = ({
   const stripe = useStripe();
   const elements = useElements();
 
-  const [error, setError] =
-    useState<SetStateAction<null | undefined | string>>(null);
-  const [submitting, setSubmitting] = useState(false);
-
   async function onSubmit() {
-    setError(null);
-    setSubmitting(true);
-
     try {
       const { data: subscriptionData, error } =
         await handleStripeCardAndSubscriptionSetup(
@@ -59,15 +52,17 @@ const CheckoutFormContent = ({
 
       if (subscriptionData?.success) {
         onSubscriptionSuccess(subscriptionData.stripeSubscriptionId);
+        return { data: subscriptionData, error };
       }
 
       if (error) {
-        setError(error.message);
-        setSubmitting(false);
+        return { data: subscriptionData, error };
       }
     } catch (error) {
-      setError("Error creating subscription");
-      setSubmitting(false);
+      return {
+        data: null,
+        error: { message: "Error confirming subscription" },
+      };
     }
   }
 
@@ -94,12 +89,8 @@ const CheckoutFormContent = ({
           />
         </div>
       </div>
-      <Button
-        type="submit"
-        disabled={submitting}
-        error={(error as string) || ""}
-      >
-        {submitting ? "Processing..." : "Pay"}
+      <Button type="submit" submittingText="Processing...">
+        Pay
       </Button>
     </Form>
   );

@@ -14,7 +14,7 @@ import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
 
 const Signup = () => {
-  const { user, error, coachSignUp } = useAuth();
+  const { user, coachSignUp } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -23,10 +23,10 @@ const Signup = () => {
     }
   }, [user]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = (data: any) => {
     const { email, password, full_name, monthly_subscription_amount } = data;
 
-    await coachSignUp({
+    return coachSignUp({
       email,
       password,
       full_name,
@@ -60,11 +60,7 @@ const Signup = () => {
             placeholder="Monthly price"
             required
           />
-          <Button
-            type="submit"
-            submittingText="Signing up..."
-            error={error || ""}
-          >
+          <Button type="submit" submittingText="Signing up...">
             Sign up
           </Button>
           <p className={styles["sign-up-log-in"]}>

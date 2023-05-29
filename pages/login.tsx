@@ -13,7 +13,7 @@ import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
 
 const Login = () => {
-  const { logIn, user, error } = useAuth();
+  const { logIn, user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -22,9 +22,9 @@ const Login = () => {
     }
   }, [user]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = (data: any) => {
     const { email, password } = data;
-    await logIn(email, password);
+    return logIn(email, password);
   };
 
   return (
@@ -41,11 +41,7 @@ const Login = () => {
             type="password"
             required
           />
-          <Button
-            type="submit"
-            submittingText="Logging in..."
-            error={error || ""}
-          >
+          <Button type="submit" submittingText="Logging in...">
             Log in
           </Button>
           <p className={styles["sign-up-log-in"]}>

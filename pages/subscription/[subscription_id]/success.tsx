@@ -16,7 +16,7 @@ import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
 
 const Success = ({ coach, client }: { coach: any; client: any }) => {
-  const { user, error, clientSignUp } = useAuth();
+  const { user, clientSignUp } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -25,17 +25,13 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
     }
   }, [user]);
 
-  const onSubmit = async (data: any) => {
-    try {
-      const { password } = data;
-      await clientSignUp({
-        email: client.email,
-        password,
-        clientId: client.id,
-      });
-    } catch (error) {
-      console.error("Error during sign-up:", error);
-    }
+  const onSubmit = (data: any) => {
+    const { password } = data;
+    return clientSignUp({
+      email: client.email,
+      password,
+      clientId: client.id,
+    });
   };
 
   return (
@@ -74,11 +70,7 @@ const Success = ({ coach, client }: { coach: any; client: any }) => {
               },
             }}
           />
-          <Button
-            type="submit"
-            submittingText="Creating account..."
-            error={error || ""}
-          >
+          <Button type="submit" submittingText="Creating account...">
             Create account
           </Button>
         </Form>

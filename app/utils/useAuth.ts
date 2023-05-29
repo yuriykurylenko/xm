@@ -21,13 +21,13 @@ export default function useAuth() {
 
     if (error) {
       setError(error.message);
-      return null;
+      return { data: null, error: error };
     }
 
     const profile = await getRoleAndProfile(user.id);
     setUser({ ...user, ...profile });
 
-    return user;
+    return { data: user, error };
   }
 
   async function coachSignUp({
@@ -53,7 +53,7 @@ export default function useAuth() {
 
     if (signUpError) {
       setError(signUpError.message);
-      return null;
+      return { data: null, error: signUpError };
     }
 
     if (user) {
@@ -69,7 +69,7 @@ export default function useAuth() {
 
       if (insertError) {
         setError(insertError.message);
-        return null;
+        return { data: null, error: insertError };
       }
 
       const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -79,13 +79,13 @@ export default function useAuth() {
 
       if (signInError) {
         setError(signInError.message);
-        return null;
+        return { data: null, error: signInError };
       }
 
       setUser({ ...user, ...profile });
       setRole("coach");
 
-      return user;
+      return { data: user, error: signInError };
     }
   }
 
@@ -108,7 +108,7 @@ export default function useAuth() {
 
     if (signupError) {
       setError(signupError.message);
-      return null;
+      return { data: null, error: signupError };
     }
 
     // Insert the client entry with a link to the coach
@@ -122,7 +122,7 @@ export default function useAuth() {
 
     if (updateError) {
       setError(updateError.message);
-      return null;
+      return { data: null, error: updateError };
     }
 
     const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -132,13 +132,13 @@ export default function useAuth() {
 
     if (signInError) {
       setError(signInError.message);
-      return null;
+      return { data: null, error: signInError };
     }
 
     setRole("client");
     setUser({ ...user, ...profile });
 
-    return user;
+    return { data: user, error: signInError };
   }
 
   async function getRoleAndProfile(userId: any) {
