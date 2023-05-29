@@ -26,7 +26,7 @@ const Signup = () => {
   const onSubmit = async (data: any) => {
     const { email, password, full_name, monthly_subscription_amount } = data;
 
-    await coachSignUp({
+    return coachSignUp({
       email,
       password,
       full_name,
@@ -60,11 +60,7 @@ const Signup = () => {
             placeholder="Monthly price"
             required
           />
-          <Button
-            type="submit"
-            submittingText="Signing up..."
-            error={error || ""}
-          >
+          <Button type="submit" submittingText="Signing up...">
             Sign up
           </Button>
           <p className={styles["sign-up-log-in"]}>

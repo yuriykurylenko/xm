@@ -11,7 +11,6 @@ import {
   FormProvider,
   useFormContext,
 } from "react-hook-form";
-import styles from "@/app/components/Form/styles.module.css";
 
 interface FormProps extends UseFormProps {
   children: React.ReactNode;
@@ -81,7 +80,11 @@ const FormInner: FC<FormInnerProps> = ({
     setIsSubmitting(false);
   };
 
-  return <form onSubmit={handleSubmit(handleSubmitInner)}>{children}</form>;
+  return (
+    <form onSubmit={handleSubmit(handleSubmitInner)} {...formProps}>
+      {children}
+    </form>
+  );
 };
 
 export const Form: FC<FormProps> = ({ children, onSubmit, ...formProps }) => {
