@@ -65,14 +65,13 @@ const FormInner: FC<FormInnerProps> = ({
   onSubmit,
   ...formProps
 }) => {
-  const {
-    handleSubmit,
-    formState: { errors },
-  } = useFormContext();
+  const { handleSubmit } = useFormContext();
   const { setIsSubmitting, setErrorMessage } = useFormStatus();
 
   const handleSubmitInner = async (data: any) => {
     setIsSubmitting(true);
+    setErrorMessage("");
+
     const { error } = await onSubmit(data);
     if (error?.message) {
       setErrorMessage(error.message);
