@@ -14,7 +14,7 @@ import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
 
 const Signup = () => {
-  const { user, error, coachSignUp } = useAuth();
+  const { user, coachSignUp } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
