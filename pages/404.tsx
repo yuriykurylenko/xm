@@ -11,7 +11,7 @@ const NotFoundPage: React.FC = () => {
     <div className={styles.container}>
       <h2 className={styles.header}>404</h2>
       <p className={styles.paragraph}>
-        Oops! The page you're looking for does not exist.
+        Oops! The page you are looking for does not exist.
       </p>
       <button onClick={() => router.back()} className={styles.button}>
         Go Back
