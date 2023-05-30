@@ -1,5 +1,5 @@
-import ClientCard from "./ClientCard";
-import styles from "./styles.module.css";
+import ClientCard from "@/app/components/clients/ClientList/ClientCard";
+import styles from "@/app/components/clients/ClientList/styles.module.css";
 
 interface ClientListProps {
   user: any;

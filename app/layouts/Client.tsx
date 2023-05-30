@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import Header from "@/app/components/Header";
 
 export default function ClientLayout({ children }: { children: any }) {
   return (

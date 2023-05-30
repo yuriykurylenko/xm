@@ -1,4 +1,4 @@
-import styles from "./styles.module.css";
+import styles from "@/app/components/clients/ClientList/styles.module.css";
 
 interface ClientProps {
   client: any;

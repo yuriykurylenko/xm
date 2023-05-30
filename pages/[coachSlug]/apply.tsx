@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { createClient, fetchCoachBySlug } from "@/app/utils/api";

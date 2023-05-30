@@ -1,4 +1,4 @@
-import styles from "./styles.module.css";
+import styles from "@/app/components/clients/FilterBar/styles.module.css";
 
 interface FilterButtonProps {
   status: string;

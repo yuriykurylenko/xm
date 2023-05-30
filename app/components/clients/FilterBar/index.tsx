@@ -1,4 +1,4 @@
-import FilterButton from "./FilterButton";
+import FilterButton from "@/app/components/clients/FilterBar/FilterButton";
 
 interface FilterBarProps {
   filterStatus: string;
