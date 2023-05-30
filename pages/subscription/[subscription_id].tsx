@@ -7,7 +7,7 @@ import {
 } from "@/app/utils/api";
 import CheckoutForm from "@/app/components/CheckoutForm";
 import router from "next/router";
-import withAuth from "@/app/components/withAuth";
+import withAuth from "@/app/hoc/withAuth";
 import PageContainer from "@/app/components/PageContainer";
 
 const SubscriptionPage = ({

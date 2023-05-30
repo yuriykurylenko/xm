@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import withAuth from "@/app/components/withAuth";
+import withAuth from "@/app/hoc/withAuth";
 import { fetchClientsByCoachId } from "@/app/utils/api";
 import FilterBar from "@/app/components/clients/FilterBar";
 import ClientList from "@/app/components/clients/ClientList";

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import useAuth from "@/app/utils/useAuth";
+import useAuth from "@/app/hooks/useAuth";
 
 import styles from "./styles.module.css";
 

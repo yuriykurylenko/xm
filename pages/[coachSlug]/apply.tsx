@@ -4,7 +4,7 @@ import Head from "next/head";
 import { createClient, fetchCoachBySlug } from "@/app/utils/api";
 
 import Form from "@/app/components/Form";
-import withAuth from "@/app/components/withAuth";
+import withAuth from "@/app/hoc/withAuth";
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";

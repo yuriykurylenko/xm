@@ -2,8 +2,8 @@ import AnonymousLayout from "@/app/layouts/Anonymous";
 import CoachLayout from "@/app/layouts/Coach";
 import ClientLayout from "../layouts/Client";
 
-import useAuth from "../utils/useAuth";
-import Loading from "./Loading";
+import useAuth from "../hooks/useAuth";
+import Loading from "../components/Loading";
 import { useRouter } from "next/router";
 
 import "@/app/globals.css";

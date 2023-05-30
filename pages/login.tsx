@@ -4,8 +4,8 @@ import Button from "@/app/components/Form/Button";
 
 import styles from "@/app/components/Form/styles.module.css";
 
-import useAuth from "@/app/utils/useAuth";
-import withAuth from "@/app/components/withAuth";
+import useAuth from "@/app/hooks/useAuth";
+import withAuth from "@/app/hoc/withAuth";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/router";

@@ -1,4 +1,4 @@
-import withAuth from "@/app/components/withAuth";
+import withAuth from "@/app/hoc/withAuth";
 
 const Home = () => {
   return null;

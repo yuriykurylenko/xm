@@ -2,7 +2,7 @@ import React from "react";
 import Head from "next/head";
 import { fetchCoachBySlug } from "@/app/utils/api";
 import PageContainer from "@/app/components/PageContainer";
-import withAuth from "@/app/components/withAuth";
+import withAuth from "@/app/hoc/withAuth";
 
 const Success = ({ coachName }: { coachName: any }) => {
   return (

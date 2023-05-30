@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 
 import Form from "@/app/components/Form";
 
-import useAuth from "@/app/utils/useAuth";
-import withAuth from "@/app/components/withAuth";
+import useAuth from "@/app/hooks/useAuth";
+import withAuth from "@/app/hoc/withAuth";
 import {
   fetchClientById,
   fetchCoachById,
