@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styles from "@/app/styles/404.module.css";
 import "@/app/globals.css";
-import Button from "@/app/components/Form/Button";
 
 const NotFoundPage: React.FC = () => {
   const router = useRouter();
