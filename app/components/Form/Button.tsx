@@ -30,7 +30,7 @@ export const Button: FC<ButtonProps> = ({
         onClick={onClick}
         {...props}
       >
-        {isSubmitting ? "Submitting..." : children}
+        {isSubmitting ? submittingText || "Submitting..." : children}
       </button>
       {errorMessage && (
         <p className={styles["submit-error-message"]}>

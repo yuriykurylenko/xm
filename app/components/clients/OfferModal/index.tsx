@@ -27,33 +27,28 @@ const OfferModal: React.FC<OfferModalProps> = ({
   const [monthlyAmount, setMonthlyAmount] = useState(
     user.monthly_subscription_amount / 100
   );
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function onModalClose() {
     closeModal();
     setMonthlyAmount(user.monthly_subscription_amount / 100);
-    setError(null);
   }
 
   async function onSubmit(data: any) {
-    setIsSubmitting(true);
-
     const { monthlyAmount } = data;
-    const { error } = await sendClientOffer((selectedClient as any)?.id, {
+    const { data: sendOfferData, error } = await sendClientOffer((selectedClient as any)?.id, {
       monthlyAmount: Number(monthlyAmount) * 100,
       currency: "USD",
     });
 
     if (error) {
-      setIsSubmitting(false);
-      setError(error);
-      return;
+      return { data: sendOfferData, error };
     }
 
     onModalClose();
-    setIsSubmitting(false);
     onOfferSent && onOfferSent();
+
+    return { data: sendOfferData, error }
   }
 
   return (
@@ -94,7 +89,6 @@ const OfferModal: React.FC<OfferModalProps> = ({
             type="submit"
             disabled={isNaN(parseFloat(monthlyAmount as any))}
             submittingText="Sending..."
-            error={error || ""}
           >
             Send Offer
           </Button>
