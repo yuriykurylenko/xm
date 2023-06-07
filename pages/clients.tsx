@@ -56,7 +56,7 @@ const Clients = ({ user }: { user: any }) => {
         onActionButtonClick={openModal}
         actionButtonText="Send offer"
       >
-        <div className={styles["no-item-container"]}>
+        <div>
           Please share this link to get your clients to apply for coaching:
           <br />
           <a
