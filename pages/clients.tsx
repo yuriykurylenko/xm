@@ -5,7 +5,7 @@ import { fetchClientsByCoachId } from "@/app/utils/api";
 import FilterBar from "@/app/components/clients/FilterBar";
 import OfferModal from "@/app/components/clients/OfferModal";
 
-import styles from "@/app/components/clients/ClientList/styles.module.css";
+import styles from "@/app/styles/clients.module.css";
 import ItemList from "@/app/components/ItemList";
 
 const Clients = ({ user }: { user: any }) => {
