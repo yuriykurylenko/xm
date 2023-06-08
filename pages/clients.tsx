@@ -63,9 +63,8 @@ const Clients = ({ user }: { user: any }) => {
             actionButtonText="Send offer"
           />
         )}
-      >
-        <EmptyList user={user} />
-      </ItemList>
+        renderEmptyList={(user) => <EmptyList user={user} />}
+      />
       {selectedClient && (
         <OfferModal
           isOpen={isModalOpen}
