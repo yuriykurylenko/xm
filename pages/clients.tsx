@@ -54,7 +54,6 @@ const Clients = ({ user }: { user: any }) => {
       </div>
       <ItemList
         items={filteredClients}
-        user={user}
         renderCard={(client, index) => (
           <ClientCard
             key={index}
@@ -63,7 +62,7 @@ const Clients = ({ user }: { user: any }) => {
             actionButtonText="Send offer"
           />
         )}
-        renderEmptyList={(user) => <EmptyList user={user} />}
+        renderEmptyList={() => <EmptyList user={user} />}
       />
       {selectedClient && (
         <OfferModal
