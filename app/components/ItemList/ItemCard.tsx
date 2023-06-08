@@ -1,28 +1,28 @@
 import styles from "@/app/components/ItemList/styles.module.css";
 
-interface EntityProps {
-  entity: any;
+interface ItemProps {
+  item: any;
   onActionButtonClick: (entity: any) => void;
   actionButtonText: string;
 }
 
-const EntityCard: React.FC<EntityProps> = ({
-  entity,
+const EntityCard: React.FC<ItemProps> = ({
+  item,
   onActionButtonClick,
   actionButtonText,
 }) => (
-  <div key={entity.id} className={styles["entity-item"]}>
-    <div className={styles["avatar"]}>{entity.full_name.charAt(0)}</div>
-    <div className={styles["entity-name"]}>{entity.full_name}</div>
-    {entity.status === "lead" && (
+  <div key={item.id} className={styles["entity-item"]}>
+    <div className={styles["avatar"]}>{item.full_name.charAt(0)}</div>
+    <div className={styles["entity-name"]}>{item.full_name}</div>
+    {item.status === "lead" && (
       <button
         className={styles.btn}
-        onClick={() => onActionButtonClick(entity)}
+        onClick={() => onActionButtonClick(item)}
       >
         {actionButtonText}
       </button>
     )}
-    {entity.status === "offerSent" && (
+    {item.status === "offerSent" && (
       <div className={styles["offer-sent"]}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +40,7 @@ const EntityCard: React.FC<EntityProps> = ({
         Offer sent
       </div>
     )}
-    {entity.status === "client" && (
+    {item.status === "client" && (
       <div className={styles["active"]}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -22,7 +22,7 @@ const ItemList: React.FC<ItemListProps> = ({
         ? items.map((item) => (
             <ItemCard
               key={item.id}
-              entity={item}
+              item={item}
               onActionButtonClick={() => onActionButtonClick(item)}
               actionButtonText={actionButtonText}
             />
