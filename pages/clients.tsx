@@ -51,7 +51,7 @@ const Clients = ({ user }: { user: any }) => {
         />
       </div>
       <ItemList
-        entities={filteredClients}
+        items={filteredClients}
         user={user}
         onActionButtonClick={openModal}
         actionButtonText="Send offer"

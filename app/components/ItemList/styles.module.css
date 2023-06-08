@@ -16,18 +16,7 @@
   cursor: not-allowed;
 }
 
-/* .clients-container-header {
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem;
-    padding-bottom: 0;
-    font-family: Arial, sans-serif;
-} */
-
-.entities-container {
+.items-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem 2rem;
@@ -60,7 +49,7 @@
   flex-grow: 1;
 }
 
-.no-entities-container {
+.no-items-container {
   margin: 0 auto;
   padding: 1rem 2rem;
   text-align: center;

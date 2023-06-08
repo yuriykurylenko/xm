@@ -3,7 +3,7 @@ import styles from "@/app/components/ItemList/styles.module.css";
 
 interface ItemListProps {
   user: any;
-  entities: any[];
+  items: any[];
   onActionButtonClick: (entity: any) => void;
   actionButtonText: string;
   children: React.ReactNode;
@@ -11,24 +11,24 @@ interface ItemListProps {
 
 const ItemList: React.FC<ItemListProps> = ({
   user,
-  entities,
+  items,
   onActionButtonClick,
   actionButtonText,
   children,
 }) => {
   return (
-    <div className={styles["entities-container"]}>
-      {entities.length > 0
-        ? entities.map((entity) => (
+    <div className={styles["items-container"]}>
+      {items.length > 0
+        ? items.map((item) => (
             <ItemCard
-              key={entity.id}
-              entity={entity}
-              onActionButtonClick={() => onActionButtonClick(entity)}
+              key={item.id}
+              entity={item}
+              onActionButtonClick={() => onActionButtonClick(item)}
               actionButtonText={actionButtonText}
             />
           ))
         : user && (
-            <div className={styles["no-entities-container"]}>{children}</div>
+            <div className={styles["no-items-container"]}>{children}</div>
           )}
     </div>
   );
