@@ -90,7 +90,6 @@ const OfferModal: React.FC<OfferModalProps> = ({
           />
           <Button
             type="submit"
-            disabled={isNaN(parseFloat(monthlyAmount as any))}
             submittingText="Sending..."
           >
             Send Offer
