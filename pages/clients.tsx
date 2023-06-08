@@ -7,6 +7,7 @@ import OfferModal from "@/app/components/clients/OfferModal";
 
 import styles from "@/app/styles/clients.module.css";
 import ItemList from "@/app/components/ItemList";
+import ClientCard from "@/app/components/clients/ClientCard";
 
 const Clients = ({ user }: { user: any }) => {
   const [clients, setClients] = useState([]);
@@ -53,8 +54,14 @@ const Clients = ({ user }: { user: any }) => {
       <ItemList
         items={filteredClients}
         user={user}
-        onActionButtonClick={openModal}
-        actionButtonText="Send offer"
+        renderCard={(client, index) => (
+          <ClientCard
+            key={index}
+            client={client}
+            onActionButtonClick={openModal}
+            actionButtonText="Send offer"
+          />
+        )}
       >
         <div>
           Please share this link to get your clients to apply for coaching:
