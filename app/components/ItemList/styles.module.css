@@ -24,7 +24,7 @@
   font-family: Arial, sans-serif;
 }
 
-.entity-item {
+.list-item {
   display: flex;
   align-items: center;
   padding: 1rem;
@@ -45,7 +45,7 @@
   margin-right: 1rem;
 }
 
-.entity-name {
+.item-name {
   flex-grow: 1;
 }
 

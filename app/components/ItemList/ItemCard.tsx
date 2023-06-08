@@ -6,14 +6,14 @@ interface ItemProps {
   actionButtonText: string;
 }
 
-const EntityCard: React.FC<ItemProps> = ({
+const ItemCard: React.FC<ItemProps> = ({
   item,
   onActionButtonClick,
   actionButtonText,
 }) => (
-  <div key={item.id} className={styles["entity-item"]}>
+  <div key={item.id} className={styles["list-item"]}>
     <div className={styles["avatar"]}>{item.full_name.charAt(0)}</div>
-    <div className={styles["entity-name"]}>{item.full_name}</div>
+    <div className={styles["item-name"]}>{item.full_name}</div>
     {item.status === "lead" && (
       <button
         className={styles.btn}
@@ -60,4 +60,4 @@ const EntityCard: React.FC<ItemProps> = ({
   </div>
 );
 
-export default EntityCard;
+export default ItemCard;
