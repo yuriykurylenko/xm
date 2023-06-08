@@ -1,29 +1,31 @@
-import FilterButton from "@/app/components/clients/FilterBar/FilterButton";
+// import FilterButton from "@/app/components/clients/FilterBar/FilterButton";
+import BasicButton from "@/app/components/BasicButton";
+import styles from "@/app/components/clients/FilterBar/styles.module.css";
 
 interface FilterBarProps {
   filterStatus: string;
   setFilterStatus: (status: string) => void;
+  filterOptions: { value: string; name: string }[];
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({
   filterStatus,
   setFilterStatus,
+  filterOptions,
 }) => {
   return (
     <div>
-      {[
-        { status: "all", name: "All" },
-        { status: "lead", name: "Leads" },
-        { status: "offerSent", name: "Offer sent" },
-        { status: "client", name: "Clients" },
-      ].map((item) => (
-        <FilterButton
-          key={item.status}
-          name={item.name}
-          status={item.status}
-          filterStatus={filterStatus}
-          onClick={() => setFilterStatus(item.status)}
-        />
+      {filterOptions.map((option) => (
+        <BasicButton
+          key={option.value}
+          type="button"
+          onClick={() => setFilterStatus(option.value)}
+          className={`${styles["filter-btn"]} ${
+            filterStatus === option.value ? styles["filter-btn-active"] : ""
+          }`}
+        >
+          {option.name}
+        </BasicButton>
       ))}
     </div>
   );

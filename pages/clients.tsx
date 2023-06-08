@@ -10,6 +10,13 @@ import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList from "@/app/components/clients/EmptyList";
 
+const CLIENT_STATUS_OPTIONS = [
+  { value: "all", name: "All" },
+  { value: "lead", name: "Leads" },
+  { value: "offerSent", name: "Offer sent" },
+  { value: "client", name: "Clients" },
+];
+
 const Clients = ({ user }: { user: any }) => {
   const [clients, setClients] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
@@ -48,6 +55,7 @@ const Clients = ({ user }: { user: any }) => {
       <div className={styles["clients-container-header"]}>
         <h1>Clients</h1>
         <FilterBar
+          filterOptions={CLIENT_STATUS_OPTIONS}
           filterStatus={filterStatus}
           setFilterStatus={setFilterStatus}
         />

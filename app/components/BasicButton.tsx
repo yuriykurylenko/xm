@@ -1,23 +1,25 @@
 import React, { FC } from "react";
 import styles from "@/app/components/Form/styles.module.css";
 
-interface BaseButtonProps {
+interface BasicButtonProps {
   type?: "button" | "reset" | "submit";
   children: React.ReactNode;
   disabled?: boolean;
   onClick?: any;
+  className?: string;
 }
 
-export const BaseButton: FC<BaseButtonProps> = ({
+export const BasicButton: FC<BasicButtonProps> = ({
   children,
   type = "button",
   disabled,
   onClick,
+  className,
   ...props
 }) => {
   return (
     <button
-      className={styles["submit-btn"]}
+      className={className || styles["submit-btn"]}
       disabled={disabled}
       type={type}
       onClick={onClick}
@@ -28,4 +30,4 @@ export const BaseButton: FC<BaseButtonProps> = ({
   );
 };
 
-export default BaseButton;
+export default BasicButton;
