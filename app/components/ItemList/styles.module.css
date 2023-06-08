@@ -65,14 +65,14 @@
   line-height: 2rem;
 }
 
-.offer-sent {
+.status-offerSent {
   display: flex;
   align-items: center;
   gap: 0.2rem;
   color: orange;
 }
 
-.active {
+.status-client {
   display: flex;
   align-items: center;
   gap: 0.2rem;

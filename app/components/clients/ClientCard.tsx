@@ -20,7 +20,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
     >
       {actionButtonText}
     </button>}
-    <div className={styles[client.status]}>
+    <div className={styles[`status-${client.status}`]}>
     {client.status === "offerSent" && (
       <div>
         <svg
