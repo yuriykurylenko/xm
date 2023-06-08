@@ -36,10 +36,13 @@ const OfferModal: React.FC<OfferModalProps> = ({
 
   async function onSubmit(data: any) {
     const { monthlyAmount } = data;
-    const { data: sendOfferData, error } = await sendClientOffer((selectedClient as any)?.id, {
-      monthlyAmount: Number(monthlyAmount) * 100,
-      currency: "USD",
-    });
+    const { data: sendOfferData, error } = await sendClientOffer(
+      (selectedClient as any)?.id,
+      {
+        monthlyAmount: Number(monthlyAmount) * 100,
+        currency: "USD",
+      }
+    );
 
     if (error) {
       return { data: sendOfferData, error };
@@ -48,7 +51,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
     onModalClose();
     onOfferSent && onOfferSent();
 
-    return { data: sendOfferData, error }
+    return { data: sendOfferData, error };
   }
 
   return (

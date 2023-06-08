@@ -1,52 +1,9 @@
-.btn {
-  padding: 0.5rem 1rem;
-  background-color: #7c9efc;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #5683d7;
-}
-
-.btn:disabled {
-  background-color: #bbb;
-  cursor: not-allowed;
-}
-
 .items-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem 2rem;
   padding-bottom: 0.2rem;
   font-family: Arial, sans-serif;
-}
-
-.list-item {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  background-color: #f8f8f8;
-}
-
-.avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #ccc;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  margin-right: 1rem;
-}
-
-.item-name {
-  flex-grow: 1;
 }
 
 .no-items-container {
@@ -63,23 +20,4 @@
   justify-content: center;
   font-family: Arial, sans-serif;
   line-height: 2rem;
-}
-
-.status-offerSent {
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  color: orange;
-}
-
-.status-client {
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  color: green;
-}
-
-.icon {
-  width: 16px;
-  height: 16px;
 }

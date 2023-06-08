@@ -15,10 +15,7 @@ const ItemCard: React.FC<ItemProps> = ({
     <div className={styles["avatar"]}>{item.full_name.charAt(0)}</div>
     <div className={styles["item-name"]}>{item.full_name}</div>
     {item.status === "lead" && (
-      <button
-        className={styles.btn}
-        onClick={() => onActionButtonClick(item)}
-      >
+      <button className={styles.btn} onClick={() => onActionButtonClick(item)}>
         {actionButtonText}
       </button>
     )}
