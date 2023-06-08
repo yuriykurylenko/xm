@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
 import { fetchClientsByCoachId } from "@/app/utils/api";
-import FilterBar from "@/app/components/clients/FilterBar";
+import FilterBar from "@/app/components/FilterBar";
 import OfferModal from "@/app/components/clients/OfferModal";
 
 import styles from "@/app/styles/clients.module.css";

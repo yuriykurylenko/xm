@@ -1,6 +1,5 @@
-// import FilterButton from "@/app/components/clients/FilterBar/FilterButton";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/clients/FilterBar/styles.module.css";
+import styles from "@/app/components/FilterBar/styles.module.css";
 
 interface FilterBarProps {
   filterStatus: string;
