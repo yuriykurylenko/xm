@@ -15,11 +15,7 @@ const ItemList: React.FC<ItemListProps> = ({
 }) => {
   return (
     <div className={styles["items-container"]}>
-      {items.length > 0
-        ? items.map(renderCard)
-        : user && (
-            <div className={styles["no-items-container"]}>{children}</div>
-          )}
+      {items.length > 0 ? items.map(renderCard) : user && children}
     </div>
   );
 };

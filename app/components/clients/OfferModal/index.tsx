@@ -88,10 +88,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
             required
             defaultValue={user.monthly_subscription_amount / 100}
           />
-          <Button
-            type="submit"
-            submittingText="Sending..."
-          >
+          <Button type="submit" submittingText="Sending...">
             Send Offer
           </Button>
         </Form>

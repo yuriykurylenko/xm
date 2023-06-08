@@ -8,6 +8,7 @@ import OfferModal from "@/app/components/clients/OfferModal";
 import styles from "@/app/styles/clients.module.css";
 import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
+import EmptyList from "@/app/components/clients/EmptyList";
 
 const Clients = ({ user }: { user: any }) => {
   const [clients, setClients] = useState([]);
@@ -63,19 +64,7 @@ const Clients = ({ user }: { user: any }) => {
           />
         )}
       >
-        <div>
-          Please share this link to get your clients to apply for coaching:
-          <br />
-          <a
-            href={`${window.location.protocol}//${window.location.host}/${
-              (user as any).slug
-            }/apply`}
-          >
-            {`${window.location.protocol}//${window.location.host}/${
-              (user as any).slug
-            }/apply`}
-          </a>
-        </div>
+        <EmptyList user={user} />
       </ItemList>
       {selectedClient && (
         <OfferModal
