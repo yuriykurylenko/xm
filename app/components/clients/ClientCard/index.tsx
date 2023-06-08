@@ -1,4 +1,5 @@
 import styles from "@/app/components/clients/ClientCard/styles.module.css";
+import BasicButton from "@/app/components/BasicButton";
 
 interface ClientCardProps {
   client: any;
@@ -15,12 +16,11 @@ const ClientCard: React.FC<ClientCardProps> = ({
     <div className={styles["avatar"]}>{client.full_name.charAt(0)}</div>
     <div className={styles["item-name"]}>{client.full_name}</div>
     {client.status === "lead" && (
-      <button
-        className={styles.btn}
-        onClick={() => onActionButtonClick(client)}
-      >
-        {actionButtonText}
-      </button>
+      <div className={styles["button-container"]}>
+        <BasicButton onClick={() => onActionButtonClick(client)}>
+          {actionButtonText}
+        </BasicButton>
+      </div>
     )}
     <div className={styles[`status-${client.status}`]}>
       {client.status === "offerSent" && (

@@ -41,21 +41,3 @@
   width: 16px;
   height: 16px;
 }
-
-.btn {
-  padding: 0.5rem 1rem;
-  background-color: #7c9efc;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background-color: #5683d7;
-}
-
-.btn:disabled {
-  background-color: #bbb;
-  cursor: not-allowed;
-}

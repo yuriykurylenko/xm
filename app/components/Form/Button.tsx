@@ -1,41 +1,33 @@
 import React, { FC } from "react";
-import styles from "@/app/components/Form/styles.module.css";
+import BasicButton from "@/app/components/BasicButton";
 import { useFormStatus } from "@/app/components/Form";
+import styles from "@/app/components/Form/styles.module.css";
 
-interface ButtonProps {
-  type?: "button" | "reset" | "submit";
+interface FormButtonProps {
+  type?: "submit";
   children: React.ReactNode;
-  error?: string;
-  disabled?: boolean;
   submittingText?: string;
-  onClick?: any;
+  disabled?: boolean;
 }
 
-export const Button: FC<ButtonProps> = ({
+export const Button: FC<FormButtonProps> = ({
   children,
-  type = "button",
-  error,
-  disabled,
   submittingText,
-  onClick,
+  disabled,
   ...props
 }) => {
   const { isSubmitting, errorMessage } = useFormStatus();
+  const buttonText = isSubmitting
+    ? submittingText || "Submitting..."
+    : children;
 
   return (
     <>
-      <button
-        className={styles["submit-btn"]}
-        disabled={isSubmitting}
-        onClick={onClick}
-        {...props}
-      >
-        {isSubmitting ? submittingText || "Submitting..." : children}
-      </button>
+      <BasicButton disabled={disabled || isSubmitting} {...props}>
+        {buttonText}
+      </BasicButton>
       {errorMessage && (
-        <p className={styles["submit-error-message"]}>
-          <>{errorMessage || ""}</>
-        </p>
+        <p className={styles["submit-error-message"]}>{errorMessage}</p>
       )}
     </>
   );
