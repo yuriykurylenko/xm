@@ -13,6 +13,13 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
 
+interface SignUpFormData {
+  email: string;
+  password: string;
+  full_name: string;
+  monthly_subscription_amount: number | string;
+}
+
 const Signup = () => {
   const { user, coachSignUp } = useAuth();
   const router = useRouter();
@@ -23,7 +30,7 @@ const Signup = () => {
     }
   }, [user]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: SignUpFormData) => {
     const { email, password, full_name, monthly_subscription_amount } = data;
 
     return coachSignUp({

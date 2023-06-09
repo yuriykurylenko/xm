@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
 
-type FormData = {
+type LoginFormData = {
   email: string;
   password: string;
 };
@@ -27,7 +27,7 @@ const Login = () => {
     }
   }, [user]);
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: LoginFormData) => {
     const { email, password } = data;
     return logIn(email, password);
   };
