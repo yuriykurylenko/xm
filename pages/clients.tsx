@@ -10,13 +10,10 @@ import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList from "@/app/components/clients/EmptyList";
 import { UUID } from "crypto";
-
-type User = {
-  id: UUID;
-};
+import { User } from "@/app/types/user";
 
 type Client = {
-  id: string;
+  id: UUID;
   status: string;
 };
 

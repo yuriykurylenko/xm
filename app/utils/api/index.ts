@@ -2,7 +2,7 @@ import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
 
-export const fetchCoachById = (id: string) =>
+export const fetchCoachById = (id: UUID) =>
   supabase.from("coaches").select("*").eq("id", id).single();
 
 export const fetchCoachBySlug = (slug: string) =>
