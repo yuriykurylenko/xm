@@ -1,15 +1,32 @@
 import { useState, useEffect, SetStateAction } from "react";
 import supabase from "@/app/utils/supabaseClient";
 
+interface User {
+  id: string;
+}
+
+interface CoachSignUpParams {
+  email: string;
+  password: string;
+  full_name: string;
+  monthly_subscription_amount: number;
+}
+
+interface ClientSignUpParams {
+  email: string;
+  password: string;
+  clientId: string;
+}
+
 export default function useAuth() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<SetStateAction<string>>("anonymous");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const clearError = () => setError(null);
 
-  async function logIn(email: any, password: any) {
+  async function logIn(email: string, password: string) {
     clearError();
     const {
       data: { user },
@@ -35,12 +52,7 @@ export default function useAuth() {
     password,
     full_name,
     monthly_subscription_amount,
-  }: {
-    email: any;
-    password: any;
-    full_name: any;
-    monthly_subscription_amount: any;
-  }) {
+  }: CoachSignUpParams) {
     clearError();
 
     const {
@@ -93,11 +105,7 @@ export default function useAuth() {
     email,
     password,
     clientId,
-  }: {
-    email: any;
-    password: any;
-    clientId: any;
-  }) {
+  }: ClientSignUpParams) {
     const {
       data: { user },
       error: signupError,
@@ -141,7 +149,7 @@ export default function useAuth() {
     return { data: user, error: signInError };
   }
 
-  async function getRoleAndProfile(userId: any) {
+  async function getRoleAndProfile(userId: string) {
     const { data: coaches, error: coachError } = await supabase
       .from("coaches")
       .select("*")
@@ -188,9 +196,8 @@ export default function useAuth() {
         }
       } catch (error) {
         console.error("Error fetching user and role:", error);
-        // handle the error appropriately for your application here
       } finally {
-        setLoading(false); // set loading to false at the end of the operation
+        setLoading(false);
       }
     };
 
