@@ -1,3 +1,4 @@
+import React from "react";
 import AnonymousLayout from "@/app/layouts/Anonymous";
 import CoachLayout from "@/app/layouts/Coach";
 import ClientLayout from "@/app/layouts/Client";
@@ -5,17 +6,25 @@ import ClientLayout from "@/app/layouts/Client";
 import useAuth from "@/app/hooks/useAuth";
 import Loading from "@/app/components/Loading";
 import { useRouter } from "next/router";
+import { User } from "@/app/types/user";
 
 import "@/app/globals.css";
 
-const DEFAULT_ROUTES = {
+const DEFAULT_ROUTES: Record<string, string> = {
   anonymous: "/signup",
   coach: "/clients",
   client: "/home",
 };
 
-export default function withAuth(Component: any, supprotedRoles: String[]) {
-  const Wrapper = (props: any) => {
+interface AuthProps {
+  user: User | null | undefined;
+}
+
+export default function withAuth<P extends AuthProps>(
+  Component: React.FC<P>,
+  supportedRoles: string[]
+): React.FC<P> {
+  const Wrapper: React.FC<P> = (props: P) => {
     const { user, role, loading } = useAuth();
     const router = useRouter();
 
@@ -23,12 +32,12 @@ export default function withAuth(Component: any, supprotedRoles: String[]) {
       return <Loading />;
     }
 
-    if (!supprotedRoles.includes(role as string) || router.pathname === "/") {
-      router.push((DEFAULT_ROUTES as any)[role as any]);
+    if (!supportedRoles.includes(role as string) || router.pathname === "/") {
+      router.push(DEFAULT_ROUTES[role as string]);
       return <Loading />;
     }
 
-    if (role === "coach" && supprotedRoles.includes("coach")) {
+    if (role === "coach" && supportedRoles.includes("coach")) {
       return (
         <CoachLayout>
           <Component {...props} user={user} />
@@ -36,7 +45,7 @@ export default function withAuth(Component: any, supprotedRoles: String[]) {
       );
     }
 
-    if (role === "client" && supprotedRoles.includes("client")) {
+    if (role === "client" && supportedRoles.includes("client")) {
       return (
         <ClientLayout>
           <Component {...props} user={user} />
