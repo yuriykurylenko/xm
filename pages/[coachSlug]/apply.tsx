@@ -10,6 +10,7 @@ import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
 import { Client } from "@/app/types/client";
 import { ClientApplicationPageProps } from "@/app/types/ClientApplicationPageProps";
+import { ClientApplicationPageContext } from "@/app/types/ClientApplicationPageContext";
 
 const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
   const router = useRouter();
@@ -49,7 +50,7 @@ const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
   );
 };
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: ClientApplicationPageContext) {
   const { coachSlug } = context.params;
   const { data: coach, error } = await fetchCoachBySlug(coachSlug);
 

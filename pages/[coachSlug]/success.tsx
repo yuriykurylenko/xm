@@ -4,6 +4,7 @@ import { fetchCoachBySlug } from "@/app/utils/api";
 import PageContainer from "@/app/components/PageContainer";
 import withAuth from "@/app/hoc/withAuth";
 import { ClientApplicationPageProps } from "@/app/types/ClientApplicationPageProps";
+import { ClientApplicationPageContext } from "@/app/types/ClientApplicationPageContext";
 
 const Success = ({ coach }: ClientApplicationPageProps) => {
   return (
@@ -23,7 +24,7 @@ const Success = ({ coach }: ClientApplicationPageProps) => {
   );
 };
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: ClientApplicationPageContext) {
   const { coachSlug } = context.params;
   const { data, error } = await fetchCoachBySlug(coachSlug);
 

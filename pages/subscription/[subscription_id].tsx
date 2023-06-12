@@ -12,6 +12,7 @@ import PageContainer from "@/app/components/PageContainer";
 import { Coach } from "@/app/types/coach";
 import { Client } from "@/app/types/client";
 import { Subscription } from "@/app/types/subscription";
+import { UUID } from "crypto";
 
 interface SubscriptionPageProps extends AuthProps {
   subscription: Subscription;
@@ -72,7 +73,7 @@ const SubscriptionPage = ({
 };
 
 export async function getServerSideProps(context: {
-  params: { subscription_id: any };
+  params: { subscription_id: UUID };
 }) {
   const { subscription_id } = context.params;
   const { data: subscription } = await fetchSubscriptionById(subscription_id);

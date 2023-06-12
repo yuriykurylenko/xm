@@ -16,10 +16,16 @@ import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
 import { Coach } from "@/app/types/coach";
 import { Client } from "@/app/types/client";
+import { UUID } from "crypto";
 
 interface SubscriptionSuccessPageProps extends AuthProps {
   coach: Coach;
   client: Client;
+}
+
+interface ClientSignUpFormData {
+  email: string;
+  password: string;
 }
 
 const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
@@ -32,7 +38,7 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
     }
   }, [user]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: ClientSignUpFormData) => {
     const { password } = data;
     return clientSignUp({
       email: client.email,
@@ -88,7 +94,7 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
 
 export default withAuth(Success, ["anonymous"]);
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: { params: { subscription_id: UUID; }; }) {
   const { subscription_id } = context.params;
 
   const { data: subscriptionData, error: subscriptionError } =
