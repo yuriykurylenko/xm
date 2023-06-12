@@ -4,15 +4,16 @@ import Head from "next/head";
 import { createClient, fetchCoachBySlug } from "@/app/utils/api";
 
 import Form from "@/app/components/Form";
-import withAuth from "@/app/hoc/withAuth";
+import withAuth, { ClientAuthProps } from "@/app/hoc/withAuth";
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
+import { Client } from "@/app/types/client";
 
-const ClientApplication = ({ coach }: { coach: any }) => {
+const ClientApplication = ({ coach }: ClientAuthProps) => {
   const router = useRouter();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: Client) => {
     const { full_name, email } = data;
     const { data: client, error } = await createClient({
       full_name,

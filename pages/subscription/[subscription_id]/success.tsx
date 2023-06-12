@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Form from "@/app/components/Form";
 
 import useAuth from "@/app/hooks/useAuth";
-import withAuth from "@/app/hoc/withAuth";
+import withAuth, { AuthProps } from "@/app/hoc/withAuth";
 import {
   fetchClientById,
   fetchCoachById,
@@ -14,8 +14,15 @@ import {
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
+import { Coach } from "@/app/types/coach";
+import { Client } from "@/app/types/client";
 
-const Success = ({ coach, client }: { coach: any; client: any }) => {
+interface SuccessAuthProps extends AuthProps {
+  coach: Coach;
+  client: Client;
+}
+
+const Success = ({ coach, client }: SuccessAuthProps) => {
   const { user, clientSignUp } = useAuth();
   const router = useRouter();
 

@@ -2,18 +2,20 @@ import React from "react";
 import Head from "next/head";
 import { fetchCoachBySlug } from "@/app/utils/api";
 import PageContainer from "@/app/components/PageContainer";
-import withAuth from "@/app/hoc/withAuth";
+import withAuth, { ClientAuthProps } from "@/app/hoc/withAuth";
 
-const Success = ({ coachName }: { coachName: any }) => {
+const Success = ({ coach }: ClientAuthProps) => {
   return (
     <div>
       <Head>
-        <title>{coachName ? `${coachName} | Success` : "Loading..."}</title>
+        <title>
+          {coach.full_name ? `${coach.full_name} | Success` : "Loading..."}
+        </title>
       </Head>
       <PageContainer title="Congratulations!">
         <p>
-          You have succesfully applied to work with <b>{coachName}</b>. You will
-          hear from us shortly.
+          You have succesfully applied to work with <b>{coach.full_name}</b>.
+          You will hear from us shortly.
         </p>
       </PageContainer>
     </div>
@@ -32,7 +34,7 @@ export async function getServerSideProps(context: any) {
 
   return {
     props: {
-      coachName: data.full_name,
+      coach: data,
     },
   };
 }

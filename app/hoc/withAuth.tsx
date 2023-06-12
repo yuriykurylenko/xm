@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { User } from "@/app/types/user";
 
 import "@/app/globals.css";
+import { Coach } from "../types/coach";
 
 const DEFAULT_ROUTES: Record<string, string> = {
   anonymous: "/signup",
@@ -16,8 +17,12 @@ const DEFAULT_ROUTES: Record<string, string> = {
   client: "/home",
 };
 
-interface AuthProps {
-  user: User | null | undefined;
+export interface AuthProps {
+  user?: User | null | undefined;
+}
+
+export interface ClientAuthProps extends AuthProps {
+  coach: Coach;
 }
 
 export default function withAuth<P extends AuthProps>(

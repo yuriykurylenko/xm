@@ -7,18 +7,23 @@ import {
 } from "@/app/utils/api";
 import CheckoutForm from "@/app/components/CheckoutForm";
 import router from "next/router";
-import withAuth from "@/app/hoc/withAuth";
+import withAuth, { AuthProps } from "@/app/hoc/withAuth";
 import PageContainer from "@/app/components/PageContainer";
+import { Coach } from "@/app/types/coach";
+import { Client } from "@/app/types/client";
+import { Subscription } from "@/app/types/subscription";
+
+interface SubscriptionPageProps extends AuthProps {
+  subscription: Subscription;
+  coach: Coach;
+  client: Client;
+}
 
 const SubscriptionPage = ({
   subscription,
   client,
   coach,
-}: {
-  subscription: any;
-  client: any;
-  coach: any;
-}) => {
+}: SubscriptionPageProps) => {
   // Helper function to format the subscription amount
   const formatAmount = (amount: number, currency: string) => {
     const formattedAmount = Number((amount / 100).toFixed(2));
