@@ -50,7 +50,9 @@ const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
   );
 };
 
-export async function getServerSideProps(context: ClientApplicationPageContext) {
+export async function getServerSideProps(
+  context: ClientApplicationPageContext
+) {
   const { coachSlug } = context.params;
   const { data: coach, error } = await fetchCoachBySlug(coachSlug);
 

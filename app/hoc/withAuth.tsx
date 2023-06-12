@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 import { User } from "@/app/types/user";
 
 import "@/app/globals.css";
-import { Coach } from "../types/coach";
 
 const DEFAULT_ROUTES: Record<string, string> = {
   anonymous: "/signup",

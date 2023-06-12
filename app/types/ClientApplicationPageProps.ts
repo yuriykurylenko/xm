@@ -1,5 +1,5 @@
-import { AuthProps } from "../hoc/withAuth";
-import { Coach } from "./coach";
+import { AuthProps } from "@/app/hoc/withAuth";
+import { Coach } from "@/app/types/coach";
 
 export interface ClientApplicationPageProps extends AuthProps {
   coach: Coach;

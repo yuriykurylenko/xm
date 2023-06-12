@@ -94,7 +94,9 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
 
 export default withAuth(Success, ["anonymous"]);
 
-export async function getServerSideProps(context: { params: { subscription_id: UUID; }; }) {
+export async function getServerSideProps(context: {
+  params: { subscription_id: UUID };
+}) {
   const { subscription_id } = context.params;
 
   const { data: subscriptionData, error: subscriptionError } =
