@@ -21,10 +21,6 @@ export interface AuthProps {
   user?: User | null | undefined;
 }
 
-export interface ClientAuthProps extends AuthProps {
-  coach: Coach;
-}
-
 export default function withAuth<P extends AuthProps>(
   Component: React.FC<P>,
   supportedRoles: string[]

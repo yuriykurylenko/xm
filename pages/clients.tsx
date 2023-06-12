@@ -9,13 +9,8 @@ import styles from "@/app/styles/clients.module.css";
 import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList from "@/app/components/clients/EmptyList";
-import { UUID } from "crypto";
 import { User } from "@/app/types/user";
-
-type Client = {
-  id: UUID;
-  status: string;
-};
+import { Client } from "@/app/types/client";
 
 type FilterOption = {
   value: string;

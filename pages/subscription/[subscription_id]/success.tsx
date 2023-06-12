@@ -17,12 +17,12 @@ import PageContainer from "@/app/components/PageContainer";
 import { Coach } from "@/app/types/coach";
 import { Client } from "@/app/types/client";
 
-interface SuccessAuthProps extends AuthProps {
+interface SubscriptionSuccessPageProps extends AuthProps {
   coach: Coach;
   client: Client;
 }
 
-const Success = ({ coach, client }: SuccessAuthProps) => {
+const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
   const { user, clientSignUp } = useAuth();
   const router = useRouter();
 

@@ -2,9 +2,10 @@ import React from "react";
 import Head from "next/head";
 import { fetchCoachBySlug } from "@/app/utils/api";
 import PageContainer from "@/app/components/PageContainer";
-import withAuth, { ClientAuthProps } from "@/app/hoc/withAuth";
+import withAuth from "@/app/hoc/withAuth";
+import { ClientApplicationPageProps } from "@/app/types/ClientApplicationPageProps";
 
-const Success = ({ coach }: ClientAuthProps) => {
+const Success = ({ coach }: ClientApplicationPageProps) => {
   return (
     <div>
       <Head>
