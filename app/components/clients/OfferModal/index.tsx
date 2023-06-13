@@ -18,6 +18,10 @@ interface OfferModalProps {
   onOfferSent?: () => void;
 }
 
+interface OfferModalFormData {
+  monthlyAmount: number | string;
+}
+
 const OfferModal: React.FC<OfferModalProps> = ({
   isOpen,
   closeModal,
@@ -31,10 +35,10 @@ const OfferModal: React.FC<OfferModalProps> = ({
     setMonthlyAmount(user.monthly_subscription_amount / 100);
   }
 
-  async function onSubmit(data: any) {
+  async function onSubmit(data: OfferModalFormData) {
     const { monthlyAmount } = data;
     const { data: sendOfferData, error } = await sendClientOffer(
-      (selectedClient as any)?.id,
+      selectedClient.id,
       {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
