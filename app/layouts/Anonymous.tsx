@@ -1,11 +1,8 @@
 import React from "react";
 import styles from "@/app/styles/anonymous.module.css";
+import { LayoutProps } from "@/app/types/LayoutProps";
 
-interface AnonymousLayoutProps {
-  children: React.ReactNode;
-}
-
-const AnonymousLayout: React.FC<AnonymousLayoutProps> = ({ children }) => {
+const AnonymousLayout: React.FC<LayoutProps> = ({ children }) => {
   return <div className={styles["blue-background"]}>{children}</div>;
 };
 

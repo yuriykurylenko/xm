@@ -1,11 +1,8 @@
 import React from "react";
 import Header from "@/app/components/Header";
+import { LayoutProps } from "../types/LayoutProps";
 
-interface CoachLayoutProps {
-  children: React.ReactNode;
-}
-
-const CoachLayout: React.FC<CoachLayoutProps> = ({ children }) => {
+const CoachLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div>
       <Header />

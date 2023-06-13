@@ -1,11 +1,8 @@
 import React from "react";
 import Header from "@/app/components/Header";
+import { LayoutProps } from "@/app/types/LayoutProps";
 
-interface ClientLayoutProps {
-  children: React.ReactNode;
-}
-
-const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
+const ClientLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div>
       <Header />
