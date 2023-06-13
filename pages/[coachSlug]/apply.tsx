@@ -8,7 +8,7 @@ import withAuth from "@/app/hoc/withAuth";
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
-import { Client } from "@/app/types/client";
+import { Client } from "@/app/types/user";
 import { ClientApplicationPageProps } from "@/app/types/ClientApplicationPageProps";
 import { ClientApplicationPageContext } from "@/app/types/ClientApplicationPageContext";
 

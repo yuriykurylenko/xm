@@ -14,8 +14,7 @@ import {
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
-import { Coach } from "@/app/types/coach";
-import { Client } from "@/app/types/client";
+import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
 interface SubscriptionSuccessPageProps extends AuthProps {

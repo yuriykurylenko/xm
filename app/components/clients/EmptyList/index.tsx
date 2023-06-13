@@ -1,8 +1,9 @@
 import React from "react";
 import styles from "@/app/components/clients/EmptyList/styles.module.css";
+import { Coach } from "@/app/types/user";
 
 interface EmptyListProps {
-  user: any;
+  user: Coach;
 }
 
 const EmptyList: React.FC<EmptyListProps> = ({ user }) => {

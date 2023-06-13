@@ -9,8 +9,7 @@ import styles from "@/app/styles/clients.module.css";
 import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList from "@/app/components/clients/EmptyList";
-import { User } from "@/app/types/user";
-import { Client } from "@/app/types/client";
+import { Coach, Client } from "@/app/types/user";
 
 type FilterOption = {
   value: string;
@@ -24,7 +23,7 @@ const CLIENT_STATUS_OPTIONS: FilterOption[] = [
   { value: "client", name: "Clients" },
 ];
 
-const Clients = ({ user }: { user: User }) => {
+const Clients = ({ user }: { user: Coach }) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

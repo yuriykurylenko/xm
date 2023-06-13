@@ -9,8 +9,7 @@ import CheckoutForm from "@/app/components/CheckoutForm";
 import router from "next/router";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";
 import PageContainer from "@/app/components/PageContainer";
-import { Coach } from "@/app/types/coach";
-import { Client } from "@/app/types/client";
+import { Coach, Client } from "@/app/types/user";
 import { Subscription } from "@/app/types/subscription";
 import { UUID } from "crypto";
 

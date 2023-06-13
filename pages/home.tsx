@@ -3,10 +3,9 @@ import { useEffect, useState } from "react";
 import withAuth from "@/app/hoc/withAuth";
 import { fetchCoachById } from "@/app/utils/api";
 import styles from "@/app/styles/home.module.css";
-import { User } from "@/app/types/user";
-import { Coach } from "@/app/types/coach";
+import { Client, Coach } from "@/app/types/user";
 
-const Home = ({ user }: { user: User }) => {
+const Home = ({ user }: { user: Client }) => {
   const [coach, setCoach] = useState<Coach | null>(null);
 
   useEffect(() => {

@@ -6,14 +6,15 @@ import Form from "@/app/components/Form";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
+import { Client, Coach } from "@/app/types/user";
 
 Modal.setAppElement("#__next");
 
 interface OfferModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  selectedClient: any;
-  user: any;
+  selectedClient: Client;
+  user: Coach;
   onOfferSent?: () => void;
 }
 
@@ -24,11 +25,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
   user,
   onOfferSent,
 }) => {
-  const [monthlyAmount, setMonthlyAmount] = useState(
-    user.monthly_subscription_amount / 100
-  );
-  const [error, setError] = useState<string | null>(null);
-
+  const [, setMonthlyAmount] = useState(user.monthly_subscription_amount / 100);
   async function onModalClose() {
     closeModal();
     setMonthlyAmount(user.monthly_subscription_amount / 100);

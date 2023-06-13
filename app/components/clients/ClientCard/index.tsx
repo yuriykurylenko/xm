@@ -1,8 +1,9 @@
 import styles from "@/app/components/clients/ClientCard/styles.module.css";
 import BasicButton from "@/app/components/BasicButton";
+import { Client } from "@/app/types/user";
 
 interface ClientCardProps {
-  client: any;
+  client: Client;
   onActionButtonClick: (entity: any) => void;
   actionButtonText: string;
 }
