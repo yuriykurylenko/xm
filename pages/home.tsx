@@ -3,13 +3,8 @@ import { useEffect, useState } from "react";
 import withAuth from "@/app/hoc/withAuth";
 import { fetchCoachById } from "@/app/utils/api";
 import styles from "@/app/styles/home.module.css";
-import { UUID } from "crypto";
 import { User } from "@/app/types/user";
-
-type Coach = {
-  id: UUID;
-  full_name: string;
-};
+import { Coach } from "@/app/types/coach";
 
 const Home = ({ user }: { user: User }) => {
   const [coach, setCoach] = useState<Coach | null>(null);
