@@ -62,8 +62,9 @@ const SubscriptionPage = ({
           {coach?.full_name}
         </p>
         <CheckoutForm
-          client={client}
-          subscription={subscription}
+          clientEmail={client.email}
+          clientFullName={client.full_name}
+          monthlyAmount={subscription.monthly_amount}
           onSubscriptionSuccess={onSubscriptionSuccess}
         />
       </PageContainer>

@@ -16,27 +16,25 @@ const stripePromise = loadStripe(
   "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
 );
 
-const CheckoutForm = (
-  props: JSX.IntrinsicAttributes & {
-    client: any;
-    subscription: any;
-    onSubscriptionSuccess: (stripeSubscritionId: string) => void;
-  }
-) => (
+interface CheckoutFormProps {
+  clientEmail: string;
+  clientFullName: string;
+  monthlyAmount: number;
+  onSubscriptionSuccess: (stripeSubscritionId: string) => void;
+}
+
+const CheckoutForm = (props: JSX.IntrinsicAttributes & CheckoutFormProps) => (
   <Elements stripe={stripePromise}>
     <CheckoutFormContent {...props} />
   </Elements>
 );
 
 const CheckoutFormContent = ({
-  client,
-  subscription,
+  clientEmail,
+  clientFullName,
+  monthlyAmount,
   onSubscriptionSuccess,
-}: {
-  client: any;
-  subscription: any;
-  onSubscriptionSuccess: (stripeSubscritionId: string) => void;
-}) => {
+}: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -46,8 +44,8 @@ const CheckoutFormContent = ({
         await handleStripeCardAndSubscriptionSetup(
           stripe,
           elements?.getElement(CardElement),
-          { email: client.email, full_name: client.full_name },
-          { monthly_amount: subscription.monthly_amount }
+          { email: clientEmail, full_name: clientFullName },
+          { monthly_amount: monthlyAmount }
         );
 
       if (subscriptionData?.success) {
