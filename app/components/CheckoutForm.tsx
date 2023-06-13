@@ -44,8 +44,11 @@ const CheckoutFormContent = ({
         await handleStripeCardAndSubscriptionSetup(
           stripe,
           elements?.getElement(CardElement),
-          { email: customerEmail, full_name: customerFullName },
-          { monthly_amount: subscriptionMonthlyAmount }
+          {
+            email: customerEmail,
+            full_name: customerFullName,
+            monthly_amount: subscriptionMonthlyAmount,
+          }
         );
 
       if (subscriptionData?.success) {

@@ -89,8 +89,11 @@ const createAndConfirmStripeSubscription = async (
 export const handleStripeCardAndSubscriptionSetup = async (
   stripe: any,
   StripeCardElementInstance: any,
-  { email, full_name }: { email: string; full_name: string },
-  { monthly_amount }: { monthly_amount: number }
+  {
+    email,
+    full_name,
+    monthly_amount,
+  }: { email: string; full_name: string; monthly_amount: number }
 ) => {
   const {
     data: { client_secret, customer_id },
