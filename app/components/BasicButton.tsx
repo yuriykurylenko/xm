@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, MouseEventHandler } from "react";
 import styles from "@/app/components/Form/styles.module.css";
 
 interface BasicButtonProps {
   type?: "button" | "reset" | "submit";
   children: React.ReactNode;
   disabled?: boolean;
-  onClick?: any;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
 }
 
