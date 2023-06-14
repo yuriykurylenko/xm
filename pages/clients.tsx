@@ -66,7 +66,7 @@ const Clients = ({ user }: { user: Coach }) => {
           setFilterStatus={setFilterStatus}
         />
       </div>
-      <ItemList
+      <ItemList<Client>
         items={filteredClients}
         renderCard={(client: Client, index: number) => (
           <ClientCard
