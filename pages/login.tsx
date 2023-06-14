@@ -25,7 +25,7 @@ const Login = () => {
     if (user) {
       router.reload();
     }
-  }, [user]);
+  }, [user, router]);
 
   const onSubmit = (data: LoginFormData) => {
     const { email, password } = data;

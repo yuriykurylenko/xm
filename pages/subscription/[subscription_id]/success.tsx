@@ -35,7 +35,7 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
     if (user) {
       router.reload();
     }
-  }, [user]);
+  }, [user, router]);
 
   const onSubmit = (data: ClientSignUpFormData) => {
     const { password } = data;

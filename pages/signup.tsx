@@ -28,7 +28,7 @@ const Signup = () => {
     if (user) {
       router.reload();
     }
-  }, [user]);
+  }, [user, router]);
 
   const onSubmit = (data: CoachSignUpFormData) => {
     const { email, password, full_name, monthly_subscription_amount } = data;
