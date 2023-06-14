@@ -10,11 +10,12 @@ import {
   UseFormProps,
   FormProvider,
   useFormContext,
+  FieldValues,
 } from "react-hook-form";
 
-interface FormProps extends UseFormProps {
+interface FormProps<T extends FieldValues> extends UseFormProps {
   children: React.ReactNode;
-  onSubmit: (data: any) => any;
+  onSubmit: (data: T) => Promise<any>;
 }
 
 interface FormStatusContextProps {
@@ -55,20 +56,20 @@ export const FormStatusProvider: React.FC<FormStatusProviderProps> = ({
   );
 };
 
-interface FormInnerProps {
+interface FormInnerProps<T extends FieldValues> {
   children: ReactNode;
-  onSubmit: (data: any) => Promise<any>;
+  onSubmit: (data: T) => Promise<any>;
 }
 
-const FormInner: FC<FormInnerProps> = ({
+const FormInner = <T extends FieldValues>({
   children,
   onSubmit,
   ...formProps
-}) => {
+}: FormInnerProps<T>) => {
   const { handleSubmit } = useFormContext();
   const { setIsSubmitting, setErrorMessage } = useFormStatus();
 
-  const handleSubmitInner = async (data: any) => {
+  const handleSubmitInner = async (data: T) => {
     setIsSubmitting(true);
     setErrorMessage("");
 
@@ -80,13 +81,17 @@ const FormInner: FC<FormInnerProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleSubmitInner)} {...formProps}>
+    <form onSubmit={handleSubmit(handleSubmitInner as any)} {...formProps}>
       {children}
     </form>
   );
 };
 
-export const Form: FC<FormProps> = ({ children, onSubmit, ...formProps }) => {
+export const Form = <T extends FieldValues>({
+  children,
+  onSubmit,
+  ...formProps
+}: FormProps<T>) => {
   const methods = useForm();
 
   return (

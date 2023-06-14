@@ -38,7 +38,7 @@ const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
         </title>
       </Head>
       <PageContainer title={`Apply to work with ${coach?.full_name}`}>
-        <Form onSubmit={onSubmit}>
+        <Form<Client> onSubmit={onSubmit}>
           <Input name="full_name" placeholder="Full Name" required />
           <Input name="email" placeholder="Email" type="email" required />
           <Button type="submit" submittingText="Submitting..">

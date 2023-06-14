@@ -47,7 +47,7 @@ const Signup = () => {
         <title>Coaching | Sign up</title>
       </Head>
       <PageContainer title="Sign up as a Coach">
-        <Form onSubmit={onSubmit}>
+        <Form<CoachSignUpFormData> onSubmit={onSubmit}>
           <Input name="full_name" placeholder="Full Name" required />
           <Input name="email" placeholder="Email" type="email" required />
           <Input

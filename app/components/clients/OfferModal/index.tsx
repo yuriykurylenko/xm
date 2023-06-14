@@ -78,7 +78,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
       }}
     >
       <PageContainer title={`Send offer to ${selectedClient.full_name}`}>
-        <Form onSubmit={onSubmit}>
+        <Form<OfferModalFormData> onSubmit={onSubmit}>
           <p>
             {selectedClient.full_name} will receive an email with the link to
             subscribe and pay your specified amount monthly.

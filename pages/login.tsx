@@ -38,7 +38,7 @@ const Login = () => {
         <title>Coaching | Log in</title>
       </Head>
       <PageContainer title="Log in">
-        <Form onSubmit={onSubmit}>
+        <Form<LoginFormData> onSubmit={onSubmit}>
           <Input name="email" placeholder="Email" type="email" required />
           <Input
             name="password"

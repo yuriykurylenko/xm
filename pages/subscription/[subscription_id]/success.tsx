@@ -54,7 +54,7 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
         </title>
       </Head>
       <PageContainer title={`Thank you, ${client.full_name}!`}>
-        <Form onSubmit={onSubmit}>
+        <Form<ClientSignUpFormData> onSubmit={onSubmit}>
           <p>
             Your payment has been processed successfully and you have signed up
             to work with <b>{coach.full_name}</b>. We appreciate your business

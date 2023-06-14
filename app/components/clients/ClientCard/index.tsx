@@ -4,7 +4,7 @@ import { Client } from "@/app/types/user";
 
 interface ClientCardProps {
   client: Client;
-  onActionButtonClick: (entity: any) => void;
+  onActionButtonClick: (client: Client) => void;
   actionButtonText: string;
 }
 
