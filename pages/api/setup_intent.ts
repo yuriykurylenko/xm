@@ -1,6 +1,6 @@
 import { stripe } from "@/app/utils/initStripe";
 
-export default async (req: any, res: any) => {
+const handler = async (req: any, res: any) => {
   if (req.method === "POST") {
     try {
       const { email } = req.body;
@@ -28,3 +28,5 @@ export default async (req: any, res: any) => {
     res.status(405).end("Method Not Allowed");
   }
 };
+
+export default handler;

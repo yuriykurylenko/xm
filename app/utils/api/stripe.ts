@@ -2,7 +2,7 @@ import { PaymentMethod } from "@stripe/stripe-js";
 import axios from "axios";
 
 const createStripeSetupIntent = ({ email }: { email: string }) =>
-  axios.post("/api/setup_intents", { email });
+  axios.post("/api/setup_intent", { email });
 
 const confirmStripeCardSetup = async (
   stripe: any,
