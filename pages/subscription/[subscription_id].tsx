@@ -94,7 +94,7 @@ export async function getServerSideProps(context: {
   }
 
   const { data: client } = await fetchClientById(subscription.client_id);
-  const { data: coach } = await fetchCoachById(client.coach_id);
+  const { data: coach } = await fetchCoachById(client?.coach_id);
 
   return {
     props: {
