@@ -42,7 +42,7 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
     return clientSignUp({
       email: client.email,
       password,
-      clientId: client.id,
+      clientId: client.id as UUID,
     });
   };
 

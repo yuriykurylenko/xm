@@ -10,6 +10,7 @@ import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList from "@/app/components/clients/EmptyList";
 import { Coach, Client } from "@/app/types/user";
+import { UUID } from "crypto";
 
 type FilterOption = {
   value: string;
@@ -31,7 +32,7 @@ const Clients = ({ user }: { user: Coach }) => {
 
   useEffect(() => {
     (async () => {
-      const { data } = await fetchClientsByCoachId(user.id);
+      const { data } = await fetchClientsByCoachId(user.id as UUID);
       setClients(data as Client[]);
     })();
   }, [user, filterStatus]);

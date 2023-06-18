@@ -1,6 +1,7 @@
 import { useState, useEffect, SetStateAction } from "react";
 import supabase from "@/app/utils/supabaseClient";
-import { Client, Coach, User } from "../types/user";
+import { Client, Coach, User } from "@/app/types/user";
+import { createCoach, updateClientById } from "@/app/utils/api";
 
 interface CoachSignUpParams {
   email: string;
@@ -68,16 +69,13 @@ export default function useAuth() {
     }
 
     if (user) {
-      const { data: profile, error: insertError } = await supabase
-        .from("coaches")
-        .insert({
-          user_id: user.id,
-          full_name,
-          email,
-          monthly_subscription_amount,
-          subscription_currency: "USD",
-        })
-        .select();
+      const { data: profile, error: insertError } = await createCoach({
+        user_id: user.id,
+        full_name,
+        email,
+        monthly_subscription_amount,
+        subscription_currency: "USD",
+      });
 
       if (insertError) {
         setError(insertError.message);
@@ -123,14 +121,13 @@ export default function useAuth() {
 
     // Insert the client entry with a link to the coach
     if (user) {
-      const { data: profile, error: updateError } = await supabase
-        .from("clients")
-        .update({
+      const { data: profile, error: updateError } = await updateClientById(
+        clientId,
+        {
           user_id: user.id,
           status: "client",
-        })
-        .eq("id", clientId)
-        .single();
+        }
+      );
 
       if (updateError) {
         setError(updateError.message);

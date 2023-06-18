@@ -7,6 +7,7 @@ import PriceInput from "@/app/components/Form/PriceInput";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
 import { Client, Coach } from "@/app/types/user";
+import { UUID } from "crypto";
 
 Modal.setAppElement("#__next");
 
@@ -38,7 +39,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
   async function onSubmit(data: OfferModalFormData) {
     const { monthlyAmount } = data;
     const { data: sendOfferData, error } = await sendClientOffer(
-      selectedClient.id,
+      selectedClient.id as UUID,
       {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",

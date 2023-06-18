@@ -11,6 +11,7 @@ import PageContainer from "@/app/components/PageContainer";
 import { Client } from "@/app/types/user";
 import { ClientApplicationPageProps } from "@/app/types/ClientApplicationPageProps";
 import { ClientApplicationPageContext } from "@/app/types/ClientApplicationPageContext";
+import { UUID } from "crypto";
 
 const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
     const { data: client, error } = await createClient({
       full_name,
       email,
-      coach_id: coach.id,
+      coach_id: coach.id as UUID,
     });
 
     if (client) {

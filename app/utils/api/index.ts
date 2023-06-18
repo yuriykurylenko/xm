@@ -1,4 +1,5 @@
 import { Subscription } from "@/app/types/subscription";
+import { Client, Coach } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
@@ -26,15 +27,7 @@ export const fetchClientsByCoachId = (coachId: UUID) =>
 export const fetchSubscriptionById = (subscriptionId: UUID) =>
   supabase.from("subscriptions").select("*").eq("id", subscriptionId).single();
 
-export const createClient = ({
-  full_name,
-  email,
-  coach_id,
-}: {
-  full_name: string;
-  email: string;
-  coach_id: UUID;
-}) =>
+export const createClient = ({ full_name, email, coach_id }: Client) =>
   supabase
     .from("clients")
     .insert([
@@ -44,6 +37,24 @@ export const createClient = ({
         coach_id,
       },
     ])
+    .select();
+
+export const createCoach = ({
+  user_id,
+  full_name,
+  email,
+  monthly_subscription_amount,
+  subscription_currency,
+}: Coach) =>
+  supabase
+    .from("coaches")
+    .insert({
+      user_id,
+      full_name,
+      email,
+      monthly_subscription_amount,
+      subscription_currency,
+    })
     .select();
 
 const createClientSubscription = (
@@ -67,7 +78,7 @@ const createClientSubscription = (
     ])
     .select();
 
-export const updateClientById = (clientId: UUID, data: any) =>
+export const updateClientById = (clientId: UUID | string, data: any) =>
   supabase.from("clients").update(data).eq("id", clientId);
 
 const sendClientPaymentLink = ({

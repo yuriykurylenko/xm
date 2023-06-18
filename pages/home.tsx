@@ -4,6 +4,7 @@ import withAuth from "@/app/hoc/withAuth";
 import { fetchCoachById } from "@/app/utils/api";
 import styles from "@/app/styles/home.module.css";
 import { Client, Coach } from "@/app/types/user";
+import { UUID } from "crypto";
 
 const Home = ({ user }: { user: Client }) => {
   const [coach, setCoach] = useState<Coach | null>(null);
@@ -11,7 +12,7 @@ const Home = ({ user }: { user: Client }) => {
   useEffect(() => {
     (async () => {
       const coachResponse = user.coach_id
-        ? await fetchCoachById(user.coach_id)
+        ? await fetchCoachById(user.coach_id as UUID)
         : null;
       setCoach(coachResponse?.data as Coach);
     })();
