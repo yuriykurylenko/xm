@@ -1,7 +1,7 @@
+import { Subscription } from "@/app/types/subscription";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
-import { Subscription } from "react-hook-form/dist/utils/createSubject";
 
 export const fetchCoachById = (id: UUID) =>
   supabase.from("coaches").select("*").eq("id", id).single();
@@ -102,7 +102,7 @@ export const sendClientOffer = async (
   }
   if (data) {
     sendClientPaymentLink({
-      subscription: data[0],
+      subscription: data[0] as Subscription,
       domain: `${window.location.protocol}//${window.location.host}`,
     });
   }

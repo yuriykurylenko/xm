@@ -10,10 +10,10 @@ const Home = ({ user }: { user: Client }) => {
 
   useEffect(() => {
     (async () => {
-      const { data } = user.coach_id
+      const coachResponse = user.coach_id
         ? await fetchCoachById(user.coach_id)
         : null;
-      setCoach(data);
+      setCoach(coachResponse?.data as Coach);
     })();
   }, [user]);
 

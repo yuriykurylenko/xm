@@ -32,7 +32,7 @@ const Clients = ({ user }: { user: Coach }) => {
   useEffect(() => {
     (async () => {
       const { data } = await fetchClientsByCoachId(user.id);
-      setClients(data);
+      setClients(data as Client[]);
     })();
   }, [user, filterStatus]);
 

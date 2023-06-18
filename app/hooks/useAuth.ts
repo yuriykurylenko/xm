@@ -1,6 +1,6 @@
 import { useState, useEffect, SetStateAction } from "react";
 import supabase from "@/app/utils/supabaseClient";
-import { User } from "../types/user";
+import { Client, Coach, User } from "../types/user";
 
 interface CoachSignUpParams {
   email: string;
@@ -38,8 +38,10 @@ export default function useAuth() {
       return { data: null, error: error };
     }
 
-    const profile = await getRoleAndProfile(user.id);
-    setUser({ ...user, ...profile });
+    if (user) {
+      const profile = await getRoleAndProfile(user.id);
+      setUser({ ...user, ...profile });
+    }
 
     return { data: user, error };
   }
@@ -74,7 +76,8 @@ export default function useAuth() {
           email,
           monthly_subscription_amount,
           subscription_currency: "USD",
-        });
+        })
+        .select();
 
       if (insertError) {
         setError(insertError.message);
@@ -91,8 +94,10 @@ export default function useAuth() {
         return { data: null, error: signInError };
       }
 
-      setUser({ ...user, ...profile });
-      setRole("coach");
+      if (user && profile) {
+        setUser({ ...user, ...(profile as unknown as Coach) });
+        setRole("coach");
+      }
 
       return { data: user, error: signInError };
     }
@@ -117,54 +122,61 @@ export default function useAuth() {
     }
 
     // Insert the client entry with a link to the coach
-    const { data: profile, error: updateError } = await supabase
-      .from("clients")
-      .update({
-        user_id: user.id,
-        status: "client",
-      })
-      .eq("id", clientId);
+    if (user) {
+      const { data: profile, error: updateError } = await supabase
+        .from("clients")
+        .update({
+          user_id: user.id,
+          status: "client",
+        })
+        .eq("id", clientId)
+        .single();
 
-    if (updateError) {
-      setError(updateError.message);
-      return { data: null, error: updateError };
+      if (updateError) {
+        setError(updateError.message);
+        return { data: null, error: updateError };
+      }
+
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setError(signInError.message);
+        return { data: null, error: signInError };
+      }
+
+      setRole("client");
+      if (user && profile) {
+        setUser({ ...user, ...(profile as Client) });
+      }
+
+      return { data: user, error: signInError };
     }
-
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (signInError) {
-      setError(signInError.message);
-      return { data: null, error: signInError };
-    }
-
-    setRole("client");
-    setUser({ ...user, ...profile });
-
-    return { data: user, error: signInError };
   }
 
   async function getRoleAndProfile(userId: string) {
-    const { data: coaches, error: coachError } = await supabase
+    const { data: coach } = await supabase
       .from("coaches")
       .select("*")
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .single();
 
-    if (coaches[0]) {
+    if (coach) {
       setRole("coach");
-      return coaches[0];
+      return coach as unknown as Coach;
     }
 
-    const { data: clients, error: clientError } = await supabase
+    const { data: client } = await supabase
       .from("clients")
       .select("*")
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .single();
 
-    if (clients[0]) {
+    if (client) {
       setRole("client");
-      return clients[0];
+      return client as unknown as Client;
     }
 
     throw new Error("Role not found.");
@@ -182,11 +194,10 @@ export default function useAuth() {
 
   useEffect(() => {
     const fetchUserAndRole = async () => {
-      setLoading(true); // set loading to true at the start of the operation
+      setLoading(true);
       try {
         const { data } = await supabase.auth.getUser();
         if (data?.user) {
-          setUser(data?.user);
           const profile = await getRoleAndProfile(data?.user.id);
 
           setUser({ ...data?.user, ...profile });

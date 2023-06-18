@@ -32,7 +32,7 @@ const Header = () => {
   const logout = async () => {
     const error = await logOut();
     if (error) {
-      console.log("Error logging out:", error.message);
+      console.log("Error logging out:", error);
     } else {
       router.push("/login");
     }
