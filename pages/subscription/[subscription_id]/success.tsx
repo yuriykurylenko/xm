@@ -31,6 +31,7 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
   const { user, clientSignUp } = useAuth();
   const router = useRouter();
 
+  // TODO: fix apparently not fetching the user after signing up
   useEffect(() => {
     if (user) {
       router.reload();
