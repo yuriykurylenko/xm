@@ -40,24 +40,26 @@ const CheckoutFormContent = ({
 
   async function onSubmit() {
     try {
-      const { data: subscriptionData, error } =
-        await handleStripeCardAndSubscriptionSetup(
-          stripe,
-          elements?.getElement(CardElement),
-          {
-            email: customerEmail,
-            full_name: customerFullName,
-            monthly_amount: subscriptionMonthlyAmount,
-          }
-        );
+      if (stripe) {
+        const { data: subscriptionData, error } =
+          await handleStripeCardAndSubscriptionSetup(
+            stripe,
+            elements?.getElement(CardElement) || null,
+            {
+              email: customerEmail,
+              full_name: customerFullName,
+              monthly_amount: subscriptionMonthlyAmount,
+            }
+          );
 
-      if (subscriptionData?.success) {
-        onSubscriptionSuccess(subscriptionData.stripeSubscriptionId);
-        return { data: subscriptionData, error };
-      }
+        if (subscriptionData?.success) {
+          onSubscriptionSuccess(subscriptionData.stripeSubscriptionId);
+          return { data: subscriptionData, error };
+        }
 
-      if (error) {
-        return { data: subscriptionData, error };
+        if (error) {
+          return { data: subscriptionData, error };
+        }
       }
     } catch (error) {
       return {

@@ -11,8 +11,8 @@ const createStripeSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/setup_intent", { email });
 
 const confirmStripeCardSetup = async (
-  stripe: Stripe,
-  StripeCardElementInstance: StripeCardElement,
+  stripe: Stripe | null,
+  StripeCardElementInstance: StripeCardElement | null,
   stripeClientSecret: string,
   billingDetails: { name: string }
 ): Promise<{ data: SetupIntent | null; error: Error | StripeError | null }> => {
@@ -51,7 +51,7 @@ const createStripeSubscription = ({
   });
 
 const createAndConfirmStripeSubscription = async (
-  stripe: Stripe,
+  stripe: Stripe | null,
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,
   { monthly_amount }: { monthly_amount: number }
@@ -98,8 +98,8 @@ const createAndConfirmStripeSubscription = async (
 };
 
 export const handleStripeCardAndSubscriptionSetup = async (
-  stripe: Stripe,
-  StripeCardElementInstance: StripeCardElement,
+  stripe: Stripe | null,
+  StripeCardElementInstance: StripeCardElement | null,
   {
     email,
     full_name,
@@ -122,7 +122,7 @@ export const handleStripeCardAndSubscriptionSetup = async (
   );
 
   if (error) {
-    return { data: setupIntentData, error };
+    return { data: null, error };
   }
 
   if (setupIntentData && setupIntentData.status === "succeeded") {
