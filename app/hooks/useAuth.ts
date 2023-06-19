@@ -146,7 +146,7 @@ export default function useAuth() {
 
       setRole("client");
       if (user && profile) {
-        setUser({ ...user, ...(profile as Client) });
+        setUser({ ...user, ...(profile as unknown as Client) });
       }
 
       return { data: user, error: signInError };

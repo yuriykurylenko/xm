@@ -79,7 +79,7 @@ const createClientSubscription = (
     .select();
 
 export const updateClientById = (clientId: UUID | string, data: any) =>
-  supabase.from("clients").update(data).eq("id", clientId);
+  supabase.from("clients").update(data).eq("id", clientId).select();
 
 const sendClientPaymentLink = ({
   subscription,
