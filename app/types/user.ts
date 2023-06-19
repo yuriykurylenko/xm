@@ -22,7 +22,7 @@ export type UserInput = {
   full_name?: string;
   email?: string;
   user_id?: UUID | string;
-}
+};
 
 export type ClientInput = UserInput & {
   coach_id?: UUID | string;

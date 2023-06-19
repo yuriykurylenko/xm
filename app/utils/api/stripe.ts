@@ -1,26 +1,37 @@
-import { PaymentMethod } from "@stripe/stripe-js";
+import {
+  PaymentMethod,
+  SetupIntent,
+  Stripe,
+  StripeCardElement,
+  StripeError,
+} from "@stripe/stripe-js";
 import axios from "axios";
 
 const createStripeSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/setup_intent", { email });
 
 const confirmStripeCardSetup = async (
-  stripe: any,
-  StripeCardElementInstance: any,
+  stripe: Stripe,
+  StripeCardElementInstance: StripeCardElement,
   stripeClientSecret: string,
   billingDetails: { name: string }
-) => {
-  const { setupIntent, error } = await stripe?.confirmCardSetup(
-    stripeClientSecret,
-    {
+): Promise<{ data: SetupIntent | null; error: Error | StripeError | null }> => {
+  if (!StripeCardElementInstance) {
+    return {
+      data: null,
+      error: new Error("Card Element Instance is not available"),
+    };
+  }
+
+  const { error, setupIntent } =
+    (await stripe?.confirmCardSetup(stripeClientSecret, {
       payment_method: {
         card: StripeCardElementInstance,
         billing_details: billingDetails,
       },
-    }
-  );
+    })) ?? {};
 
-  return { data: setupIntent, error };
+  return { data: setupIntent || null, error: error || null };
 };
 
 const createStripeSubscription = ({
@@ -40,7 +51,7 @@ const createStripeSubscription = ({
   });
 
 const createAndConfirmStripeSubscription = async (
-  stripe: any,
+  stripe: Stripe,
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,
   { monthly_amount }: { monthly_amount: number }
@@ -87,8 +98,8 @@ const createAndConfirmStripeSubscription = async (
 };
 
 export const handleStripeCardAndSubscriptionSetup = async (
-  stripe: any,
-  StripeCardElementInstance: any,
+  stripe: Stripe,
+  StripeCardElementInstance: StripeCardElement,
   {
     email,
     full_name,
