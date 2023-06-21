@@ -1,6 +1,7 @@
 import { stripe } from "@/app/utils/initStripe";
+import { NextApiRequest, NextApiResponse } from "next";
 
-const handler = async (req: any, res: any) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
       const { email } = req.body;
@@ -21,7 +22,7 @@ const handler = async (req: any, res: any) => {
         customer_id: customer.id,
       });
     } catch (err) {
-      res.status(500).json({ statusCode: 500, message: (err as any).message });
+      res.status(500).json({ statusCode: 500, message: err });
     }
   } else {
     res.setHeader("Allow", "POST");

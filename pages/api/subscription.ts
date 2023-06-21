@@ -1,6 +1,10 @@
 import { stripe } from "@/app/utils/initStripe";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req: any, res: any) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     const { customerId, paymentMethodId, priceId, quantity } = req.body;
 
