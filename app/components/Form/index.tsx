@@ -11,6 +11,7 @@ import {
   FormProvider,
   useFormContext,
   FieldValues,
+  SubmitHandler,
 } from "react-hook-form";
 
 interface FormProps<T extends FieldValues> extends UseFormProps {
@@ -81,7 +82,10 @@ const FormInner = <T extends FieldValues>({
   };
 
   return (
-    <form onSubmit={handleSubmit(handleSubmitInner as any)} {...formProps}>
+    <form
+      onSubmit={handleSubmit(handleSubmitInner as SubmitHandler<FieldValues>)}
+      {...formProps}
+    >
       {children}
     </form>
   );
