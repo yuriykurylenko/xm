@@ -98,6 +98,10 @@ const Clients = ({ user }: { user: Coach }) => {
             <BasicButton onClick={handlePrevPage} disabled={page === 1}>
               Previous
             </BasicButton>
+            <span>
+              Page <strong>{page}</strong> of{" "}
+              <strong>{Math.ceil(totalClients / 10)}</strong>
+            </span>
             <BasicButton
               onClick={handleNextPage}
               disabled={page >= Math.ceil(totalClients / 10)}
