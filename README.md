@@ -1,34 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Coaching Subscription Application
 
-## Getting Started
+This application is designed to facilitate a seamless coaching subscription experience. Built with Next.js, Supabase, and TypeScript, the application provides users with the ability to apply to work with a coach, confirm their coaching subscriptions, and receive updates and confirmations through email.
 
-First, run the development server:
+## Application Architecture
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+The application is structured as a Next.js application with server-side rendering, which interacts with a Supabase back-end for data retrieval and manipulations, and uses external services for email notifications and payments.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Frontend
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The frontend of the application is built using Next.js and TypeScript. The major components of the application include:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Page Components**: These are the primary components responsible for rendering the application pages. They interact with the back-end services to fetch and manipulate data as needed. Examples include `@/pages/application/[coachSlug].tsx`, `@/pages/[coachSlug]/success.tsx` and `@/pages/subscription/[subscription_id].tsx`.
+  
+- **API Routes**: These components manage the interactions with external services, such as sending emails with SendGrid (in `@/pages/api/send_payment_link.ts`) and creating subscriptions with Stripe (in `@/pages/api/subscription.ts`).
 
-## Learn More
+- **Utility Functions**: These are helper functions used throughout the application to perform common operations. For example, `@/app/utils/api` includes API fetch functions, and `@/app/utils/initStripe` initializes the Stripe service.
 
-To learn more about Next.js, take a look at the following resources:
+- **Higher-Order Components**: These components add additional functionalities to the page components, such as authentication (in `@/app/hoc/withAuth.tsx`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Custom Hooks**: These hooks encapsulate common logic that can be reused across multiple components, such as authentication logic in `@/app/hooks/useAuth.ts`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Backend
 
-## Deploy on Vercel
+The backend services primarily include Supabase as the primary database and authentication service, and third-party APIs, such as Stripe for payment processing and SendGrid for sending emails.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Supabase**: Supabase is used for storing application data, user authentication and serverless functions.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- **Stripe**: This service is used to handle customer creation, setup of payment methods, and subscription creation.
+
+- **SendGrid**: This service is used to send emails to users, such as the payment confirmation email sent when a user subscribes.
+
+## How to Run the Application
+
+Please refer to the official Next.js documentation on how to build and run a Next.js application: https://nextjs.org/docs/getting-started. Remember to set up your environment variables for Supabase, Stripe and SendGrid services according to their respective documentations.
+
+---
+
+Please note that this is a high-level overview of the application, and more detailed documentation might be needed for each component or specific workflows in the application.
