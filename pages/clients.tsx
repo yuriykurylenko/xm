@@ -94,7 +94,7 @@ const Clients = ({ user }: { user: Coach }) => {
         )}
         renderEmptyList={() => <EmptyList user={user} />}
         renderPagination={() => (
-          <>
+          <div className={styles["pagination-container"]}>
             <BasicButton onClick={handlePrevPage} disabled={page === 1}>
               Previous
             </BasicButton>
@@ -104,7 +104,7 @@ const Clients = ({ user }: { user: Coach }) => {
             >
               Next
             </BasicButton>
-          </>
+          </div>
         )}
       />
       {selectedClient && (

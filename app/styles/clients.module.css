@@ -8,3 +8,13 @@
   padding-bottom: 0;
   font-family: Arial, sans-serif;
 }
+
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.pagination-container button {
+  min-width: 100px;
+  width: auto;
+}
