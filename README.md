@@ -1,37 +1,33 @@
-# Coaching Subscription Application
+# Coaching Application
 
-This application is designed to facilitate a seamless coaching subscription experience for both clients and coaches. Built with Next.js, Supabase, and TypeScript, the application provides users with the ability to apply to work with a coach, confirm their coaching subscriptions, and receive updates and confirmations through email. For coaches, it offers a platform to manage their client list and oversee their clients' subscription statuses.
+This repository contains the codebase for a Next.js + TypeScript application that aims to facilitate online coaching services. This platform enables coaches to manage their clients and allows clients to interact with their coaches seamlessly. The application leverages various technologies including Next.js, TypeScript, Supabase, and Stripe.
 
-## Application Architecture
+## Architecture
 
-The application is structured as a Next.js application with server-side rendering, which interacts with a Supabase back-end for data retrieval and manipulations, and uses external services for email notifications and payments.
+The application follows the standard Next.js structure with several additional directories and files to accommodate the specific needs of the coaching platform. The codebase is structured as follows:
 
-### Frontend
+1. **Pages**: In Next.js, any file inside the pages directory becomes a route. We utilize dynamic routing for pages that need to render different content based on the URL's path.
 
-The frontend of the application is built using Next.js and TypeScript. The major components of the application include:
+2. **API Routes**: Next.js supports API routes out of the box. We've used this feature to create API endpoints that interact with the Stripe service for payments and SendGrid for emails.
 
-- **Page Components**: These are the primary components responsible for rendering the application pages. They interact with the back-end services to fetch and manipulate data as needed. Examples include `@/pages/application/[coachSlug].tsx`, `@/pages/[coachSlug]/success.tsx` and `@/pages/subscription/[subscription_id].tsx`.
+3. **Types**: TypeScript types used across the application are defined in the types directory. These are used to provide static typing for our data, improving maintainability and developer productivity.
 
-- **API Routes**: These components manage the interactions with external services, such as sending emails with SendGrid (in `@/pages/api/send_payment_link.ts`) and creating subscriptions with Stripe (in `@/pages/api/subscription.ts`).
+4. **Components**: This directory is divided into two subdirectories:
+    - **App Components**: These components are specific to our application. They implement specific features required by the coaching platform, like form handling, page layout, etc.
+    - **Base Components**: These are context-agnostic components that can be reused in various parts of the application. They include basic UI elements like buttons, inputs, etc.
 
-- **Utility Functions**: These are helper functions used throughout the application to perform common operations. For example, `@/app/utils/api` includes API fetch functions, and `@/app/utils/initStripe` initializes the Stripe service.
+5. **Hooks**: These are custom React hooks created for the application. They encapsulate common logic that affects components, improving code reuse and readability.
 
-- **Higher-Order Components**: These components add additional functionalities to the page components, such as authentication (in `@/app/hoc/withAuth.tsx`).
+6. **High Order Components (HOC)**: These components are functions that take a component and return a new component with additional props or functionality.
 
-- **Context-Agnostic Components**: These components are designed to be reusable and unaware of their context. They are used across different components and include form elements such as input fields and buttons, and layout components like `PageContainer`.
+7. **Utilities**: This directory is split into two parts:
+    - **Data Service Functions**: These are functions that encapsulate the application's interactions with its underlying data stored in Supabase. They handle CRUD operations and abstract away the details of data access, making it easier to interact with the data in our application.
+    - **Initialization Functions**: These are functions used to initialize various services used in the application. For example, @/app/utils/initStripe initializes the Stripe service.
 
-- **Custom Hooks**: These hooks encapsulate common logic that can be reused across multiple components, such as authentication logic in `@/app/hooks/useAuth.ts`.
+8. **Context**: This directory contains all the context providers used for state management in our application. It helps in sharing state across multiple components without the need for prop drilling.
 
-### Backend
+## Getting Started
 
-The backend services primarily include Supabase as the primary database and authentication service, and third-party APIs, such as Stripe for payment processing and SendGrid for sending emails.
+Clone this repository and install the dependencies using `yarn install`. You'll need to set up environment variables for the Supabase URL and public key, SendGrid API key, and Stripe public key.
 
-- **Supabase**: Supabase is used for storing application data, user authentication and serverless functions. It's also used by coaches to manage their client list and monitor subscription statuses.
-
-- **Stripe**: This service is used to handle customer creation, setup of payment methods, and subscription creation.
-
-- **SendGrid**: This service is used to send emails to users, such as the payment confirmation email sent when a user subscribes.
-
-## How to Run the Application
-
-Please refer to the official Next.js documentation on how to build and run a Next.js application: https://nextjs.org/docs/getting-started. Remember to set up your environment variables for Supabase, Stripe and SendGrid services according to their respective documentations.
+To run the application locally, use `yarn dev`. For a production build, first use `yarn build`, then `yarn start`.
