@@ -34,7 +34,12 @@ export const fetchClientsByCoachId = async (
     .eq("coach_id", coachId)
     .range(offset, offset + itemsPerPage - 1);
 
-  return response;
+  const total = await supabase
+    .from("clients")
+    .select("id", { count: "exact" })
+    .eq("coach_id", coachId);
+
+  return { ...response, total: total.count };
 };
 
 export const fetchSubscriptionById = (subscriptionId: UUID) =>

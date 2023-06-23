@@ -26,15 +26,20 @@ const CLIENT_STATUS_OPTIONS: FilterOption[] = [
 
 const Clients = ({ user }: { user: Coach }) => {
   const [clients, setClients] = useState<Client[]>([]);
-  const [page, setPage] = useState(1);
+  const [totalClients, setTotalClients] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   useEffect(() => {
     (async () => {
-      const { data } = await fetchClientsByCoachId(user.id as UUID, page);
+      const { data, total } = await fetchClientsByCoachId(
+        user.id as UUID,
+        page
+      );
       setClients(data as Client[]);
+      setTotalClients(total || 0);
     })();
   }, [user, filterStatus, page]);
 
@@ -89,8 +94,15 @@ const Clients = ({ user }: { user: Coach }) => {
         renderEmptyList={() => <EmptyList user={user} />}
         renderPagination={() => (
           <>
-            <button onClick={handlePrevPage}>Previous</button>
-            <button onClick={handleNextPage}>Next</button>
+            <button onClick={handlePrevPage} disabled={page === 1}>
+              Previous
+            </button>
+            <button
+              onClick={handleNextPage}
+              disabled={page >= Math.ceil(totalClients / 10)}
+            >
+              Next
+            </button>
           </>
         )}
       />
