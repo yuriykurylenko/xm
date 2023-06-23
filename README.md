@@ -24,8 +24,6 @@ The application follows the standard Next.js structure with several additional d
     - **Data Service Functions**: These are functions that encapsulate the application's interactions with its underlying data stored in Supabase. They handle CRUD operations and abstract away the details of data access, making it easier to interact with the data in our application.
     - **Initialization Functions**: These are functions used to initialize various services used in the application. For example, @/app/utils/initStripe initializes the Stripe service.
 
-8. **Context**: This directory contains all the context providers used for state management in our application. It helps in sharing state across multiple components without the need for prop drilling.
-
 ## Getting Started
 
 Clone this repository and install the dependencies using `yarn install`. You'll need to set up environment variables for the Supabase URL and public key, SendGrid API key, and Stripe public key.
