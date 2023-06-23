@@ -11,6 +11,7 @@ import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList from "@/app/components/clients/EmptyList";
 import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
+import BasicButton from "@/app/components/BasicButton";
 
 type FilterOption = {
   value: string;
@@ -94,15 +95,15 @@ const Clients = ({ user }: { user: Coach }) => {
         renderEmptyList={() => <EmptyList user={user} />}
         renderPagination={() => (
           <>
-            <button onClick={handlePrevPage} disabled={page === 1}>
+            <BasicButton onClick={handlePrevPage} disabled={page === 1}>
               Previous
-            </button>
-            <button
+            </BasicButton>
+            <BasicButton
               onClick={handleNextPage}
               disabled={page >= Math.ceil(totalClients / 10)}
             >
               Next
-            </button>
+            </BasicButton>
           </>
         )}
       />
