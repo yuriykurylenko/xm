@@ -1,6 +1,6 @@
 # Coaching Subscription Application
 
-This application is designed to facilitate a seamless coaching subscription experience. Built with Next.js, Supabase, and TypeScript, the application provides users with the ability to apply to work with a coach, confirm their coaching subscriptions, and receive updates and confirmations through email.
+This application is designed to facilitate a seamless coaching subscription experience for both clients and coaches. Built with Next.js, Supabase, and TypeScript, the application provides users with the ability to apply to work with a coach, confirm their coaching subscriptions, and receive updates and confirmations through email. For coaches, it offers a platform to manage their client list and oversee their clients' subscription statuses.
 
 ## Application Architecture
 
@@ -26,7 +26,7 @@ The frontend of the application is built using Next.js and TypeScript. The major
 
 The backend services primarily include Supabase as the primary database and authentication service, and third-party APIs, such as Stripe for payment processing and SendGrid for sending emails.
 
-- **Supabase**: Supabase is used for storing application data, user authentication and serverless functions.
+- **Supabase**: Supabase is used for storing application data, user authentication and serverless functions. It's also used by coaches to manage their client list and monitor subscription statuses.
 
 - **Stripe**: This service is used to handle customer creation, setup of payment methods, and subscription creation.
 
