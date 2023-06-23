@@ -4,16 +4,25 @@ interface ItemListProps<T> {
   items: T[];
   renderCard: (item: T, index: number) => JSX.Element;
   renderEmptyList: () => JSX.Element;
+  renderPagination?: () => JSX.Element;
 }
 
 const ItemList = <T,>({
   items,
   renderCard,
   renderEmptyList,
+  renderPagination,
 }: ItemListProps<T>) => {
   return (
     <div className={styles["items-container"]}>
-      {items.length > 0 ? items.map(renderCard) : renderEmptyList()}
+      {items.length === 0 ? (
+        renderEmptyList()
+      ) : (
+        <>
+          {items.map(renderCard)}
+          {renderPagination && renderPagination()}
+        </>
+      )}
     </div>
   );
 };

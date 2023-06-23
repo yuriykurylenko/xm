@@ -26,26 +26,35 @@ const CLIENT_STATUS_OPTIONS: FilterOption[] = [
 
 const Clients = ({ user }: { user: Coach }) => {
   const [clients, setClients] = useState<Client[]>([]);
+  const [page, setPage] = useState(1);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   useEffect(() => {
     (async () => {
-      const { data } = await fetchClientsByCoachId(user.id as UUID);
+      const { data } = await fetchClientsByCoachId(user.id as UUID, page);
       setClients(data as Client[]);
     })();
-  }, [user, filterStatus]);
+  }, [user, filterStatus, page]);
 
-  function openModal(client: Client) {
+  const openModal = (client: Client) => {
     setIsModalOpen(true);
     setSelectedClient(client);
-  }
+  };
 
-  function closeModal() {
+  const closeModal = () => {
     setIsModalOpen(false);
     setSelectedClient(null);
-  }
+  };
+
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setPage((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
+  };
 
   const filteredClients = clients.filter((client: Client) => {
     if (filterStatus === "all") {
@@ -78,6 +87,12 @@ const Clients = ({ user }: { user: Coach }) => {
           />
         )}
         renderEmptyList={() => <EmptyList user={user} />}
+        renderPagination={() => (
+          <>
+            <button onClick={handlePrevPage}>Previous</button>
+            <button onClick={handleNextPage}>Next</button>
+          </>
+        )}
       />
       {selectedClient && (
         <OfferModal

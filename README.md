@@ -13,16 +13,18 @@ The application follows the standard Next.js structure with several additional d
 3. **Types**: TypeScript types used across the application are defined in the types directory. These are used to provide static typing for our data, improving maintainability and developer productivity.
 
 4. **Components**: This directory is divided into two subdirectories:
-    - **App Components**: These components are specific to our application. They implement specific features required by the coaching platform, like form handling, page layout, etc.
-    - **Base Components**: These are context-agnostic components that can be reused in various parts of the application. They include basic UI elements like buttons, inputs, etc.
+
+   - **App Components**: These components are specific to our application. They implement specific features required by the coaching platform, like form handling, page layout, etc.
+   - **Base Components**: These are context-agnostic components that can be reused in various parts of the application. They include basic UI elements like buttons, inputs, etc.
 
 5. **Hooks**: These are custom React hooks created for the application. They encapsulate common logic that affects components, improving code reuse and readability.
 
 6. **High Order Components (HOC)**: These components are functions that take a component and return a new component with additional props or functionality.
 
 7. **Utilities**: This directory is split into two parts:
-    - **Data Service Functions**: These are functions that encapsulate the application's interactions with its underlying data stored in Supabase. They handle CRUD operations and abstract away the details of data access, making it easier to interact with the data in our application.
-    - **Initialization Functions**: These are functions used to initialize various services used in the application. For example, @/app/utils/initStripe initializes the Stripe service.
+
+   - **Data Service Functions**: These are functions that encapsulate the application's interactions with its underlying data stored in Supabase. They handle CRUD operations and abstract away the details of data access, making it easier to interact with the data in our application.
+   - **Initialization Functions**: These are functions used to initialize various services used in the application. For example, @/app/utils/initStripe initializes the Stripe service.
 
 8. **Context**: This directory contains all the context providers used for state management in our application. It helps in sharing state across multiple components without the need for prop drilling.
 

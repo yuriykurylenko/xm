@@ -21,8 +21,21 @@ export const fetchCoachByClientId = async (clientId: UUID) => {
   return fetchCoachById(data.coach_id);
 };
 
-export const fetchClientsByCoachId = (coachId: UUID) =>
-  supabase.from("clients").select("*").eq("coach_id", coachId);
+export const fetchClientsByCoachId = async (
+  coachId: UUID,
+  page: number = 1
+) => {
+  const itemsPerPage = 10;
+  const offset = (page - 1) * itemsPerPage;
+
+  const response = await supabase
+    .from("clients")
+    .select("*")
+    .eq("coach_id", coachId)
+    .range(offset, offset + itemsPerPage - 1);
+
+  return response;
+};
 
 export const fetchSubscriptionById = (subscriptionId: UUID) =>
   supabase.from("subscriptions").select("*").eq("id", subscriptionId).single();
