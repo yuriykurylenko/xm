@@ -23,21 +23,25 @@ export const fetchCoachByClientId = async (clientId: UUID) => {
 
 export const fetchClientsByCoachId = async (
   coachId: UUID,
-  page: number = 1
+  page: number = 1,
+  filterStatus: string = "all"
 ) => {
   const itemsPerPage = 10;
   const offset = (page - 1) * itemsPerPage;
 
-  const response = await supabase
-    .from("clients")
-    .select("*")
-    .eq("coach_id", coachId)
-    .range(offset, offset + itemsPerPage - 1);
-
-  const total = await supabase
+  let query = supabase.from("clients").select("*").eq("coach_id", coachId);
+  let totalQuery = supabase
     .from("clients")
     .select("id", { count: "exact" })
     .eq("coach_id", coachId);
+
+  if (filterStatus !== "all") {
+    query = query.eq("status", filterStatus);
+    totalQuery = totalQuery.eq("status", filterStatus);
+  }
+
+  const response = await query.range(offset, offset + itemsPerPage - 1);
+  const total = await totalQuery;
 
   return { ...response, total: total.count };
 };

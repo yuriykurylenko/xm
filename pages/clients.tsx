@@ -37,7 +37,8 @@ const Clients = ({ user }: { user: Coach }) => {
     (async () => {
       const { data, total } = await fetchClientsByCoachId(
         user.id as UUID,
-        page
+        page,
+        filterStatus
       );
       setClients(data as Client[]);
       setTotalClients(total || 0);
