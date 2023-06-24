@@ -45,6 +45,10 @@ const Clients = ({ user }: { user: Coach }) => {
     })();
   }, [user, filterStatus, page]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [filterStatus]);
+
   const openModal = (client: Client) => {
     setIsModalOpen(true);
     setSelectedClient(client);
