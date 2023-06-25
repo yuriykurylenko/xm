@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import useAuth from "@/app/hooks/useAuth";

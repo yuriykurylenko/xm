@@ -1,3 +1,4 @@
+import * as React from "react";
 import styles from "@/app/components/ItemList/styles.module.css";
 
 interface ItemListProps<T> {

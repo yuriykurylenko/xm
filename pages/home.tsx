@@ -1,3 +1,4 @@
+import * as React from "react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import withAuth from "@/app/hoc/withAuth";

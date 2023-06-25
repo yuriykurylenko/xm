@@ -1,3 +1,4 @@
+import * as React from "react";
 import Modal from "react-modal";
 import { useState } from "react";
 import { sendClientOffer } from "@/app/utils/api";
