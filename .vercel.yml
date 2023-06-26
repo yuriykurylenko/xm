@@ -1,0 +1,10 @@
+builds:
+  - src: /path/to/source/code
+    use: vercel/node
+
+test:
+  command: yarn test
+
+deploy:
+  production:
+    command: vercel --prod
