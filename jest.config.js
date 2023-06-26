@@ -8,10 +8,14 @@ module.exports = {
   },
   moduleNameMapper: {
     "\\.css$": "<rootDir>/__mocks__/styleMock.js",
+    "^@/(.*)$": "<rootDir>/$1",
   },
   globals: {
     "ts-jest": {
       tsconfig: "tsconfig.test.json",
     },
+  },
+  transform: {
+    "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/jest-preprocess.js",
   },
 };
