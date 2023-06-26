@@ -1,5 +1,5 @@
 builds:
-  - src: /path/to/source/code
+  - src: /
     use: vercel/node
 
 test:
