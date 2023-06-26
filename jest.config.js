@@ -15,6 +15,7 @@ module.exports = {
       tsconfig: "tsconfig.test.json",
     },
   },
+  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
   transform: {
     "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/jest-preprocess.js",
   },
