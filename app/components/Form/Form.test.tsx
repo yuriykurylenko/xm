@@ -1,9 +1,16 @@
+import Button from "./Button";
 import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import Form from "./index";
 describe("Form Component", () => {
   it("renders without crashing", () => {
-    const { getByText } = render(<Form />);
+    const { getByText } = render(
+      <Form onSubmit={() => {}}>
+        <Button type="submit" submittingText="Submitting...">
+          Submit
+        </Button>
+      </Form>
+    );
     expect(getByText("Submit")).toBeInTheDocument();
   });
   it("handles user interaction correctly", () => {
@@ -14,5 +21,3 @@ describe("Form Component", () => {
   });
   // Add more tests as necessary for other functionality
 });
-
-
