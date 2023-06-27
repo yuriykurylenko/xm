@@ -29,7 +29,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
     <div className={styles["list-item"]}>
       <input
         type="checkbox"
-        checked={selectedClients.includes(client)}
+        checked={selectedClients.map((c) => c.id).includes(client.id)}
         onChange={handleCheckboxChange}
       />
       <div className={styles["avatar"]}>{client.full_name.charAt(0)}</div>
