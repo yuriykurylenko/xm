@@ -8,7 +8,7 @@ interface ClientCardProps {
   onActionButtonClick: (client: Client) => void;
   actionButtonText: string;
   selectedClients: Client[];
-  onClientSelect: (client: Client, selected: boolean) => void;
+  onClientSelect: () => void;
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({
@@ -22,7 +22,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
 
   const handleCheckboxChange = () => {
     setSelected(!selected);
-    onClientSelect(client, !selected);
+    onClientSelect();
   };
 
   return (

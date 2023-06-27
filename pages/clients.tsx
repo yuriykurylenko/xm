@@ -105,7 +105,7 @@ const Clients = ({ user }: { user: Coach }) => {
             actionButtonText="Send offer"
             selectedClients={selectedClients}
             onClientSelect={() => {
-              selectedClients.includes(client)
+              selectedClients.map((c) => c.id).includes(client.id)
                 ? setSelectedClients(
                     selectedClients.filter((c) => c.id !== client.id)
                   )
