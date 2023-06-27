@@ -32,7 +32,7 @@ const Clients = ({ user }: { user: Coach }) => {
   const [page, setPage] = useState<number>(1);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [selectedClients, setSelectedClients] = useState<Client[]>([]); // New state for selected clients
 
   useEffect(() => {
     (async () => {
@@ -52,12 +52,12 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const openModal = (client: Client) => {
     setIsModalOpen(true);
-    setSelectedClient(client);
+    setSelectedClients([client]);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedClient(null);
+    setSelectedClients([]);
   };
 
   const handleNextPage = () => {
@@ -82,6 +82,13 @@ const Clients = ({ user }: { user: Coach }) => {
       </Head>
       <div className={styles["clients-container-header"]}>
         <h1>Clients</h1>
+        {selectedClients.length > 0 ? (
+          <BasicButton onClick={() => setIsModalOpen(true)}>
+            Send Offers
+          </BasicButton>
+        ) : (
+          <></>
+        )}
         <FilterBar
           filterOptions={CLIENT_STATUS_OPTIONS}
           filterStatus={filterStatus}
@@ -96,6 +103,14 @@ const Clients = ({ user }: { user: Coach }) => {
             client={client}
             onActionButtonClick={() => openModal(client)}
             actionButtonText="Send offer"
+            selectedClients={selectedClients}
+            onClientSelect={() => {
+              selectedClients.includes(client)
+                ? setSelectedClients(
+                    selectedClients.filter((c) => c.id !== client.id)
+                  )
+                : setSelectedClients([...selectedClients, client]);
+            }}
           />
         )}
         renderEmptyList={() => <EmptyList user={user} />}
@@ -117,12 +132,12 @@ const Clients = ({ user }: { user: Coach }) => {
           </div>
         )}
       />
-      {selectedClient && (
+      {selectedClients.length > 0 && (
         <OfferModal
           isOpen={isModalOpen}
           closeModal={closeModal}
           onOfferSent={() => setFilterStatus("offerSent")}
-          selectedClients={[selectedClient]}
+          selectedClients={selectedClients}
           user={user}
         />
       )}

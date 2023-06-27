@@ -22,6 +22,8 @@ describe("ClientCard", () => {
         client={client}
         onActionButtonClick={() => {}}
         actionButtonText="Send Offer"
+        selectedClients={[]}
+        onClientSelect={() => {}}
       />
     );
 
@@ -40,6 +42,8 @@ describe("ClientCard", () => {
         client={client}
         onActionButtonClick={mockButtonClick}
         actionButtonText="Send Offer"
+        selectedClients={[]}
+        onClientSelect={() => {}}
       />
     );
 

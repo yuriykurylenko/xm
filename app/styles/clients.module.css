@@ -14,7 +14,8 @@
   align-items: center;
 }
 
-.pagination-container button {
+.pagination-container button,
+.clients-container-header button {
   min-width: 100px;
   width: auto;
 }
