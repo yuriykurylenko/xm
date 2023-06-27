@@ -1,9 +1,0 @@
-{
-    "ignore": [
-      "readme.md",
-      "package.json",
-      ".github/**",
-      ".vercel"
-    ]
-  }
-  
