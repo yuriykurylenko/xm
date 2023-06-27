@@ -15,7 +15,7 @@ Modal.setAppElement("#__next");
 interface OfferModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  selectedClient: Client;
+  selectedClients: Client[];
   user: Coach;
   onOfferSent?: () => void;
 }
@@ -27,7 +27,7 @@ interface OfferModalFormData {
 const OfferModal: React.FC<OfferModalProps> = ({
   isOpen,
   closeModal,
-  selectedClient,
+  selectedClients,
   user,
   onOfferSent,
 }) => {
@@ -39,22 +39,24 @@ const OfferModal: React.FC<OfferModalProps> = ({
 
   async function onSubmit(data: OfferModalFormData) {
     const { monthlyAmount } = data;
-    const { data: sendOfferData, error } = await sendClientOffer(
-      selectedClient.id as UUID,
-      {
-        monthlyAmount: Number(monthlyAmount) * 100,
-        currency: "USD",
-      }
-    );
+    for (const selectedClient of selectedClients) {
+      const { data: sendOfferData, error } = await sendClientOffer(
+        selectedClient.id as UUID,
+        {
+          monthlyAmount: Number(monthlyAmount) * 100,
+          currency: "USD",
+        }
+      );
 
-    if (error) {
-      return { data: sendOfferData, error };
+      if (error) {
+        return { data: sendOfferData, error };
+      }
     }
 
     onModalClose();
     onOfferSent && onOfferSent();
 
-    return { data: sendOfferData, error };
+    return { error: null };
   }
 
   return (
@@ -79,11 +81,20 @@ const OfferModal: React.FC<OfferModalProps> = ({
         },
       }}
     >
-      <PageContainer title={`Send offer to ${selectedClient.full_name}`}>
+      <PageContainer
+        title={`Send offer to ${
+          selectedClients.length === 1
+            ? selectedClients[0].full_name
+            : selectedClients.length + " clients"
+        }`}
+      >
         <Form<OfferModalFormData> onSubmit={onSubmit}>
           <p>
-            {selectedClient.full_name} will receive an email with the link to
-            subscribe and pay your specified amount monthly.
+            {selectedClients.length === 1
+              ? selectedClients[0].full_name
+              : "Your clients"}{" "}
+            will receive an email with the link to subscribe and pay your
+            specified amount monthly.
           </p>
           <PriceInput
             name="monthlyAmount"

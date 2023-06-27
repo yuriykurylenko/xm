@@ -122,7 +122,7 @@ const Clients = ({ user }: { user: Coach }) => {
           isOpen={isModalOpen}
           closeModal={closeModal}
           onOfferSent={() => setFilterStatus("offerSent")}
-          selectedClient={selectedClient}
+          selectedClients={[selectedClient]}
           user={user}
         />
       )}
