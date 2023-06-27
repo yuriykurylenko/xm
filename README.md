@@ -30,4 +30,4 @@ The application follows the standard Next.js structure with several additional d
 
 Clone this repository and install the dependencies using `yarn install`. You'll need to set up environment variables for the Supabase URL and public key, SendGrid API key, and Stripe public key.
 
-To run the application locally, use `yarn dev`. For a production build, first use `yarn build`, then `yarn start`.
+To run the application locally, use `yarn dev`. For a production build, first use `yarn build`, then `yarn start`. 
