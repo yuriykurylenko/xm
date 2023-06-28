@@ -20,19 +20,18 @@ type FilterOption = {
 };
 
 const CLIENT_STATUS_OPTIONS: FilterOption[] = [
-  { value: "all", name: "All" },
   { value: "lead", name: "Leads" },
-  { value: "offerSent", name: "Offer sent" },
-  { value: "client", name: "Clients" },
+  { value: "offerSent", name: "Sent offers" },
+  { value: "client", name: "Active" },
 ];
 
 const Clients = ({ user }: { user: Coach }) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [totalClients, setTotalClients] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
-  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string>("lead");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedClients, setSelectedClients] = useState<Client[]>([]); // New state for selected clients
+  const [selectedClients, setSelectedClients] = useState<Client[]>([]);
 
   useEffect(() => {
     (async () => {
