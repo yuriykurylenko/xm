@@ -9,6 +9,7 @@ interface ClientCardProps {
   actionButtonText: string;
   selectedClients: Client[];
   onClientSelect: () => void;
+  bulkOperationsAllowed: boolean;
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({
@@ -17,6 +18,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
   actionButtonText,
   selectedClients,
   onClientSelect,
+  bulkOperationsAllowed = false,
 }) => {
   const [selected, setSelected] = useState(false);
 
@@ -27,11 +29,13 @@ const ClientCard: React.FC<ClientCardProps> = ({
 
   return (
     <div className={styles["list-item"]}>
-      <input
-        type="checkbox"
-        checked={selectedClients.map((c) => c.id).includes(client.id)}
-        onChange={handleCheckboxChange}
-      />
+      {bulkOperationsAllowed && (
+        <input
+          type="checkbox"
+          checked={selectedClients.map((c) => c.id).includes(client.id)}
+          onChange={handleCheckboxChange}
+        />
+      )}
       <div className={styles["avatar"]}>{client.full_name.charAt(0)}</div>
       <div className={styles["item-name"]}>{client.full_name}</div>
       {client.status === "lead" && (

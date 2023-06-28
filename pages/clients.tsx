@@ -68,9 +68,6 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const filteredClients = clients.filter((client: Client) => {
-    if (filterStatus === "all") {
-      return true;
-    }
     return client.status === filterStatus;
   });
 
@@ -103,6 +100,7 @@ const Clients = ({ user }: { user: Coach }) => {
             onActionButtonClick={() => openModal(client)}
             actionButtonText="Send offer"
             selectedClients={selectedClients}
+            bulkOperationsAllowed={filterStatus === "lead"}
             onClientSelect={() => {
               selectedClients.map((c) => c.id).includes(client.id)
                 ? setSelectedClients(
