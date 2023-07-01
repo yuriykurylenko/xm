@@ -19,12 +19,6 @@ type FilterOption = {
   name: string;
 };
 
-const CLIENT_STATUS_OPTIONS: FilterOption[] = [
-  { value: "lead", name: "Leads" },
-  { value: "offerSent", name: "Sent offers" },
-  { value: "client", name: "Active" },
-];
-
 const Clients = ({ user }: { user: Coach }) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [totalClients, setTotalClients] = useState<number>(0);
@@ -32,6 +26,18 @@ const Clients = ({ user }: { user: Coach }) => {
   const [filterStatus, setFilterStatus] = useState<string>("lead");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedClients, setSelectedClients] = useState<Client[]>([]);
+
+  const [filterCounts, setFilterCounts] = useState<Record<string, number>>({
+    lead: 0,
+    offerSent: 0,
+    client: 0,
+  });
+
+  const CLIENT_STATUS_OPTIONS: FilterOption[] = [
+    { value: "lead", name: `Leads (${filterCounts.lead})` },
+    { value: "offerSent", name: `Sent offers (${filterCounts.offerSent})` },
+    { value: "client", name: `Active (${filterCounts.client})` },
+  ];
 
   useEffect(() => {
     (async () => {
@@ -48,6 +54,25 @@ const Clients = ({ user }: { user: Coach }) => {
   useEffect(() => {
     setPage(1);
   }, [filterStatus]);
+
+  useEffect(() => {
+    const fetchFilterCounts = async () => {
+      const counts: Record<string, number> = {};
+
+      for (const filterOption of CLIENT_STATUS_OPTIONS) {
+        const { total } = await fetchClientsByCoachId(
+          user.id as UUID,
+          1,
+          filterOption.value
+        );
+        counts[filterOption.value] = total as number;
+      }
+
+      setFilterCounts(counts);
+    };
+
+    fetchFilterCounts();
+  }, [user]);
 
   const openModal = (client: Client) => {
     setIsModalOpen(true);
@@ -86,7 +111,12 @@ const Clients = ({ user }: { user: Coach }) => {
           <></>
         )}
         <FilterBar
-          filterOptions={CLIENT_STATUS_OPTIONS}
+          filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
+            ...option,
+            count: filteredClients.filter(
+              (client) => client.status === option.value
+            ).length,
+          }))}
           filterStatus={filterStatus}
           setFilterStatus={setFilterStatus}
         />
