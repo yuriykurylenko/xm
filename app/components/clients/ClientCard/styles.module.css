@@ -56,3 +56,12 @@
 .bulk-column {
   max-width: 30px;
 }
+
+.name-column {
+  width: 200px;
+  max-width: 200px;
+}
+
+.created-column {
+  max-width: 150px;
+}

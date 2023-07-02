@@ -137,8 +137,16 @@ const Clients = ({ user }: { user: Coach }) => {
             >
               &nbsp;
             </div>
-            <div className={styles["header-column"]}>Name</div>
-            <div className={styles["header-column"]}>Created</div>
+            <div
+              className={`${styles["header-column"]} ${styles["header-column-name"]}`}
+            >
+              Name
+            </div>
+            <div
+              className={`${styles["header-column"]} ${styles["header-column-created"]}`}
+            >
+              Created
+            </div>
             <div className={styles["header-column"]}>Status</div>
             <div className={styles["header-column"]}>Actions</div>
           </div>

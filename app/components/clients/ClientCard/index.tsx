@@ -41,10 +41,12 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div className={`${styles["avatar"]} ${styles["column"]}`}>
         {client.full_name.charAt(0)}
       </div>
-      <div className={`${styles["item-name"]} ${styles["column"]}`}>
+      <div
+        className={`${styles["item-name"]} ${styles["name-column"]} ${styles["column"]}`}
+      >
         {client.full_name}
       </div>
-      <div className={styles["column"]}>
+      <div className={`${styles["column"]} ${styles["created-column"]}`}>
         {new Date(client.created_at)
           .toLocaleDateString("en-US", {
             year: "numeric",

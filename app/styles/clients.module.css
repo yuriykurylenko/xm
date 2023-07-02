@@ -48,3 +48,13 @@
   width: 30px;
   max-width: 30px;
 }
+
+.header-column-name {
+  width: 200px;
+  max-width: 200px;
+}
+
+.header-column-created {
+  width: 150px;
+  max-width: 150px;
+}
