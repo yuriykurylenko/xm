@@ -17,6 +17,7 @@ export type Coach = User & {
 export type Client = User & {
   coach_id: UUID | string;
   status?: string;
+  archived_at?: Date | string;
 };
 
 export type UserInput = {
@@ -28,4 +29,5 @@ export type UserInput = {
 export type ClientInput = UserInput & {
   coach_id?: UUID | string;
   status?: string;
+  archived_at?: Date | string;
 };

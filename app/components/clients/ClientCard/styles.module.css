@@ -70,3 +70,11 @@
   max-width: 60px;
   font-size: 13px;
 }
+
+.button-container {
+  display: flex;
+}
+
+.button-container button {
+  margin-right: 0.5rem;
+}

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
-import { fetchClientsByCoachId } from "@/app/utils/api";
+import { fetchClientsByCoachId, updateClientById } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 import OfferModal from "@/app/components/clients/OfferModal";
 
@@ -42,15 +42,19 @@ const Clients = ({ user }: { user: Coach }) => {
     { value: "client", name: `Active (${filterCounts.client})` },
   ];
 
+  const fetchClients = async () => {
+    const { data, total } = await fetchClientsByCoachId(
+      user.id as UUID,
+      page,
+      filterStatus
+    );
+    setClients(data as Client[]);
+    setTotalClients(total || 0);
+  };
+
   useEffect(() => {
     (async () => {
-      const { data, total } = await fetchClientsByCoachId(
-        user.id as UUID,
-        page,
-        filterStatus
-      );
-      setClients(data as Client[]);
-      setTotalClients(total || 0);
+      fetchClients();
     })();
   }, [user, filterStatus, page]);
 
@@ -93,6 +97,11 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const handlePrevPage = () => {
     setPage((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
+  };
+
+  const handleArchiveClient = async (client: Client) => {
+    await updateClientById(client.id as UUID, { archived_at: new Date() });
+    await fetchClients();
   };
 
   const filteredClients = clients.filter((client: Client) => {
@@ -187,6 +196,7 @@ const Clients = ({ user }: { user: Coach }) => {
                   )
                 : setSelectedClients([...selectedClients, client]);
             }}
+            onArchiveButtonClick={() => handleArchiveClient(client)}
           />
         )}
         renderEmptyList={() => <EmptyList user={user} />}

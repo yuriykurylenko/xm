@@ -29,11 +29,16 @@ export const fetchClientsByCoachId = async (
   const itemsPerPage = 10;
   const offset = (page - 1) * itemsPerPage;
 
-  let query = supabase.from("clients").select("*").eq("coach_id", coachId);
+  let query = supabase
+    .from("clients")
+    .select("*")
+    .eq("coach_id", coachId)
+    .is("archived_at", null);
   let totalQuery = supabase
     .from("clients")
     .select("id", { count: "exact" })
-    .eq("coach_id", coachId);
+    .eq("coach_id", coachId)
+    .is("archived_at", null);
 
   if (filterStatus !== "all") {
     query = query.eq("status", filterStatus);

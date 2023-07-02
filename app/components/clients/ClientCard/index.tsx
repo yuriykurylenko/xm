@@ -3,6 +3,9 @@ import BasicButton from "@/app/components/BasicButton";
 import { Client } from "@/app/types/user";
 import { ReactNode, useState } from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
 interface ClientCardProps {
   client: Client;
   onActionButtonClick: (client: Client) => void;
@@ -10,6 +13,7 @@ interface ClientCardProps {
   selectedClients: Client[];
   onClientSelect: () => void;
   bulkOperationsAllowed: boolean;
+  onArchiveButtonClick: () => void;
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({
@@ -19,6 +23,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
   selectedClients,
   onClientSelect,
   bulkOperationsAllowed = false,
+  onArchiveButtonClick,
 }) => {
   const [selected, setSelected] = useState(false);
 
@@ -55,17 +60,21 @@ const ClientCard: React.FC<ClientCardProps> = ({
           })
           .replace(/\//g, "/")}
       </div>
-      <div className={styles["column"]}>
+      <div className={`${styles["column"]} ${styles["button-container"]}`}>
         {client.status === "lead" && (
-          <div className={styles["button-container"]}>
-            <BasicButton
-              className={styles["action-btn"]}
-              onClick={() => onActionButtonClick(client)}
-            >
-              {actionButtonText}
-            </BasicButton>
-          </div>
+          <BasicButton
+            className={styles["action-btn"]}
+            onClick={() => onActionButtonClick(client)}
+          >
+            {actionButtonText}
+          </BasicButton>
         )}
+        <BasicButton
+          className={styles["action-btn"]}
+          onClick={onArchiveButtonClick}
+        >
+          <FontAwesomeIcon icon={faTrash} />
+        </BasicButton>
       </div>
     </div>
   );
