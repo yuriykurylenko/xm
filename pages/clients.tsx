@@ -59,6 +59,10 @@ const Clients = ({ user }: { user: Coach }) => {
   }, [user, filterStatus, page]);
 
   useEffect(() => {
+    setSelectedClients([]);
+  }, [filterStatus]);
+
+  useEffect(() => {
     setPage(1);
   }, [filterStatus]);
 
@@ -123,14 +127,16 @@ const Clients = ({ user }: { user: Coach }) => {
         <h1>Clients</h1>
         {selectedClients.length > 0 ? (
           <>
-            <BasicButton
-              className={styles["action-btn"]}
-              onClick={() => setIsModalOpen(true)}
-            >
-              <span title="Send offers">
-                <FontAwesomeIcon icon={faPaperPlane} />
-              </span>
-            </BasicButton>
+            {filterStatus === "lead" && (
+              <BasicButton
+                className={styles["action-btn"]}
+                onClick={() => setIsModalOpen(true)}
+              >
+                <span title="Send offers">
+                  <FontAwesomeIcon icon={faPaperPlane} />
+                </span>
+              </BasicButton>
+            )}
             <BasicButton
               className={styles["action-btn"]}
               onClick={handleArchiveSelectedClients}
