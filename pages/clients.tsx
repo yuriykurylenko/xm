@@ -111,7 +111,9 @@ const Clients = ({ user }: { user: Coach }) => {
             className={styles["action-btn"]}
             onClick={() => setIsModalOpen(true)}
           >
-            <FontAwesomeIcon icon={faPaperPlane} />
+            <span title="Send offers">
+              <FontAwesomeIcon icon={faPaperPlane} />
+            </span>
           </BasicButton>
         ) : (
           <></>
@@ -172,7 +174,11 @@ const Clients = ({ user }: { user: Coach }) => {
             key={index}
             client={client}
             onActionButtonClick={() => openModal(client)}
-            actionButtonText={<FontAwesomeIcon icon={faPaperPlane} />}
+            actionButtonText={
+              <span title="Send offer">
+                <FontAwesomeIcon icon={faPaperPlane} />
+              </span>
+            }
             selectedClients={selectedClients}
             bulkOperationsAllowed={filterStatus === "lead"}
             onClientSelect={() => {
