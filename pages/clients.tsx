@@ -107,8 +107,11 @@ const Clients = ({ user }: { user: Coach }) => {
       <div className={styles["clients-container-header"]}>
         <h1>Clients</h1>
         {selectedClients.length > 0 ? (
-          <BasicButton onClick={() => setIsModalOpen(true)}>
-            Send Offers
+          <BasicButton
+            className={styles["action-btn"]}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <FontAwesomeIcon icon={faPaperPlane} />
           </BasicButton>
         ) : (
           <></>

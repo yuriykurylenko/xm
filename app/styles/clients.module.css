@@ -58,3 +58,8 @@
   width: 150px;
   max-width: 150px;
 }
+
+.action-btn {
+  min-width: 60px !important;
+  max-width: 60px;
+}
