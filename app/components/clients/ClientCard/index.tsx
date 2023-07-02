@@ -44,7 +44,15 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div className={`${styles["item-name"]} ${styles["column"]}`}>
         {client.full_name}
       </div>
-      <div className={styles["column"]}></div>
+      <div className={styles["column"]}>
+        {new Date(client.created_at)
+          .toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })
+          .replace(/\//g, "/")}
+      </div>
       <div
         className={`${styles[`status-${client.status}`]} ${styles["column"]}`}
       >
