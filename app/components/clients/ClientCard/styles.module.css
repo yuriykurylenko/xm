@@ -65,3 +65,7 @@
 .created-column {
   max-width: 150px;
 }
+
+.action-btn {
+  max-width: 60px;
+}

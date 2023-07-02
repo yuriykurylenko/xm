@@ -14,6 +14,9 @@ import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 import BasicButton from "@/app/components/BasicButton";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+
 type FilterOption = {
   value: string;
   name: string;
@@ -166,7 +169,7 @@ const Clients = ({ user }: { user: Coach }) => {
             key={index}
             client={client}
             onActionButtonClick={() => openModal(client)}
-            actionButtonText="Send offer"
+            actionButtonText={<FontAwesomeIcon icon={faPaperPlane} />}
             selectedClients={selectedClients}
             bulkOperationsAllowed={filterStatus === "lead"}
             onClientSelect={() => {

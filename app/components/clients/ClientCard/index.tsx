@@ -1,12 +1,12 @@
 import styles from "@/app/components/clients/ClientCard/styles.module.css";
 import BasicButton from "@/app/components/BasicButton";
 import { Client } from "@/app/types/user";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 interface ClientCardProps {
   client: Client;
   onActionButtonClick: (client: Client) => void;
-  actionButtonText: string;
+  actionButtonText: string | ReactNode;
   selectedClients: Client[];
   onClientSelect: () => void;
   bulkOperationsAllowed: boolean;
@@ -97,7 +97,10 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div className={styles["column"]}>
         {client.status === "lead" && (
           <div className={styles["button-container"]}>
-            <BasicButton onClick={() => onActionButtonClick(client)}>
+            <BasicButton
+              className={styles["action-btn"]}
+              onClick={() => onActionButtonClick(client)}
+            >
               {actionButtonText}
             </BasicButton>
           </div>

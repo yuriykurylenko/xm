@@ -21,7 +21,7 @@ export const BasicButton: FC<BasicButtonProps> = ({
 }) => {
   return (
     <button
-      className={className || styles["submit-btn"]}
+      className={`${className} ${styles["submit-btn"]}`}
       disabled={disabled}
       type={type}
       onClick={onClick}
