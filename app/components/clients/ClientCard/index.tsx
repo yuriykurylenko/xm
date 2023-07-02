@@ -28,7 +28,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
   };
 
   return (
-    <div className={styles["list-item"]}>
+    <div className={styles["card-row"]}>
       {bulkOperationsAllowed && (
         <input
           type="checkbox"
@@ -36,16 +36,16 @@ const ClientCard: React.FC<ClientCardProps> = ({
           onChange={handleCheckboxChange}
         />
       )}
-      <div className={styles["avatar"]}>{client.full_name.charAt(0)}</div>
-      <div className={styles["item-name"]}>{client.full_name}</div>
-      {client.status === "lead" && (
-        <div className={styles["button-container"]}>
-          <BasicButton onClick={() => onActionButtonClick(client)}>
-            {actionButtonText}
-          </BasicButton>
-        </div>
-      )}
-      <div className={styles[`status-${client.status}`]}>
+      <div className={`${styles["avatar"]} ${styles["column"]}`}>
+        {client.full_name.charAt(0)}
+      </div>
+      <div className={`${styles["item-name"]} ${styles["column"]}`}>
+        {client.full_name}
+      </div>
+      <div className={styles["column"]}></div>
+      <div
+        className={`${styles[`status-${client.status}`]} ${styles["column"]}`}
+      >
         {client.status === "offerSent" && (
           <div>
             <svg
@@ -79,6 +79,15 @@ const ClientCard: React.FC<ClientCardProps> = ({
               />
             </svg>
             Active
+          </div>
+        )}
+      </div>
+      <div className={styles["column"]}>
+        {client.status === "lead" && (
+          <div className={styles["button-container"]}>
+            <BasicButton onClick={() => onActionButtonClick(client)}>
+              {actionButtonText}
+            </BasicButton>
           </div>
         )}
       </div>

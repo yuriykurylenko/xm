@@ -41,3 +41,14 @@
   width: 16px;
   height: 16px;
 }
+
+.card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.column {
+  flex-grow: 1;
+}

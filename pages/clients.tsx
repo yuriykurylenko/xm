@@ -125,6 +125,7 @@ const Clients = ({ user }: { user: Coach }) => {
         items={filteredClients}
         renderHeader={() => (
           <div className={styles["header-row"]}>
+            <div className={styles["header-column"]}></div>
             <div className={styles["header-column"]}>Name</div>
             <div className={styles["header-column"]}>Created</div>
             <div className={styles["header-column"]}>Status</div>
