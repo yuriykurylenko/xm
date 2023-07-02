@@ -15,7 +15,7 @@ import { UUID } from "crypto";
 import BasicButton from "@/app/components/BasicButton";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 type FilterOption = {
   value: string;
@@ -104,6 +104,12 @@ const Clients = ({ user }: { user: Coach }) => {
     await fetchClients();
   };
 
+  const handleArchiveSelectedClients = async () => {
+    for (const client of selectedClients) {
+      handleArchiveClient(client);
+    }
+  };
+
   const filteredClients = clients.filter((client: Client) => {
     return client.status === filterStatus;
   });
@@ -116,14 +122,24 @@ const Clients = ({ user }: { user: Coach }) => {
       <div className={styles["clients-container-header"]}>
         <h1>Clients</h1>
         {selectedClients.length > 0 ? (
-          <BasicButton
-            className={styles["action-btn"]}
-            onClick={() => setIsModalOpen(true)}
-          >
-            <span title="Send offers">
-              <FontAwesomeIcon icon={faPaperPlane} />
-            </span>
-          </BasicButton>
+          <>
+            <BasicButton
+              className={styles["action-btn"]}
+              onClick={() => setIsModalOpen(true)}
+            >
+              <span title="Send offers">
+                <FontAwesomeIcon icon={faPaperPlane} />
+              </span>
+            </BasicButton>
+            <BasicButton
+              className={styles["action-btn"]}
+              onClick={handleArchiveSelectedClients}
+            >
+              <span title="Archive clients">
+                <FontAwesomeIcon icon={faTrash} />
+              </span>
+            </BasicButton>
+          </>
         ) : (
           <></>
         )}
@@ -142,23 +158,21 @@ const Clients = ({ user }: { user: Coach }) => {
         items={filteredClients}
         renderHeader={() => (
           <div className={styles["header-row"]}>
-            {filterStatus === "lead" && (
-              <div
-                className={`${styles["header-column"]} ${styles["header-column-bulk"]}`}
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedClients.length === filteredClients.length}
-                  onChange={() => {
-                    if (selectedClients.length === filteredClients.length) {
-                      setSelectedClients([]);
-                    } else {
-                      setSelectedClients(filteredClients);
-                    }
-                  }}
-                />
-              </div>
-            )}
+            <div
+              className={`${styles["header-column"]} ${styles["header-column-bulk"]}`}
+            >
+              <input
+                type="checkbox"
+                checked={selectedClients.length === filteredClients.length}
+                onChange={() => {
+                  if (selectedClients.length === filteredClients.length) {
+                    setSelectedClients([]);
+                  } else {
+                    setSelectedClients(filteredClients);
+                  }
+                }}
+              />
+            </div>
             <div
               className={`${styles["header-column"]} ${styles["header-column-avatar"]}`}
             >
@@ -188,7 +202,7 @@ const Clients = ({ user }: { user: Coach }) => {
               </span>
             }
             selectedClients={selectedClients}
-            bulkOperationsAllowed={filterStatus === "lead"}
+            bulkOperationsAllowed={true}
             onClientSelect={() => {
               selectedClients.map((c) => c.id).includes(client.id)
                 ? setSelectedClients(
