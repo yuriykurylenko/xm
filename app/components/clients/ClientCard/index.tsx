@@ -30,11 +30,13 @@ const ClientCard: React.FC<ClientCardProps> = ({
   return (
     <div className={styles["card-row"]}>
       {bulkOperationsAllowed && (
-        <input
-          type="checkbox"
-          checked={selectedClients.map((c) => c.id).includes(client.id)}
-          onChange={handleCheckboxChange}
-        />
+        <div className={`${styles["bulk-column"]} ${styles["column"]}`}>
+          <input
+            type="checkbox"
+            checked={selectedClients.map((c) => c.id).includes(client.id)}
+            onChange={handleCheckboxChange}
+          />
+        </div>
       )}
       <div className={`${styles["avatar"]} ${styles["column"]}`}>
         {client.full_name.charAt(0)}

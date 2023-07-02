@@ -8,7 +8,7 @@
 }
 
 .avatar {
-  width: 30px;
+  max-width: 30px;
   height: 30px;
   border-radius: 50%;
   background-color: #ccc;
@@ -51,4 +51,8 @@
 
 .column {
   flex-grow: 1;
+}
+
+.bulk-column {
+  max-width: 30px;
 }

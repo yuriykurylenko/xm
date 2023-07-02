@@ -34,3 +34,17 @@
   background-color: #f0f0f0;
   font-weight: bold;
 }
+
+.header-column {
+  flex-grow: 1;
+}
+
+.header-column-avatar {
+  width: 45px;
+  max-width: 45px;
+}
+
+.header-column-bulk {
+  width: 30px;
+  max-width: 30px;
+}

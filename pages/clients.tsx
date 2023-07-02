@@ -125,7 +125,18 @@ const Clients = ({ user }: { user: Coach }) => {
         items={filteredClients}
         renderHeader={() => (
           <div className={styles["header-row"]}>
-            <div className={styles["header-column"]}></div>
+            {filterStatus === "lead" && (
+              <div
+                className={`${styles["header-column"]} ${styles["header-column-bulk"]}`}
+              >
+                &nbsp;
+              </div>
+            )}
+            <div
+              className={`${styles["header-column"]} ${styles["header-column-avatar"]}`}
+            >
+              &nbsp;
+            </div>
             <div className={styles["header-column"]}>Name</div>
             <div className={styles["header-column"]}>Created</div>
             <div className={styles["header-column"]}>Status</div>
