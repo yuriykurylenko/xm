@@ -6,6 +6,7 @@ interface ItemListProps<T> {
   renderCard: (item: T, index: number) => JSX.Element;
   renderEmptyList: () => JSX.Element;
   renderPagination?: () => JSX.Element;
+  renderHeader?: () => JSX.Element;
 }
 
 const ItemList = <T,>({
@@ -13,9 +14,11 @@ const ItemList = <T,>({
   renderCard,
   renderEmptyList,
   renderPagination,
+  renderHeader,
 }: ItemListProps<T>) => {
   return (
     <div className={styles["items-container"]}>
+      {renderHeader && items.length > 0 && renderHeader()}
       {items.length === 0 ? (
         renderEmptyList()
       ) : (

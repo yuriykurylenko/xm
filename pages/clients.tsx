@@ -123,6 +123,14 @@ const Clients = ({ user }: { user: Coach }) => {
       </div>
       <ItemList<Client>
         items={filteredClients}
+        renderHeader={() => (
+          <div className={styles["header-row"]}>
+            <div className={styles["header-column"]}>Name</div>
+            <div className={styles["header-column"]}>Created</div>
+            <div className={styles["header-column"]}>Status</div>
+            <div className={styles["header-column"]}>Actions</div>
+          </div>
+        )}
         renderCard={(client: Client, index: number) => (
           <ClientCard
             key={index}

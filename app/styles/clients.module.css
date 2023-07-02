@@ -25,3 +25,12 @@
   flex: 1 0 auto;
   padding: 0 10px;
 }
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
