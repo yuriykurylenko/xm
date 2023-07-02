@@ -18,6 +18,7 @@
 .clients-container-header button {
   min-width: 100px;
   width: auto;
+  font-size: 13px;
 }
 
 .pagination-container span {
@@ -62,4 +63,5 @@
 .action-btn {
   min-width: 60px !important;
   max-width: 60px;
+  font-size: 13px;
 }
