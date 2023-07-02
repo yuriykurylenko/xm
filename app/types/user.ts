@@ -4,7 +4,7 @@ export type User = {
   id?: UUID | string;
   full_name: string;
   email: string;
-  created_at: Date;
+  created_at?: Date | string;
   user_id?: UUID | string;
 };
 

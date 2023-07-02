@@ -47,7 +47,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
         {client.full_name}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
-        {new Date(client.created_at)
+        {new Date(client.created_at as Date)
           .toLocaleDateString("en-US", {
             year: "numeric",
             month: "2-digit",
