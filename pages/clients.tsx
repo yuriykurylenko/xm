@@ -129,7 +129,17 @@ const Clients = ({ user }: { user: Coach }) => {
               <div
                 className={`${styles["header-column"]} ${styles["header-column-bulk"]}`}
               >
-                &nbsp;
+                <input
+                  type="checkbox"
+                  checked={selectedClients.length === filteredClients.length}
+                  onChange={() => {
+                    if (selectedClients.length === filteredClients.length) {
+                      setSelectedClients([]);
+                    } else {
+                      setSelectedClients(filteredClients);
+                    }
+                  }}
+                />
               </div>
             )}
             <div
