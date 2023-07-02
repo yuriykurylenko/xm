@@ -165,7 +165,6 @@ const Clients = ({ user }: { user: Coach }) => {
             >
               Created
             </div>
-            <div className={styles["header-column"]}>Status</div>
             <div className={styles["header-column"]}>Actions</div>
           </div>
         )}
