@@ -78,6 +78,7 @@ const Clients = ({ user }: { user: Coach }) => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedClients([]);
+    updateFilterCounts();
   };
 
   const handleNextPage = () => {
