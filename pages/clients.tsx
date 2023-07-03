@@ -16,6 +16,7 @@ import BasicButton from "@/app/components/BasicButton";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
+import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 
 type FilterOption = {
   value: string;
@@ -27,7 +28,11 @@ const Clients = ({ user }: { user: Coach }) => {
   const [totalClients, setTotalClients] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [filterStatus, setFilterStatus] = useState<string>("lead");
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+    useState<boolean>(false);
+
   const [selectedClients, setSelectedClients] = useState<Client[]>([]);
 
   const [filterCounts, setFilterCounts] = useState<Record<string, number>>({
@@ -95,10 +100,25 @@ const Clients = ({ user }: { user: Coach }) => {
     await updateFilterCounts();
   };
 
+  const handleArchiveConfirmation = (client?: Client) => {
+    setIsConfirmationDialogOpen(true);
+
+    if (client) {
+      setSelectedClients([client]);
+    }
+  };
+
   const handleArchiveSelectedClients = async () => {
     for (const client of selectedClients) {
       handleArchiveClient(client);
     }
+
+    setSelectedClients([]);
+    setIsConfirmationDialogOpen(false);
+  };
+
+  const handleCancelAction = () => {
+    setIsConfirmationDialogOpen(false);
   };
 
   const updateFilterCounts = async () => {
@@ -141,7 +161,7 @@ const Clients = ({ user }: { user: Coach }) => {
             )}
             <BasicButton
               className={styles["action-btn"]}
-              onClick={handleArchiveSelectedClients}
+              onClick={() => handleArchiveConfirmation()}
             >
               <span title="Archive clients">
                 <FontAwesomeIcon icon={faTrash} />
@@ -218,7 +238,7 @@ const Clients = ({ user }: { user: Coach }) => {
                   )
                 : setSelectedClients([...selectedClients, client]);
             }}
-            onArchiveButtonClick={() => handleArchiveClient(client)}
+            onArchiveButtonClick={() => handleArchiveConfirmation(client)}
           />
         )}
         renderEmptyList={() => <EmptyList user={user} />}
@@ -247,6 +267,18 @@ const Clients = ({ user }: { user: Coach }) => {
           onOfferSent={() => setFilterStatus("offerSent")}
           selectedClients={selectedClients}
           user={user}
+        />
+      )}
+      {isConfirmationDialogOpen && (
+        <ConfirmationDialog
+          isOpen={isConfirmationDialogOpen}
+          message={`Would you like to archive ${
+            selectedClients.length === 1
+              ? selectedClients[0].full_name
+              : selectedClients.length + " clients"
+          }?`}
+          onConfirm={handleArchiveSelectedClients}
+          onCancel={handleCancelAction}
         />
       )}
     </>
