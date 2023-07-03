@@ -146,31 +146,33 @@ const Clients = ({ user }: { user: Coach }) => {
         <title>Coaching | Clients</title>
       </Head>
       <div className={styles["clients-container-header"]}>
-        <h1>Clients</h1>
-        {selectedClients.length > 0 ? (
-          <>
-            {filterStatus === "lead" && (
+        <div className={styles["clients-title-container"]}>
+          <h1>Clients</h1>
+          {selectedClients.length > 0 ? (
+            <div className={styles["action-buttons-container"]}>
+              {filterStatus === "lead" && (
+                <BasicButton
+                  className={styles["action-btn"]}
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <span title="Send offers">
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                  </span>
+                </BasicButton>
+              )}
               <BasicButton
                 className={styles["action-btn"]}
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => handleArchiveConfirmation()}
               >
-                <span title="Send offers">
-                  <FontAwesomeIcon icon={faPaperPlane} />
+                <span title="Archive clients">
+                  <FontAwesomeIcon icon={faTrash} />
                 </span>
               </BasicButton>
-            )}
-            <BasicButton
-              className={styles["action-btn"]}
-              onClick={() => handleArchiveConfirmation()}
-            >
-              <span title="Archive clients">
-                <FontAwesomeIcon icon={faTrash} />
-              </span>
-            </BasicButton>
-          </>
-        ) : (
-          <></>
-        )}
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
         <FilterBar
           filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
             ...option,
