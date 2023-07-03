@@ -67,22 +67,7 @@ const Clients = ({ user }: { user: Coach }) => {
   }, [filterStatus]);
 
   useEffect(() => {
-    const fetchFilterCounts = async () => {
-      const counts: Record<string, number> = {};
-
-      for (const filterOption of CLIENT_STATUS_OPTIONS) {
-        const { total } = await fetchClientsByCoachId(
-          user.id as UUID,
-          1,
-          filterOption.value
-        );
-        counts[filterOption.value] = total as number;
-      }
-
-      setFilterCounts(counts);
-    };
-
-    fetchFilterCounts();
+    updateFilterCounts();
   }, [user]);
 
   const openModal = (client: Client) => {
@@ -106,12 +91,28 @@ const Clients = ({ user }: { user: Coach }) => {
   const handleArchiveClient = async (client: Client) => {
     await updateClientById(client.id as UUID, { archived_at: new Date() });
     await fetchClients();
+    await updateFilterCounts();
   };
 
   const handleArchiveSelectedClients = async () => {
     for (const client of selectedClients) {
       handleArchiveClient(client);
     }
+  };
+
+  const updateFilterCounts = async () => {
+    const counts: Record<string, number> = {};
+
+    for (const filterOption of CLIENT_STATUS_OPTIONS) {
+      const { total } = await fetchClientsByCoachId(
+        user.id as UUID,
+        1,
+        filterOption.value
+      );
+      counts[filterOption.value] = total as number;
+    }
+
+    setFilterCounts(counts);
   };
 
   const filteredClients = clients.filter((client: Client) => {
