@@ -156,11 +156,9 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const onClientSelect = (client: Client) => {
     selectedClients.map((c) => c.id).includes(client.id)
-      ? setSelectedClients(
-          selectedClients.filter((c) => c.id !== client.id)
-        )
+      ? setSelectedClients(selectedClients.filter((c) => c.id !== client.id))
       : setSelectedClients([...selectedClients, client]);
-  }
+  };
 
   const onClientsBulkSelect = () => {
     if (selectedClients.length === filteredClients.length) {
@@ -168,7 +166,7 @@ const Clients = ({ user }: { user: Coach }) => {
     } else {
       setSelectedClients(filteredClients);
     }
-  }
+  };
 
   const filteredClients = clients.filter((client: Client) => {
     return client.status === filterStatus;

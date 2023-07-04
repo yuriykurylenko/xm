@@ -1,7 +1,7 @@
 import styles from "@/app/components/clients/ClientCard/styles.module.css";
-import BasicButton from "@/app/components/BasicButton";
 import { Client } from "@/app/types/user";
 import { useState } from "react";
+import ActionsBar from "../ActionsBar";
 
 interface ClientCardProps {
   client: Client;
@@ -54,19 +54,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
           .replace(/\//g, "/")}
       </div>
       <div className={`${styles["column"]} ${styles["button-container"]}`}>
-        {actions.map(
-          (action: any, i: number) =>
-            action.show && (
-              <span title={action.title} key={i}>
-                <BasicButton
-                  className={styles["action-btn"]}
-                  onClick={() => action.handler(client)}
-                >
-                  {action.icon}
-                </BasicButton>
-              </span>
-            )
-        )}
+        <ActionsBar actions={actions} selectedClients={[client]} />
       </div>
     </div>
   );
