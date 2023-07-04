@@ -17,6 +17,7 @@ import BasicButton from "@/app/components/BasicButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ConfirmationDialog from "@/app/components/ConfirmationDialog";
+import ActionsBar from "@/app/components/clients/ActionsBar";
 
 type FilterOption = {
   value: string;
@@ -181,21 +182,7 @@ const Clients = ({ user }: { user: Coach }) => {
         <div className={styles["clients-title-container"]}>
           <h1>Clients</h1>
           {selectedClients.length > 0 ? (
-            <div className={styles["action-buttons-container"]}>
-              {ACTIONS.map(
-                (action: any, i: number) =>
-                  action.show && (
-                    <span title={action.titleBulk} key={i}>
-                      <BasicButton
-                        className={styles["action-btn"]}
-                        onClick={() => action.handler(selectedClients)}
-                      >
-                        {action.icon}
-                      </BasicButton>
-                    </span>
-                  )
-              )}
-            </div>
+            <ActionsBar actions={ACTIONS} selectedClients={selectedClients} />
           ) : (
             <></>
           )}
