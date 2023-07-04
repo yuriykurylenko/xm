@@ -5,7 +5,6 @@ import { useState } from "react";
 
 interface ClientCardProps {
   client: Client;
-  onActionButtonClick: (client: Client) => void;
   selectedClients: Client[];
   onClientSelect: () => void;
   bulkOperationsAllowed: boolean;

@@ -238,7 +238,6 @@ const Clients = ({ user }: { user: Coach }) => {
           <ClientCard
             key={index}
             client={client}
-            onActionButtonClick={() => openModal(client)}
             selectedClients={selectedClients}
             bulkOperationsAllowed={true}
             onClientSelect={() => {

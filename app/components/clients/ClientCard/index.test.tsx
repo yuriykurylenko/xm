@@ -2,9 +2,18 @@ import * as React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import ClientCard from "@/app/components/clients/ClientCard";
 import { Client } from "@/app/types/user";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 describe("ClientCard", () => {
   let client: Client;
+
+  const ACTION = {
+    title: "Send offer",
+    titleBulk: "Send offers",
+    icon: <FontAwesomeIcon icon={faPaperPlane} />,
+    show: true,
+  };
 
   beforeEach(() => {
     client = {
@@ -20,15 +29,15 @@ describe("ClientCard", () => {
     render(
       <ClientCard
         client={client}
-        onActionButtonClick={() => {}}
-        actionButtonText="Send Offer"
         selectedClients={[]}
         onClientSelect={() => {}}
+        bulkOperationsAllowed={true}
+        actions={[ACTION]}
       />
     );
 
     const nameElement = screen.getByText("John Doe");
-    const statusElement = screen.getByText("Send Offer");
+    const statusElement = screen.getByTitle("Send offer");
 
     expect(nameElement).toBeInTheDocument();
     expect(statusElement).toBeInTheDocument();
@@ -40,16 +49,15 @@ describe("ClientCard", () => {
     render(
       <ClientCard
         client={client}
-        onActionButtonClick={mockButtonClick}
-        actionButtonText="Send Offer"
         selectedClients={[]}
         onClientSelect={() => {}}
+        bulkOperationsAllowed={true}
+        actions={[{ ...ACTION, handler: mockButtonClick }]}
       />
     );
 
-    const statusElement = screen.getByText("Send Offer");
-
-    fireEvent.click(statusElement);
+    const statusElement = screen.getByTitle("Send offer").firstElementChild;
+    fireEvent.click(statusElement as Element);
 
     expect(mockButtonClick).toHaveBeenCalledTimes(1);
   });
