@@ -52,14 +52,14 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Send offer",
       titleBulk: "Send offers",
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
-      handler: (client: Client) => openModal(client),
+      handler: (client: Client | Client[]) => openModal(client),
       show: filterStatus === "lead",
     },
     {
       title: "Archive client",
       titleBulk: "Archive clients",
       icon: <FontAwesomeIcon icon={faTrash} />,
-      handler: (client: Client) => handleArchiveConfirmation(client),
+      handler: (client: Client | Client[]) => handleArchiveConfirmation(client),
       show: true,
     },
   ];
@@ -92,9 +92,9 @@ const Clients = ({ user }: { user: Coach }) => {
     updateFilterCounts();
   }, [user]);
 
-  const openModal = (client: Client) => {
+  const openModal = (client: Client | Client[]) => {
     setIsModalOpen(true);
-    setSelectedClients([client]);
+    setSelectedClients([client].flat());
   };
 
   const closeModal = () => {
@@ -117,11 +117,12 @@ const Clients = ({ user }: { user: Coach }) => {
     await updateFilterCounts();
   };
 
-  const handleArchiveConfirmation = (client?: Client) => {
+  const handleArchiveConfirmation = (client?: Client | Client[]) => {
+    console.log(client);
     setIsConfirmationDialogOpen(true);
 
     if (client) {
-      setSelectedClients([client]);
+      setSelectedClients([client].flat());
     }
   };
 
@@ -167,24 +168,19 @@ const Clients = ({ user }: { user: Coach }) => {
           <h1>Clients</h1>
           {selectedClients.length > 0 ? (
             <div className={styles["action-buttons-container"]}>
-              {filterStatus === "lead" && (
-                <BasicButton
-                  className={styles["action-btn"]}
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  <span title="Send offers">
-                    <FontAwesomeIcon icon={faPaperPlane} />
-                  </span>
-                </BasicButton>
+              {ACTIONS.map(
+                (action: any, i: number) =>
+                  action.show && (
+                    <span title={action.titleBulk} key={i}>
+                      <BasicButton
+                        className={styles["action-btn"]}
+                        onClick={() => action.handler(selectedClients)}
+                      >
+                        {action.icon}
+                      </BasicButton>
+                    </span>
+                  )
               )}
-              <BasicButton
-                className={styles["action-btn"]}
-                onClick={() => handleArchiveConfirmation()}
-              >
-                <span title="Archive clients">
-                  <FontAwesomeIcon icon={faTrash} />
-                </span>
-              </BasicButton>
             </div>
           ) : (
             <></>
