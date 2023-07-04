@@ -118,7 +118,6 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const handleArchiveConfirmation = (client?: Client | Client[]) => {
-    console.log(client);
     setIsConfirmationDialogOpen(true);
 
     if (client) {
@@ -136,6 +135,7 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const handleCancelAction = () => {
+    setSelectedClients([]);
     setIsConfirmationDialogOpen(false);
   };
 
