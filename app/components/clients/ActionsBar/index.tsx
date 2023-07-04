@@ -1,6 +1,6 @@
 import React from "react";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/clients/ClientCard/styles.module.css";
+import styles from "@/app/components/clients/ActionsBar/styles.module.css";
 import { Client } from "@/app/types/user";
 
 interface Action {

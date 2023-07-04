@@ -60,13 +60,6 @@
   max-width: 150px;
 }
 
-.action-btn {
-  min-width: 60px !important;
-  max-width: 60px;
-  font-size: 13px;
-  margin-right: 10px;
-}
-
 .clients-title-container {
   display: flex;
   align-items: center;

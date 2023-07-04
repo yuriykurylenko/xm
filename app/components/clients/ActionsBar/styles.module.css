@@ -1,0 +1,11 @@
+.action-buttons-container {
+  display: flex;
+  align-items: center;
+}
+
+.action-btn {
+  min-width: 60px !important;
+  max-width: 60px;
+  font-size: 13px;
+  margin-right: 10px;
+}
