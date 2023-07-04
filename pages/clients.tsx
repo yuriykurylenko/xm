@@ -173,6 +173,8 @@ const Clients = ({ user }: { user: Coach }) => {
     return client.status === filterStatus;
   });
 
+  const totalPages = Math.ceil(totalClients / 10);
+
   return (
     <>
       <Head>
@@ -240,23 +242,26 @@ const Clients = ({ user }: { user: Coach }) => {
           />
         )}
         renderEmptyList={() => <EmptyList user={user} />}
-        renderPagination={() => (
-          <div className={styles["pagination-container"]}>
-            <BasicButton onClick={handlePrevPage} disabled={page === 1}>
-              Previous
-            </BasicButton>
-            <span>
-              Page <strong>{page}</strong> of{" "}
-              <strong>{Math.ceil(totalClients / 10)}</strong>
-            </span>
-            <BasicButton
-              onClick={handleNextPage}
-              disabled={page >= Math.ceil(totalClients / 10)}
-            >
-              Next
-            </BasicButton>
-          </div>
-        )}
+        renderPagination={() =>
+          totalPages > 1 ? (
+            <div className={styles["pagination-container"]}>
+              <BasicButton onClick={handlePrevPage} disabled={page === 1}>
+                Previous
+              </BasicButton>
+              <span>
+                Page <strong>{page}</strong> of <strong>{totalPages}</strong>
+              </span>
+              <BasicButton
+                onClick={handleNextPage}
+                disabled={page >= totalPages}
+              >
+                Next
+              </BasicButton>
+            </div>
+          ) : (
+            <></>
+          )
+        }
       />
       {selectedClients.length > 0 && (
         <OfferModal
