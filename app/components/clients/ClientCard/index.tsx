@@ -1,29 +1,23 @@
 import styles from "@/app/components/clients/ClientCard/styles.module.css";
 import BasicButton from "@/app/components/BasicButton";
 import { Client } from "@/app/types/user";
-import { ReactNode, useState } from "react";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 
 interface ClientCardProps {
   client: Client;
   onActionButtonClick: (client: Client) => void;
-  actionButtonText: string | ReactNode;
   selectedClients: Client[];
   onClientSelect: () => void;
   bulkOperationsAllowed: boolean;
-  onArchiveButtonClick: () => void;
+  actions?: any;
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({
   client,
-  onActionButtonClick,
-  actionButtonText,
   selectedClients,
   onClientSelect,
   bulkOperationsAllowed = false,
-  onArchiveButtonClick,
+  actions,
 }) => {
   const [selected, setSelected] = useState(false);
 
@@ -61,20 +55,19 @@ const ClientCard: React.FC<ClientCardProps> = ({
           .replace(/\//g, "/")}
       </div>
       <div className={`${styles["column"]} ${styles["button-container"]}`}>
-        {client.status === "lead" && (
-          <BasicButton
-            className={styles["action-btn"]}
-            onClick={() => onActionButtonClick(client)}
-          >
-            {actionButtonText}
-          </BasicButton>
+        {actions.map(
+          (action: any, i: number) =>
+            action.show && (
+              <span title={action.title} key={i}>
+                <BasicButton
+                  className={styles["action-btn"]}
+                  onClick={() => action.handler(client)}
+                >
+                  {action.icon}
+                </BasicButton>
+              </span>
+            )
         )}
-        <BasicButton
-          className={styles["action-btn"]}
-          onClick={onArchiveButtonClick}
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </BasicButton>
       </div>
     </div>
   );

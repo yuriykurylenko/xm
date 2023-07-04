@@ -47,6 +47,23 @@ const Clients = ({ user }: { user: Coach }) => {
     { value: "client", name: `Active (${filterCounts.client})` },
   ];
 
+  const ACTIONS = [
+    {
+      title: "Send offer",
+      titleBulk: "Send offers",
+      icon: <FontAwesomeIcon icon={faPaperPlane} />,
+      handler: (client: Client) => openModal(client),
+      show: filterStatus === "lead",
+    },
+    {
+      title: "Archive client",
+      titleBulk: "Archive clients",
+      icon: <FontAwesomeIcon icon={faTrash} />,
+      handler: (client: Client) => handleArchiveConfirmation(client),
+      show: true,
+    },
+  ];
+
   const fetchClients = async () => {
     const { data, total } = await fetchClientsByCoachId(
       user.id as UUID,
@@ -226,11 +243,6 @@ const Clients = ({ user }: { user: Coach }) => {
             key={index}
             client={client}
             onActionButtonClick={() => openModal(client)}
-            actionButtonText={
-              <span title="Send offer">
-                <FontAwesomeIcon icon={faPaperPlane} />
-              </span>
-            }
             selectedClients={selectedClients}
             bulkOperationsAllowed={true}
             onClientSelect={() => {
@@ -240,7 +252,7 @@ const Clients = ({ user }: { user: Coach }) => {
                   )
                 : setSelectedClients([...selectedClients, client]);
             }}
-            onArchiveButtonClick={() => handleArchiveConfirmation(client)}
+            actions={ACTIONS}
           />
         )}
         renderEmptyList={() => <EmptyList user={user} />}
