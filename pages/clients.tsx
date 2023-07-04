@@ -29,7 +29,7 @@ const Clients = ({ user }: { user: Coach }) => {
   const [page, setPage] = useState<number>(1);
   const [filterStatus, setFilterStatus] = useState<string>("lead");
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isOfferModalOpen, setIsOfferModalOpen] = useState<boolean>(false);
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
     useState<boolean>(false);
 
@@ -52,7 +52,7 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Send offer",
       titleBulk: "Send offers",
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
-      handler: (client: Client | Client[]) => openModal(client),
+      handler: (client: Client | Client[]) => openOfferModal(client),
       show: filterStatus === "lead",
     },
     {
@@ -92,13 +92,13 @@ const Clients = ({ user }: { user: Coach }) => {
     updateFilterCounts();
   }, [user]);
 
-  const openModal = (client: Client | Client[]) => {
-    setIsModalOpen(true);
+  const openOfferModal = (client: Client | Client[]) => {
+    setIsOfferModalOpen(true);
     setSelectedClients([client].flat());
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeOfferModal = () => {
+    setIsOfferModalOpen(false);
     setSelectedClients([]);
     updateFilterCounts();
   };
@@ -154,6 +154,22 @@ const Clients = ({ user }: { user: Coach }) => {
     setFilterCounts(counts);
   };
 
+  const onClientSelect = (client: Client) => {
+    selectedClients.map((c) => c.id).includes(client.id)
+      ? setSelectedClients(
+          selectedClients.filter((c) => c.id !== client.id)
+        )
+      : setSelectedClients([...selectedClients, client]);
+  }
+
+  const onClientsBulkSelect = () => {
+    if (selectedClients.length === filteredClients.length) {
+      setSelectedClients([]);
+    } else {
+      setSelectedClients(filteredClients);
+    }
+  }
+
   const filteredClients = clients.filter((client: Client) => {
     return client.status === filterStatus;
   });
@@ -207,13 +223,7 @@ const Clients = ({ user }: { user: Coach }) => {
               <input
                 type="checkbox"
                 checked={selectedClients.length === filteredClients.length}
-                onChange={() => {
-                  if (selectedClients.length === filteredClients.length) {
-                    setSelectedClients([]);
-                  } else {
-                    setSelectedClients(filteredClients);
-                  }
-                }}
+                onChange={onClientsBulkSelect}
               />
             </div>
             <div
@@ -240,13 +250,7 @@ const Clients = ({ user }: { user: Coach }) => {
             client={client}
             selectedClients={selectedClients}
             bulkOperationsAllowed={true}
-            onClientSelect={() => {
-              selectedClients.map((c) => c.id).includes(client.id)
-                ? setSelectedClients(
-                    selectedClients.filter((c) => c.id !== client.id)
-                  )
-                : setSelectedClients([...selectedClients, client]);
-            }}
+            onClientSelect={() => onClientSelect(client)}
             actions={ACTIONS}
           />
         )}
@@ -271,8 +275,8 @@ const Clients = ({ user }: { user: Coach }) => {
       />
       {selectedClients.length > 0 && (
         <OfferModal
-          isOpen={isModalOpen}
-          closeModal={closeModal}
+          isOpen={isOfferModalOpen}
+          closeModal={closeOfferModal}
           onOfferSent={() => setFilterStatus("offerSent")}
           selectedClients={selectedClients}
           user={user}
