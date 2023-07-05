@@ -48,6 +48,15 @@
   justify-content: space-between;
   padding: 5px 10px;
   border-bottom: #ddd 1px solid;
+  cursor: pointer;
+}
+
+.card-row:hover {
+  background-color: #f8f8f8;
+}
+
+.card-row input[type="checkbox"] {
+  cursor: pointer;
 }
 
 .column {
