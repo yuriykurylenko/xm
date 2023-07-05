@@ -1,6 +1,10 @@
+.clients-container {
+  max-width: 100%;
+  margin: 20px 7%;
+  font-size: 15px;
+}
+
 .clients-container-header {
-  max-width: 800px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,6 +25,7 @@
   padding: 10px;
   background-color: #f0f0f0;
   font-weight: bold;
+  border-bottom: #ddd 1px solid;
 }
 
 .header-column {
@@ -38,8 +43,8 @@
 }
 
 .header-column-name {
-  width: 400px;
-  max-width: 400px;
+  width: 60%;
+  max-width: 60%;
 }
 
 .header-column-created {

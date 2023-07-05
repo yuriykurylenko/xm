@@ -5,6 +5,8 @@
   padding: 10px;
   background-color: #f0f0f0;
   font-weight: bold;
+  border-top: #ddd 1px solid;
+  border-bottom: #ddd 1px solid;
 }
 
 .header-column {
@@ -22,8 +24,8 @@
 }
 
 .header-column-name {
-  width: 400px;
-  max-width: 400px;
+  width: calc(100% - 350px);
+  max-width: calc(100% - 350px);
 }
 
 .header-column-created {

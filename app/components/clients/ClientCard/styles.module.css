@@ -46,7 +46,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 5px 10px;
+  border-bottom: #ddd 1px solid;
 }
 
 .column {
@@ -58,8 +59,8 @@
 }
 
 .name-column {
-  width: 400px;
-  max-width: 400px;
+  width: calc(100% - 350px);
+  max-width: calc(100% - 350px);
 }
 
 .created-column {
