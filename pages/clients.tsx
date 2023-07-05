@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 import ActionsBar from "@/app/components/clients/ActionsBar";
+import Pagination from "@/app/components/Pagination";
 
 type FilterOption = {
   value: string;
@@ -173,8 +174,6 @@ const Clients = ({ user }: { user: Coach }) => {
     return client.status === filterStatus;
   });
 
-  const totalPages = Math.ceil(totalClients / 10);
-
   return (
     <>
       <Head>
@@ -242,26 +241,14 @@ const Clients = ({ user }: { user: Coach }) => {
           />
         )}
         renderEmptyList={() => <EmptyList user={user} />}
-        renderPagination={() =>
-          totalPages > 1 ? (
-            <div className={styles["pagination-container"]}>
-              <BasicButton onClick={handlePrevPage} disabled={page === 1}>
-                Previous
-              </BasicButton>
-              <span>
-                Page <strong>{page}</strong> of <strong>{totalPages}</strong>
-              </span>
-              <BasicButton
-                onClick={handleNextPage}
-                disabled={page >= totalPages}
-              >
-                Next
-              </BasicButton>
-            </div>
-          ) : (
-            <></>
-          )
-        }
+        renderPagination={() => (
+          <Pagination
+            currentPage={page}
+            totalPages={Math.ceil(totalClients / 10)}
+            onNextPage={handleNextPage}
+            onPrevPage={handlePrevPage}
+          />
+        )}
       />
       {selectedClients.length > 0 && (
         <OfferModal

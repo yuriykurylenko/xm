@@ -1,0 +1,17 @@
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination-container button {
+  min-width: 100px;
+  width: auto;
+  font-size: 13px;
+}
+
+.pagination-container span {
+  text-align: center;
+  flex: 1 0 auto;
+  padding: 0 10px;
+}
