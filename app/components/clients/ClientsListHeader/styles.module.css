@@ -2,15 +2,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px;
+  padding: 11px 10px;
   background-color: #f0f0f0;
   font-weight: bold;
   border-top: #ddd 1px solid;
   border-bottom: #ddd 1px solid;
+  position: sticky;
+  top: 40px;
+}
+
+.header-row-no-padding {
+  padding: 0 10px;
 }
 
 .header-column {
   flex-grow: 1;
+}
+
+.header-column-selected {
+  width: 120px;
+  max-width: 120px;
+  font-weight: 600;
+  font-style: italic;
 }
 
 .header-column-avatar {

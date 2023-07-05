@@ -189,10 +189,6 @@ const Clients = ({ user }: { user: Coach }) => {
     return client.status === filterStatus;
   });
 
-  const isBulkSelected =
-    selectedClients.length > 0 &&
-    selectedClients.length === filteredClients.length;
-
   return (
     <>
       <Head>
@@ -202,11 +198,6 @@ const Clients = ({ user }: { user: Coach }) => {
         <div className={styles["clients-container-header"]}>
           <div className={styles["clients-title-container"]}>
             <h1>Clients</h1>
-            {selectedClients.length > 0 ? (
-              <ActionsBar actions={ACTIONS} selectedClients={selectedClients} />
-            ) : (
-              <></>
-            )}
           </div>
           <FilterBar
             filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
@@ -225,7 +216,8 @@ const Clients = ({ user }: { user: Coach }) => {
           renderHeader={() => (
             <ClientsListHeader
               onBulkSelect={onClientsBulkSelect}
-              isBulkSelected={isBulkSelected}
+              selectedClients={selectedClients}
+              actions={ACTIONS}
             />
           )}
           renderCard={(client: Client, index: number) => (
