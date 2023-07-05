@@ -12,13 +12,13 @@ import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList from "@/app/components/clients/EmptyList";
 import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
-import BasicButton from "@/app/components/BasicButton";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 import ActionsBar from "@/app/components/clients/ActionsBar";
 import Pagination from "@/app/components/Pagination";
+import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 
 type FilterOption = {
   value: string;
@@ -174,6 +174,8 @@ const Clients = ({ user }: { user: Coach }) => {
     return client.status === filterStatus;
   });
 
+  const isBulkSelected = selectedClients.length === filteredClients.length;
+
   return (
     <>
       <Head>
@@ -202,33 +204,10 @@ const Clients = ({ user }: { user: Coach }) => {
       <ItemList<Client>
         items={filteredClients}
         renderHeader={() => (
-          <div className={styles["header-row"]}>
-            <div
-              className={`${styles["header-column"]} ${styles["header-column-bulk"]}`}
-            >
-              <input
-                type="checkbox"
-                checked={selectedClients.length === filteredClients.length}
-                onChange={onClientsBulkSelect}
-              />
-            </div>
-            <div
-              className={`${styles["header-column"]} ${styles["header-column-avatar"]}`}
-            >
-              &nbsp;
-            </div>
-            <div
-              className={`${styles["header-column"]} ${styles["header-column-name"]}`}
-            >
-              Name
-            </div>
-            <div
-              className={`${styles["header-column"]} ${styles["header-column-created"]}`}
-            >
-              Created
-            </div>
-            <div className={styles["header-column"]}>Actions</div>
-          </div>
+          <ClientsListHeader
+            onBulkSelect={onClientsBulkSelect}
+            isBulkSelected={isBulkSelected}
+          />
         )}
         renderCard={(client: Client, index: number) => (
           <ClientCard
