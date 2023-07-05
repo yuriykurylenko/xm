@@ -26,7 +26,7 @@ export const fetchClientsByCoachId = async (
   page: number = 1,
   filterStatus: string = "all"
 ) => {
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
   const offset = (page - 1) * itemsPerPage;
 
   let query = supabase

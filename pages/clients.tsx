@@ -242,7 +242,7 @@ const Clients = ({ user }: { user: Coach }) => {
           renderPagination={() => (
             <Pagination
               currentPage={page}
-              totalPages={Math.ceil(totalClients / 10)}
+              totalPages={Math.ceil(totalClients / 20)}
               onNextPage={handleNextPage}
               onPrevPage={handlePrevPage}
             />

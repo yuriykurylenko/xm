@@ -40,19 +40,21 @@ const Header = () => {
   };
 
   return user ? (
-    <header>
-      <div className={styles["header-content"]}>
-        <div className={styles["user-avatar"]} onClick={(e) => toggle(e)}>
-          {user.email?.charAt(0).toUpperCase()}
-        </div>
-        {isOpen && (
-          <div className={styles["popover"]} ref={node}>
-            <p>{user.email}</p>
-            <button onClick={logout}>Log Out</button>
+    <div className={styles["sticky-header"]}>
+      <header>
+        <div className={styles["header-content"]}>
+          <div className={styles["user-avatar"]} onClick={(e) => toggle(e)}>
+            {user.email?.charAt(0).toUpperCase()}
           </div>
-        )}
-      </div>
-    </header>
+          {isOpen && (
+            <div className={styles["popover"]} ref={node}>
+              <p>{user.email}</p>
+              <button onClick={logout}>Log Out</button>
+            </div>
+          )}
+        </div>
+      </header>
+    </div>
   ) : (
     <></>
   );
