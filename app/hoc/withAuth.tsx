@@ -12,8 +12,8 @@ import "@/app/globals.css";
 
 const DEFAULT_ROUTES: Record<string, string> = {
   anonymous: "/signup",
-  coach: "/clients",
-  client: "/home",
+  coach: "/coach/home",
+  client: "/client/home",
 };
 
 export interface AuthProps {
