@@ -4,3 +4,10 @@
   padding-bottom: 0.2rem;
   font-family: Arial, sans-serif;
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 200px);
+}

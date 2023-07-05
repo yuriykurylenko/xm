@@ -83,7 +83,9 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const changeFilterStatus = (status: string) => {
-    setIsListLoaded(false);
+    if (status !== filterStatus) {
+      setIsListLoaded(false);
+    }
     setFilterStatus(status);
   };
 
@@ -216,7 +218,6 @@ const Clients = ({ user }: { user: Coach }) => {
           setFilterStatus={changeFilterStatus}
         />
       </div>
-
       <ItemList<Client>
         isListLoaded={isListLoaded}
         items={filteredClients}

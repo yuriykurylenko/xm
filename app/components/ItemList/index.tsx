@@ -1,5 +1,6 @@
 import * as React from "react";
 import styles from "@/app/components/ItemList/styles.module.css";
+import Loading from "../Loading";
 
 interface ItemListProps<T> {
   isListLoaded: boolean;
@@ -31,7 +32,7 @@ const ItemList = <T,>({
           </>
         )
       ) : (
-        <>Loading</>
+        <Loading />
       )}
     </div>
   );
