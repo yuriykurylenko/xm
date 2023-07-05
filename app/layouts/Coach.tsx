@@ -6,7 +6,7 @@ const CoachLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div>
       <Header />
-      {children}
+      <div className="main-content">{children}</div>
     </div>
   );
 };

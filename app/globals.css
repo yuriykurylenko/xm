@@ -4,5 +4,11 @@ body {
 }
 
 p {
-  font-size: 14px;
+  font-size: 15px;
+}
+
+.main-content {
+  max-width: 100%;
+  margin: 20px 7%;
+  font-size: 15px;
 }

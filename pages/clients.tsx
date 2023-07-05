@@ -194,7 +194,7 @@ const Clients = ({ user }: { user: Coach }) => {
       <Head>
         <title>Coaching | Clients</title>
       </Head>
-      <div className={styles["clients-container"]}>
+      <>
         <div className={styles["clients-container-header"]}>
           <div className={styles["clients-title-container"]}>
             <h1>Clients</h1>
@@ -240,7 +240,7 @@ const Clients = ({ user }: { user: Coach }) => {
             />
           )}
         />
-      </div>
+      </>
       {selectedClients.length > 0 && (
         <OfferModal
           isOpen={isOfferModalOpen}
