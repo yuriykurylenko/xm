@@ -43,6 +43,8 @@ const Clients = ({ user }: { user: Coach }) => {
     client: 0,
   });
 
+  const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
+
   const CLIENT_STATUS_OPTIONS: FilterOption[] = [
     { value: "lead", name: `Leads (${filterCounts.lead})` },
     { value: "offerSent", name: `Sent offers (${filterCounts.offerSent})` },
@@ -67,13 +69,22 @@ const Clients = ({ user }: { user: Coach }) => {
   ];
 
   const fetchClients = async (defaultPage?: number) => {
+    setIsListLoaded(false);
+
     const { data, total } = await fetchClientsByCoachId(
       user.id as UUID,
       defaultPage || page,
       filterStatus
     );
+
     setClients(data as Client[]);
     setTotalClients(total || 0);
+    setIsListLoaded(true);
+  };
+
+  const changeFilterStatus = (status: string) => {
+    setIsListLoaded(false);
+    setFilterStatus(status);
   };
 
   useEffect(() => {
@@ -86,6 +97,7 @@ const Clients = ({ user }: { user: Coach }) => {
   }, [filterStatus]);
 
   useEffect(() => {
+    setIsListLoaded(false);
     (async () => {
       fetchClients();
     })();
@@ -199,37 +211,41 @@ const Clients = ({ user }: { user: Coach }) => {
             ).length,
           }))}
           filterStatus={filterStatus}
-          setFilterStatus={setFilterStatus}
+          setFilterStatus={changeFilterStatus}
         />
       </div>
-      <ItemList<Client>
-        items={filteredClients}
-        renderHeader={() => (
-          <ClientsListHeader
-            onBulkSelect={onClientsBulkSelect}
-            isBulkSelected={isBulkSelected}
-          />
-        )}
-        renderCard={(client: Client, index: number) => (
-          <ClientCard
-            key={index}
-            client={client}
-            selectedClients={selectedClients}
-            bulkOperationsAllowed={true}
-            onClientSelect={() => onClientSelect(client)}
-            actions={ACTIONS}
-          />
-        )}
-        renderEmptyList={() => <EmptyList user={user} />}
-        renderPagination={() => (
-          <Pagination
-            currentPage={page}
-            totalPages={Math.ceil(totalClients / 10)}
-            onNextPage={handleNextPage}
-            onPrevPage={handlePrevPage}
-          />
-        )}
-      />
+      {isListLoaded ? (
+        <ItemList<Client>
+          items={filteredClients}
+          renderHeader={() => (
+            <ClientsListHeader
+              onBulkSelect={onClientsBulkSelect}
+              isBulkSelected={isBulkSelected}
+            />
+          )}
+          renderCard={(client: Client, index: number) => (
+            <ClientCard
+              key={index}
+              client={client}
+              selectedClients={selectedClients}
+              bulkOperationsAllowed={true}
+              onClientSelect={() => onClientSelect(client)}
+              actions={ACTIONS}
+            />
+          )}
+          renderEmptyList={() => <EmptyList user={user} />}
+          renderPagination={() => (
+            <Pagination
+              currentPage={page}
+              totalPages={Math.ceil(totalClients / 10)}
+              onNextPage={handleNextPage}
+              onPrevPage={handlePrevPage}
+            />
+          )}
+        />
+      ) : (
+        <></>
+      )}
       {selectedClients.length > 0 && (
         <OfferModal
           isOpen={isOfferModalOpen}
