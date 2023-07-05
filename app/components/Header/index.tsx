@@ -4,8 +4,16 @@ import { useRouter } from "next/router";
 import useAuth from "@/app/hooks/useAuth";
 
 import styles from "@/app/components/Header/styles.module.css";
+import Link from "next/link";
 
-const Header = () => {
+interface HeaderProps {
+  menu?: {
+    label: string;
+    link: string;
+  }[];
+}
+
+const Header: React.FC<HeaderProps> = ({ menu }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logOut } = useAuth();
 
@@ -43,6 +51,22 @@ const Header = () => {
     <div className={styles["sticky-header"]}>
       <header>
         <div className={styles["header-content"]}>
+          <nav className={styles["menu"]}>
+            {menu && (
+              <ul>
+                {menu.map((item) => (
+                  <li
+                    key={item.link}
+                    className={`${
+                      router.asPath === item.link ? styles["active"] : ""
+                    }`}
+                  >
+                    <Link href={item.link}>{item.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </nav>
           <div className={styles["user-avatar"]} onClick={(e) => toggle(e)}>
             {user.email?.charAt(0).toUpperCase()}
           </div>
