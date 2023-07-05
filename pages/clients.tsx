@@ -187,7 +187,9 @@ const Clients = ({ user }: { user: Coach }) => {
     return client.status === filterStatus;
   });
 
-  const isBulkSelected = selectedClients.length === filteredClients.length;
+  const isBulkSelected =
+    selectedClients.length > 0 &&
+    selectedClients.length === filteredClients.length;
 
   return (
     <>
@@ -214,38 +216,36 @@ const Clients = ({ user }: { user: Coach }) => {
           setFilterStatus={changeFilterStatus}
         />
       </div>
-      {isListLoaded ? (
-        <ItemList<Client>
-          items={filteredClients}
-          renderHeader={() => (
-            <ClientsListHeader
-              onBulkSelect={onClientsBulkSelect}
-              isBulkSelected={isBulkSelected}
-            />
-          )}
-          renderCard={(client: Client, index: number) => (
-            <ClientCard
-              key={index}
-              client={client}
-              selectedClients={selectedClients}
-              bulkOperationsAllowed={true}
-              onClientSelect={() => onClientSelect(client)}
-              actions={ACTIONS}
-            />
-          )}
-          renderEmptyList={() => <EmptyList user={user} />}
-          renderPagination={() => (
-            <Pagination
-              currentPage={page}
-              totalPages={Math.ceil(totalClients / 10)}
-              onNextPage={handleNextPage}
-              onPrevPage={handlePrevPage}
-            />
-          )}
-        />
-      ) : (
-        <></>
-      )}
+
+      <ItemList<Client>
+        isListLoaded={isListLoaded}
+        items={filteredClients}
+        renderHeader={() => (
+          <ClientsListHeader
+            onBulkSelect={onClientsBulkSelect}
+            isBulkSelected={isBulkSelected}
+          />
+        )}
+        renderCard={(client: Client, index: number) => (
+          <ClientCard
+            key={index}
+            client={client}
+            selectedClients={selectedClients}
+            bulkOperationsAllowed={true}
+            onClientSelect={() => onClientSelect(client)}
+            actions={ACTIONS}
+          />
+        )}
+        renderEmptyList={() => <EmptyList user={user} />}
+        renderPagination={() => (
+          <Pagination
+            currentPage={page}
+            totalPages={Math.ceil(totalClients / 10)}
+            onNextPage={handleNextPage}
+            onPrevPage={handlePrevPage}
+          />
+        )}
+      />
       {selectedClients.length > 0 && (
         <OfferModal
           isOpen={isOfferModalOpen}

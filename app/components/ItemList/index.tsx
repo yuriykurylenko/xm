@@ -2,6 +2,7 @@ import * as React from "react";
 import styles from "@/app/components/ItemList/styles.module.css";
 
 interface ItemListProps<T> {
+  isListLoaded: boolean;
   items: T[];
   renderCard: (item: T, index: number) => JSX.Element;
   renderEmptyList: () => JSX.Element;
@@ -10,6 +11,7 @@ interface ItemListProps<T> {
 }
 
 const ItemList = <T,>({
+  isListLoaded,
   items,
   renderCard,
   renderEmptyList,
@@ -18,14 +20,18 @@ const ItemList = <T,>({
 }: ItemListProps<T>) => {
   return (
     <div className={styles["items-container"]}>
-      {renderHeader && items.length > 0 && renderHeader()}
-      {items.length === 0 ? (
-        renderEmptyList()
+      {renderHeader && (items.length > 0 || !isListLoaded) && renderHeader()}
+      {isListLoaded ? (
+        items.length === 0 ? (
+          renderEmptyList()
+        ) : (
+          <>
+            {items.map(renderCard)}
+            {renderPagination && renderPagination()}
+          </>
+        )
       ) : (
-        <>
-          {items.map(renderCard)}
-          {renderPagination && renderPagination()}
-        </>
+        <>Loading</>
       )}
     </div>
   );
