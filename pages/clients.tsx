@@ -66,10 +66,10 @@ const Clients = ({ user }: { user: Coach }) => {
     },
   ];
 
-  const fetchClients = async () => {
+  const fetchClients = async (defaultPage?: number) => {
     const { data, total } = await fetchClientsByCoachId(
       user.id as UUID,
-      page,
+      defaultPage || page,
       filterStatus
     );
     setClients(data as Client[]);
@@ -77,18 +77,19 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   useEffect(() => {
+    setPage(1);
+    setSelectedClients([]);
+
+    (async () => {
+      fetchClients(1);
+    })();
+  }, [filterStatus]);
+
+  useEffect(() => {
     (async () => {
       fetchClients();
     })();
-  }, [user, filterStatus, page]);
-
-  useEffect(() => {
-    setSelectedClients([]);
-  }, [filterStatus]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [filterStatus]);
+  }, [user, page]);
 
   useEffect(() => {
     updateFilterCounts();
