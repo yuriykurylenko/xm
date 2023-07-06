@@ -4,7 +4,7 @@ import styles from "@/app/components/FilterBar/styles.module.css";
 interface FilterBarProps {
   filterStatus: string;
   setFilterStatus: (status: string) => void;
-  filterOptions: { value: string; name: string }[];
+  filterOptions: { value: string; name: string; count?: number }[];
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({
@@ -23,7 +23,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
             filterStatus === option.value ? styles["filter-btn-active"] : ""
           }`}
         >
-          {option.name}
+          {option.name} ({option.count})
         </BasicButton>
       ))}
     </div>

@@ -48,9 +48,9 @@ const Clients = ({ user }: { user: Coach }) => {
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
 
   const CLIENT_STATUS_OPTIONS: FilterOption[] = [
-    { value: "lead", name: `Leads (${filterCounts.lead})` },
-    { value: "offerSent", name: `Sent offers (${filterCounts.offerSent})` },
-    { value: "client", name: `Active (${filterCounts.client})` },
+    { value: "lead", name: "Leads" },
+    { value: "offerSent", name: "Sent Offers" },
+    { value: "client", name: "Active" },
   ];
 
   const ACTIONS = [
@@ -214,9 +214,7 @@ const Clients = ({ user }: { user: Coach }) => {
           <FilterBar
             filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
               ...option,
-              count: filteredClients.filter(
-                (client) => client.status === option.value
-              ).length,
+              count: filterCounts[option.value],
             }))}
             filterStatus={filterStatus}
             setFilterStatus={changeFilterStatus}
