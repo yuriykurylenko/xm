@@ -23,6 +23,7 @@ import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 import ActionsBar from "@/app/components/clients/ActionsBar";
 import Pagination from "@/app/components/Pagination";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
+import SearchInput from "@/app/components/SearchInput";
 
 type FilterOption = {
   value: string;
@@ -205,21 +206,14 @@ const Clients = ({ user }: { user: Coach }) => {
         <div className={styles["clients-container-header"]}>
           <div className={styles["clients-title-container"]}>
             <h1>Clients</h1>
-            <div className={styles["input-container"]}>
-              <div className={styles["input-icon"]}>
-                <FontAwesomeIcon icon={faSearch} size="sm" color="#888" />
-              </div>
-              <input
-                className={styles["input"]}
-                type="text"
-                value={filterText}
-                onChange={(e) => setFilterText(e.target.value)}
-                placeholder={`Search in ${
-                  CLIENT_STATUS_OPTIONS.find((o) => o.value === filterStatus)
-                    ?.name
-                }`}
-              />
-            </div>
+            <SearchInput
+              value={filterText}
+              onChange={setFilterText}
+              placeholder={`Search in ${
+                CLIENT_STATUS_OPTIONS.find((o) => o.value === filterStatus)
+                  ?.name
+              }`}
+            />
           </div>
           <FilterBar
             filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
