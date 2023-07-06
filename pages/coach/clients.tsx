@@ -28,8 +28,10 @@ type FilterOption = {
 const Clients = ({ user }: { user: Coach }) => {
   const [clients, setClients] = useState<Client[]>([]);
   const [totalClients, setTotalClients] = useState<number>(0);
+
   const [page, setPage] = useState<number>(1);
   const [filterStatus, setFilterStatus] = useState<string>("lead");
+  const [filterText, setFilterText] = useState<string>("");
 
   const [isOfferModalOpen, setIsOfferModalOpen] = useState<boolean>(false);
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
@@ -74,7 +76,8 @@ const Clients = ({ user }: { user: Coach }) => {
     const { data, total } = await fetchClientsByCoachId(
       user.id as UUID,
       defaultPage || page,
-      filterStatus
+      filterStatus,
+      filterText
     );
 
     setClients(data as Client[]);
@@ -96,7 +99,7 @@ const Clients = ({ user }: { user: Coach }) => {
     (async () => {
       fetchClients(1);
     })();
-  }, [filterStatus]);
+  }, [filterStatus, filterText]);
 
   useEffect(() => {
     setIsListLoaded(false);
@@ -198,6 +201,12 @@ const Clients = ({ user }: { user: Coach }) => {
         <div className={styles["clients-container-header"]}>
           <div className={styles["clients-title-container"]}>
             <h1>Clients</h1>
+            <input
+              type="text"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              placeholder="Search"
+            />
           </div>
           <FilterBar
             filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({

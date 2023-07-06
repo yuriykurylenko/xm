@@ -24,7 +24,8 @@ export const fetchCoachByClientId = async (clientId: UUID) => {
 export const fetchClientsByCoachId = async (
   coachId: UUID,
   page: number = 1,
-  filterStatus: string = "all"
+  filterStatus: string = "all",
+  filterText?: string
 ) => {
   const itemsPerPage = 20;
   const offset = (page - 1) * itemsPerPage;
@@ -40,9 +41,14 @@ export const fetchClientsByCoachId = async (
     .eq("coach_id", coachId)
     .is("archived_at", null);
 
-  if (filterStatus !== "all") {
+  if (filterStatus !== "all" && !filterText) {
     query = query.eq("status", filterStatus);
     totalQuery = totalQuery.eq("status", filterStatus);
+  }
+
+  if (filterText) {
+    query = query.ilike("full_name", `%${filterText}%`);
+    totalQuery = totalQuery.ilike("full_name", `%${filterText}%`);
   }
 
   const response = await query.range(offset, offset + itemsPerPage - 1);
