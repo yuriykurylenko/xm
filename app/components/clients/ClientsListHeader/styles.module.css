@@ -17,7 +17,7 @@
 
 .header-column {
   flex-grow: 1;
-  line-height: 42px;
+  line-height: 40px;
 }
 
 .header-column-sortable {
@@ -39,6 +39,10 @@
 .header-column-bulk {
   width: 30px;
   max-width: 30px;
+}
+
+.header-column-bulk input {
+  cursor: pointer;
 }
 
 .header-column-name {
