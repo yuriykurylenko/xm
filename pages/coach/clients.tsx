@@ -205,7 +205,10 @@ const Clients = ({ user }: { user: Coach }) => {
               type="text"
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
-              placeholder="Search"
+              placeholder={`Search in ${
+                CLIENT_STATUS_OPTIONS.find((o) => o.value === filterStatus)
+                  ?.name
+              }`}
             />
           </div>
           <FilterBar
