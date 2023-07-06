@@ -47,6 +47,9 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
 
+  const [sortColumn, setSortColumn] = useState<string>("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
   const CLIENT_STATUS_OPTIONS: FilterOption[] = [
     { value: "lead", name: "Leads" },
     { value: "offerSent", name: "Sent Offers" },
@@ -77,7 +80,9 @@ const Clients = ({ user }: { user: Coach }) => {
       user.id as UUID,
       defaultPage || page,
       filterStatus,
-      filterText
+      filterText,
+      sortColumn,
+      sortDirection
     );
 
     setClients(data as Client[]);
@@ -92,6 +97,15 @@ const Clients = ({ user }: { user: Coach }) => {
     setFilterStatus(status);
   };
 
+  const handleSort = (column: string) => {
+    if (column === sortColumn) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
+
   useEffect(() => {
     setPage(1);
     setSelectedClients([]);
@@ -99,7 +113,7 @@ const Clients = ({ user }: { user: Coach }) => {
     (async () => {
       fetchClients(1);
     })();
-  }, [filterStatus, filterText]);
+  }, [filterStatus, filterText, sortColumn, sortDirection]);
 
   useEffect(() => {
     setIsListLoaded(false);
@@ -227,6 +241,9 @@ const Clients = ({ user }: { user: Coach }) => {
               onBulkSelect={onClientsBulkSelect}
               selectedClients={selectedClients}
               actions={ACTIONS}
+              onSort={handleSort}
+              sortColumn={sortColumn}
+              sortDirection={sortDirection}
             />
           )}
           renderCard={(client: Client, index: number) => (

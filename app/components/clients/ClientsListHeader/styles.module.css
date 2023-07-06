@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 11px 10px;
+  padding: 0 10px;
   background-color: #f0f0f0;
   font-weight: bold;
   border-top: #ddd 1px solid;
@@ -17,6 +17,11 @@
 
 .header-column {
   flex-grow: 1;
+  line-height: 42px;
+}
+
+.header-column-sortable {
+  cursor: pointer;
 }
 
 .header-column-selected {
@@ -44,4 +49,8 @@
 .header-column-created {
   width: 150px;
   max-width: 150px;
+}
+
+.sorting-icon {
+  margin-left: 8px;
 }

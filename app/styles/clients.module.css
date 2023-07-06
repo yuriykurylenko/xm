@@ -12,40 +12,6 @@
   font-size: 13px;
 }
 
-.header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  background-color: #f0f0f0;
-  font-weight: bold;
-  border-bottom: #ddd 1px solid;
-}
-
-.header-column {
-  flex-grow: 1;
-}
-
-.header-column-avatar {
-  width: 45px;
-  max-width: 45px;
-}
-
-.header-column-bulk {
-  width: 30px;
-  max-width: 30px;
-}
-
-.header-column-name {
-  width: 60%;
-  max-width: 60%;
-}
-
-.header-column-created {
-  width: 150px;
-  max-width: 150px;
-}
-
 .clients-title-container {
   display: flex;
   align-items: center;

@@ -48,8 +48,8 @@ const ClientCard: React.FC<ClientCardProps> = ({
         {new Date(client.created_at as Date)
           .toLocaleDateString("en-US", {
             year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
+            month: "short",
+            day: "numeric",
           })
           .replace(/\//g, "/")}
       </div>

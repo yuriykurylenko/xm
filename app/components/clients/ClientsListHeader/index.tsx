@@ -2,17 +2,25 @@ import React from "react";
 import styles from "@/app/components/clients/ClientsListHeader/styles.module.css";
 import ActionsBar from "../ActionsBar";
 import { Client } from "@/app/types/user";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 
 interface ClientsListHeaderProps {
   onBulkSelect: () => void;
   selectedClients: Client[];
   actions: any;
+  onSort: (column: string) => void;
+  sortColumn: string;
+  sortDirection: "asc" | "desc";
 }
 
 const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
   onBulkSelect,
   selectedClients = [],
   actions,
+  onSort,
+  sortColumn,
+  sortDirection,
 }) => {
   const handleBulkSelectChange = () => {
     onBulkSelect();
@@ -54,14 +62,30 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             &nbsp;
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-name"]}`}
+            className={`${styles["header-column"]} ${styles["header-column-name"]} ${styles["header-column-sortable"]}`}
+            onClick={() => onSort("full_name")}
           >
-            Name
+            <span>Name</span>
+            {sortColumn === "full_name" && (
+              <span className={styles["sorting-icon"]}>
+                <FontAwesomeIcon
+                  icon={sortDirection === "asc" ? faSortUp : faSortDown}
+                />
+              </span>
+            )}
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-created"]}`}
+            className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
+            onClick={() => onSort("created_at")}
           >
-            Created
+            <span>Created</span>
+            {sortColumn === "created_at" && (
+              <span className={styles["sorting-icon"]}>
+                <FontAwesomeIcon
+                  icon={sortDirection === "asc" ? faSortUp : faSortDown}
+                />
+              </span>
+            )}
           </div>
           <div className={styles["header-column"]}>Actions</div>
         </>

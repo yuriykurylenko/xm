@@ -25,7 +25,9 @@ export const fetchClientsByCoachId = async (
   coachId: UUID,
   page: number = 1,
   filterStatus: string = "all",
-  filterText?: string
+  filterText?: string,
+  sortColumn: string = "",
+  sortDirection: "asc" | "desc" = "asc"
 ) => {
   const itemsPerPage = 20;
   const offset = (page - 1) * itemsPerPage;
@@ -49,6 +51,10 @@ export const fetchClientsByCoachId = async (
   if (filterText) {
     query = query.ilike("full_name", `%${filterText}%`);
     totalQuery = totalQuery.ilike("full_name", `%${filterText}%`);
+  }
+
+  if (sortColumn) {
+    query = query.order(sortColumn, { ascending: sortDirection === "asc" });
   }
 
   const response = await query.range(offset, offset + itemsPerPage - 1);
