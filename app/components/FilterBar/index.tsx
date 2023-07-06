@@ -23,7 +23,8 @@ const FilterBar: React.FC<FilterBarProps> = ({
             filterStatus === option.value ? styles["filter-btn-active"] : ""
           }`}
         >
-          {option.name} ({option.count})
+          {option.name}
+          {!isNaN(Number(option.count)) && ` (${option.count})`}
         </BasicButton>
       ))}
     </div>
