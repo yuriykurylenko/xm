@@ -9,6 +9,7 @@
   border-bottom: #ddd 1px solid;
   position: sticky;
   top: 44px;
+  line-height: 42.5px;
 }
 
 .header-row-no-padding {
@@ -17,7 +18,6 @@
 
 .header-column {
   flex-grow: 1;
-  line-height: 40px;
 }
 
 .header-column-sortable {
