@@ -16,11 +16,9 @@ import { UUID } from "crypto";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPaperPlane,
-  faSearch,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import ConfirmationDialog from "@/app/components/ConfirmationDialog";
-import ActionsBar from "@/app/components/clients/ActionsBar";
 import Pagination from "@/app/components/Pagination";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
