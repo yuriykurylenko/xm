@@ -14,10 +14,7 @@ import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPaperPlane,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 import Pagination from "@/app/components/Pagination";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";

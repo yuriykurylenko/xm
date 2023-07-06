@@ -5,6 +5,7 @@ import useAuth from "@/app/hooks/useAuth";
 
 import styles from "@/app/components/Header/styles.module.css";
 import Link from "next/link";
+import BasicButton from "@/app/components/BasicButton";
 
 interface HeaderProps {
   menu?: {
@@ -73,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({ menu }) => {
           {isOpen && (
             <div className={styles["popover"]} ref={node}>
               <p>{user.email}</p>
-              <button onClick={logout}>Log Out</button>
+              <BasicButton onClick={logout}>Log Out</BasicButton>
             </div>
           )}
         </div>
