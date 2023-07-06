@@ -59,3 +59,24 @@
   display: flex;
   align-items: center;
 }
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 300px;
+}
+
+.input {
+  padding: 10px 30px;
+  padding-right: 6px;
+  border: 1.5px solid #555555;
+  background-color: #fafafa;
+  border-radius: 5px;
+  font-size: 13px;
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}

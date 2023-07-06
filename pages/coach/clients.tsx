@@ -201,15 +201,18 @@ const Clients = ({ user }: { user: Coach }) => {
         <div className={styles["clients-container-header"]}>
           <div className={styles["clients-title-container"]}>
             <h1>Clients</h1>
-            <input
-              type="text"
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              placeholder={`Search in ${
-                CLIENT_STATUS_OPTIONS.find((o) => o.value === filterStatus)
-                  ?.name
-              }`}
-            />
+            <div className={styles["input-container"]}>
+              <input
+                className={styles["input"]}
+                type="text"
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                placeholder={`Search in ${
+                  CLIENT_STATUS_OPTIONS.find((o) => o.value === filterStatus)
+                    ?.name
+                }`}
+              />
+            </div>
           </div>
           <FilterBar
             filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
