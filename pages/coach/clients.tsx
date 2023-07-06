@@ -14,7 +14,11 @@ import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPaperPlane,
+  faSearch,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 import ActionsBar from "@/app/components/clients/ActionsBar";
 import Pagination from "@/app/components/Pagination";
@@ -202,6 +206,9 @@ const Clients = ({ user }: { user: Coach }) => {
           <div className={styles["clients-title-container"]}>
             <h1>Clients</h1>
             <div className={styles["input-container"]}>
+              <div className={styles["input-icon"]}>
+                <FontAwesomeIcon icon={faSearch} size="sm" color="#888" />
+              </div>
               <input
                 className={styles["input"]}
                 type="text"

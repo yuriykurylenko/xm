@@ -70,7 +70,7 @@
 .input {
   padding: 10px 30px;
   padding-right: 6px;
-  border: 1.5px solid #555555;
+  border: 1.5px solid #ddd;
   background-color: #fafafa;
   border-radius: 5px;
   font-size: 13px;
@@ -79,4 +79,17 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+.input:focus {
+  border-color: #555555;
+}
+
+.input-icon {
+  position: relative;
+  left: 10px;
+  top: 11px;
+  z-index: 0;
+  width: 0;
+  height: 0;
 }
