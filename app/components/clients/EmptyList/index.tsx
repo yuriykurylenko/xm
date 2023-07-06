@@ -4,15 +4,22 @@ import { Coach } from "@/app/types/user";
 
 interface EmptyListProps {
   user: Coach;
+  isSearchResult: boolean;
 }
 
-const EmptyList: React.FC<EmptyListProps> = ({ user }) => {
+const EmptyList: React.FC<EmptyListProps> = ({ user, isSearchResult }) => {
   const applicationLink = `${window.location.protocol}//${window.location.host}/${user.slug}/apply`;
   return (
     <div className={styles["empty-list-container"]}>
-      Please share this link to get your clients to apply for coaching:
-      <br />
-      <a href={applicationLink}>{applicationLink}</a>
+      {!isSearchResult ? (
+        <>
+          Please share this link to get your clients to apply for coaching:
+          <br />
+          <a href={applicationLink}>{applicationLink}</a>
+        </>
+      ) : (
+        <>No clients found</>
+      )}
     </div>
   );
 };

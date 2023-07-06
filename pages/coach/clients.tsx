@@ -240,7 +240,9 @@ const Clients = ({ user }: { user: Coach }) => {
               actions={ACTIONS}
             />
           )}
-          renderEmptyList={() => <EmptyList user={user} />}
+          renderEmptyList={() => (
+            <EmptyList user={user} isSearchResult={filterText !== ""} />
+          )}
           renderPagination={() => (
             <Pagination
               currentPage={page}
