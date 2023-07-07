@@ -43,7 +43,7 @@ export const fetchClientsByCoachId = async (
     .eq("coach_id", coachId)
     .is("archived_at", null);
 
-  if (filterStatus !== "all" && !filterText) {
+  if (filterStatus !== "all") {
     query = query.eq("status", filterStatus);
     totalQuery = totalQuery.eq("status", filterStatus);
   }
