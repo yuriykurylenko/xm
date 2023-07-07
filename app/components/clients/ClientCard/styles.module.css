@@ -51,8 +51,16 @@
   cursor: pointer;
 }
 
+.card-row-selected {
+  background-color: #eaf1ff;
+}
+
 .card-row:hover {
   background-color: #f8f8f8;
+}
+
+.card-row-selected:hover {
+  background-color: #eaf1ff;
 }
 
 .card-row input[type="checkbox"] {

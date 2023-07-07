@@ -25,13 +25,19 @@ const ClientCard: React.FC<ClientCardProps> = ({
     onClientSelect();
   };
 
+  const isSelected = selectedClients.map((c) => c.id).includes(client.id);
+
   return (
-    <div className={styles["card-row"]}>
+    <div
+      className={`${styles["card-row"]} ${
+        isSelected ? styles["card-row-selected"] : ""
+      }`}
+    >
       {bulkOperationsAllowed && (
         <div className={`${styles["bulk-column"]} ${styles["column"]}`}>
           <input
             type="checkbox"
-            checked={selectedClients.map((c) => c.id).includes(client.id)}
+            checked={isSelected}
             onChange={handleCheckboxChange}
           />
         </div>
