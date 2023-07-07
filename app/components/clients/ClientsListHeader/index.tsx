@@ -3,7 +3,11 @@ import styles from "@/app/components/clients/ClientsListHeader/styles.module.css
 import ActionsBar from "../ActionsBar";
 import { Client } from "@/app/types/user";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSort,
+  faSortDown,
+  faSortUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface ClientsListHeaderProps {
   onBulkSelect: () => void;
@@ -66,26 +70,32 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             onClick={() => onSort("full_name")}
           >
             <span>Name</span>
-            {sortColumn === "full_name" && (
-              <span className={styles["sorting-icon"]}>
+            <span className={styles["sorting-icon"]}>
+              {sortColumn === "full_name" ? (
                 <FontAwesomeIcon
                   icon={sortDirection === "asc" ? faSortUp : faSortDown}
+                  size="sm"
                 />
-              </span>
-            )}
+              ) : (
+                <FontAwesomeIcon icon={faSort} size="sm" color="#aaa" />
+              )}
+            </span>
           </div>
           <div
             className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
             onClick={() => onSort("created_at")}
           >
             <span>Created</span>
-            {sortColumn === "created_at" && (
-              <span className={styles["sorting-icon"]}>
+            <span className={styles["sorting-icon"]}>
+              {sortColumn === "created_at" ? (
                 <FontAwesomeIcon
                   icon={sortDirection === "asc" ? faSortUp : faSortDown}
+                  size="sm"
                 />
-              </span>
-            )}
+              ) : (
+                <FontAwesomeIcon icon={faSort} size="sm" color="#aaa" />
+              )}
+            </span>
           </div>
           <div className={styles["header-column"]}>Actions</div>
         </>
