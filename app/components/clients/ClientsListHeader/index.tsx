@@ -2,12 +2,7 @@ import React from "react";
 import styles from "@/app/components/clients/ClientsListHeader/styles.module.css";
 import ActionsBar from "../ActionsBar";
 import { Client } from "@/app/types/user";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSort,
-  faSortDown,
-  faSortUp,
-} from "@fortawesome/free-solid-svg-icons";
+import SortIcon from "@/app/components/SortIcon";
 
 interface ClientsListHeaderProps {
   onBulkSelect: () => void;
@@ -71,14 +66,11 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
           >
             <span>Name</span>
             <span className={styles["sorting-icon"]}>
-              {sortColumn === "full_name" ? (
-                <FontAwesomeIcon
-                  icon={sortDirection === "asc" ? faSortUp : faSortDown}
-                  size="sm"
-                />
-              ) : (
-                <FontAwesomeIcon icon={faSort} size="sm" color="#aaa" />
-              )}
+              <SortIcon
+                sortColumn={sortColumn}
+                column="full_name"
+                sortDirection={sortDirection}
+              />
             </span>
           </div>
           <div
@@ -87,14 +79,11 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
           >
             <span>Created</span>
             <span className={styles["sorting-icon"]}>
-              {sortColumn === "created_at" ? (
-                <FontAwesomeIcon
-                  icon={sortDirection === "asc" ? faSortUp : faSortDown}
-                  size="sm"
-                />
-              ) : (
-                <FontAwesomeIcon icon={faSort} size="sm" color="#aaa" />
-              )}
+              <SortIcon
+                sortColumn={sortColumn}
+                column="created_at"
+                sortDirection={sortDirection}
+              />
             </span>
           </div>
           <div className={styles["header-column"]}>Actions</div>
