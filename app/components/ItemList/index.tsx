@@ -21,7 +21,7 @@ const ItemList = <T,>({
 }: ItemListProps<T>) => {
   return (
     <div className={styles["items-container"]}>
-      {renderHeader && (items.length > 0 || !isListLoaded) && renderHeader()}
+      {renderHeader && renderHeader()}
       {isListLoaded ? (
         items.length === 0 ? (
           renderEmptyList()
