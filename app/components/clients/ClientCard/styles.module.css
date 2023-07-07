@@ -8,6 +8,7 @@
 }
 
 .avatar {
+  width: 30px;
   max-width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -16,11 +17,11 @@
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  margin-right: 1rem;
+  margin: 0 15px;
 }
 
-.item-name {
-  flex-grow: 1;
+.column {
+  line-height: 40px;
 }
 
 .status-offerSent {
@@ -45,7 +46,6 @@
 .card-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 5px 10px;
   border-bottom: #ddd 1px solid;
   cursor: pointer;
@@ -67,22 +67,20 @@
   cursor: pointer;
 }
 
-.column {
-  flex-grow: 1;
-}
-
 .bulk-column {
   max-width: 30px;
 }
 
 .name-column {
-  width: calc(100% - 350px);
-  max-width: calc(100% - 350px);
+  flex: 0 0 calc(100% - 290px);
 }
 
 .created-column {
-  width: 150px;
-  max-width: 150px;
+  flex: 0 0 150px;
+}
+
+.actions-column {
+  flex: 0 0 60px;
 }
 
 .button-container {

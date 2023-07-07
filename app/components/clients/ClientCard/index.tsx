@@ -59,7 +59,9 @@ const ClientCard: React.FC<ClientCardProps> = ({
           })
           .replace(/\//g, "/")}
       </div>
-      <div className={`${styles["column"]} ${styles["button-container"]}`}>
+      <div
+        className={`${styles["column"]} ${styles["actions-column"]} ${styles["button-container"]}`}
+      >
         <ActionsBar actions={actions} selectedClients={[client]} />
       </div>
     </div>

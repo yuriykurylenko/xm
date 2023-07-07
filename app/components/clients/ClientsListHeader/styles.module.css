@@ -1,7 +1,6 @@
 .header-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 10px;
   background-color: #f0f0f0;
   font-weight: bold;
@@ -14,11 +13,8 @@
 }
 
 .header-row-no-padding {
+  justify-content: flex-start;
   padding: 0 10px;
-}
-
-.header-column {
-  flex-grow: 1;
 }
 
 .header-column-sortable {
@@ -33,13 +29,14 @@
 }
 
 .header-column-avatar {
-  width: 45px;
-  max-width: 45px;
-}
-
-.header-column-bulk {
   width: 30px;
   max-width: 30px;
+  margin: 0 15px;
+}
+
+.header-row-no-padding .header-column-bulk {
+  max-width: 30px;
+  margin-right: 20px;
 }
 
 .header-column-bulk input {
@@ -47,13 +44,15 @@
 }
 
 .header-column-name {
-  width: calc(100% - 350px);
-  max-width: calc(100% - 350px);
+  flex: 0 0 calc(100% - 290px);
 }
 
 .header-column-created {
-  width: 150px;
-  max-width: 150px;
+  flex: 0 0 150px;
+}
+
+.header-column-actions {
+  flex: 0 0 60px;
 }
 
 .sorting-icon {

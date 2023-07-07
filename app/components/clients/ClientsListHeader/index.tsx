@@ -86,7 +86,11 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
               />
             </span>
           </div>
-          <div className={styles["header-column"]}>Actions</div>
+          <div
+            className={`${styles["header-column"]} ${styles["header-column-actions"]}`}
+          >
+            Actions
+          </div>
         </>
       )}
     </div>
