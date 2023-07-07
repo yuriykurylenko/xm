@@ -9,7 +9,8 @@
   border-bottom: #ddd 1px solid;
   position: sticky;
   top: 44px;
-  line-height: 42.5px;
+  line-height: 42px;
+  height: 42px;
 }
 
 .header-row-no-padding {
