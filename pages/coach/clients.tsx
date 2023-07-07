@@ -195,16 +195,12 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const onClientsBulkSelect = () => {
-    if (selectedClients.length === filteredClients.length) {
+    if (selectedClients.length === clients.length) {
       setSelectedClients([]);
     } else {
-      setSelectedClients(filteredClients);
+      setSelectedClients(clients);
     }
   };
-
-  const filteredClients = clients.filter((client: Client) => {
-    return client.status === filterStatus;
-  });
 
   return (
     <>
@@ -235,7 +231,7 @@ const Clients = ({ user }: { user: Coach }) => {
         </div>
         <ItemList<Client>
           isListLoaded={isListLoaded}
-          items={filteredClients}
+          items={clients}
           renderHeader={() => (
             <ClientsListHeader
               onBulkSelect={onClientsBulkSelect}
