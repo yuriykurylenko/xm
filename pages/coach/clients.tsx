@@ -58,6 +58,7 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const ACTIONS = [
     {
+      name: "sendOffer",
       title: "Send offer",
       titleBulk: "Send offers",
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
@@ -65,6 +66,7 @@ const Clients = ({ user }: { user: Coach }) => {
       show: filterStatus === "lead",
     },
     {
+      name: "archive",
       title: "Archive client",
       titleBulk: "Archive clients",
       icon: <FontAwesomeIcon icon={faTrash} />,

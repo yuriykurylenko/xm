@@ -4,6 +4,7 @@ import styles from "@/app/components/clients/ActionsBar/styles.module.css";
 import { Client } from "@/app/types/user";
 
 interface Action {
+  name: string;
   title: string;
   titleBulk: string;
   icon: React.ReactNode;
@@ -32,7 +33,9 @@ const ActionsBar: React.FC<ActionsBarProps> = ({
               key={index}
             >
               <BasicButton
-                className={styles["action-btn"]}
+                className={`${styles["action-btn"]} ${
+                  styles["action-btn-" + action.name]
+                } `}
                 onClick={() => action.handler(selectedClients)}
               >
                 {action.icon}

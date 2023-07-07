@@ -4,8 +4,27 @@
 }
 
 .action-btn {
-  min-width: 60px !important;
+  /* min-width: 60px !important;
   max-width: 60px;
   font-size: 10px;
-  margin-right: 10px;
+  margin-right: 10px; */
+
+  cursor: pointer;
+  color: #aaa;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin-right: 1rem !important;
+}
+
+.action-btn:hover {
+  background-color: transparent;
+}
+
+.action-btn-sendOffer:hover {
+  color: #56d779;
+}
+
+.action-btn-archive:hover {
+  color: #d75656;
 }
