@@ -16,7 +16,6 @@ import { UUID } from "crypto";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ConfirmationDialog from "@/app/components/ConfirmationDialog";
-import Pagination from "@/app/components/Pagination";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 
@@ -27,7 +26,6 @@ type FilterOption = {
 
 const Clients = ({ user }: { user: Coach }) => {
   const [clients, setClients] = useState<Client[]>([]);
-  const [totalClients, setTotalClients] = useState<number>(0);
 
   const [page, setPage] = useState<number>(1);
   const [filterStatus, setFilterStatus] = useState<string>("lead");
@@ -82,8 +80,6 @@ const Clients = ({ user }: { user: Coach }) => {
     sortColumn: string,
     sortDirection: "asc" | "desc"
   ) => {
-    setIsListLoaded(false);
-
     const { data, total } = await fetchClientsByCoachId(
       user.id as UUID,
       page,
@@ -132,14 +128,6 @@ const Clients = ({ user }: { user: Coach }) => {
     setIsOfferModalOpen(false);
     setSelectedClients([]);
     updateFilterCounts();
-  };
-
-  const handleNextPage = () => {
-    setPage((prevPage) => prevPage + 1);
-  };
-
-  const handlePrevPage = () => {
-    setPage((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
   };
 
   const handleArchiveClient = async (client: Client) => {
@@ -262,14 +250,6 @@ const Clients = ({ user }: { user: Coach }) => {
           )}
           renderEmptyList={() => (
             <EmptyList user={user} isSearchResult={filterText !== ""} />
-          )}
-          renderPagination={() => (
-            <Pagination
-              currentPage={page}
-              totalPages={Math.ceil(totalClients / 20)}
-              onNextPage={handleNextPage}
-              onPrevPage={handlePrevPage}
-            />
           )}
         />
       </>

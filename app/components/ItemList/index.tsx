@@ -2,6 +2,7 @@ import * as React from "react";
 import styles from "@/app/components/ItemList/styles.module.css";
 import Loading from "../Loading";
 import { useEffect, useState } from "react";
+import Pagination from "@/app/components/Pagination";
 
 interface ItemListProps<T> {
   filterStatus: string;
@@ -15,7 +16,6 @@ interface ItemListProps<T> {
   ) => Promise<{ data: T[]; total: number }>;
   renderCard: (item: T, index: number) => JSX.Element;
   renderEmptyList: () => JSX.Element;
-  renderPagination?: () => JSX.Element;
   renderHeader?: (
     handleSort: (column: string) => void,
     sortColumn: string,
@@ -29,12 +29,12 @@ const ItemList = <T,>({
   fetchItems,
   renderCard,
   renderEmptyList,
-  renderPagination,
   renderHeader,
 }: ItemListProps<T>) => {
   const [page, setPage] = useState<number>(1);
 
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<T[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
@@ -43,7 +43,7 @@ const ItemList = <T,>({
     (async () => {
       setIsListLoaded(false);
 
-      const { data: items } = await fetchItems(
+      const { data: items, total } = await fetchItems(
         page,
         filterStatus,
         filterText,
@@ -52,10 +52,19 @@ const ItemList = <T,>({
       );
       // @ts-ignore
       setItems(items as T[]);
+      setTotalItems(total);
 
       setIsListLoaded(true);
     })();
   }, [page, filterStatus, filterText, sortColumn, sortDirection]);
+
+  const handleNextPage = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    setPage((prevPage) => (prevPage > 1 ? prevPage - 1 : 1));
+  };
 
   const handleSort = (column: React.SetStateAction<string>) => {
     if (column === sortColumn) {
@@ -75,7 +84,12 @@ const ItemList = <T,>({
         ) : (
           <>
             {items.map(renderCard)}
-            {renderPagination && renderPagination()}
+            <Pagination
+              currentPage={page}
+              totalPages={Math.ceil(totalItems / 20)}
+              onNextPage={handleNextPage}
+              onPrevPage={handlePrevPage}
+            />
           </>
         )
       ) : (
