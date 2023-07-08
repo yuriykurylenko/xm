@@ -11,3 +11,26 @@
   align-items: center;
   height: calc(100vh - 200px);
 }
+
+.items-container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0;
+  font-family: Arial, sans-serif;
+}
+
+.items-container-header button {
+  min-width: 100px;
+  width: auto;
+  font-size: 13px;
+}
+
+.items-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.items-title-container h1 {
+  margin-right: 20px;
+}

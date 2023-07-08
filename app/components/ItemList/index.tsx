@@ -10,7 +10,8 @@ type FilterOption = {
 };
 
 interface ItemListProps<T> {
-  filterStatusOptions: FilterOption[],
+  title: string;
+  filterStatusOptions: FilterOption[];
   filterText: string;
   fetchItems: (
     page: number,
@@ -40,6 +41,7 @@ interface ItemListProps<T> {
 }
 
 const ItemList = <T,>({
+  title,
   filterStatusOptions,
   filterText,
   fetchItems,
@@ -48,7 +50,9 @@ const ItemList = <T,>({
   renderEmptyList,
   renderHeader,
 }: ItemListProps<T>) => {
-  const [filterStatus, setFilterStatus] = useState<string>(filterStatusOptions[0].value);
+  const [filterStatus, setFilterStatus] = useState<string>(
+    filterStatusOptions[0].value
+  );
   const [page, setPage] = useState<number>(1);
   const [items, setItems] = useState<T[]>([]);
   const [selectedItems, setSelectedItems] = useState<T[]>([]);
@@ -117,7 +121,12 @@ const ItemList = <T,>({
 
   return (
     <div className={styles["items-container"]}>
-      {renderFilterBar && renderFilterBar(filterStatus, changeFilterStatus)}
+      <div className={styles["items-container-header"]}>
+        <div className={styles["items-title-container"]}>
+          <h1>{title}</h1>
+          {renderFilterBar && renderFilterBar(filterStatus, changeFilterStatus)}
+        </div>
+      </div>
       {renderHeader &&
         renderHeader(
           handleSort,

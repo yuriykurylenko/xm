@@ -174,6 +174,7 @@ const Clients = ({ user }: { user: Coach }) => {
           </div>
         </div>
         <ItemList<Client>
+          title="Clients"
           filterStatusOptions={CLIENT_STATUS_OPTIONS}
           fetchItems={fetchClients}
           filterText={filterText}
