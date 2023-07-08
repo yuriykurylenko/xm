@@ -14,7 +14,12 @@ interface ItemListProps<T> {
     sortColumn: string,
     sortDirection: "asc" | "desc"
   ) => Promise<{ data: T[]; total: number }>;
-  renderCard: (item: T, index: number) => JSX.Element;
+  renderCard: (
+    item: T,
+    index: number,
+    selectedItems: T[],
+    onItemSelect: (item: T) => void
+  ) => JSX.Element;
   renderEmptyList: () => JSX.Element;
   renderHeader?: (
     handleSort: (column: string) => void,
@@ -32,12 +37,26 @@ const ItemList = <T,>({
   renderHeader,
 }: ItemListProps<T>) => {
   const [page, setPage] = useState<number>(1);
-
   const [items, setItems] = useState<T[]>([]);
+  const [selectedItems, setSelectedItems] = useState<T[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
+
+  const onItemSelect = (item: T) => {
+    selectedItems.includes(item)
+      ? setSelectedItems(selectedItems.filter((i) => i !== item))
+      : setSelectedItems([...selectedItems, item]);
+  };
+
+  const onItemsBulkSelect = () => {
+    if (selectedItems.length === items.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(items);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -83,7 +102,9 @@ const ItemList = <T,>({
           renderEmptyList()
         ) : (
           <>
-            {items.map(renderCard)}
+            {items.map((item, index) =>
+              renderCard(item, index, selectedItems, onItemSelect)
+            )}
             <Pagination
               currentPage={page}
               totalPages={Math.ceil(totalItems / 20)}

@@ -179,12 +179,6 @@ const Clients = ({ user }: { user: Coach }) => {
     setFilterCounts(counts);
   };
 
-  const onClientSelect = (client: Client) => {
-    selectedClients.map((c) => c.id).includes(client.id)
-      ? setSelectedClients(selectedClients.filter((c) => c.id !== client.id))
-      : setSelectedClients([...selectedClients, client]);
-  };
-
   const onClientsBulkSelect = () => {
     if (selectedClients.length === clients.length) {
       setSelectedClients([]);
@@ -238,7 +232,12 @@ const Clients = ({ user }: { user: Coach }) => {
               sortDirection={sortDirection}
             />
           )}
-          renderCard={(client: Client, index: number) => (
+          renderCard={(
+            client: Client,
+            index: number,
+            selectedClients: Client[],
+            onClientSelect: (client: Client) => void
+          ) => (
             <ClientCard
               key={index}
               client={client}
