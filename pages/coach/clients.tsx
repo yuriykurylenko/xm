@@ -25,8 +25,6 @@ type FilterOption = {
 };
 
 const Clients = ({ user }: { user: Coach }) => {
-  const [clients, setClients] = useState<Client[]>([]);
-
   const [page, setPage] = useState<number>(1);
   const [filterStatus, setFilterStatus] = useState<string>("lead");
   const [filterText, setFilterText] = useState<string>("");
@@ -91,29 +89,6 @@ const Clients = ({ user }: { user: Coach }) => {
 
     return { data, total } as { data: Client[]; total: number };
   };
-
-  const changeFilterStatus = (status: string) => {
-    if (status !== filterStatus) {
-      setIsListLoaded(false);
-    }
-    setFilterStatus(status);
-  };
-
-  useEffect(() => {
-    setPage(1);
-    setSelectedClients([]);
-
-    (async () => {
-      fetchClients(1, filterStatus, filterText, sortColumn, sortDirection);
-    })();
-  }, [filterStatus, filterText, sortColumn, sortDirection]);
-
-  useEffect(() => {
-    setIsListLoaded(false);
-    (async () => {
-      fetchClients(page, filterStatus, filterText, sortColumn, sortDirection);
-    })();
-  }, [user, page]);
 
   useEffect(() => {
     updateFilterCounts();
@@ -197,19 +172,24 @@ const Clients = ({ user }: { user: Coach }) => {
               }`}
             />
           </div>
-          <FilterBar
-            filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
-              ...option,
-              count: filterCounts[option.value],
-            }))}
-            filterStatus={filterStatus}
-            setFilterStatus={changeFilterStatus}
-          />
         </div>
         <ItemList<Client>
           filterStatus={filterStatus}
           fetchItems={fetchClients}
           filterText={filterText}
+          renderFilterBar={(
+            filterStatus: string,
+            changeFilterStatus: (status: string) => void
+          ) => (
+            <FilterBar
+              filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
+                ...option,
+                count: filterCounts[option.value],
+              }))}
+              filterStatus={filterStatus}
+              setFilterStatus={changeFilterStatus}
+            />
+          )}
           renderHeader={(
             handleSort: (column: string) => void,
             sortColumn: string,

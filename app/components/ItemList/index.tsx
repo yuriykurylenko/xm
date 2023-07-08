@@ -14,6 +14,10 @@ interface ItemListProps<T> {
     sortColumn: string,
     sortDirection: "asc" | "desc"
   ) => Promise<{ data: T[]; total: number }>;
+  renderFilterBar: (
+    filterStatus: string,
+    changeFilterStatus: (status: string) => void
+  ) => JSX.Element;
   renderCard: (
     item: T,
     index: number,
@@ -31,13 +35,14 @@ interface ItemListProps<T> {
 }
 
 const ItemList = <T,>({
-  filterStatus,
   filterText,
   fetchItems,
+  renderFilterBar,
   renderCard,
   renderEmptyList,
   renderHeader,
 }: ItemListProps<T>) => {
+  const [filterStatus, setFilterStatus] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [items, setItems] = useState<T[]>([]);
   const [selectedItems, setSelectedItems] = useState<T[]>([]);
@@ -45,20 +50,6 @@ const ItemList = <T,>({
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
-
-  const onItemSelect = (item: T) => {
-    selectedItems.includes(item)
-      ? setSelectedItems(selectedItems.filter((i) => i !== item))
-      : setSelectedItems([...selectedItems, item]);
-  };
-
-  const onItemsBulkSelect = () => {
-    if (selectedItems.length === items.length) {
-      setSelectedItems([]);
-    } else {
-      setSelectedItems(items);
-    }
-  };
 
   useEffect(() => {
     (async () => {
@@ -79,6 +70,28 @@ const ItemList = <T,>({
     })();
   }, [page, filterStatus, filterText, sortColumn, sortDirection]);
 
+  const changeFilterStatus = (status: string) => {
+    if (status !== filterStatus) {
+      setIsListLoaded(false);
+    }
+    setFilterStatus(status);
+    setPage(1);
+  };
+
+  const onItemSelect = (item: T) => {
+    selectedItems.includes(item)
+      ? setSelectedItems(selectedItems.filter((i) => i !== item))
+      : setSelectedItems([...selectedItems, item]);
+  };
+
+  const onItemsBulkSelect = () => {
+    if (selectedItems.length === items.length) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(items);
+    }
+  };
+
   const handleNextPage = () => {
     setPage((prevPage) => prevPage + 1);
   };
@@ -98,6 +111,7 @@ const ItemList = <T,>({
 
   return (
     <div className={styles["items-container"]}>
+      {renderFilterBar && renderFilterBar(filterStatus, changeFilterStatus)}
       {renderHeader &&
         renderHeader(
           handleSort,
