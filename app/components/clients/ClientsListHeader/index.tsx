@@ -11,6 +11,7 @@ interface ClientsListHeaderProps {
   onSort: (column: string) => void;
   sortColumn: string;
   sortDirection: "asc" | "desc";
+  filterStatus: string;
 }
 
 const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
@@ -20,6 +21,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
   onSort,
   sortColumn,
   sortDirection,
+  filterStatus,
 }) => {
   const handleBulkSelectChange = () => {
     onBulkSelect();
@@ -50,7 +52,11 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             {`${selectedClients.length} selected`}
           </div>
           <div className={styles["header-column"]}>
-            <ActionsBar actions={actions} selectedClients={selectedClients} />
+            <ActionsBar
+              actions={actions}
+              selectedClients={selectedClients}
+              filterStatus={filterStatus}
+            />
           </div>
         </>
       ) : (

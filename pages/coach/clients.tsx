@@ -6,7 +6,6 @@ import { fetchClientsByCoachId, updateClientById } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 import OfferModal from "@/app/components/clients/OfferModal";
 
-import styles from "@/app/styles/clients.module.css";
 import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList from "@/app/components/clients/EmptyList";
@@ -41,8 +40,6 @@ const Clients = ({ user }: { user: Coach }) => {
     client: 0,
   });
 
-  const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
-
   const [sortColumn, setSortColumn] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
@@ -59,7 +56,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send offers",
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
       handler: (client: Client | Client[]) => openOfferModal(client),
-      show: filterStatus === "lead",
+      show: (filterStatus: string) => filterStatus === "lead",
     },
     {
       name: "archive",
@@ -67,7 +64,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Archive clients",
       icon: <FontAwesomeIcon icon={faTrash} />,
       handler: (client: Client | Client[]) => handleArchiveConfirmation(client),
-      show: true,
+      show: (filterStatus: string) => true,
     },
   ];
 
@@ -196,7 +193,8 @@ const Clients = ({ user }: { user: Coach }) => {
             sortColumn: string,
             sortDirection: "desc" | "asc",
             onClientsBulkSelect: () => void,
-            selectedClients: Client[]
+            selectedClients: Client[],
+            filterStatus: string
           ) => (
             <ClientsListHeader
               onBulkSelect={onClientsBulkSelect}
@@ -205,13 +203,15 @@ const Clients = ({ user }: { user: Coach }) => {
               onSort={handleSort}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
+              filterStatus={filterStatus}
             />
           )}
           renderCard={(
             client: Client,
             index: number,
             selectedClients: Client[],
-            onClientSelect: (client: Client) => void
+            onClientSelect: (client: Client) => void,
+            filterStatus: string
           ) => (
             <ClientCard
               key={index}
@@ -220,6 +220,7 @@ const Clients = ({ user }: { user: Coach }) => {
               bulkOperationsAllowed={true}
               onClientSelect={() => onClientSelect(client)}
               actions={ACTIONS}
+              filterStatus={filterStatus}
             />
           )}
           renderEmptyList={() => (

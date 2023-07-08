@@ -9,6 +9,7 @@ interface ClientCardProps {
   onClientSelect: () => void;
   bulkOperationsAllowed: boolean;
   actions?: any;
+  filterStatus: string;
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({
@@ -17,6 +18,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
   onClientSelect,
   bulkOperationsAllowed = false,
   actions,
+  filterStatus,
 }) => {
   const [selected, setSelected] = useState(false);
 
@@ -62,7 +64,11 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div
         className={`${styles["column"]} ${styles["actions-column"]} ${styles["button-container"]}`}
       >
-        <ActionsBar actions={actions} selectedClients={[client]} />
+        <ActionsBar
+          actions={actions}
+          selectedClients={[client]}
+          filterStatus={filterStatus}
+        />
       </div>
     </div>
   );
