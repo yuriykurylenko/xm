@@ -12,7 +12,6 @@ type FilterOption = {
 interface ItemListProps<T> {
   title: string;
   filterStatusOptions: FilterOption[];
-  filterText: string;
   fetchItems: (
     page: number,
     filterStatus: string,
@@ -20,6 +19,11 @@ interface ItemListProps<T> {
     sortColumn: string,
     sortDirection: "asc" | "desc"
   ) => Promise<{ data: T[]; total: number }>;
+  renderSearchInput: (
+    filterText: string,
+    setFilterText: (value: string) => void,
+    filterStatus: string
+  ) => JSX.Element;
   renderFilterBar: (
     filterStatus: string,
     changeFilterStatus: (status: string) => void
@@ -43,8 +47,8 @@ interface ItemListProps<T> {
 const ItemList = <T,>({
   title,
   filterStatusOptions,
-  filterText,
   fetchItems,
+  renderSearchInput,
   renderFilterBar,
   renderCard,
   renderEmptyList,
@@ -53,6 +57,7 @@ const ItemList = <T,>({
   const [filterStatus, setFilterStatus] = useState<string>(
     filterStatusOptions[0].value
   );
+  const [filterText, setFilterText] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [items, setItems] = useState<T[]>([]);
   const [selectedItems, setSelectedItems] = useState<T[]>([]);
@@ -124,6 +129,8 @@ const ItemList = <T,>({
       <div className={styles["items-container-header"]}>
         <div className={styles["items-title-container"]}>
           <h1>{title}</h1>
+          {renderSearchInput &&
+            renderSearchInput(filterText, setFilterText, filterStatus)}
           {renderFilterBar && renderFilterBar(filterStatus, changeFilterStatus)}
         </div>
       </div>

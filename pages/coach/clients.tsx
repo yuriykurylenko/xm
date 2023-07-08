@@ -160,9 +160,15 @@ const Clients = ({ user }: { user: Coach }) => {
         <title>Coaching | Clients</title>
       </Head>
       <>
-        <div className={styles["clients-container-header"]}>
-          <div className={styles["clients-title-container"]}>
-            <h1>Clients</h1>
+        <ItemList<Client>
+          title="Clients"
+          filterStatusOptions={CLIENT_STATUS_OPTIONS}
+          fetchItems={fetchClients}
+          renderSearchInput={(
+            filterText: string,
+            setFilterText: (value: string) => void,
+            filterStatus: string
+          ) => (
             <SearchInput
               value={filterText}
               onChange={setFilterText}
@@ -171,13 +177,7 @@ const Clients = ({ user }: { user: Coach }) => {
                   ?.name
               }`}
             />
-          </div>
-        </div>
-        <ItemList<Client>
-          title="Clients"
-          filterStatusOptions={CLIENT_STATUS_OPTIONS}
-          fetchItems={fetchClients}
-          filterText={filterText}
+          )}
           renderFilterBar={(
             filterStatus: string,
             changeFilterStatus: (status: string) => void
