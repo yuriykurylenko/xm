@@ -4,8 +4,13 @@ import Loading from "../Loading";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/Pagination";
 
+type FilterOption = {
+  value: string;
+  name: string;
+};
+
 interface ItemListProps<T> {
-  filterStatus: string;
+  filterStatusOptions: FilterOption[],
   filterText: string;
   fetchItems: (
     page: number,
@@ -35,6 +40,7 @@ interface ItemListProps<T> {
 }
 
 const ItemList = <T,>({
+  filterStatusOptions,
   filterText,
   fetchItems,
   renderFilterBar,
@@ -42,7 +48,7 @@ const ItemList = <T,>({
   renderEmptyList,
   renderHeader,
 }: ItemListProps<T>) => {
-  const [filterStatus, setFilterStatus] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>(filterStatusOptions[0].value);
   const [page, setPage] = useState<number>(1);
   const [items, setItems] = useState<T[]>([]);
   const [selectedItems, setSelectedItems] = useState<T[]>([]);

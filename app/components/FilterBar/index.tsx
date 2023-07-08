@@ -14,13 +14,13 @@ const FilterBar: React.FC<FilterBarProps> = ({
 }) => {
   return (
     <div>
-      {filterOptions.map((option) => (
+      {filterOptions.map((option, index) => (
         <BasicButton
           key={option.value}
           type="button"
           onClick={() => setFilterStatus(option.value)}
           className={`${styles["filter-btn"]} ${
-            filterStatus === option.value ? styles["filter-btn-active"] : ""
+            ((filterStatus === option.value || index === 0 && !filterStatus) ? styles["filter-btn-active"] : "")
           }`}
         >
           {option.name}
