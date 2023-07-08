@@ -179,14 +179,6 @@ const Clients = ({ user }: { user: Coach }) => {
     setFilterCounts(counts);
   };
 
-  const onClientsBulkSelect = () => {
-    if (selectedClients.length === clients.length) {
-      setSelectedClients([]);
-    } else {
-      setSelectedClients(clients);
-    }
-  };
-
   return (
     <>
       <Head>
@@ -221,7 +213,9 @@ const Clients = ({ user }: { user: Coach }) => {
           renderHeader={(
             handleSort: (column: string) => void,
             sortColumn: string,
-            sortDirection: "desc" | "asc"
+            sortDirection: "desc" | "asc",
+            onClientsBulkSelect: () => void,
+            selectedClients: Client[]
           ) => (
             <ClientsListHeader
               onBulkSelect={onClientsBulkSelect}

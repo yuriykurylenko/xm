@@ -24,7 +24,9 @@ interface ItemListProps<T> {
   renderHeader?: (
     handleSort: (column: string) => void,
     sortColumn: string,
-    sortDirection: "desc" | "asc"
+    sortDirection: "desc" | "asc",
+    onItemsBulkSelect: () => void,
+    selectedItems: T[]
   ) => JSX.Element;
 }
 
@@ -96,7 +98,14 @@ const ItemList = <T,>({
 
   return (
     <div className={styles["items-container"]}>
-      {renderHeader && renderHeader(handleSort, sortColumn, sortDirection)}
+      {renderHeader &&
+        renderHeader(
+          handleSort,
+          sortColumn,
+          sortDirection,
+          onItemsBulkSelect,
+          selectedItems
+        )}
       {isListLoaded ? (
         items.length === 0 ? (
           renderEmptyList()
