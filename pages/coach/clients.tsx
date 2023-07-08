@@ -75,21 +75,25 @@ const Clients = ({ user }: { user: Coach }) => {
     },
   ];
 
-  const fetchClients = async (defaultPage?: number) => {
+  const fetchClients = async (
+    page: number,
+    filterStatus: string,
+    filterText: string,
+    sortColumn: string,
+    sortDirection: "asc" | "desc"
+  ) => {
     setIsListLoaded(false);
 
     const { data, total } = await fetchClientsByCoachId(
       user.id as UUID,
-      defaultPage || page,
+      page,
       filterStatus,
       filterText,
       sortColumn,
       sortDirection
     );
 
-    setClients(data as Client[]);
-    setTotalClients(total || 0);
-    setIsListLoaded(true);
+    return { data, total } as { data: Client[]; total: number };
   };
 
   const changeFilterStatus = (status: string) => {
@@ -99,28 +103,19 @@ const Clients = ({ user }: { user: Coach }) => {
     setFilterStatus(status);
   };
 
-  const handleSort = (column: string) => {
-    if (column === sortColumn) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      setSortColumn(column);
-      setSortDirection("asc");
-    }
-  };
-
   useEffect(() => {
     setPage(1);
     setSelectedClients([]);
 
     (async () => {
-      fetchClients(1);
+      fetchClients(1, filterStatus, filterText, sortColumn, sortDirection);
     })();
   }, [filterStatus, filterText, sortColumn, sortDirection]);
 
   useEffect(() => {
     setIsListLoaded(false);
     (async () => {
-      fetchClients();
+      fetchClients(page, filterStatus, filterText, sortColumn, sortDirection);
     })();
   }, [user, page]);
 
@@ -149,7 +144,13 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const handleArchiveClient = async (client: Client) => {
     await updateClientById(client.id as UUID, { archived_at: new Date() });
-    await fetchClients();
+    await fetchClients(
+      page,
+      filterStatus,
+      filterText,
+      sortColumn,
+      sortDirection
+    );
     await updateFilterCounts();
   };
 
@@ -232,9 +233,14 @@ const Clients = ({ user }: { user: Coach }) => {
           />
         </div>
         <ItemList<Client>
-          isListLoaded={isListLoaded}
-          items={clients}
-          renderHeader={() => (
+          filterStatus={filterStatus}
+          fetchItems={fetchClients}
+          filterText={filterText}
+          renderHeader={(
+            handleSort: (column: string) => void,
+            sortColumn: string,
+            sortDirection: "desc" | "asc"
+          ) => (
             <ClientsListHeader
               onBulkSelect={onClientsBulkSelect}
               selectedClients={selectedClients}
