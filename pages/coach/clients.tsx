@@ -71,9 +71,9 @@ const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
     page: number,
     filterStatus: string,
-    filterText: string,
-    sortColumn: string,
-    sortDirection: "asc" | "desc"
+    filterText?: string,
+    sortColumn?: string,
+    sortDirection?: "asc" | "desc"
   ) => {
     const { data, total } = await fetchClientsByCoachId(
       user.id as UUID,
@@ -86,10 +86,6 @@ const Clients = ({ user }: { user: Coach }) => {
 
     return { data, total } as { data: Client[]; total: number };
   };
-
-  useEffect(() => {
-    updateFilterCounts();
-  }, [user]);
 
   const openOfferModal = (client: Client | Client[]) => {
     setIsOfferModalOpen(true);
@@ -177,10 +173,12 @@ const Clients = ({ user }: { user: Coach }) => {
           )}
           renderFilterBar={(
             filterStatus: string,
-            changeFilterStatus: (status: string) => void
+            changeFilterStatus: (status: string) => void,
+            filterOptions,
+            filterCounts
           ) => (
             <FilterBar
-              filterOptions={CLIENT_STATUS_OPTIONS.map((option) => ({
+              filterOptions={filterOptions.map((option: FilterOption) => ({
                 ...option,
                 count: filterCounts[option.value],
               }))}

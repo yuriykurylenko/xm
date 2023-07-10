@@ -12,6 +12,7 @@ const FilterBar: React.FC<FilterBarProps> = ({
   setFilterStatus,
   filterOptions,
 }) => {
+  console.log(filterOptions);
   return (
     <div>
       {filterOptions.map((option, index) => (

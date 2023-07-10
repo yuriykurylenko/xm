@@ -15,9 +15,9 @@ interface ItemListProps<T> {
   fetchItems: (
     page: number,
     filterStatus: string,
-    filterText: string,
-    sortColumn: string,
-    sortDirection: "asc" | "desc"
+    filterText?: string,
+    sortColumn?: string,
+    sortDirection?: "asc" | "desc"
   ) => Promise<{ data: T[]; total: number }>;
   renderSearchInput: (
     filterText: string,
@@ -26,7 +26,9 @@ interface ItemListProps<T> {
   ) => JSX.Element;
   renderFilterBar: (
     filterStatus: string,
-    changeFilterStatus: (status: string) => void
+    changeFilterStatus: (status: string) => void,
+    filterOptions: FilterOption[],
+    filterCounts: Record<string, number>
   ) => JSX.Element;
   renderCard: (
     item: T,
@@ -60,6 +62,16 @@ const ItemList = <T,>({
     filterStatusOptions[0].value
   );
   const [filterText, setFilterText] = useState<string>("");
+
+  const [filterCounts, setFilterCounts] = useState<Record<string, number>>(
+    filterStatusOptions
+      .map((fso) => fso.name)
+      .reduce<Record<string, number>>((acc, key) => {
+        acc[key] = 0;
+        return acc;
+      }, {})
+  );
+
   const [page, setPage] = useState<number>(1);
   const [items, setItems] = useState<T[]>([]);
   const [selectedItems, setSelectedItems] = useState<T[]>([]);
@@ -82,6 +94,7 @@ const ItemList = <T,>({
       // @ts-ignore
       setItems(items as T[]);
       setTotalItems(total);
+      updateFilterCounts();
 
       setIsListLoaded(true);
     })();
@@ -93,6 +106,17 @@ const ItemList = <T,>({
     }
     setFilterStatus(status);
     setPage(1);
+  };
+
+  const updateFilterCounts = async () => {
+    const counts: Record<string, number> = {};
+
+    for (const filterOption of filterStatusOptions) {
+      const { total } = await fetchItems(1, filterOption.value);
+      counts[filterOption.value] = total as number;
+    }
+
+    setFilterCounts(counts);
   };
 
   const onItemSelect = (item: T) => {
@@ -133,7 +157,13 @@ const ItemList = <T,>({
           <h1>{title}</h1>
           {renderSearchInput &&
             renderSearchInput(filterText, setFilterText, filterStatus)}
-          {renderFilterBar && renderFilterBar(filterStatus, changeFilterStatus)}
+          {renderFilterBar &&
+            renderFilterBar(
+              filterStatus,
+              changeFilterStatus,
+              filterStatusOptions,
+              filterCounts
+            )}
         </div>
       </div>
       {renderHeader &&

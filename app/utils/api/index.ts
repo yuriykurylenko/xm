@@ -25,7 +25,7 @@ export const fetchClientsByCoachId = async (
   coachId: UUID,
   page: number = 1,
   filterStatus: string = "all",
-  filterText?: string,
+  filterText: string = "",
   sortColumn: string = "",
   sortDirection: "asc" | "desc" = "asc"
 ) => {
