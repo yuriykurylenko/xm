@@ -12,7 +12,7 @@ describe("ClientCard", () => {
     title: "Send offer",
     titleBulk: "Send offers",
     icon: <FontAwesomeIcon icon={faPaperPlane} />,
-    show: true,
+    show: () => true,
   };
 
   beforeEach(() => {
@@ -28,6 +28,7 @@ describe("ClientCard", () => {
   it("renders client name and status", () => {
     render(
       <ClientCard
+        filterStatus="lead"
         client={client}
         selectedClients={[]}
         onClientSelect={() => {}}
@@ -48,6 +49,7 @@ describe("ClientCard", () => {
 
     render(
       <ClientCard
+        filterStatus="lead"
         client={client}
         selectedClients={[]}
         onClientSelect={() => {}}
