@@ -142,20 +142,7 @@ const Clients = ({ user }: { user: Coach }) => {
           filterStatusOptions={CLIENT_STATUS_OPTIONS}
           fetchItems={fetchClients}
           actions={ACTIONS}
-          renderSearchInput={(
-            filterText: string,
-            setFilterText: (value: string) => void,
-            filterStatus: string
-          ) => (
-            <SearchInput
-              value={filterText}
-              onChange={setFilterText}
-              placeholder={`Search in ${
-                CLIENT_STATUS_OPTIONS.find((o) => o.value === filterStatus)
-                  ?.name
-              }`}
-            />
-          )}
+          SearchInputComponent={SearchInput}
           renderFilterBar={(
             filterStatus: string,
             changeFilterStatus: (status: string) => void,

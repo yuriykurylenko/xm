@@ -19,11 +19,11 @@ interface ItemListProps<T> {
     sortColumn?: string,
     sortDirection?: "asc" | "desc"
   ) => Promise<{ data: T[]; total: number }>;
-  renderSearchInput: (
-    filterText: string,
-    setFilterText: (value: string) => void,
-    filterStatus: string
-  ) => JSX.Element;
+  SearchInputComponent: React.ComponentType<{
+    value: string;
+    onChange: (value: string) => void;
+    placeholder: string;
+  }>;
   renderFilterBar: (
     filterStatus: string,
     changeFilterStatus: (status: string) => void,
@@ -55,7 +55,7 @@ const ItemList = <T,>({
   title,
   filterStatusOptions,
   fetchItems,
-  renderSearchInput,
+  SearchInputComponent,
   renderFilterBar,
   renderCard,
   renderEmptyList,
@@ -178,8 +178,16 @@ const ItemList = <T,>({
       <div className={styles["items-container-header"]}>
         <div className={styles["items-title-container"]}>
           <h1>{title}</h1>
-          {renderSearchInput &&
-            renderSearchInput(filterText, setFilterText, filterStatus)}
+          {/* {renderSearchInput &&
+            renderSearchInput(filterText, setFilterText, filterStatus)} */}
+
+          <SearchInputComponent
+            value={filterText}
+            onChange={setFilterText}
+            placeholder={`Search in ${
+              filterStatusOptions.find((o) => o.value === filterStatus)?.name
+            }`}
+          />
           {renderFilterBar &&
             renderFilterBar(
               filterStatus,
