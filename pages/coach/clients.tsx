@@ -57,10 +57,14 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
       handler: (client: Client | Client[]) => openOfferModal(client),
       show: (filterStatus: string) => filterStatus === "lead",
-      renderDialog: (selectedClients: Client[], isOfferModalOpen: boolean) => (
+      renderDialog: (
+        selectedClients: Client[],
+        isOfferModalOpen: boolean,
+        onCancel: () => void
+      ) => (
         <OfferModal
           isOpen={isOfferModalOpen}
-          closeModal={closeOfferModal}
+          closeModal={onCancel}
           onOfferSent={() => setFilterStatus("offerSent")}
           selectedClients={selectedClients}
           user={user}
@@ -76,7 +80,8 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (filterStatus: string) => true,
       renderDialog: (
         selectedClients: Client[],
-        isConfirmationDialogOpen: boolean
+        isConfirmationDialogOpen: boolean,
+        onCancel: () => void
       ) => (
         <ConfirmationDialog
           isOpen={isConfirmationDialogOpen}
@@ -86,7 +91,7 @@ const Clients = ({ user }: { user: Coach }) => {
               : selectedClients.length + " clients"
           }?`}
           onConfirm={handleArchiveSelectedClients}
-          onCancel={handleCancelAction}
+          onCancel={onCancel}
         />
       ),
     },
@@ -113,7 +118,6 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const openOfferModal = (client: Client | Client[]) => {
     setIsOfferModalOpen(true);
-    // setSelectedClients([client].flat());
   };
 
   const closeOfferModal = () => {
@@ -136,10 +140,6 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const handleArchiveConfirmation = (client?: Client | Client[]) => {
     setIsConfirmationDialogOpen(true);
-
-    // if (client) {
-    //   setSelectedClients([client].flat());
-    // }
   };
 
   const handleArchiveSelectedClients = async () => {
@@ -255,27 +255,6 @@ const Clients = ({ user }: { user: Coach }) => {
           )}
         />
       </>
-      {/* {selectedClients.length > 0 && (
-        <OfferModal
-          isOpen={isOfferModalOpen}
-          closeModal={closeOfferModal}
-          onOfferSent={() => setFilterStatus("offerSent")}
-          selectedClients={selectedClients}
-          user={user}
-        />
-      )}
-      {isConfirmationDialogOpen && (
-        <ConfirmationDialog
-          isOpen={isConfirmationDialogOpen}
-          message={`Would you like to archive ${
-            selectedClients.length === 1
-              ? selectedClients[0].full_name
-              : selectedClients.length + " clients"
-          }?`}
-          onConfirm={handleArchiveSelectedClients}
-          onCancel={handleCancelAction}
-        />
-      )} */}
     </>
   );
 };

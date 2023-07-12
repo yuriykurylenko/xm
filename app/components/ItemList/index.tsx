@@ -224,7 +224,11 @@ const ItemList = <T,>({
             {actions.map((action: any) =>
               action.renderDialog(
                 selectedItems,
-                openActionDialogs.includes(action.name)
+                openActionDialogs.includes(action.name),
+                () => {
+                  setSelectedItems([]);
+                  setOpenActionDialogs([]);
+                }
               )
             )}
           </>
