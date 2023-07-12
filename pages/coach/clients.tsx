@@ -178,8 +178,7 @@ const Clients = ({ user }: { user: Coach }) => {
             onClientsBulkSelect: () => void,
             selectedClients: Client[],
             filterStatus: string,
-            actions: any,
-            openActionDialogs: string[]
+            actions: any
           ) => (
             <ClientsListHeader
               onBulkSelect={onClientsBulkSelect}
@@ -189,7 +188,6 @@ const Clients = ({ user }: { user: Coach }) => {
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               filterStatus={filterStatus}
-              openActionDialogs={openActionDialogs}
             />
           )}
           renderCard={(

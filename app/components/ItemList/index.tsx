@@ -46,8 +46,7 @@ interface ItemListProps<T> {
     onItemsBulkSelect: () => void,
     selectedItems: T[],
     filterStatus: string,
-    actions: any,
-    openActionDialogs: string[]
+    actions: any
   ) => JSX.Element;
   actions: any;
 }
@@ -161,6 +160,19 @@ const ItemList = <T,>({
     }
   };
 
+  const enhancedActions = actions.map(
+    (action: { name: string; handler: (item?: T | T[]) => void }) => ({
+      ...action,
+      handler: (item?: T | T[]) => {
+        if (item) {
+          // @ts-ignore
+          setSelectedItems([item].flat());
+        }
+        setOpenActionDialogs([action.name]);
+      },
+    })
+  );
+
   return (
     <div className={styles["items-container"]}>
       <div className={styles["items-container-header"]}>
@@ -185,8 +197,7 @@ const ItemList = <T,>({
           onItemsBulkSelect,
           selectedItems,
           filterStatus,
-          actions,
-          openActionDialogs
+          enhancedActions
         )}
       {isListLoaded ? (
         items.length === 0 ? (
@@ -200,21 +211,7 @@ const ItemList = <T,>({
                 selectedItems,
                 onItemSelect,
                 filterStatus,
-                actions.map(
-                  (action: {
-                    name: string;
-                    handler: (item?: T | T[]) => void;
-                  }) => ({
-                    ...action,
-                    handler: (item?: T | T[]) => {
-                      if (item) {
-                        // @ts-ignore
-                        setSelectedItems([item].flat());
-                      }
-                      setOpenActionDialogs([action.name]);
-                    },
-                  })
-                )
+                enhancedActions
               )
             )}
             <Pagination

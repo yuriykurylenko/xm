@@ -12,7 +12,6 @@ interface ClientsListHeaderProps {
   sortDirection: "asc" | "desc";
   filterStatus: string;
   actions: any;
-  openActionDialogs: string[];
 }
 
 const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
@@ -23,7 +22,6 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
   sortDirection,
   filterStatus,
   actions,
-  openActionDialogs,
 }) => {
   const handleBulkSelectChange = () => {
     onBulkSelect();
