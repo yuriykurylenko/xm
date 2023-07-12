@@ -28,10 +28,6 @@ const Clients = ({ user }: { user: Coach }) => {
   const [filterStatus, setFilterStatus] = useState<string>("lead");
   const [filterText, setFilterText] = useState<string>("");
 
-  const [isOfferModalOpen, setIsOfferModalOpen] = useState<boolean>(false);
-  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
-    useState<boolean>(false);
-
   const [selectedClients, setSelectedClients] = useState<Client[]>([]);
 
   const [filterCounts, setFilterCounts] = useState<Record<string, number>>({
@@ -55,7 +51,6 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Send offer",
       titleBulk: "Send offers",
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
-      handler: (client: Client | Client[]) => openOfferModal(client),
       show: (filterStatus: string) => filterStatus === "lead",
       renderDialog: (
         selectedClients: Client[],
@@ -76,7 +71,6 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Archive client",
       titleBulk: "Archive clients",
       icon: <FontAwesomeIcon icon={faTrash} />,
-      handler: (client: Client | Client[]) => handleArchiveConfirmation(client),
       show: (filterStatus: string) => true,
       renderDialog: (
         selectedClients: Client[],
@@ -116,16 +110,6 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, total } as { data: Client[]; total: number };
   };
 
-  const openOfferModal = (client: Client | Client[]) => {
-    setIsOfferModalOpen(true);
-  };
-
-  const closeOfferModal = () => {
-    setIsOfferModalOpen(false);
-    setSelectedClients([]);
-    updateFilterCounts();
-  };
-
   const handleArchiveClient = async (client: Client) => {
     await updateClientById(client.id as UUID, { archived_at: new Date() });
     await fetchClients(
@@ -138,22 +122,12 @@ const Clients = ({ user }: { user: Coach }) => {
     await updateFilterCounts();
   };
 
-  const handleArchiveConfirmation = (client?: Client | Client[]) => {
-    setIsConfirmationDialogOpen(true);
-  };
-
   const handleArchiveSelectedClients = async () => {
     for (const client of selectedClients) {
       handleArchiveClient(client);
     }
 
     setSelectedClients([]);
-    setIsConfirmationDialogOpen(false);
-  };
-
-  const handleCancelAction = () => {
-    setSelectedClients([]);
-    setIsConfirmationDialogOpen(false);
   };
 
   const updateFilterCounts = async () => {

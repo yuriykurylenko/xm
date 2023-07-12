@@ -208,8 +208,6 @@ const ItemList = <T,>({
                         setSelectedItems([item].flat());
                       }
                       setOpenActionDialogs([action.name]);
-
-                      action.handler(item);
                     },
                   })
                 )
