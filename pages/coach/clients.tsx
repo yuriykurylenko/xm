@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
 import { fetchClientsByCoachId, updateClientById } from "@/app/utils/api";
@@ -27,17 +27,6 @@ const Clients = ({ user }: { user: Coach }) => {
   const [page, setPage] = useState<number>(1);
   const [filterStatus, setFilterStatus] = useState<string>("lead");
   const [filterText, setFilterText] = useState<string>("");
-
-  const [selectedClients, setSelectedClients] = useState<Client[]>([]);
-
-  const [filterCounts, setFilterCounts] = useState<Record<string, number>>({
-    lead: 0,
-    offerSent: 0,
-    client: 0,
-  });
-
-  const [sortColumn, setSortColumn] = useState<string>("");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const CLIENT_STATUS_OPTIONS: FilterOption[] = [
     { value: "lead", name: "Leads" },
@@ -72,10 +61,12 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Archive clients",
       icon: <FontAwesomeIcon icon={faTrash} />,
       show: (filterStatus: string) => true,
+      handler: (client: Client) => handleArchiveClient(client),
       renderDialog: (
         selectedClients: Client[],
         isConfirmationDialogOpen: boolean,
-        onCancel: () => void
+        onCancel: () => void,
+        onConfirm: () => void
       ) => (
         <ConfirmationDialog
           isOpen={isConfirmationDialogOpen}
@@ -84,7 +75,7 @@ const Clients = ({ user }: { user: Coach }) => {
               ? selectedClients[0].full_name
               : selectedClients.length + " clients"
           }?`}
-          onConfirm={handleArchiveSelectedClients}
+          onConfirm={onConfirm}
           onCancel={onCancel}
         />
       ),
@@ -112,37 +103,6 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const handleArchiveClient = async (client: Client) => {
     await updateClientById(client.id as UUID, { archived_at: new Date() });
-    await fetchClients(
-      page,
-      filterStatus,
-      filterText,
-      sortColumn,
-      sortDirection
-    );
-    await updateFilterCounts();
-  };
-
-  const handleArchiveSelectedClients = async () => {
-    for (const client of selectedClients) {
-      handleArchiveClient(client);
-    }
-
-    setSelectedClients([]);
-  };
-
-  const updateFilterCounts = async () => {
-    const counts: Record<string, number> = {};
-
-    for (const filterOption of CLIENT_STATUS_OPTIONS) {
-      const { total } = await fetchClientsByCoachId(
-        user.id as UUID,
-        1,
-        filterOption.value
-      );
-      counts[filterOption.value] = total as number;
-    }
-
-    setFilterCounts(counts);
   };
 
   return (

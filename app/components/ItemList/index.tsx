@@ -87,23 +87,27 @@ const ItemList = <T,>({
 
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
 
+  const prepareData = async () => {
+    setIsListLoaded(false);
+
+    const { data: items, total } = await fetchItems(
+      page,
+      filterStatus,
+      filterText,
+      sortColumn,
+      sortDirection
+    );
+    // @ts-ignore
+    setItems(items as T[]);
+    setTotalItems(total);
+    updateFilterCounts();
+
+    setIsListLoaded(true);
+  };
+
   useEffect(() => {
     (async () => {
-      setIsListLoaded(false);
-
-      const { data: items, total } = await fetchItems(
-        page,
-        filterStatus,
-        filterText,
-        sortColumn,
-        sortDirection
-      );
-      // @ts-ignore
-      setItems(items as T[]);
-      setTotalItems(total);
-      updateFilterCounts();
-
-      setIsListLoaded(true);
+      await prepareData();
     })();
   }, [page, filterStatus, filterText, sortColumn, sortDirection]);
 
@@ -226,6 +230,16 @@ const ItemList = <T,>({
                 () => {
                   setSelectedItems([]);
                   setOpenActionDialogs([]);
+                },
+                async () => {
+                  for (const item of selectedItems) {
+                    await action.handler(item);
+                  }
+
+                  setSelectedItems([]);
+                  setOpenActionDialogs([]);
+
+                  await prepareData();
                 }
               )
             )}
