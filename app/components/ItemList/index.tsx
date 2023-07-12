@@ -46,16 +46,9 @@ interface ItemListProps<T> {
     actions?: any;
     filterStatus: string;
   }>;
-  renderEmptyList: (filterText: string) => JSX.Element;
-  renderHeader?: (
-    handleSort: (column: string) => void,
-    sortColumn: string,
-    sortDirection: "desc" | "asc",
-    onItemsBulkSelect: () => void,
-    selectedItems: T[],
-    filterStatus: string,
-    actions: any
-  ) => JSX.Element;
+  EmptyListComponent: React.ComponentType<{
+    isSearchResult: boolean;
+  }>;
   actions: any;
 }
 
@@ -67,7 +60,7 @@ const ItemList = <T,>({
   FilterBarComponent,
   HeaderComponent,
   CardComponent,
-  renderEmptyList,
+  EmptyListComponent,
   actions,
 }: ItemListProps<T>) => {
   const [filterStatus, setFilterStatus] = useState<string>(
@@ -214,7 +207,7 @@ const ItemList = <T,>({
       />
       {isListLoaded ? (
         items.length === 0 ? (
-          renderEmptyList(filterText)
+          <EmptyListComponent isSearchResult={filterText !== ""} />
         ) : (
           <>
             {items.map((item, index) => (

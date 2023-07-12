@@ -11,7 +11,7 @@ import OfferModal from "@/app/components/clients/OfferModal";
 
 import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
-import EmptyList from "@/app/components/clients/EmptyList";
+import EmptyList, { EmptyListProps } from "@/app/components/clients/EmptyList";
 import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
@@ -146,8 +146,8 @@ const Clients = ({ user }: { user: Coach }) => {
           FilterBarComponent={FilterBar}
           HeaderComponent={ClientsListHeader}
           CardComponent={ClientCard}
-          renderEmptyList={(filterText: string) => (
-            <EmptyList user={user} isSearchResult={filterText !== ""} />
+          EmptyListComponent={(props: EmptyListProps) => (
+            <EmptyList {...props} user={user} />
           )}
         />
       </>

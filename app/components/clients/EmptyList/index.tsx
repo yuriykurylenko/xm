@@ -2,16 +2,16 @@ import React from "react";
 import styles from "@/app/components/clients/EmptyList/styles.module.css";
 import { Coach } from "@/app/types/user";
 
-interface EmptyListProps {
-  user: Coach;
+export interface EmptyListProps {
+  user?: Coach;
   isSearchResult: boolean;
 }
 
 const EmptyList: React.FC<EmptyListProps> = ({ user, isSearchResult }) => {
-  const applicationLink = `${window.location.protocol}//${window.location.host}/${user.slug}/apply`;
+  const applicationLink = `${window.location.protocol}//${window.location.host}/${user?.slug}/apply`;
   return (
     <div className={styles["empty-list-container"]}>
-      {!isSearchResult ? (
+      {!isSearchResult && user ? (
         <>
           Please share this link to get your clients to apply for coaching:
           <br />
