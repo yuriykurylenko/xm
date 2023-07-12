@@ -42,6 +42,8 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (filterStatus: string) => filterStatus === "lead",
       handler: (client: Client, data: { monthlyAmount: number | string }) =>
         handleSendOfferToClient(client, data),
+      onComplete: (setFilterStatus: (filterStatus: string) => void) =>
+        setFilterStatus("offerSent"),
       renderDialog: (
         selectedClients: Client[],
         isOfferModalOpen: boolean,
@@ -103,11 +105,10 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, total } as { data: Client[]; total: number };
   };
 
-  const handleArchiveClient = async (client: Client) => {
-    return await updateClientById(client.id as UUID, {
+  const handleArchiveClient = (client: Client) =>
+    updateClientById(client.id as UUID, {
       archived_at: new Date(),
     });
-  };
 
   const handleSendOfferToClient = async (
     client: Client,

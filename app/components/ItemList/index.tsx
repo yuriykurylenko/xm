@@ -244,6 +244,7 @@ const ItemList = <T,>({
                   setOpenActionDialogs([]);
 
                   await prepareData();
+                  action.onComplete && action.onComplete(setFilterStatus);
 
                   return { error: null };
                 }
