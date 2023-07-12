@@ -29,9 +29,9 @@ describe("ClientCard", () => {
     render(
       <ClientCard
         filterStatus="lead"
-        client={client}
-        selectedClients={[]}
-        onClientSelect={() => {}}
+        item={client}
+        selectedItems={[]}
+        onSelect={() => {}}
         bulkOperationsAllowed={true}
         actions={[ACTION]}
       />
@@ -50,9 +50,9 @@ describe("ClientCard", () => {
     render(
       <ClientCard
         filterStatus="lead"
-        client={client}
-        selectedClients={[]}
-        onClientSelect={() => {}}
+        item={client}
+        selectedItems={[]}
+        onSelect={() => {}}
         bulkOperationsAllowed={true}
         actions={[{ ...ACTION, handler: mockButtonClick }]}
       />
