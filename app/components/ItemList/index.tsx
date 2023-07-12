@@ -38,14 +38,14 @@ interface ItemListProps<T> {
     filterStatus: string;
     actions: any;
   }>;
-  renderCard: (
-    item: T,
-    index: number,
-    selectedItems: T[],
-    onItemSelect: (item: T) => void,
-    filterStatus: string,
-    actions: any
-  ) => JSX.Element;
+  CardComponent: React.ComponentType<{
+    item: T;
+    selectedItems: T[];
+    onSelect: () => void;
+    bulkOperationsAllowed: boolean;
+    actions?: any;
+    filterStatus: string;
+  }>;
   renderEmptyList: (filterText: string) => JSX.Element;
   renderHeader?: (
     handleSort: (column: string) => void,
@@ -66,9 +66,8 @@ const ItemList = <T,>({
   SearchInputComponent,
   FilterBarComponent,
   HeaderComponent,
-  renderCard,
+  CardComponent,
   renderEmptyList,
-  renderHeader,
   actions,
 }: ItemListProps<T>) => {
   const [filterStatus, setFilterStatus] = useState<string>(
@@ -218,16 +217,17 @@ const ItemList = <T,>({
           renderEmptyList(filterText)
         ) : (
           <>
-            {items.map((item, index) =>
-              renderCard(
-                item,
-                index,
-                selectedItems,
-                onItemSelect,
-                filterStatus,
-                enhancedActions
-              )
-            )}
+            {items.map((item, index) => (
+              <CardComponent
+                key={index}
+                item={item}
+                selectedItems={selectedItems}
+                bulkOperationsAllowed={true}
+                onSelect={() => onItemSelect(item)}
+                actions={enhancedActions}
+                filterStatus={filterStatus}
+              />
+            ))}
             <Pagination
               currentPage={page}
               totalPages={Math.ceil(totalItems / 20)}

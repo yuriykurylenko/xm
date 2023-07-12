@@ -4,18 +4,18 @@ import { useState } from "react";
 import ActionsBar from "../ActionsBar";
 
 interface ClientCardProps {
-  client: Client;
-  selectedClients: Client[];
-  onClientSelect: () => void;
+  item: Client;
+  selectedItems: Client[];
+  onSelect: () => void;
   bulkOperationsAllowed: boolean;
   actions?: any;
   filterStatus: string;
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({
-  client,
-  selectedClients,
-  onClientSelect,
+  item,
+  selectedItems,
+  onSelect,
   bulkOperationsAllowed = false,
   actions,
   filterStatus,
@@ -24,10 +24,10 @@ const ClientCard: React.FC<ClientCardProps> = ({
 
   const handleCheckboxChange = () => {
     setSelected(!selected);
-    onClientSelect();
+    onSelect();
   };
 
-  const isSelected = selectedClients.map((c) => c.id).includes(client.id);
+  const isSelected = selectedItems.map((c) => c.id).includes(item.id);
 
   return (
     <div
@@ -45,15 +45,15 @@ const ClientCard: React.FC<ClientCardProps> = ({
         </div>
       )}
       <div className={`${styles["avatar"]} ${styles["column"]}`}>
-        {client.full_name.charAt(0)}
+        {item.full_name.charAt(0)}
       </div>
       <div
         className={`${styles["item-name"]} ${styles["name-column"]} ${styles["column"]}`}
       >
-        {client.full_name}
+        {item.full_name}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
-        {new Date(client.created_at as Date)
+        {new Date(item.created_at as Date)
           .toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",
@@ -66,7 +66,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
       >
         <ActionsBar
           actions={actions}
-          selectedClients={[client]}
+          selectedClients={[item]}
           filterStatus={filterStatus}
         />
       </div>

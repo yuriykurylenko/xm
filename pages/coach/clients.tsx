@@ -145,24 +145,7 @@ const Clients = ({ user }: { user: Coach }) => {
           SearchInputComponent={SearchInput}
           FilterBarComponent={FilterBar}
           HeaderComponent={ClientsListHeader}
-          renderCard={(
-            client: Client,
-            index: number,
-            selectedClients: Client[],
-            onClientSelect: (client: Client) => void,
-            filterStatus: string,
-            actions: any
-          ) => (
-            <ClientCard
-              key={index}
-              client={client}
-              selectedClients={selectedClients}
-              bulkOperationsAllowed={true}
-              onClientSelect={() => onClientSelect(client)}
-              actions={actions}
-              filterStatus={filterStatus}
-            />
-          )}
+          CardComponent={ClientCard}
           renderEmptyList={(filterText: string) => (
             <EmptyList user={user} isSearchResult={filterText !== ""} />
           )}
