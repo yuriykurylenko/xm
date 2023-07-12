@@ -24,10 +24,6 @@ type FilterOption = {
 };
 
 const Clients = ({ user }: { user: Coach }) => {
-  const [page, setPage] = useState<number>(1);
-  const [filterStatus, setFilterStatus] = useState<string>("lead");
-  const [filterText, setFilterText] = useState<string>("");
-
   const CLIENT_STATUS_OPTIONS: FilterOption[] = [
     { value: "lead", name: "Leads" },
     { value: "offerSent", name: "Sent Offers" },
@@ -44,12 +40,13 @@ const Clients = ({ user }: { user: Coach }) => {
       renderDialog: (
         selectedClients: Client[],
         isOfferModalOpen: boolean,
-        onCancel: () => void
+        onCancel: () => void,
+        onConfirm: () => void
       ) => (
         <OfferModal
           isOpen={isOfferModalOpen}
           closeModal={onCancel}
-          onOfferSent={() => setFilterStatus("offerSent")}
+          onOfferSent={onConfirm}
           selectedClients={selectedClients}
           user={user}
         />
@@ -184,7 +181,7 @@ const Clients = ({ user }: { user: Coach }) => {
               filterStatus={filterStatus}
             />
           )}
-          renderEmptyList={() => (
+          renderEmptyList={(filterText: string) => (
             <EmptyList user={user} isSearchResult={filterText !== ""} />
           )}
         />

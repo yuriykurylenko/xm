@@ -38,7 +38,7 @@ interface ItemListProps<T> {
     filterStatus: string,
     actions: any
   ) => JSX.Element;
-  renderEmptyList: () => JSX.Element;
+  renderEmptyList: (filterText: string) => JSX.Element;
   renderHeader?: (
     handleSort: (column: string) => void,
     sortColumn: string,
@@ -190,7 +190,7 @@ const ItemList = <T,>({
         )}
       {isListLoaded ? (
         items.length === 0 ? (
-          renderEmptyList()
+          renderEmptyList(filterText)
         ) : (
           <>
             {items.map((item, index) =>
