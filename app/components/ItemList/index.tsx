@@ -24,12 +24,11 @@ interface ItemListProps<T> {
     onChange: (value: string) => void;
     placeholder: string;
   }>;
-  renderFilterBar: (
-    filterStatus: string,
-    changeFilterStatus: (status: string) => void,
-    filterOptions: FilterOption[],
-    filterCounts: Record<string, number>
-  ) => JSX.Element;
+  FilterBarComponent: React.ComponentType<{
+    filterStatus: string;
+    setFilterStatus: (status: string) => void;
+    filterOptions: FilterOption[];
+  }>;
   renderCard: (
     item: T,
     index: number,
@@ -56,7 +55,7 @@ const ItemList = <T,>({
   filterStatusOptions,
   fetchItems,
   SearchInputComponent,
-  renderFilterBar,
+  FilterBarComponent,
   renderCard,
   renderEmptyList,
   renderHeader,
@@ -178,9 +177,6 @@ const ItemList = <T,>({
       <div className={styles["items-container-header"]}>
         <div className={styles["items-title-container"]}>
           <h1>{title}</h1>
-          {/* {renderSearchInput &&
-            renderSearchInput(filterText, setFilterText, filterStatus)} */}
-
           <SearchInputComponent
             value={filterText}
             onChange={setFilterText}
@@ -188,13 +184,14 @@ const ItemList = <T,>({
               filterStatusOptions.find((o) => o.value === filterStatus)?.name
             }`}
           />
-          {renderFilterBar &&
-            renderFilterBar(
-              filterStatus,
-              changeFilterStatus,
-              filterStatusOptions,
-              filterCounts
-            )}
+          <FilterBarComponent
+            filterOptions={filterStatusOptions.map((option: FilterOption) => ({
+              ...option,
+              count: filterCounts[option.value],
+            }))}
+            filterStatus={filterStatus}
+            setFilterStatus={changeFilterStatus}
+          />
         </div>
       </div>
       {renderHeader &&

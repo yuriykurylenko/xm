@@ -143,21 +143,7 @@ const Clients = ({ user }: { user: Coach }) => {
           fetchItems={fetchClients}
           actions={ACTIONS}
           SearchInputComponent={SearchInput}
-          renderFilterBar={(
-            filterStatus: string,
-            changeFilterStatus: (status: string) => void,
-            filterOptions,
-            filterCounts
-          ) => (
-            <FilterBar
-              filterOptions={filterOptions.map((option: FilterOption) => ({
-                ...option,
-                count: filterCounts[option.value],
-              }))}
-              filterStatus={filterStatus}
-              setFilterStatus={changeFilterStatus}
-            />
-          )}
+          FilterBarComponent={FilterBar}
           renderHeader={(
             handleSort: (column: string) => void,
             sortColumn: string,
