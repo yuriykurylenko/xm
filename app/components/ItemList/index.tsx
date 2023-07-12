@@ -19,17 +19,17 @@ interface ItemListProps<T> {
     sortColumn?: string,
     sortDirection?: "asc" | "desc"
   ) => Promise<{ data: T[]; total: number }>;
-  SearchInputComponent: React.ComponentType<{
+  SearchInputComponent?: React.ComponentType<{
     value: string;
     onChange: (value: string) => void;
     placeholder: string;
   }>;
-  FilterBarComponent: React.ComponentType<{
+  FilterBarComponent?: React.ComponentType<{
     filterStatus: string;
     setFilterStatus: (status: string) => void;
     filterOptions: FilterOption[];
   }>;
-  HeaderComponent: React.ComponentType<{
+  HeaderComponent?: React.ComponentType<{
     onSort: (column: string) => void;
     sortColumn: string;
     sortDirection: "desc" | "asc";
@@ -46,7 +46,7 @@ interface ItemListProps<T> {
     actions?: any;
     filterStatus: string;
   }>;
-  EmptyListComponent: React.ComponentType<{
+  EmptyListComponent?: React.ComponentType<{
     isSearchResult: boolean;
   }>;
   actions: any;
@@ -179,34 +179,42 @@ const ItemList = <T,>({
       <div className={styles["items-container-header"]}>
         <div className={styles["items-title-container"]}>
           <h1>{title}</h1>
-          <SearchInputComponent
-            value={filterText}
-            onChange={setFilterText}
-            placeholder={`Search in ${
-              filterStatusOptions.find((o) => o.value === filterStatus)?.name
-            }`}
-          />
-          <FilterBarComponent
-            filterOptions={filterStatusOptions.map((option: FilterOption) => ({
-              ...option,
-              count: filterCounts[option.value],
-            }))}
-            filterStatus={filterStatus}
-            setFilterStatus={changeFilterStatus}
-          />
+          {SearchInputComponent && (
+            <SearchInputComponent
+              value={filterText}
+              onChange={setFilterText}
+              placeholder={`Search in ${
+                filterStatusOptions.find((o) => o.value === filterStatus)?.name
+              }`}
+            />
+          )}
+          {FilterBarComponent && (
+            <FilterBarComponent
+              filterOptions={filterStatusOptions.map(
+                (option: FilterOption) => ({
+                  ...option,
+                  count: filterCounts[option.value],
+                })
+              )}
+              filterStatus={filterStatus}
+              setFilterStatus={changeFilterStatus}
+            />
+          )}
         </div>
       </div>
-      <HeaderComponent
-        onBulkSelect={onItemsBulkSelect}
-        selectedItems={selectedItems}
-        actions={enhancedActions}
-        onSort={handleSort}
-        sortColumn={sortColumn}
-        sortDirection={sortDirection}
-        filterStatus={filterStatus}
-      />
+      {HeaderComponent && (
+        <HeaderComponent
+          onBulkSelect={onItemsBulkSelect}
+          selectedItems={selectedItems}
+          actions={enhancedActions}
+          onSort={handleSort}
+          sortColumn={sortColumn}
+          sortDirection={sortDirection}
+          filterStatus={filterStatus}
+        />
+      )}
       {isListLoaded ? (
-        items.length === 0 ? (
+        items.length === 0 && EmptyListComponent ? (
           <EmptyListComponent isSearchResult={filterText !== ""} />
         ) : (
           <>
