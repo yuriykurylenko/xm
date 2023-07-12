@@ -64,7 +64,9 @@ const ItemList = <T,>({
   actions,
 }: ItemListProps<T>) => {
   const [filterStatus, setFilterStatus] = useState<string>(
-    filterStatusOptions[0].value
+    filterStatusOptions && FilterBarComponent
+      ? filterStatusOptions[0].value
+      : "all"
   );
   const [filterText, setFilterText] = useState<string>("");
 
@@ -183,9 +185,14 @@ const ItemList = <T,>({
             <SearchInputComponent
               value={filterText}
               onChange={setFilterText}
-              placeholder={`Search in ${
-                filterStatusOptions.find((o) => o.value === filterStatus)?.name
-              }`}
+              placeholder={
+                filterStatus != "all"
+                  ? `Search in ${
+                      filterStatusOptions.find((o) => o.value === filterStatus)
+                        ?.name
+                    }`
+                  : "Search"
+              }
             />
           )}
           {FilterBarComponent && (
