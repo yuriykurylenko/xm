@@ -46,7 +46,8 @@ interface ItemListProps<T> {
     onItemsBulkSelect: () => void,
     selectedItems: T[],
     filterStatus: string,
-    actions: any
+    actions: any,
+    openActionDialogs: string[]
   ) => JSX.Element;
   actions: any;
 }
@@ -83,6 +84,8 @@ const ItemList = <T,>({
   const [sortColumn, setSortColumn] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
+
+  const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -178,7 +181,8 @@ const ItemList = <T,>({
           onItemsBulkSelect,
           selectedItems,
           filterStatus,
-          actions
+          actions,
+          openActionDialogs
         )}
       {isListLoaded ? (
         items.length === 0 ? (
@@ -192,7 +196,23 @@ const ItemList = <T,>({
                 selectedItems,
                 onItemSelect,
                 filterStatus,
-                actions
+                actions.map(
+                  (action: {
+                    name: string;
+                    handler: (item?: T | T[]) => void;
+                  }) => ({
+                    ...action,
+                    handler: (item?: T | T[]) => {
+                      if (item) {
+                        // @ts-ignore
+                        setSelectedItems([item].flat());
+                      }
+                      setOpenActionDialogs([action.name]);
+
+                      action.handler(item);
+                    },
+                  })
+                )
               )
             )}
             <Pagination
@@ -201,6 +221,12 @@ const ItemList = <T,>({
               onNextPage={handleNextPage}
               onPrevPage={handlePrevPage}
             />
+            {actions.map((action: any) =>
+              action.renderDialog(
+                selectedItems,
+                openActionDialogs.includes(action.name)
+              )
+            )}
           </>
         )
       ) : (

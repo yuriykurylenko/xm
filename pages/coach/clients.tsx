@@ -57,6 +57,15 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
       handler: (client: Client | Client[]) => openOfferModal(client),
       show: (filterStatus: string) => filterStatus === "lead",
+      renderDialog: (selectedClients: Client[], isOfferModalOpen: boolean) => (
+        <OfferModal
+          isOpen={isOfferModalOpen}
+          closeModal={closeOfferModal}
+          onOfferSent={() => setFilterStatus("offerSent")}
+          selectedClients={selectedClients}
+          user={user}
+        />
+      ),
     },
     {
       name: "archive",
@@ -65,6 +74,21 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: <FontAwesomeIcon icon={faTrash} />,
       handler: (client: Client | Client[]) => handleArchiveConfirmation(client),
       show: (filterStatus: string) => true,
+      renderDialog: (
+        selectedClients: Client[],
+        isConfirmationDialogOpen: boolean
+      ) => (
+        <ConfirmationDialog
+          isOpen={isConfirmationDialogOpen}
+          message={`Would you like to archive ${
+            selectedClients.length === 1
+              ? selectedClients[0].full_name
+              : selectedClients.length + " clients"
+          }?`}
+          onConfirm={handleArchiveSelectedClients}
+          onCancel={handleCancelAction}
+        />
+      ),
     },
   ];
 
@@ -89,7 +113,7 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const openOfferModal = (client: Client | Client[]) => {
     setIsOfferModalOpen(true);
-    setSelectedClients([client].flat());
+    // setSelectedClients([client].flat());
   };
 
   const closeOfferModal = () => {
@@ -113,9 +137,9 @@ const Clients = ({ user }: { user: Coach }) => {
   const handleArchiveConfirmation = (client?: Client | Client[]) => {
     setIsConfirmationDialogOpen(true);
 
-    if (client) {
-      setSelectedClients([client].flat());
-    }
+    // if (client) {
+    //   setSelectedClients([client].flat());
+    // }
   };
 
   const handleArchiveSelectedClients = async () => {
@@ -194,7 +218,8 @@ const Clients = ({ user }: { user: Coach }) => {
             onClientsBulkSelect: () => void,
             selectedClients: Client[],
             filterStatus: string,
-            actions: any
+            actions: any,
+            openActionDialogs: string[]
           ) => (
             <ClientsListHeader
               onBulkSelect={onClientsBulkSelect}
@@ -204,6 +229,7 @@ const Clients = ({ user }: { user: Coach }) => {
               sortColumn={sortColumn}
               sortDirection={sortDirection}
               filterStatus={filterStatus}
+              openActionDialogs={openActionDialogs}
             />
           )}
           renderCard={(
@@ -229,7 +255,7 @@ const Clients = ({ user }: { user: Coach }) => {
           )}
         />
       </>
-      {selectedClients.length > 0 && (
+      {/* {selectedClients.length > 0 && (
         <OfferModal
           isOpen={isOfferModalOpen}
           closeModal={closeOfferModal}
@@ -249,7 +275,7 @@ const Clients = ({ user }: { user: Coach }) => {
           onConfirm={handleArchiveSelectedClients}
           onCancel={handleCancelAction}
         />
-      )}
+      )} */}
     </>
   );
 };
