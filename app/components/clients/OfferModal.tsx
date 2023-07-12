@@ -1,14 +1,11 @@
 import * as React from "react";
 import Modal from "react-modal";
-import { useState } from "react";
-import { sendClientOffer } from "@/app/utils/api";
 
 import Form from "@/app/components/Form";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
 import { Client, Coach } from "@/app/types/user";
-import { UUID } from "crypto";
 
 Modal.setAppElement("#__next");
 
@@ -17,7 +14,7 @@ interface OfferModalProps {
   closeModal: () => void;
   selectedClients: Client[];
   user: Coach;
-  onOfferSent?: () => void;
+  onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>;
 }
 
 interface OfferModalFormData {
@@ -29,36 +26,8 @@ const OfferModal: React.FC<OfferModalProps> = ({
   closeModal,
   selectedClients,
   user,
-  onOfferSent,
+  onConfirm,
 }) => {
-  const [, setMonthlyAmount] = useState(user.monthly_subscription_amount / 100);
-  async function onModalClose() {
-    closeModal();
-    setMonthlyAmount(user.monthly_subscription_amount / 100);
-  }
-
-  async function onSubmit(data: OfferModalFormData) {
-    const { monthlyAmount } = data;
-    for (const selectedClient of selectedClients) {
-      const { data: sendOfferData, error } = await sendClientOffer(
-        selectedClient.id as UUID,
-        {
-          monthlyAmount: Number(monthlyAmount) * 100,
-          currency: "USD",
-        }
-      );
-
-      if (error) {
-        return { data: sendOfferData, error };
-      }
-    }
-
-    onModalClose();
-    onOfferSent && onOfferSent();
-
-    return { error: null };
-  }
-
   return (
     <Modal
       isOpen={isOpen}
@@ -88,7 +57,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
             : selectedClients.length + " clients"
         }`}
       >
-        <Form<OfferModalFormData> onSubmit={onSubmit}>
+        <Form<OfferModalFormData> onSubmit={onConfirm}>
           <p>
             {selectedClients.length === 1
               ? selectedClients[0].full_name

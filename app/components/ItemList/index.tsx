@@ -231,15 +231,21 @@ const ItemList = <T,>({
                   setSelectedItems([]);
                   setOpenActionDialogs([]);
                 },
-                async () => {
+                async (data?: any) => {
                   for (const item of selectedItems) {
-                    await action.handler(item);
+                    const { error } = await action.handler(item, data);
+
+                    if (error) {
+                      return { error };
+                    }
                   }
 
                   setSelectedItems([]);
                   setOpenActionDialogs([]);
 
                   await prepareData();
+
+                  return { error: null };
                 }
               )
             )}

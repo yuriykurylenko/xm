@@ -1,8 +1,11 @@
 import * as React from "react";
-import { useState } from "react";
 import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
-import { fetchClientsByCoachId, updateClientById } from "@/app/utils/api";
+import {
+  fetchClientsByCoachId,
+  sendClientOffer,
+  updateClientById,
+} from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 import OfferModal from "@/app/components/clients/OfferModal";
 
@@ -37,16 +40,18 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send offers",
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
       show: (filterStatus: string) => filterStatus === "lead",
+      handler: (client: Client, data: { monthlyAmount: number | string }) =>
+        handleSendOfferToClient(client, data),
       renderDialog: (
         selectedClients: Client[],
         isOfferModalOpen: boolean,
         onCancel: () => void,
-        onConfirm: () => void
+        onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>
       ) => (
         <OfferModal
           isOpen={isOfferModalOpen}
           closeModal={onCancel}
-          onOfferSent={onConfirm}
+          onConfirm={onConfirm}
           selectedClients={selectedClients}
           user={user}
         />
@@ -99,7 +104,30 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const handleArchiveClient = async (client: Client) => {
-    await updateClientById(client.id as UUID, { archived_at: new Date() });
+    return await updateClientById(client.id as UUID, {
+      archived_at: new Date(),
+    });
+  };
+
+  const handleSendOfferToClient = async (
+    client: Client,
+    data: { monthlyAmount: number | string }
+  ) => {
+    const { monthlyAmount } = data;
+
+    const { data: sendOfferData, error } = await sendClientOffer(
+      client.id as UUID,
+      {
+        monthlyAmount: Number(monthlyAmount) * 100,
+        currency: "USD",
+      }
+    );
+
+    if (error) {
+      return { data: sendOfferData, error };
+    }
+
+    return { error: null };
   };
 
   return (
