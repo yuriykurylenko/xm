@@ -157,6 +157,7 @@ const Clients = ({ user }: { user: Coach }) => {
           title="Clients"
           filterStatusOptions={CLIENT_STATUS_OPTIONS}
           fetchItems={fetchClients}
+          actions={ACTIONS}
           renderSearchInput={(
             filterText: string,
             setFilterText: (value: string) => void,
@@ -192,12 +193,13 @@ const Clients = ({ user }: { user: Coach }) => {
             sortDirection: "desc" | "asc",
             onClientsBulkSelect: () => void,
             selectedClients: Client[],
-            filterStatus: string
+            filterStatus: string,
+            actions: any
           ) => (
             <ClientsListHeader
               onBulkSelect={onClientsBulkSelect}
               selectedClients={selectedClients}
-              actions={ACTIONS}
+              actions={actions}
               onSort={handleSort}
               sortColumn={sortColumn}
               sortDirection={sortDirection}
@@ -209,7 +211,8 @@ const Clients = ({ user }: { user: Coach }) => {
             index: number,
             selectedClients: Client[],
             onClientSelect: (client: Client) => void,
-            filterStatus: string
+            filterStatus: string,
+            actions: any
           ) => (
             <ClientCard
               key={index}
@@ -217,7 +220,7 @@ const Clients = ({ user }: { user: Coach }) => {
               selectedClients={selectedClients}
               bulkOperationsAllowed={true}
               onClientSelect={() => onClientSelect(client)}
-              actions={ACTIONS}
+              actions={actions}
               filterStatus={filterStatus}
             />
           )}

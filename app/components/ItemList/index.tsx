@@ -35,7 +35,8 @@ interface ItemListProps<T> {
     index: number,
     selectedItems: T[],
     onItemSelect: (item: T) => void,
-    filterStatus: string
+    filterStatus: string,
+    actions: any
   ) => JSX.Element;
   renderEmptyList: () => JSX.Element;
   renderHeader?: (
@@ -44,8 +45,10 @@ interface ItemListProps<T> {
     sortDirection: "desc" | "asc",
     onItemsBulkSelect: () => void,
     selectedItems: T[],
-    filterStatus: string
+    filterStatus: string,
+    actions: any
   ) => JSX.Element;
+  actions: any;
 }
 
 const ItemList = <T,>({
@@ -57,6 +60,7 @@ const ItemList = <T,>({
   renderCard,
   renderEmptyList,
   renderHeader,
+  actions,
 }: ItemListProps<T>) => {
   const [filterStatus, setFilterStatus] = useState<string>(
     filterStatusOptions[0].value
@@ -173,7 +177,8 @@ const ItemList = <T,>({
           sortDirection,
           onItemsBulkSelect,
           selectedItems,
-          filterStatus
+          filterStatus,
+          actions
         )}
       {isListLoaded ? (
         items.length === 0 ? (
@@ -181,7 +186,14 @@ const ItemList = <T,>({
         ) : (
           <>
             {items.map((item, index) =>
-              renderCard(item, index, selectedItems, onItemSelect, filterStatus)
+              renderCard(
+                item,
+                index,
+                selectedItems,
+                onItemSelect,
+                filterStatus,
+                actions
+              )
             )}
             <Pagination
               currentPage={page}

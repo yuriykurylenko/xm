@@ -7,21 +7,21 @@ import SortIcon from "@/app/components/SortIcon";
 interface ClientsListHeaderProps {
   onBulkSelect: () => void;
   selectedClients: Client[];
-  actions: any;
   onSort: (column: string) => void;
   sortColumn: string;
   sortDirection: "asc" | "desc";
   filterStatus: string;
+  actions: any;
 }
 
 const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
   onBulkSelect,
   selectedClients = [],
-  actions,
   onSort,
   sortColumn,
   sortDirection,
   filterStatus,
+  actions,
 }) => {
   const handleBulkSelectChange = () => {
     onBulkSelect();
