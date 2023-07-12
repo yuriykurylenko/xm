@@ -29,6 +29,15 @@ interface ItemListProps<T> {
     setFilterStatus: (status: string) => void;
     filterOptions: FilterOption[];
   }>;
+  HeaderComponent: React.ComponentType<{
+    onSort: (column: string) => void;
+    sortColumn: string;
+    sortDirection: "desc" | "asc";
+    onBulkSelect: () => void;
+    selectedItems: T[];
+    filterStatus: string;
+    actions: any;
+  }>;
   renderCard: (
     item: T,
     index: number,
@@ -56,6 +65,7 @@ const ItemList = <T,>({
   fetchItems,
   SearchInputComponent,
   FilterBarComponent,
+  HeaderComponent,
   renderCard,
   renderEmptyList,
   renderHeader,
@@ -194,16 +204,15 @@ const ItemList = <T,>({
           />
         </div>
       </div>
-      {renderHeader &&
-        renderHeader(
-          handleSort,
-          sortColumn,
-          sortDirection,
-          onItemsBulkSelect,
-          selectedItems,
-          filterStatus,
-          enhancedActions
-        )}
+      <HeaderComponent
+        onBulkSelect={onItemsBulkSelect}
+        selectedItems={selectedItems}
+        actions={enhancedActions}
+        onSort={handleSort}
+        sortColumn={sortColumn}
+        sortDirection={sortDirection}
+        filterStatus={filterStatus}
+      />
       {isListLoaded ? (
         items.length === 0 ? (
           renderEmptyList(filterText)

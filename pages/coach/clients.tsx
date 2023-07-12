@@ -144,25 +144,7 @@ const Clients = ({ user }: { user: Coach }) => {
           actions={ACTIONS}
           SearchInputComponent={SearchInput}
           FilterBarComponent={FilterBar}
-          renderHeader={(
-            handleSort: (column: string) => void,
-            sortColumn: string,
-            sortDirection: "desc" | "asc",
-            onClientsBulkSelect: () => void,
-            selectedClients: Client[],
-            filterStatus: string,
-            actions: any
-          ) => (
-            <ClientsListHeader
-              onBulkSelect={onClientsBulkSelect}
-              selectedClients={selectedClients}
-              actions={actions}
-              onSort={handleSort}
-              sortColumn={sortColumn}
-              sortDirection={sortDirection}
-              filterStatus={filterStatus}
-            />
-          )}
+          HeaderComponent={ClientsListHeader}
           renderCard={(
             client: Client,
             index: number,

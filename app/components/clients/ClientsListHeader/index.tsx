@@ -6,7 +6,7 @@ import SortIcon from "@/app/components/SortIcon";
 
 interface ClientsListHeaderProps {
   onBulkSelect: () => void;
-  selectedClients: Client[];
+  selectedItems: Client[];
   onSort: (column: string) => void;
   sortColumn: string;
   sortDirection: "asc" | "desc";
@@ -16,7 +16,7 @@ interface ClientsListHeaderProps {
 
 const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
   onBulkSelect,
-  selectedClients = [],
+  selectedItems = [],
   onSort,
   sortColumn,
   sortDirection,
@@ -27,7 +27,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
     onBulkSelect();
   };
 
-  const isBulkSelected = selectedClients.length > 0;
+  const isBulkSelected = selectedItems.length > 0;
 
   return (
     <div
@@ -49,12 +49,12 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
           <div
             className={`${styles["header-column"]} ${styles["header-column-selected"]}`}
           >
-            {`${selectedClients.length} selected`}
+            {`${selectedItems.length} selected`}
           </div>
           <div className={styles["header-column"]}>
             <ActionsBar
               actions={actions}
-              selectedClients={selectedClients}
+              selectedClients={selectedItems}
               filterStatus={filterStatus}
             />
           </div>
