@@ -18,6 +18,7 @@
   align-items: center;
   padding-bottom: 0;
   font-family: Arial, sans-serif;
+  width: 100%;
 }
 
 .items-container-header button {
@@ -29,6 +30,7 @@
 .items-title-container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 .items-title-container h1 {

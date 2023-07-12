@@ -195,19 +195,17 @@ const ItemList = <T,>({
               }
             />
           )}
-          {FilterBarComponent && (
-            <FilterBarComponent
-              filterOptions={filterStatusOptions.map(
-                (option: FilterOption) => ({
-                  ...option,
-                  count: filterCounts[option.value],
-                })
-              )}
-              filterStatus={filterStatus}
-              setFilterStatus={changeFilterStatus}
-            />
-          )}
         </div>
+        {FilterBarComponent && (
+          <FilterBarComponent
+            filterOptions={filterStatusOptions.map((option: FilterOption) => ({
+              ...option,
+              count: filterCounts[option.value],
+            }))}
+            filterStatus={filterStatus}
+            setFilterStatus={changeFilterStatus}
+          />
+        )}
       </div>
       {HeaderComponent && (
         <HeaderComponent
