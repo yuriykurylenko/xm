@@ -27,65 +27,6 @@ type FilterOption = {
 };
 
 const Clients = ({ user }: { user: Coach }) => {
-  const CLIENT_STATUS_OPTIONS: FilterOption[] = [
-    { value: "lead", name: "Leads" },
-    { value: "offerSent", name: "Sent Offers" },
-    { value: "client", name: "Active" },
-  ];
-
-  const ACTIONS = [
-    {
-      name: "sendOffer",
-      title: "Send offer",
-      titleBulk: "Send offers",
-      icon: <FontAwesomeIcon icon={faPaperPlane} />,
-      show: (filterStatus: string) => filterStatus === "lead",
-      handler: (client: Client, data: { monthlyAmount: number | string }) =>
-        handleSendOfferToClient(client, data),
-      onComplete: (setFilterStatus: (filterStatus: string) => void) =>
-        setFilterStatus("offerSent"),
-      renderDialog: (
-        selectedClients: Client[],
-        isOfferModalOpen: boolean,
-        onCancel: () => void,
-        onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>
-      ) => (
-        <OfferModal
-          isOpen={isOfferModalOpen}
-          closeModal={onCancel}
-          onConfirm={onConfirm}
-          selectedClients={selectedClients}
-          user={user}
-        />
-      ),
-    },
-    {
-      name: "archive",
-      title: "Archive client",
-      titleBulk: "Archive clients",
-      icon: <FontAwesomeIcon icon={faTrash} />,
-      show: (filterStatus: string) => true,
-      handler: (client: Client) => handleArchiveClient(client),
-      renderDialog: (
-        selectedClients: Client[],
-        isConfirmationDialogOpen: boolean,
-        onCancel: () => void,
-        onConfirm: () => void
-      ) => (
-        <ConfirmationDialog
-          isOpen={isConfirmationDialogOpen}
-          message={`Would you like to archive ${
-            selectedClients.length === 1
-              ? selectedClients[0].full_name
-              : selectedClients.length + " clients"
-          }?`}
-          onConfirm={onConfirm}
-          onCancel={onCancel}
-        />
-      ),
-    },
-  ];
-
   const fetchClients = async (
     page: number,
     filterStatus: string,
@@ -130,6 +71,64 @@ const Clients = ({ user }: { user: Coach }) => {
 
     return { error: null };
   };
+
+  const CLIENT_STATUS_OPTIONS: FilterOption[] = [
+    { value: "lead", name: "Leads" },
+    { value: "offerSent", name: "Sent Offers" },
+    { value: "client", name: "Active" },
+  ];
+
+  const ACTIONS = [
+    {
+      name: "sendOffer",
+      title: "Send offer",
+      titleBulk: "Send offers",
+      icon: <FontAwesomeIcon icon={faPaperPlane} />,
+      show: (filterStatus: string) => filterStatus === "lead",
+      handler: handleSendOfferToClient,
+      onComplete: (setFilterStatus: (filterStatus: string) => void) =>
+        setFilterStatus("offerSent"),
+      renderDialog: (
+        selectedClients: Client[],
+        isOfferModalOpen: boolean,
+        onCancel: () => void,
+        onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>
+      ) => (
+        <OfferModal
+          isOpen={isOfferModalOpen}
+          closeModal={onCancel}
+          onConfirm={onConfirm}
+          selectedClients={selectedClients}
+          user={user}
+        />
+      ),
+    },
+    {
+      name: "archive",
+      title: "Archive client",
+      titleBulk: "Archive clients",
+      icon: <FontAwesomeIcon icon={faTrash} />,
+      show: (filterStatus: string) => true,
+      handler: handleArchiveClient,
+      renderDialog: (
+        selectedClients: Client[],
+        isConfirmationDialogOpen: boolean,
+        onCancel: () => void,
+        onConfirm: () => void
+      ) => (
+        <ConfirmationDialog
+          isOpen={isConfirmationDialogOpen}
+          message={`Would you like to archive ${
+            selectedClients.length === 1
+              ? selectedClients[0].full_name
+              : selectedClients.length + " clients"
+          }?`}
+          onConfirm={onConfirm}
+          onCancel={onCancel}
+        />
+      ),
+    },
+  ];
 
   return (
     <>
