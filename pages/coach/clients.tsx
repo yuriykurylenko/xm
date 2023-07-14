@@ -14,10 +14,29 @@ import EmptyList, { EmptyListProps } from "@/app/components/clients/EmptyList";
 import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
-import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  IconDefinition,
+  faPaperPlane,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
+
+type Action<T = any, U = any> = {
+  name: string;
+  title: string;
+  titleBulk: string;
+  icon: IconDefinition;
+  show: (client: Client | Client[]) => boolean;
+  handler: (client: Client, data: T) => Promise<U>;
+  onComplete?: (setFilterStatus: (filterStatus: string) => void) => void;
+  DialogForm?: React.ComponentType;
+  dialogTitle: (selectedClient: Client) => string;
+  dialogTitleBulk: (selectedClients: Client[]) => string;
+  dialogText: (selectedClient: Client) => string;
+  dialogTextBulk: (selectedClients: Client[]) => string;
+};
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
@@ -69,12 +88,14 @@ const Clients = ({ user }: { user: Coach }) => {
     setFilterStatus: (filterStatus: string) => void
   ) => setFilterStatus("offerSent");
 
-  const handleArchiveClient = (client: Client) =>
-    updateClientById(client.id as UUID, {
+  const handleArchiveClient = async (client: Client) => {
+    const { data, error } = await updateClientById(client.id as UUID, {
       archived_at: new Date(),
     });
+    return { data, error };
+  };
 
-  const actions = [
+  const actions: Action[] = [
     {
       name: "sendOffer",
       title: "Send offer",
