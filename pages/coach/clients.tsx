@@ -21,11 +21,6 @@ import ConfirmationDialog from "@/app/components/ConfirmationDialog";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 
-type FilterOption = {
-  value: string;
-  name: string;
-};
-
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
     page: number,
@@ -45,11 +40,6 @@ const Clients = ({ user }: { user: Coach }) => {
 
     return { data, total } as { data: Client[]; total: number };
   };
-
-  const handleArchiveClient = (client: Client) =>
-    updateClientById(client.id as UUID, {
-      archived_at: new Date(),
-    });
 
   const handleSendOfferToClient = async (
     client: Client,
@@ -72,41 +62,61 @@ const Clients = ({ user }: { user: Coach }) => {
     return { error: null };
   };
 
-  const CLIENT_STATUS_OPTIONS: FilterOption[] = [
-    { value: "lead", name: "Leads" },
-    { value: "offerSent", name: "Sent Offers" },
-    { value: "client", name: "Active" },
-  ];
+  const sendOfferToClientAllowed = (client: Client | Client[]) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    return clientStatuses.length === 1 && clientStatuses[0] === "lead";
+  };
 
-  const ACTIONS = [
+  const onSendOfferComplete = (
+    setFilterStatus: (filterStatus: string) => void
+  ) => setFilterStatus("offerSent");
+
+  const handleArchiveClient = (client: Client) =>
+    updateClientById(client.id as UUID, {
+      archived_at: new Date(),
+    });
+
+  const renderSendOfferToClientDialog = (
+    selectedClients: Client[],
+    onCancel: () => void,
+    onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>
+  ) => (
+    <OfferModal
+      isOpen={true}
+      closeModal={onCancel}
+      onConfirm={onConfirm}
+      selectedClients={selectedClients}
+      user={user}
+    />
+  );
+
+  const renderArchiveClientDialog = (
+    selectedClients: Client[],
+    onCancel: () => void,
+    onConfirm: () => void
+  ) => (
+    <ConfirmationDialog
+      isOpen={true}
+      message={`Would you like to archive ${
+        selectedClients.length === 1
+          ? selectedClients[0].full_name
+          : selectedClients.length + " clients"
+      }?`}
+      onConfirm={onConfirm}
+      onCancel={onCancel}
+    />
+  );
+
+  const actions = [
     {
       name: "sendOffer",
       title: "Send offer",
       titleBulk: "Send offers",
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
-      show: (client: Client | Client[]) => {
-        const clientStatuses = [
-          ...new Set([client].flat().map((c) => c.status)),
-        ];
-        return clientStatuses.length === 1 && clientStatuses[0] === "lead";
-      },
+      show: sendOfferToClientAllowed,
       handler: handleSendOfferToClient,
-      onComplete: (setFilterStatus: (filterStatus: string) => void) =>
-        setFilterStatus("offerSent"),
-      renderDialog: (
-        selectedClients: Client[],
-        isOfferModalOpen: boolean,
-        onCancel: () => void,
-        onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>
-      ) => (
-        <OfferModal
-          isOpen={isOfferModalOpen}
-          closeModal={onCancel}
-          onConfirm={onConfirm}
-          selectedClients={selectedClients}
-          user={user}
-        />
-      ),
+      onComplete: onSendOfferComplete,
+      renderDialog: renderSendOfferToClientDialog,
     },
     {
       name: "archive",
@@ -115,23 +125,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: <FontAwesomeIcon icon={faTrash} />,
       show: (client: Client | Client[]) => true,
       handler: handleArchiveClient,
-      renderDialog: (
-        selectedClients: Client[],
-        isConfirmationDialogOpen: boolean,
-        onCancel: () => void,
-        onConfirm: () => void
-      ) => (
-        <ConfirmationDialog
-          isOpen={isConfirmationDialogOpen}
-          message={`Would you like to archive ${
-            selectedClients.length === 1
-              ? selectedClients[0].full_name
-              : selectedClients.length + " clients"
-          }?`}
-          onConfirm={onConfirm}
-          onCancel={onCancel}
-        />
-      ),
+      renderDialog: renderArchiveClientDialog,
     },
   ];
 
@@ -143,9 +137,13 @@ const Clients = ({ user }: { user: Coach }) => {
       <>
         <ItemList<Client>
           title="Clients"
-          filterStatusOptions={CLIENT_STATUS_OPTIONS}
+          filterStatusOptions={[
+            { value: "lead", name: "Leads" },
+            { value: "offerSent", name: "Sent Offers" },
+            { value: "client", name: "Active" },
+          ]}
           fetchItems={fetchClients}
-          actions={ACTIONS}
+          actions={actions}
           SearchInputComponent={SearchInput}
           FilterBarComponent={FilterBar}
           HeaderComponent={ClientsListHeader}

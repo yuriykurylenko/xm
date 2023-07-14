@@ -201,6 +201,13 @@ const ItemList = <T,>({
     return { error: null };
   };
 
+  const searchPlaceholder =
+    filterStatus != "all"
+      ? `Search in ${
+          filterStatusOptions.find((o) => o.value === filterStatus)?.name
+        }`
+      : "Search";
+
   return (
     <div className={styles["items-container"]}>
       <div className={styles["items-container-header"]}>
@@ -210,14 +217,7 @@ const ItemList = <T,>({
             <SearchInputComponent
               value={filterText}
               onChange={handleSearch}
-              placeholder={
-                filterStatus != "all"
-                  ? `Search in ${
-                      filterStatusOptions.find((o) => o.value === filterStatus)
-                        ?.name
-                    }`
-                  : "Search"
-              }
+              placeholder={searchPlaceholder}
             />
           )}
         </div>
@@ -264,13 +264,14 @@ const ItemList = <T,>({
               onNextPage={handleNextPage}
               onPrevPage={handlePrevPage}
             />
-            {actions.map((action: any) =>
-              action.renderDialog(
-                selectedItems,
-                openActionDialogs.includes(action.name),
-                handleCloseDialog,
-                (data?: any) => handleConfirmAction(action, data)
-              )
+            {actions.map(
+              (action: any) =>
+                openActionDialogs.includes(action.name) &&
+                action.renderDialog(
+                  selectedItems,
+                  handleCloseDialog,
+                  (data?: any) => handleConfirmAction(action, data)
+                )
             )}
           </>
         )
