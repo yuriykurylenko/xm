@@ -1,34 +1,30 @@
 import React from "react";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/clients/ActionsBar/styles.module.css";
-import { Client } from "@/app/types/user";
+import styles from "@/app/components/ActionsBar/styles.module.css";
 
-interface Action {
+interface Action<T> {
   name: string;
   title: string;
   titleBulk: string;
   icon: React.ReactNode;
-  handler: (clients: Client[]) => void;
-  show: (client: Client | Client[]) => boolean;
+  handler: (items: T[]) => void;
+  show: (item: T | T[]) => boolean;
 }
 
-interface ActionsBarProps {
-  actions: Action[];
-  selectedClients: Client[];
+interface ActionsBarProps<T> {
+  actions: Action<T>[];
+  selectedItems: T[];
 }
 
-const ActionsBar: React.FC<ActionsBarProps> = ({
-  actions,
-  selectedClients,
-}) => {
+const ActionsBar = <T,>({ actions, selectedItems }: ActionsBarProps<T>) => {
   return (
     <div className={styles["action-buttons-container"]}>
       {actions.map(
         (action, index) =>
-          action.show(selectedClients) && (
+          action.show(selectedItems) && (
             <span
               title={
-                selectedClients.length === 1 ? action.title : action.titleBulk
+                selectedItems.length === 1 ? action.title : action.titleBulk
               }
               key={index}
             >
@@ -36,7 +32,7 @@ const ActionsBar: React.FC<ActionsBarProps> = ({
                 className={`${styles["action-btn"]} ${
                   styles["action-btn-" + action.name]
                 } `}
-                onClick={() => action.handler(selectedClients)}
+                onClick={() => action.handler(selectedItems)}
               >
                 {action.icon}
               </BasicButton>

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/app/components/clients/ClientsListHeader/styles.module.css";
-import ActionsBar from "../ActionsBar";
+import ActionsBar from "@/app/components/ActionsBar";
 import { Client } from "@/app/types/user";
 import SortIcon from "@/app/components/SortIcon";
 
@@ -50,7 +50,10 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             {`${selectedItems.length} selected`}
           </div>
           <div className={styles["header-column"]}>
-            <ActionsBar actions={actions} selectedClients={selectedItems} />
+            <ActionsBar<Client>
+              actions={actions}
+              selectedItems={selectedItems}
+            />
           </div>
         </>
       ) : (

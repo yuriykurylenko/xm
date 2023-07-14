@@ -1,7 +1,7 @@
 import styles from "@/app/components/clients/ClientCard/styles.module.css";
 import { Client } from "@/app/types/user";
 import { useState } from "react";
-import ActionsBar from "../ActionsBar";
+import ActionsBar from "@/app/components/ActionsBar";
 
 interface ClientCardProps {
   item: Client;
@@ -9,7 +9,6 @@ interface ClientCardProps {
   onSelect: () => void;
   bulkOperationsAllowed: boolean;
   actions?: any;
-  filterStatus: string;
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({
@@ -18,7 +17,6 @@ const ClientCard: React.FC<ClientCardProps> = ({
   onSelect,
   bulkOperationsAllowed = false,
   actions,
-  filterStatus,
 }) => {
   const [selected, setSelected] = useState(false);
 
@@ -64,7 +62,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div
         className={`${styles["column"]} ${styles["actions-column"]} ${styles["button-container"]}`}
       >
-        <ActionsBar actions={actions} selectedClients={[item]} />
+        <ActionsBar<Client> actions={actions} selectedItems={[item]} />
       </div>
     </div>
   );
