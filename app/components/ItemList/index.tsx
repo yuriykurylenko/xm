@@ -268,6 +268,7 @@ const ItemList = <T,>({
               (action: any) =>
                 openActionDialogs.includes(action.name) && (
                   <action.DialogComponent
+                    key={action.name}
                     isOpen={true}
                     onConfirm={(data?: any) =>
                       handleConfirmAction(action, data)
