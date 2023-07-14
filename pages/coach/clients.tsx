@@ -8,35 +8,16 @@ import {
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 
-import ItemList from "@/app/components/ItemList";
+import ItemList, { Action } from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList, { EmptyListProps } from "@/app/components/clients/EmptyList";
 import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
-import {
-  IconDefinition,
-  faPaperPlane,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
-
-type Action<T = any, U = any> = {
-  name: string;
-  title: string;
-  titleBulk: string;
-  icon: IconDefinition;
-  show: (client: Client | Client[]) => boolean;
-  handler: (client: Client, data: T) => Promise<U>;
-  onComplete?: (setFilterStatus: (filterStatus: string) => void) => void;
-  DialogForm?: React.ComponentType;
-  dialogTitle: (selectedClient: Client) => string;
-  dialogTitleBulk: (selectedClients: Client[]) => string;
-  dialogText: (selectedClient: Client) => string;
-  dialogTextBulk: (selectedClients: Client[]) => string;
-};
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
@@ -95,7 +76,7 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, error };
   };
 
-  const actions: Action[] = [
+  const actions: Action<Client>[] = [
     {
       name: "sendOffer",
       title: "Send offer",
