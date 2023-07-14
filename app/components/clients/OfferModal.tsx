@@ -9,10 +9,10 @@ import { Client, Coach } from "@/app/types/user";
 
 Modal.setAppElement("#__next");
 
-interface OfferModalProps {
+export interface OfferModalProps {
   isOpen: boolean;
   closeModal: () => void;
-  selectedClients: Client[];
+  selectedItems: Client[];
   user: Coach;
   onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>;
 }
@@ -24,7 +24,7 @@ interface OfferModalFormData {
 const OfferModal: React.FC<OfferModalProps> = ({
   isOpen,
   closeModal,
-  selectedClients,
+  selectedItems,
   user,
   onConfirm,
 }) => {
@@ -52,15 +52,15 @@ const OfferModal: React.FC<OfferModalProps> = ({
     >
       <PageContainer
         title={`Send offer to ${
-          selectedClients.length === 1
-            ? selectedClients[0].full_name
-            : selectedClients.length + " clients"
+          selectedItems.length === 1
+            ? selectedItems[0].full_name
+            : selectedItems.length + " clients"
         }`}
       >
         <Form<OfferModalFormData> onSubmit={onConfirm}>
           <p>
-            {selectedClients.length === 1
-              ? selectedClients[0].full_name
+            {selectedItems.length === 1
+              ? selectedItems[0].full_name
               : "Your clients"}{" "}
             will receive an email with the link to subscribe and pay your
             specified amount monthly.

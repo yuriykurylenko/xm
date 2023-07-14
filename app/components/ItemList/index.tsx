@@ -266,11 +266,15 @@ const ItemList = <T,>({
             />
             {actions.map(
               (action: any) =>
-                openActionDialogs.includes(action.name) &&
-                action.renderDialog(
-                  selectedItems,
-                  handleCloseDialog,
-                  (data?: any) => handleConfirmAction(action, data)
+                openActionDialogs.includes(action.name) && (
+                  <action.DialogComponent
+                    isOpen={true}
+                    onConfirm={(data?: any) =>
+                      handleConfirmAction(action, data)
+                    }
+                    onCancel={handleCloseDialog}
+                    selectedItems={selectedItems}
+                  />
                 )
             )}
           </>

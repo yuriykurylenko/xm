@@ -7,7 +7,9 @@ import {
   updateClientById,
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
-import OfferModal from "@/app/components/clients/OfferModal";
+import OfferModal, {
+  OfferModalProps,
+} from "@/app/components/clients/OfferModal";
 
 import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
@@ -17,7 +19,9 @@ import { UUID } from "crypto";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
-import ConfirmationDialog from "@/app/components/ConfirmationDialog";
+import ConfirmationDialog, {
+  ConfirmationDialogProps,
+} from "@/app/components/ConfirmationDialog";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 
@@ -76,37 +80,6 @@ const Clients = ({ user }: { user: Coach }) => {
       archived_at: new Date(),
     });
 
-  const renderSendOfferToClientDialog = (
-    selectedClients: Client[],
-    onCancel: () => void,
-    onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>
-  ) => (
-    <OfferModal
-      isOpen={true}
-      closeModal={onCancel}
-      onConfirm={onConfirm}
-      selectedClients={selectedClients}
-      user={user}
-    />
-  );
-
-  const renderArchiveClientDialog = (
-    selectedClients: Client[],
-    onCancel: () => void,
-    onConfirm: () => void
-  ) => (
-    <ConfirmationDialog
-      isOpen={true}
-      message={`Would you like to archive ${
-        selectedClients.length === 1
-          ? selectedClients[0].full_name
-          : selectedClients.length + " clients"
-      }?`}
-      onConfirm={onConfirm}
-      onCancel={onCancel}
-    />
-  );
-
   const actions = [
     {
       name: "sendOffer",
@@ -116,7 +89,9 @@ const Clients = ({ user }: { user: Coach }) => {
       show: sendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
-      renderDialog: renderSendOfferToClientDialog,
+      DialogComponent: (props: OfferModalProps) => (
+        <OfferModal {...props} user={user} />
+      ),
     },
     {
       name: "archive",
@@ -125,7 +100,16 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: <FontAwesomeIcon icon={faTrash} />,
       show: (client: Client | Client[]) => true,
       handler: handleArchiveClient,
-      renderDialog: renderArchiveClientDialog,
+      DialogComponent: (props: ConfirmationDialogProps) => (
+        <ConfirmationDialog
+          {...props}
+          message={`Would you like to archive ${
+            props.selectedItems.length === 1
+              ? props.selectedItems[0].full_name
+              : props.selectedItems.length + " clients"
+          }?`}
+        />
+      ),
     },
   ];
 

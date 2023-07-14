@@ -3,11 +3,12 @@ import Modal from "react-modal";
 import styles from "@/app/components/ConfirmationDialog/styles.module.css";
 import BasicButton from "../BasicButton";
 
-type ConfirmationDialogProps = {
+export type ConfirmationDialogProps = {
   isOpen: boolean;
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  selectedItems: any[];
 };
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
@@ -15,6 +16,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   message,
   onConfirm,
   onCancel,
+  selectedItems,
 }) => {
   return (
     <Modal
