@@ -3,6 +3,7 @@ import styles from "@/app/components/ItemList/styles.module.css";
 import Loading from "../Loading";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/ItemList/Pagination";
+import ActionDialog from "../ActionDialog";
 
 type FilterOption = {
   value: string;
@@ -267,7 +268,7 @@ const ItemList = <T,>({
             {actions.map(
               (action: any) =>
                 openActionDialogs.includes(action.name) && (
-                  <action.DialogComponent
+                  <ActionDialog
                     key={action.name}
                     onConfirm={(data?: any) =>
                       handleConfirmAction(action, data)
@@ -286,7 +287,7 @@ const ItemList = <T,>({
                     actionTitle={action.title}
                   >
                     {action.DialogForm && <action.DialogForm />}
-                  </action.DialogComponent>
+                  </ActionDialog>
                 )
             )}
           </>

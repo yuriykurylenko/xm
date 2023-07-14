@@ -12,7 +12,7 @@ Modal.setAppElement("#__next");
 
 export interface ActionDialogProps {
   onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>;
-  onCancel: () => Promise<any>;
+  onCancel: () => void;
   children?: React.ReactNode;
   title: string;
   text: string;

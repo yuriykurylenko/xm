@@ -7,7 +7,6 @@ import {
   updateClientById,
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
-import ActionDialog from "@/app/components/ActionDialog";
 
 import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
@@ -19,7 +18,6 @@ import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
-import Button from "@/app/components/Form/Button";
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
@@ -85,7 +83,6 @@ const Clients = ({ user }: { user: Coach }) => {
       show: sendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
-      DialogComponent: ActionDialog,
       DialogForm: () => (
         <>
           <PriceInput
@@ -112,7 +109,6 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faTrash,
       show: (client: Client | Client[]) => true,
       handler: handleArchiveClient,
-      DialogComponent: ActionDialog,
       dialogTitle: (selectedItem: Client) =>
         `Archive ${selectedItem.full_name}`,
       dialogTitleBulk: (selectedItems: Client[]) =>
