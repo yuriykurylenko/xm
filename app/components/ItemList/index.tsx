@@ -4,10 +4,26 @@ import Loading from "../Loading";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/ItemList/Pagination";
 import ActionDialog from "../ActionDialog";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
 type FilterOption = {
   value: string;
   name: string;
+};
+
+export type Action<T, D = any, U = any> = {
+  name: string;
+  title: string;
+  titleBulk: string;
+  icon: IconDefinition;
+  show: (item: T | T[]) => boolean;
+  handler: (item: T, data: D) => Promise<U>;
+  onComplete?: (setFilterStatus: (filterStatus: string) => void) => void;
+  DialogForm?: React.ComponentType;
+  dialogTitle: (selectedItem: T) => string;
+  dialogTitleBulk: (selectedItems: T[]) => string;
+  dialogText: (selectedItems: T) => string;
+  dialogTextBulk: (selectedItems: T[]) => string;
 };
 
 interface ItemListProps<T> {
@@ -36,7 +52,7 @@ interface ItemListProps<T> {
     sortDirection: "desc" | "asc";
     onBulkSelect: () => void;
     selectedItems: T[];
-    actions: any;
+    actions: Action<T>[];
   }>;
   CardComponent: React.ComponentType<{
     item: T;
