@@ -9,25 +9,23 @@ interface Action {
   titleBulk: string;
   icon: React.ReactNode;
   handler: (clients: Client[]) => void;
-  show: (flterStatus: string) => boolean;
+  show: (client: Client | Client[]) => boolean;
 }
 
 interface ActionsBarProps {
   actions: Action[];
   selectedClients: Client[];
-  filterStatus: string;
 }
 
 const ActionsBar: React.FC<ActionsBarProps> = ({
   actions,
   selectedClients,
-  filterStatus,
 }) => {
   return (
     <div className={styles["action-buttons-container"]}>
       {actions.map(
         (action, index) =>
-          action.show(filterStatus) && (
+          action.show(selectedClients) && (
             <span
               title={
                 selectedClients.length === 1 ? action.title : action.titleBulk

@@ -84,7 +84,12 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Send offer",
       titleBulk: "Send offers",
       icon: <FontAwesomeIcon icon={faPaperPlane} />,
-      show: (filterStatus: string) => filterStatus === "lead",
+      show: (client: Client | Client[]) => {
+        const clientStatuses = [
+          ...new Set([client].flat().map((c) => c.status)),
+        ];
+        return clientStatuses.length === 1 && clientStatuses[0] === "lead";
+      },
       handler: handleSendOfferToClient,
       onComplete: (setFilterStatus: (filterStatus: string) => void) =>
         setFilterStatus("offerSent"),
@@ -108,7 +113,7 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Archive client",
       titleBulk: "Archive clients",
       icon: <FontAwesomeIcon icon={faTrash} />,
-      show: (filterStatus: string) => true,
+      show: (client: Client | Client[]) => true,
       handler: handleArchiveClient,
       renderDialog: (
         selectedClients: Client[],

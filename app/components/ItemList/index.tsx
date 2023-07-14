@@ -35,7 +35,6 @@ interface ItemListProps<T> {
     sortDirection: "desc" | "asc";
     onBulkSelect: () => void;
     selectedItems: T[];
-    filterStatus: string;
     actions: any;
   }>;
   CardComponent: React.ComponentType<{
@@ -215,7 +214,6 @@ const ItemList = <T,>({
           onSort={handleSort}
           sortColumn={sortColumn}
           sortDirection={sortDirection}
-          filterStatus={filterStatus}
         />
       )}
       {isListLoaded ? (
