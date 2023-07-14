@@ -274,7 +274,9 @@ const ItemList = <T,>({
                     }
                     onCancel={handleCloseDialog}
                     selectedItems={selectedItems}
-                  />
+                  >
+                    {action.DialogForm && <action.DialogForm />}
+                  </action.DialogComponent>
                 )
             )}
           </>

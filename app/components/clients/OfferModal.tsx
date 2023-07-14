@@ -2,8 +2,6 @@ import * as React from "react";
 import Modal from "react-modal";
 
 import Form from "@/app/components/Form";
-import PriceInput from "@/app/components/Form/PriceInput";
-import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
 import { Client, Coach } from "@/app/types/user";
 
@@ -11,9 +9,9 @@ Modal.setAppElement("#__next");
 
 export interface OfferModalProps {
   selectedItems: Client[];
-  user: Coach;
   onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>;
   onCancel: () => Promise<any>;
+  children?: React.ReactNode;
 }
 
 interface OfferModalFormData {
@@ -22,9 +20,9 @@ interface OfferModalFormData {
 
 const OfferModal: React.FC<OfferModalProps> = ({
   selectedItems,
-  user,
   onConfirm,
   onCancel,
+  children,
 }) => {
   return (
     <Modal
@@ -62,17 +60,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
           will receive an email with the link to subscribe and pay your
           specified amount monthly.
         </p>
-        <Form<OfferModalFormData> onSubmit={onConfirm}>
-          <PriceInput
-            name="monthlyAmount"
-            placeholder="Monthly price"
-            required
-            defaultValue={user.monthly_subscription_amount / 100}
-          />
-          <Button type="submit" submittingText="Sending...">
-            Send Offer
-          </Button>
-        </Form>
+        <Form<OfferModalFormData> onSubmit={onConfirm}>{children}</Form>
       </PageContainer>
     </Modal>
   );

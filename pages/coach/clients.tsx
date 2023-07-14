@@ -23,6 +23,8 @@ import ConfirmationDialog, {
 } from "@/app/components/ConfirmationDialog";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
+import PriceInput from "@/app/components/Form/PriceInput";
+import Button from "@/app/components/Form/Button";
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
@@ -88,8 +90,19 @@ const Clients = ({ user }: { user: Coach }) => {
       show: sendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
-      DialogComponent: (props: OfferModalProps) => (
-        <OfferModal {...props} user={user} />
+      DialogComponent: (props: OfferModalProps) => <OfferModal {...props} />,
+      DialogForm: () => (
+        <>
+          <PriceInput
+            name="monthlyAmount"
+            placeholder="Monthly price"
+            required
+            defaultValue={user.monthly_subscription_amount / 100}
+          />
+          <Button type="submit" submittingText="Sending...">
+            Send Offer
+          </Button>
+        </>
       ),
     },
     {
