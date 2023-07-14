@@ -17,7 +17,6 @@ import EmptyList, { EmptyListProps } from "@/app/components/clients/EmptyList";
 import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ConfirmationDialog, {
   ConfirmationDialogProps,
@@ -85,7 +84,7 @@ const Clients = ({ user }: { user: Coach }) => {
       name: "sendOffer",
       title: "Send offer",
       titleBulk: "Send offers",
-      icon: <FontAwesomeIcon icon={faPaperPlane} />,
+      icon: faPaperPlane,
       show: sendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
@@ -97,7 +96,7 @@ const Clients = ({ user }: { user: Coach }) => {
       name: "archive",
       title: "Archive client",
       titleBulk: "Archive clients",
-      icon: <FontAwesomeIcon icon={faTrash} />,
+      icon: faTrash,
       show: (client: Client | Client[]) => true,
       handler: handleArchiveClient,
       DialogComponent: (props: ConfirmationDialogProps) => (

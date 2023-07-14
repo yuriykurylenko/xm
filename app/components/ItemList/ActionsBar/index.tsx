@@ -1,12 +1,14 @@
 import React from "react";
 import BasicButton from "@/app/components/BasicButton";
 import styles from "@/app/components/ItemList/ActionsBar/styles.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
 interface Action<T> {
   name: string;
   title: string;
   titleBulk: string;
-  icon: React.ReactNode;
+  icon: IconDefinition;
   handler: (items: T[]) => void;
   show: (item: T | T[]) => boolean;
 }
@@ -34,7 +36,7 @@ const ActionsBar = <T,>({ actions, selectedItems }: ActionsBarProps<T>) => {
                 } `}
                 onClick={() => action.handler(selectedItems)}
               >
-                {action.icon}
+                <FontAwesomeIcon icon={action.icon} />
               </BasicButton>
             </span>
           )
