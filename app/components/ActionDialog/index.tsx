@@ -50,7 +50,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
       }}
     >
       <PageContainer title={title}>
-        <p>{text}</p>
+        <p className={styles["dialog-text"]}>{text}</p>
         <Form onSubmit={onConfirm}>
           {children}
           <div className={styles["buttons-container"]}>
