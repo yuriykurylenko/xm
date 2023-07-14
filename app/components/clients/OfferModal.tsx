@@ -3,12 +3,10 @@ import Modal from "react-modal";
 
 import Form from "@/app/components/Form";
 import PageContainer from "@/app/components/PageContainer";
-import { Client, Coach } from "@/app/types/user";
 
 Modal.setAppElement("#__next");
 
 export interface OfferModalProps {
-  selectedItems: Client[];
   onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>;
   onCancel: () => Promise<any>;
   children?: React.ReactNode;
@@ -16,12 +14,7 @@ export interface OfferModalProps {
   text: string;
 }
 
-interface OfferModalFormData {
-  monthlyAmount: number | string;
-}
-
 const OfferModal: React.FC<OfferModalProps> = ({
-  selectedItems,
   onConfirm,
   onCancel,
   children,
@@ -52,7 +45,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
     >
       <PageContainer title={title}>
         <p>{text}</p>
-        <Form<OfferModalFormData> onSubmit={onConfirm}>{children}</Form>
+        <Form onSubmit={onConfirm}>{children}</Form>
       </PageContainer>
     </Modal>
   );

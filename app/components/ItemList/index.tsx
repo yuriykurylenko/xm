@@ -273,7 +273,6 @@ const ItemList = <T,>({
                       handleConfirmAction(action, data)
                     }
                     onCancel={handleCloseDialog}
-                    selectedItems={selectedItems}
                     title={
                       selectedItems.length === 1
                         ? action.dialogTitle(selectedItems[0])
