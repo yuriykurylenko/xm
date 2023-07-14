@@ -162,6 +162,11 @@ const ItemList = <T,>({
     }
   };
 
+  const handleSearch = (value: string) => {
+    setPage(1);
+    setFilterText(value);
+  };
+
   const enhancedActions = actions.map(
     (action: { name: string; handler: (item?: T | T[]) => void }) => ({
       ...action,
@@ -175,6 +180,27 @@ const ItemList = <T,>({
     })
   );
 
+  const handleCloseDialog = () => {
+    setSelectedItems([]);
+    setOpenActionDialogs([]);
+  };
+
+  const handleConfirmAction = async (action: any, data?: any) => {
+    for (const item of selectedItems) {
+      const { error } = await action.handler(item, data);
+
+      if (error) {
+        return { error };
+      }
+    }
+
+    handleCloseDialog();
+    await prepareData();
+    action.onComplete && action.onComplete(setFilterStatus);
+
+    return { error: null };
+  };
+
   return (
     <div className={styles["items-container"]}>
       <div className={styles["items-container-header"]}>
@@ -183,7 +209,7 @@ const ItemList = <T,>({
           {SearchInputComponent && (
             <SearchInputComponent
               value={filterText}
-              onChange={setFilterText}
+              onChange={handleSearch}
               placeholder={
                 filterStatus != "all"
                   ? `Search in ${
@@ -242,27 +268,8 @@ const ItemList = <T,>({
               action.renderDialog(
                 selectedItems,
                 openActionDialogs.includes(action.name),
-                () => {
-                  setSelectedItems([]);
-                  setOpenActionDialogs([]);
-                },
-                async (data?: any) => {
-                  for (const item of selectedItems) {
-                    const { error } = await action.handler(item, data);
-
-                    if (error) {
-                      return { error };
-                    }
-                  }
-
-                  setSelectedItems([]);
-                  setOpenActionDialogs([]);
-
-                  await prepareData();
-                  action.onComplete && action.onComplete(setFilterStatus);
-
-                  return { error: null };
-                }
+                handleCloseDialog,
+                (data?: any) => handleConfirmAction(action, data)
               )
             )}
           </>
