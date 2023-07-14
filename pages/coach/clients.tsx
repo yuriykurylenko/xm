@@ -118,16 +118,15 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faTrash,
       show: (client: Client | Client[]) => true,
       handler: handleArchiveClient,
-      DialogComponent: (props: ConfirmationDialogProps) => (
-        <ConfirmationDialog
-          {...props}
-          message={`Would you like to archive ${
-            props.selectedItems.length === 1
-              ? props.selectedItems[0].full_name
-              : props.selectedItems.length + " clients"
-          }?`}
-        />
-      ),
+      DialogComponent: ActionDialog,
+      dialogTitle: (selectedItem: Client) =>
+        `Archive ${selectedItem.full_name}`,
+      dialogTitleBulk: (selectedItems: Client[]) =>
+        `Archive ${selectedItems.length + " clients"}`,
+      dialogText: (selectedItem: Client) =>
+        `Are you sure you would like to archive ${selectedItem.full_name}?`,
+      dialogTextBulk: (selectedItems: Client[]) =>
+        `Are you sure you would like to archive ${selectedItems.length} clients?`,
     },
   ];
 

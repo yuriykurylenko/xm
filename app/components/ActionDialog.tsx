@@ -3,6 +3,8 @@ import Modal from "react-modal";
 
 import Form from "@/app/components/Form";
 import PageContainer from "@/app/components/PageContainer";
+import BasicButton from "./BasicButton";
+import Button from "./Form/Button";
 
 Modal.setAppElement("#__next");
 
@@ -45,7 +47,16 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
     >
       <PageContainer title={title}>
         <p>{text}</p>
-        <Form onSubmit={onConfirm}>{children}</Form>
+        <Form onSubmit={onConfirm}>
+          {children ? (
+            children
+          ) : (
+            <div>
+              <BasicButton onClick={onCancel}>Cancel</BasicButton>
+              <Button>Confirm</Button>
+            </div>
+          )}
+        </Form>
       </PageContainer>
     </Modal>
   );
