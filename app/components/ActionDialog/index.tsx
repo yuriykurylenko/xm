@@ -3,8 +3,10 @@ import Modal from "react-modal";
 
 import Form from "@/app/components/Form";
 import PageContainer from "@/app/components/PageContainer";
-import BasicButton from "./BasicButton";
-import Button from "./Form/Button";
+import BasicButton from "@/app/components/BasicButton";
+import Button from "@/app/components/Form/Button";
+
+import styles from "@/app/components/ActionDialog/styles.module.css";
 
 Modal.setAppElement("#__next");
 
@@ -14,6 +16,7 @@ export interface ActionDialogProps {
   children?: React.ReactNode;
   title: string;
   text: string;
+  actionTitle: string;
 }
 
 const ActionDialog: React.FC<ActionDialogProps> = ({
@@ -22,6 +25,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
   children,
   title,
   text,
+  actionTitle,
 }) => {
   return (
     <Modal
@@ -48,14 +52,19 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
       <PageContainer title={title}>
         <p>{text}</p>
         <Form onSubmit={onConfirm}>
-          {children ? (
-            children
-          ) : (
-            <div>
-              <BasicButton onClick={onCancel}>Cancel</BasicButton>
-              <Button>Confirm</Button>
+          {children}
+          <div className={styles["buttons-container"]}>
+            <div className={styles["button-container"]}>
+              <BasicButton className={styles["cancel-btn"]} onClick={onCancel}>
+                Cancel
+              </BasicButton>
             </div>
-          )}
+            <div className={styles["button-container"]}>
+              <Button type="submit" submittingText={actionTitle}>
+                {actionTitle}
+              </Button>
+            </div>
+          </div>
         </Form>
       </PageContainer>
     </Modal>

@@ -16,9 +16,6 @@ import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
 import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
-import ConfirmationDialog, {
-  ConfirmationDialogProps,
-} from "@/app/components/ConfirmationDialog";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
@@ -97,9 +94,6 @@ const Clients = ({ user }: { user: Coach }) => {
             required
             defaultValue={user.monthly_subscription_amount / 100}
           />
-          <Button type="submit" submittingText="Sending...">
-            Send Offer
-          </Button>
         </>
       ),
       dialogTitle: (selectedItem: Client) =>
@@ -113,8 +107,8 @@ const Clients = ({ user }: { user: Coach }) => {
     },
     {
       name: "archive",
-      title: "Archive client",
-      titleBulk: "Archive clients",
+      title: "Archive",
+      titleBulk: "Archive",
       icon: faTrash,
       show: (client: Client | Client[]) => true,
       handler: handleArchiveClient,

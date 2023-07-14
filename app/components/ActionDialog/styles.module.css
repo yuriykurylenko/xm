@@ -1,0 +1,12 @@
+.buttons-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-container {
+  width: 45%;
+}
+
+.cancel-btn {
+  background-color: #aaa;
+}
