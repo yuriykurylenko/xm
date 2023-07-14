@@ -4,7 +4,6 @@ import styles from "@/app/components/ConfirmationDialog/styles.module.css";
 import BasicButton from "../BasicButton";
 
 export type ConfirmationDialogProps = {
-  isOpen: boolean;
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
@@ -12,7 +11,6 @@ export type ConfirmationDialogProps = {
 };
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
-  isOpen,
   message,
   onConfirm,
   onCancel,
@@ -20,7 +18,7 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
 }) => {
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={true}
       onRequestClose={onCancel}
       className={styles["confirmation-dialog-container"]}
       overlayClassName={styles["confirmation-dialog-overlay"]}
