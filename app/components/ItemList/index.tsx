@@ -279,6 +279,11 @@ const ItemList = <T,>({
                         ? action.dialogTitle(selectedItems[0])
                         : action.dialogTitleBulk(selectedItems)
                     }
+                    text={
+                      selectedItems.length === 1
+                        ? action.dialogText(selectedItems[0])
+                        : action.dialogTextBulk(selectedItems)
+                    }
                   >
                     {action.DialogForm && <action.DialogForm />}
                   </action.DialogComponent>

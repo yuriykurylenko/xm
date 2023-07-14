@@ -108,6 +108,10 @@ const Clients = ({ user }: { user: Coach }) => {
         `Send offer to ${selectedItem.full_name}`,
       dialogTitleBulk: (selectedItems: Client[]) =>
         `Send offers to ${selectedItems.length + " clients"}`,
+      dialogText: (selectedItem: Client) =>
+        `${selectedItem.full_name} will receive an email with the link to subscribe and pay your specified amount monthly.`,
+      dialogTextBulk: (selectedItems: Client[]) =>
+        "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
       name: "archive",

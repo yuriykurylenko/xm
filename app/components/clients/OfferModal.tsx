@@ -13,6 +13,7 @@ export interface OfferModalProps {
   onCancel: () => Promise<any>;
   children?: React.ReactNode;
   title: string;
+  text: string;
 }
 
 interface OfferModalFormData {
@@ -25,6 +26,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
   onCancel,
   children,
   title,
+  text,
 }) => {
   return (
     <Modal
@@ -49,13 +51,7 @@ const OfferModal: React.FC<OfferModalProps> = ({
       }}
     >
       <PageContainer title={title}>
-        <p>
-          {selectedItems.length === 1
-            ? selectedItems[0].full_name
-            : "Your clients"}{" "}
-          will receive an email with the link to subscribe and pay your
-          specified amount monthly.
-        </p>
+        <p>{text}</p>
         <Form<OfferModalFormData> onSubmit={onConfirm}>{children}</Form>
       </PageContainer>
     </Modal>
