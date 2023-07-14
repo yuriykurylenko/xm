@@ -6,7 +6,7 @@ import PageContainer from "@/app/components/PageContainer";
 
 Modal.setAppElement("#__next");
 
-export interface OfferModalProps {
+export interface ActionDialogProps {
   onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>;
   onCancel: () => Promise<any>;
   children?: React.ReactNode;
@@ -14,7 +14,7 @@ export interface OfferModalProps {
   text: string;
 }
 
-const OfferModal: React.FC<OfferModalProps> = ({
+const ActionDialog: React.FC<ActionDialogProps> = ({
   onConfirm,
   onCancel,
   children,
@@ -51,4 +51,4 @@ const OfferModal: React.FC<OfferModalProps> = ({
   );
 };
 
-export default OfferModal;
+export default ActionDialog;

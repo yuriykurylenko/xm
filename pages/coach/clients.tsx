@@ -7,9 +7,7 @@ import {
   updateClientById,
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
-import OfferModal, {
-  OfferModalProps,
-} from "@/app/components/clients/OfferModal";
+import ActionDialog from "@/app/components/ActionDialog";
 
 import ItemList from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
@@ -90,7 +88,7 @@ const Clients = ({ user }: { user: Coach }) => {
       show: sendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
-      DialogComponent: (props: OfferModalProps) => <OfferModal {...props} />,
+      DialogComponent: ActionDialog,
       DialogForm: () => (
         <>
           <PriceInput
