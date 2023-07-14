@@ -55,14 +55,14 @@ const OfferModal: React.FC<OfferModalProps> = ({
             : selectedItems.length + " clients"
         }`}
       >
+        <p>
+          {selectedItems.length === 1
+            ? selectedItems[0].full_name
+            : "Your clients"}{" "}
+          will receive an email with the link to subscribe and pay your
+          specified amount monthly.
+        </p>
         <Form<OfferModalFormData> onSubmit={onConfirm}>
-          <p>
-            {selectedItems.length === 1
-              ? selectedItems[0].full_name
-              : "Your clients"}{" "}
-            will receive an email with the link to subscribe and pay your
-            specified amount monthly.
-          </p>
           <PriceInput
             name="monthlyAmount"
             placeholder="Monthly price"
