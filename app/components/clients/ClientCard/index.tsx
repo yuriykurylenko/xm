@@ -1,7 +1,7 @@
 import styles from "@/app/components/clients/ClientCard/styles.module.css";
 import { Client } from "@/app/types/user";
 import { useState } from "react";
-import ActionsBar from "@/app/components/ActionsBar";
+import ActionsBar from "@/app/components/ItemList/ActionsBar";
 
 interface ClientCardProps {
   item: Client;

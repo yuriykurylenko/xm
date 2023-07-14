@@ -1,6 +1,6 @@
 import React from "react";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/ActionsBar/styles.module.css";
+import styles from "@/app/components/ItemList/ActionsBar/styles.module.css";
 
 interface Action<T> {
   name: string;

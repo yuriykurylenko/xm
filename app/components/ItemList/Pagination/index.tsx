@@ -1,6 +1,6 @@
 import React from "react";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/Pagination/styles.module.css";
+import styles from "@/app/components/ItemList/Pagination/styles.module.css";
 
 interface PaginationProps {
   currentPage: number;

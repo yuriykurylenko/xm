@@ -2,7 +2,7 @@ import * as React from "react";
 import styles from "@/app/components/ItemList/styles.module.css";
 import Loading from "../Loading";
 import { useEffect, useState } from "react";
-import Pagination from "@/app/components/Pagination";
+import Pagination from "@/app/components/ItemList/Pagination";
 
 type FilterOption = {
   value: string;
