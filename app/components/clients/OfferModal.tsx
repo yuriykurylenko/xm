@@ -10,11 +10,10 @@ import { Client, Coach } from "@/app/types/user";
 Modal.setAppElement("#__next");
 
 export interface OfferModalProps {
-  isOpen: boolean;
-  closeModal: () => void;
   selectedItems: Client[];
   user: Coach;
   onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>;
+  onCancel: () => Promise<any>;
 }
 
 interface OfferModalFormData {
@@ -22,16 +21,15 @@ interface OfferModalFormData {
 }
 
 const OfferModal: React.FC<OfferModalProps> = ({
-  isOpen,
-  closeModal,
   selectedItems,
   user,
   onConfirm,
+  onCancel,
 }) => {
   return (
     <Modal
-      isOpen={isOpen}
-      onRequestClose={closeModal}
+      isOpen={true}
+      onRequestClose={onCancel}
       contentLabel="Send Offer Modal"
       style={{
         overlay: {
