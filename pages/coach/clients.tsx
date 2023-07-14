@@ -93,13 +93,13 @@ const Clients = ({ user }: { user: Coach }) => {
           />
         </>
       ),
-      dialogTitle: (selectedItem: Client) =>
-        `Send offer to ${selectedItem.full_name}`,
-      dialogTitleBulk: (selectedItems: Client[]) =>
-        `Send offers to ${selectedItems.length + " clients"}`,
-      dialogText: (selectedItem: Client) =>
-        `${selectedItem.full_name} will receive an email with the link to subscribe and pay your specified amount monthly.`,
-      dialogTextBulk: (selectedItems: Client[]) =>
+      dialogTitle: (selectedClient: Client) =>
+        `Send offer to ${selectedClient.full_name}`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Send offers to ${selectedClients.length + " clients"}`,
+      dialogText: (selectedClient: Client) =>
+        `${selectedClient.full_name} will receive an email with the link to subscribe and pay your specified amount monthly.`,
+      dialogTextBulk: (selectedClients: Client[]) =>
         "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
@@ -109,14 +109,14 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faTrash,
       show: (client: Client | Client[]) => true,
       handler: handleArchiveClient,
-      dialogTitle: (selectedItem: Client) =>
-        `Archive ${selectedItem.full_name}`,
-      dialogTitleBulk: (selectedItems: Client[]) =>
-        `Archive ${selectedItems.length + " clients"}`,
-      dialogText: (selectedItem: Client) =>
-        `Are you sure you would like to archive ${selectedItem.full_name}?`,
-      dialogTextBulk: (selectedItems: Client[]) =>
-        `Are you sure you would like to archive ${selectedItems.length} clients?`,
+      dialogTitle: (selectedClient: Client) =>
+        `Archive ${selectedClient.full_name}`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Archive ${selectedClients.length + " clients"}`,
+      dialogText: (selectedClient: Client) =>
+        `Are you sure you would like to archive ${selectedClient.full_name}?`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        `Are you sure you would like to archive ${selectedClients.length} clients?`,
     },
   ];
 
