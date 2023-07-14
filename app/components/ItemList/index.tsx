@@ -274,6 +274,11 @@ const ItemList = <T,>({
                     }
                     onCancel={handleCloseDialog}
                     selectedItems={selectedItems}
+                    title={
+                      selectedItems.length === 1
+                        ? action.dialogTitle(selectedItems[0])
+                        : action.dialogTitleBulk(selectedItems)
+                    }
                   >
                     {action.DialogForm && <action.DialogForm />}
                   </action.DialogComponent>

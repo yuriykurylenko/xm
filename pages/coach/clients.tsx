@@ -104,6 +104,10 @@ const Clients = ({ user }: { user: Coach }) => {
           </Button>
         </>
       ),
+      dialogTitle: (selectedItem: Client) =>
+        `Send offer to ${selectedItem.full_name}`,
+      dialogTitleBulk: (selectedItems: Client[]) =>
+        `Send offers to ${selectedItems.length + " clients"}`,
     },
     {
       name: "archive",
