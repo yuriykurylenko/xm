@@ -11,7 +11,7 @@ import styles from "@/app/components/ActionDialog/styles.module.css";
 Modal.setAppElement("#__next");
 
 export interface ActionDialogProps {
-  onConfirm: (data: { monthlyAmount: number | string }) => Promise<any>;
+  onConfirm: (data: any) => Promise<any>;
   onCancel: () => void;
   children?: React.ReactNode;
   title: string;
