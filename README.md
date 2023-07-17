@@ -23,13 +23,13 @@ The project is structured as a standard Next.js application with the addition of
 ## Setup
 
 1. Clone the repository.
-2. Install the dependencies with `npm install`.
+2. Install the dependencies with `yarn install`.
 3. Copy the `.env.example` file to `.env` and fill in your Stripe API keys and other configuration values.
-4. Run the development server with `npm run dev`.
+4. Run the development server with `yarn dev`.
 
 ## Testing
 
-Run the tests with `npm test`.
+Run the tests with `yarn test`.
 
 ## Deployment
 
