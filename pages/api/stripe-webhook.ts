@@ -62,6 +62,7 @@ export default async function handler(
         failure_message: charge?.failure_message as string | undefined,
         hosted_invoice_url: invoice.hosted_invoice_url as string,
         invoice_pdf: invoice.invoice_pdf as string,
+        receipt_url: charge.receipt_url as string,
       };
 
       await createPayment(payment);

@@ -21,4 +21,5 @@ export type Payment = {
   failure_code?: string;
   hosted_invoice_url?: string;
   invoice_pdf?: string;
+  receipt_url?: string;
 };
