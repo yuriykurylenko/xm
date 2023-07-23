@@ -1,13 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { stripe } from "@/app/utils/initStripe";
-import { buffer } from 'micro';
+import { buffer } from "micro";
+import { Payment } from "@/app/types/subscription";
+import {
+  createPayment,
+  fetchSubscriptionByStripeSubscriptionId,
+} from "@/app/utils/api";
 
 export const config = {
-    api: {
-      bodyParser: false,
-    },
-  };
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,20 +39,33 @@ export default async function handler(
       return;
     }
 
-    let payment
+    if (
+      event.type === "invoice.payment_succeeded" ||
+      event.type === "invoice.payment_failed"
+    ) {
+      const invoice = event.data.object as Stripe.Invoice;
+      const charge = await stripe.charges.retrieve(invoice.charge as string);
+      const { data: subscription } =
+        await fetchSubscriptionByStripeSubscriptionId(
+          invoice.subscription as string
+        );
 
-    switch (event.type) {
-      case "invoice.payment_succeeded":
-      case "invoice.payment_failed":
-        payment = event.data.object as Stripe.Invoice;
-        // Update your data here
-        break;
-      // Handle other event types as needed
-      default:
-        return res.status(400).end();
+      const payment: Payment = {
+        subscription_id: subscription?.id,
+        stripe_invoice_id: invoice.id,
+        stripe_payment_intent_id: invoice.payment_intent as string,
+        amount: invoice.amount_paid,
+        currency: invoice.currency,
+        status: invoice.status === "paid" ? "paid" : "failed",
+        failure_code: charge?.failure_code as string | undefined,
+        failure_message: charge?.failure_message as string | undefined,
+      };
+
+      await createPayment(payment);
+      res.json({ received: true, invoice, charge, subscription });
+    } else {
+      res.json({ received: true });
     }
-
-    res.json({ received: true, payment: payment });
   } else {
     res.setHeader("Allow", "POST");
     res.status(405).end("Method Not Allowed");
