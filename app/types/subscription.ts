@@ -12,7 +12,8 @@ export type Payment = {
   id?: UUID;
   stripe_invoice_id: string;
   subscription_id: string;
-  amount: number;
+  amount_due: number;
+  amount_paid: number;
   currency: string;
   status: string;
   stripe_payment_intent_id: string;
