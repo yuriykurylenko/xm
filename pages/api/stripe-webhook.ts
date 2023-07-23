@@ -5,8 +5,12 @@ import { buffer } from "micro";
 import { Payment } from "@/app/types/subscription";
 import {
   createPayment,
+  fetchClientById,
+  fetchCoachByClientId,
   fetchSubscriptionByStripeSubscriptionId,
 } from "@/app/utils/api";
+
+import sgMail from "@sendgrid/mail";
 
 export const config = {
   api: {
@@ -50,6 +54,13 @@ export default async function handler(
           invoice.subscription as string
         );
 
+      const { data: client, error: clientError } = await fetchClientById(
+        subscription?.client_id
+      );
+      const { data: coach, error: coachError } = await fetchCoachByClientId(
+        subscription?.client_id
+      );
+
       const payment: Payment = {
         subscription_id: subscription?.id,
         stripe_invoice_id: invoice.id,
@@ -66,6 +77,37 @@ export default async function handler(
       };
 
       await createPayment(payment);
+
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+
+      const msg = {
+        to: client?.email,
+        from: "yuriy.kurylenko@gmail.com",
+        subject: `Payment ${payment.status}`,
+        text: `Dear ${
+          client?.full_name
+        },\n\nYour recent payment for a subscription with ${
+          coach?.full_name
+        } has ${payment.status}. Please find the details below:\n\nAmount: ${
+          payment.amount_paid / 100
+        } ${payment.currency}\nInvoice: ${payment.invoice_pdf}\nReceipt: ${
+          payment.receipt_url
+        }\n\nThank you,\nYour Name`,
+        html: `<p>Dear ${
+          client?.full_name
+        },</p><p>Your recent payment for a subscription with ${
+          coach?.full_name
+        } has ${payment.status}. Please find the details below:</p><p>Amount: ${
+          payment.amount_paid / 100
+        } ${payment.currency}</p><p><a href="${
+          payment.invoice_pdf
+        }">Invoice</a></p><p><a href="${
+          payment.receipt_url
+        }">Receipt</a></p><p>Thank you,</p><p>${coach?.full_name}</p>`,
+      };
+
+      sgMail.send(msg);
+
       res.json({ received: true, invoice, charge, subscription });
     } else {
       res.json({ received: true });
