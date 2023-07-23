@@ -60,6 +60,8 @@ export default async function handler(
         status: invoice.status as string,
         failure_code: charge?.failure_code as string | undefined,
         failure_message: charge?.failure_message as string | undefined,
+        hosted_invoice_url: invoice.hosted_invoice_url as string,
+        invoice_pdf: invoice.invoice_pdf as string,
       };
 
       await createPayment(payment);

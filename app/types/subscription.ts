@@ -19,4 +19,6 @@ export type Payment = {
   stripe_payment_intent_id: string;
   failure_message?: string;
   failure_code?: string;
+  hosted_invoice_url?: string;
+  invoice_pdf?: string;
 };
