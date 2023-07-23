@@ -54,9 +54,9 @@ export default async function handler(
         subscription_id: subscription?.id,
         stripe_invoice_id: invoice.id,
         stripe_payment_intent_id: invoice.payment_intent as string,
-        amount: invoice.amount_paid,
+        amount: invoice.amount_due,
         currency: invoice.currency,
-        status: invoice.status === "paid" ? "paid" : "failed",
+        status: invoice.status as string,
         failure_code: charge?.failure_code as string | undefined,
         failure_message: charge?.failure_message as string | undefined,
       };
