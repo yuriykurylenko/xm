@@ -84,7 +84,7 @@ export default async function handler(
         to: client?.email,
         from: "yuriy.kurylenko@gmail.com",
         subject: `Payment ${payment.status}`,
-        text: `Dear ${
+        text: `Coaching subscription payment with ${coach?.full_name}\n\nDear ${
           client?.full_name
         },\n\nYour recent payment for a subscription with ${
           coach?.full_name
@@ -93,7 +93,9 @@ export default async function handler(
         } ${payment.currency}\nInvoice: ${payment.invoice_pdf}\nReceipt: ${
           payment.receipt_url
         }\n\nThank you,\n${coach?.full_name}`,
-        html: `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
+        html: `<h2>Coaching subscription payment with ${
+          coach?.full_name
+        }</h2><div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
           client?.full_name
         },</p><p>Your recent payment for a subscription with ${
           coach?.full_name
