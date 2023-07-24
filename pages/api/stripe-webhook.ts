@@ -91,12 +91,11 @@ export default async function handler(
 
       sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
-      const receiptHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.receipt_url}">Receipt</a></div>`;
-
       const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.invoice_pdf}">Invoice</a></div>`;
+      const invoiceText = `Invoice: ${payment.invoice_pdf}`;
 
-      const paymentStatus =
-        event.type === "invoice.payment_succeeded" ? "paid" : "not paid";
+      const receiptHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.receipt_url}">Receipt</a></div>`;
+      const receiptText = `Receipt: ${payment.receipt_url}`;
 
       let emailSubject;
       let emailHtml;
@@ -123,8 +122,8 @@ export default async function handler(
           coach?.full_name
         } has been paid. Please find the details below:\n\nAmount: ${
           (payment.amount_paid || payment.amount_due) / 100
-        } ${payment.currency}\nInvoice: ${payment.invoice_pdf}\nReceipt: ${
-          payment.receipt_url
+        } ${payment.currency}\n${payment.invoice_pdf ? invoiceText : ""}\n${
+          payment.receipt_url ? receiptText : ""
         }\n\nThank you,\n${coach?.full_name}`;
       } else {
         emailSubject = `${coach?.full_name} - Your subscription payment failed`;
@@ -137,8 +136,8 @@ export default async function handler(
           coach?.full_name
         }. Please find the details below:</p><p>Amount: ${
           (payment.amount_paid || payment.amount_due) / 100
-        } ${payment.currency}</p>${payment.invoice_pdf && invoiceHtml}${
-          payment.receipt_url ? receiptHtml : ""
+        } ${payment.currency}</p>${
+          payment.invoice_pdf ? invoiceHtml : ""
         }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
 
         emailText = `Invoice ${
@@ -149,9 +148,9 @@ export default async function handler(
           coach?.full_name
         }. Please find the details below:\n\nAmount: ${
           (payment.amount_paid || payment.amount_due) / 100
-        } ${payment.currency}\nInvoice: ${payment.invoice_pdf}\n\nThank you,\n${
-          coach?.full_name
-        }`;
+        } ${payment.currency}\n${
+          payment.invoice_pdf ? invoiceText : ""
+        }\n\nThank you,\n${coach?.full_name}`;
       }
 
       await sgMail.send({
