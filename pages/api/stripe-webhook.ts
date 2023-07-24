@@ -48,11 +48,12 @@ export default async function handler(
       event.type === "invoice.payment_failed"
     ) {
       const invoice = event.data.object as Stripe.Invoice;
-      const charge = await stripe.charges.retrieve(invoice.charge as string);
 
-      if (!charge) {
-        return res.json({ received: true });
+      if (!invoice.charge) {
+        res.json({ received: true });
       }
+    
+      const charge = await stripe.charges.retrieve(invoice.charge as string);
 
       const { data: subscription } =
         await fetchSubscriptionByStripeSubscriptionId(
