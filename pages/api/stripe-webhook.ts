@@ -98,38 +98,68 @@ export default async function handler(
       const paymentStatus =
         event.type === "invoice.payment_succeeded" ? "paid" : "not paid";
 
-      const successSubject = `${coach?.full_name} - Invoice ${payment.stripe_invoice_id} ${paymentStatus}`;
+      let emailSubject;
+      let emailHtml;
+      let emailText;
 
-      const successHtml = `<h2>Coaching subscription payment with ${
-        coach?.full_name
-      }</h2><div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
-        client?.full_name
-      },</p><p>Your recent invoice for a subscription with ${
-        coach?.full_name
-      } was ${paymentStatus}. Please find the details below:</p><p>Amount: ${
-        (payment.amount_paid || payment.amount_due) / 100
-      } ${payment.currency}</p>${payment.invoice_pdf && invoiceHtml}${
-        payment.receipt_url ? receiptHtml : ""
-      }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
+      if (event.type === "invoice.payment_succeeded") {
+        emailSubject = `${coach?.full_name} - Invoice ${payment.stripe_invoice_id} paid`;
 
-      const successText = `Coaching subscription payment with ${
-        coach?.full_name
-      }\n\nDear ${
-        client?.full_name
-      },\n\nYour recent payment for a subscription with ${
-        coach?.full_name
-      } has ${payment.status}. Please find the details below:\n\nAmount: ${
-        (payment.amount_paid || payment.amount_due) / 100
-      } ${payment.currency}\nInvoice: ${payment.invoice_pdf}\nReceipt: ${
-        payment.receipt_url
-      }\n\nThank you,\n${coach?.full_name}`;
+        emailHtml = `<h2>Invoice ${
+          payment.stripe_invoice_id
+        } paid</h2><div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
+          client?.full_name
+        },</p><p>Your recent invoice for a subscription with ${
+          coach?.full_name
+        } has been paid. Please find the details below:</p><p>Amount: ${
+          (payment.amount_paid || payment.amount_due) / 100
+        } ${payment.currency}</p>${payment.invoice_pdf && invoiceHtml}${
+          payment.receipt_url ? receiptHtml : ""
+        }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
+
+        emailText = `Invoice ${payment.stripe_invoice_id} paid\n\nDear ${
+          client?.full_name
+        },\n\nYour recent payment for a subscription with ${
+          coach?.full_name
+        } has been paid. Please find the details below:\n\nAmount: ${
+          (payment.amount_paid || payment.amount_due) / 100
+        } ${payment.currency}\nInvoice: ${payment.invoice_pdf}\nReceipt: ${
+          payment.receipt_url
+        }\n\nThank you,\n${coach?.full_name}`;
+      } else {
+        emailSubject = `${coach?.full_name} - Your subscription payment failed`;
+
+        emailHtml = `<h2>Invoice ${
+          payment.stripe_invoice_id
+        } - payment failed</h2><div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
+          client?.full_name
+        },</p><p>We failed to collect your payment for subscription with ${
+          coach?.full_name
+        }. Please find the details below:</p><p>Amount: ${
+          (payment.amount_paid || payment.amount_due) / 100
+        } ${payment.currency}</p>${payment.invoice_pdf && invoiceHtml}${
+          payment.receipt_url ? receiptHtml : ""
+        }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
+
+        emailText = `Invoice ${
+          payment.stripe_invoice_id
+        } - payment failed\n\nDear ${
+          client?.full_name
+        },\n\nWe failed to collect your payment for subscription with ${
+          coach?.full_name
+        }. Please find the details below:\n\nAmount: ${
+          (payment.amount_paid || payment.amount_due) / 100
+        } ${payment.currency}\nInvoice: ${payment.invoice_pdf}\n\nThank you,\n${
+          coach?.full_name
+        }`;
+      }
 
       await sgMail.send({
         to: client?.email,
         from: "yuriy.kurylenko@gmail.com",
-        subject: successSubject,
-        text: successText,
-        html: successHtml,
+        subject: emailSubject,
+        text: emailText,
+        html: emailHtml,
       });
 
       res.json({ received: true, invoice, charge, subscription });
