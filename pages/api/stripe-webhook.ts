@@ -107,9 +107,7 @@ export default async function handler(
       if (event.type === "invoice.payment_succeeded") {
         emailSubject = `${coach?.full_name} - Invoice ${payment.stripe_invoice_id} paid`;
 
-        emailHtml = `<h2>Invoice ${
-          payment.stripe_invoice_id
-        } paid</h2><div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
+        emailHtml = `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
           client?.full_name
         },</p><p>Your recent invoice for a subscription with ${
           coach?.full_name
@@ -119,7 +117,7 @@ export default async function handler(
           payment.receipt_url ? receiptHtml : ""
         }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
 
-        emailText = `Invoice ${payment.stripe_invoice_id} paid\n\nDear ${
+        emailText = `Dear ${
           client?.full_name
         },\n\nYour recent invoice for a subscription with ${
           coach?.full_name
@@ -131,21 +129,17 @@ export default async function handler(
       } else if (payment.failure_code === "authentication_required") {
         emailSubject = `${coach?.full_name} - Authentication required for your subscription payment`;
 
-        emailHtml = `<h2>Payment for invoice ${
-          payment.stripe_invoice_id
-        } - authentication required</h2><div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
+        emailHtml = `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
           client?.full_name
         },</p><p>Authentication required to collect your payment for subscription with ${
           coach?.full_name
         }.</p><p>Amount: ${(payment.amount_paid || payment.amount_due) / 100} ${
           payment.currency
-        }</p><p>Please confirm your payment below ${confirmHtml}</p><p>Thank you,</p><p>${
+        }</p>${confirmHtml}<p>Thank you,</p><p>${
           coach?.full_name
         }</p></div>`;
 
-        emailText = `Payment for invoice ${
-          payment.stripe_invoice_id
-        } - authentication required\n\nDear ${
+        emailText = `Dear ${
           client?.full_name
         },\nAuthentication required to collect your payment for subscription with ${
           coach?.full_name
@@ -157,9 +151,7 @@ export default async function handler(
       } else {
         emailSubject = `${coach?.full_name} - Your subscription payment failed`;
 
-        emailHtml = `<h2>Invoice ${
-          payment.stripe_invoice_id
-        } - payment failed</h2><div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
+        emailHtml = `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
           client?.full_name
         },</p><p>We failed to collect your payment for subscription with ${
           coach?.full_name
@@ -169,9 +161,7 @@ export default async function handler(
           payment.invoice_pdf ? invoiceHtml : ""
         }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
 
-        emailText = `Invoice ${
-          payment.stripe_invoice_id
-        } - payment failed\n\nDear ${
+        emailText = `Dear ${
           client?.full_name
         },\n\nWe failed to collect your payment for subscription with ${
           coach?.full_name
