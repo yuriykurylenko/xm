@@ -80,6 +80,10 @@ export default async function handler(
 
       sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
+      const receiptHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.receipt_url}">Receipt</a></div>`;
+
+      const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.invoice_pdf}">Receipt</a></div>`;
+
       const msg = {
         to: client?.email,
         from: "yuriy.kurylenko@gmail.com",
@@ -101,13 +105,9 @@ export default async function handler(
           coach?.full_name
         } has ${payment.status}. Please find the details below:</p><p>Amount: ${
           payment.amount_paid / 100
-        } ${
-          payment.currency
-        }</p><div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${
-          payment.invoice_pdf
-        }">Invoice</a></div><div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${
-          payment.receipt_url
-        }">Receipt</a></div><p>Thank you,</p><p>${coach?.full_name}</p></div>`,
+        } ${payment.currency}</p>${payment.invoice_pdf && invoiceHtml}${
+          payment.receipt_url && receiptHtml
+        }<p>Thank you,</p><p>${coach?.full_name}</p></div>`,
       };
 
       sgMail.send(msg);
