@@ -118,7 +118,7 @@ export default async function handler(
 
         emailText = `Invoice ${payment.stripe_invoice_id} paid\n\nDear ${
           client?.full_name
-        },\n\nYour recent payment for a subscription with ${
+        },\n\nYour recent invoice for a subscription with ${
           coach?.full_name
         } has been paid. Please find the details below:\n\nAmount: ${
           (payment.amount_paid || payment.amount_due) / 100
