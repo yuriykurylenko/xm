@@ -50,7 +50,7 @@ export default async function handler(
       const invoice = event.data.object as Stripe.Invoice;
 
       if (!invoice.charge) {
-        res.json({ received: true });
+        return res.json({ received: true });
       }
     
       const charge = await stripe.charges.retrieve(invoice.charge as string);
