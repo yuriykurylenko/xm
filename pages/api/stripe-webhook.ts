@@ -82,7 +82,7 @@ export default async function handler(
 
       const receiptHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.receipt_url}">Receipt</a></div>`;
 
-      const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.invoice_pdf}">Receipt</a></div>`;
+      const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.invoice_pdf}">Invoice</a></div>`;
 
       const msg = {
         to: client?.email,
@@ -109,6 +109,8 @@ export default async function handler(
           payment.receipt_url && receiptHtml
         }<p>Thank you,</p><p>${coach?.full_name}</p></div>`,
       };
+
+      console.log(msg)
 
       sgMail.send(msg);
 
