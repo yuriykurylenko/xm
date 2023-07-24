@@ -112,7 +112,8 @@ export default async function handler(
 
       console.log(msg)
 
-      sgMail.send(msg);
+      const mailRes = await sgMail.send(msg);
+      console.log(mailRes);
 
       res.json({ received: true, invoice, charge, subscription });
     } else {
