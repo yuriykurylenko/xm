@@ -97,6 +97,9 @@ export default async function handler(
       const receiptHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.receipt_url}">Receipt</a></div>`;
       const receiptText = `Receipt: ${payment.receipt_url}`;
 
+      const confirmHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${payment.hosted_invoice_url}">Confirm</a></div>`;
+      const confirmText = `Confirm: ${payment.hosted_invoice_url}`;
+
       let emailSubject;
       let emailHtml;
       let emailText;
@@ -125,6 +128,32 @@ export default async function handler(
         } ${payment.currency}\n${payment.invoice_pdf ? invoiceText : ""}\n${
           payment.receipt_url ? receiptText : ""
         }\n\nThank you,\n${coach?.full_name}`;
+      } else if (payment.failure_code === "authentication_required") {
+        emailSubject = `${coach?.full_name} - Authentication required for your subscription payment`;
+
+        emailHtml = `<h2>Payment for invoice ${
+          payment.stripe_invoice_id
+        } - authentication required</h2><div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
+          client?.full_name
+        },</p><p>Authentication required to collect your payment for subscription with ${
+          coach?.full_name
+        }.</p><p>Amount: ${(payment.amount_paid || payment.amount_due) / 100} ${
+          payment.currency
+        }</p><p>Please confirm your payment below ${confirmHtml}</p><p>Thank you,</p><p>${
+          coach?.full_name
+        }</p></div>`;
+
+        emailText = `Payment for invoice ${
+          payment.stripe_invoice_id
+        } - authentication required\n\nDear ${
+          client?.full_name
+        },\nAuthentication required to collect your payment for subscription with ${
+          coach?.full_name
+        }.\nAmount: ${(payment.amount_paid || payment.amount_due) / 100} ${
+          payment.currency
+        }\nPlease confirm your payment below ${confirmText}\n\nThank you,\n${
+          coach?.full_name
+        }`;
       } else {
         emailSubject = `${coach?.full_name} - Your subscription payment failed`;
 
