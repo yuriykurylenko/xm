@@ -1,0 +1,47 @@
+.skeleton {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.checkbox {
+  width: 30px;
+}
+
+.image {
+  width: 30px;
+  height: 30px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background: #ccc;
+}
+
+.content {
+  flex-grow: 1;
+  margin-left: 10px;
+}
+
+.line {
+  height: 10px;
+  background: #ccc;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.skeleton .image,
+.skeleton .line {
+  background: linear-gradient(90deg, #f0f0f0 25%, #ddd 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 5s infinite;
+}

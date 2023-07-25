@@ -1,10 +1,10 @@
 import * as React from "react";
 import styles from "@/app/components/ItemList/styles.module.css";
-import Loading from "../Loading";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/ItemList/Pagination";
 import ActionDialog from "../ActionDialog";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import ItemSkeleton from "@/app/components/ItemList/ItemSkeleton";
 
 type FilterOption = {
   value: string;
@@ -309,7 +309,15 @@ const ItemList = <T,>({
           </>
         )
       ) : (
-        <Loading />
+        <>
+          <ItemSkeleton />
+          <ItemSkeleton />
+          <ItemSkeleton />
+          <ItemSkeleton />
+          <ItemSkeleton />
+          <ItemSkeleton />
+          <ItemSkeleton />
+        </>
       )}
     </div>
   );

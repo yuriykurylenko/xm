@@ -135,9 +135,7 @@ export default async function handler(
           coach?.full_name
         }.</p><p>Amount: ${(payment.amount_paid || payment.amount_due) / 100} ${
           payment.currency
-        }</p>${confirmHtml}<p>Thank you,</p><p>${
-          coach?.full_name
-        }</p></div>`;
+        }</p>${confirmHtml}<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
 
         emailText = `Dear ${
           client?.full_name
