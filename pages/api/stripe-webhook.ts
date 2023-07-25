@@ -70,7 +70,7 @@ export default async function handler(
         subscription?.client_id
       );
 
-      const invoice: Invoice = {
+      const invoiceData: Invoice = {
         subscription_id: subscription?.id,
         stripe_invoice_id: stripeInvoice.id,
         stripe_invoice_number: stripeInvoice.number as string,
@@ -85,9 +85,12 @@ export default async function handler(
         hosted_invoice_url: stripeInvoice.hosted_invoice_url,
       };
 
-      await createInvoice(invoice);
+      // @ts-ignore
+      const { data: invoice }: { data: Invoice } = await createInvoice(
+        invoiceData
+      );
 
-      const charge: Charge = {
+      const chargeData: Charge = {
         invoice_id: invoice.id as UUID,
         stripe_charge_id: stripeCharge.id,
         amount: stripeCharge.amount,
@@ -100,7 +103,8 @@ export default async function handler(
         receipt_url: stripeCharge.receipt_url,
       };
 
-      await createCharge(charge);
+      // @ts-ignore
+      const { data: charge }: { data: Charge } = await createCharge(chargeData);
 
       sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 

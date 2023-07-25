@@ -208,22 +208,7 @@ export const createPayment = async (payment: Payment) => {
   return data;
 };
 
-export async function createInvoice(invoice: Invoice) {
-  const { data, error } = await supabase.from("invoices").insert([invoice]);
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
-
-export async function createCharge(charge: Charge) {
-  const { data, error } = await supabase.from("charges").insert([charge]);
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-}
+export const createInvoice = (invoice: Invoice) =>
+  supabase.from("invoices").insert([invoice]).select();
+export const createCharge = (charge: Charge) =>
+  supabase.from("charges").insert([charge]).select();
