@@ -209,6 +209,6 @@ export const createPayment = async (payment: Payment) => {
 };
 
 export const createInvoice = (invoice: Invoice) =>
-  supabase.from("invoices").insert([invoice]).select();
+  supabase.from("invoices").insert([invoice]).select().single();
 export const createCharge = (charge: Charge) =>
-  supabase.from("charges").insert([charge]).select();
+  supabase.from("charges").insert([charge]).select().single();
