@@ -317,6 +317,9 @@ const ItemList = <T,>({
           <ItemSkeleton />
           <ItemSkeleton />
           <ItemSkeleton />
+          <ItemSkeleton />
+          <ItemSkeleton />
+          <ItemSkeleton />
         </>
       )}
     </div>

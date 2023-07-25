@@ -1,8 +1,8 @@
 .skeleton {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 7.5px 10px;
+  border-bottom: 1px solid #eee;
 }
 
 .checkbox {
