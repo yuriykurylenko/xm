@@ -5,8 +5,18 @@
   border-bottom: 1px solid #eee;
 }
 
-.checkbox {
+.bulk {
   width: 30px;
+  height: 35px;
+}
+
+.checkbox {
+  width: 11px;
+  height: 11px;
+  margin: 4.5px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
 }
 
 .image {
