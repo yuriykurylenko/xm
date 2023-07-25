@@ -3,6 +3,7 @@ import { Client, ClientInput, Coach } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
+import { Invoice, Charge } from "@/app/types/subscription";
 
 export const fetchCoachById = (id: UUID) =>
   supabase.from("coaches").select("*").eq("id", id).single();
@@ -206,3 +207,23 @@ export const createPayment = async (payment: Payment) => {
 
   return data;
 };
+
+export async function createInvoice(invoice: Invoice) {
+  const { data, error } = await supabase.from("invoices").insert([invoice]);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
+export async function createCharge(charge: Charge) {
+  const { data, error } = await supabase.from("charges").insert([charge]);
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
