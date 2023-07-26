@@ -62,6 +62,7 @@ const SubscriptionPage = ({
           {coach?.full_name}
         </p>
         <CheckoutForm
+          coachStripePriceId={coach.stripe_price_id}
           customerEmail={client.email}
           customerFullName={client.full_name}
           subscriptionMonthlyAmount={subscription.monthly_amount}

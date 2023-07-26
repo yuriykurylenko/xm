@@ -18,6 +18,7 @@ const stripePromise = loadStripe(
 );
 
 interface CheckoutFormProps {
+  coachStripePriceId?: string;
   customerEmail: string;
   customerFullName: string;
   subscriptionMonthlyAmount: number;
@@ -31,6 +32,7 @@ const CheckoutForm = (props: JSX.IntrinsicAttributes & CheckoutFormProps) => (
 );
 
 const CheckoutFormContent = ({
+  coachStripePriceId,
   customerEmail,
   customerFullName,
   subscriptionMonthlyAmount,
@@ -47,6 +49,7 @@ const CheckoutFormContent = ({
             stripe,
             elements?.getElement(CardElement) || null,
             {
+              coach_stripe_price_id: coachStripePriceId,
               email: customerEmail,
               full_name: customerFullName,
               monthly_amount: subscriptionMonthlyAmount,
