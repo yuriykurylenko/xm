@@ -12,6 +12,7 @@ export type Coach = User & {
   slug?: string;
   monthly_subscription_amount: number;
   subscription_currency: string;
+  stripe_price_id?: string;
 };
 
 export type Client = User & {
@@ -30,4 +31,8 @@ export type ClientInput = UserInput & {
   coach_id?: UUID | string;
   status?: string;
   archived_at?: Date | string;
+};
+
+export type CoachInput = UserInput & {
+  stripe_price_id?: string;
 };

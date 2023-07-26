@@ -104,9 +104,7 @@ export default async function handler(
       };
 
       // @ts-ignore
-      const { data: charge }: { data: Charge } = await createCharge(
-        chargeData
-      );
+      const { data: charge }: { data: Charge } = await createCharge(chargeData);
 
       sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 

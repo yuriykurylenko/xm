@@ -1,3 +1,4 @@
+import { Coach } from "@/app/types/user";
 import {
   PaymentMethod,
   SetupIntent,
@@ -5,6 +6,7 @@ import {
   StripeCardElement,
   StripeError,
 } from "@stripe/stripe-js";
+import StripeApi from "stripe";
 import axios from "axios";
 
 const createStripeSetupIntent = ({ email }: { email: string }) =>
@@ -138,4 +140,35 @@ export const handleStripeCardAndSubscriptionSetup = async (
   }
 
   return { data: null, error };
+};
+
+export const createStripeProductAndPriceForCoach = async (
+  stripe: StripeApi,
+  coach: Coach
+) => {
+  const { data: product } = await createStripeProductForCoach(stripe, coach);
+  return await createStripePriceForProduct(stripe, product);
+};
+
+const createStripeProductForCoach = async (stripe: StripeApi, coach: Coach) => {
+  const product = await stripe.products.create({
+    name: `${coach.slug}_monthly_subscription`,
+    type: "service",
+  });
+
+  return { data: product };
+};
+
+const createStripePriceForProduct = async (
+  stripe: StripeApi,
+  product: { id: string }
+) => {
+  const price = await stripe.prices.create({
+    unit_amount: 100,
+    currency: "USD",
+    recurring: { interval: "month" },
+    product: product.id,
+  });
+
+  return { data: price };
 };

@@ -82,6 +82,20 @@ export default function useAuth() {
         return { data: null, error: insertError };
       }
 
+      const response = await fetch("/api/coach_product", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ coach_id: profile[0]?.id }),
+      });
+
+      if (!response.ok) {
+        const { error: createStripePriceError } = await response.json();
+        setError(createStripePriceError);
+        return { data: null, error: createStripePriceError };
+      }
+
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,

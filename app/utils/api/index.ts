@@ -1,5 +1,5 @@
 import { Payment, Subscription } from "@/app/types/subscription";
-import { Client, ClientInput, Coach } from "@/app/types/user";
+import { Client, ClientInput, Coach, CoachInput } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
@@ -129,6 +129,9 @@ const createClientSubscription = (
 
 export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
   supabase.from("clients").update(data).eq("id", clientId).select();
+
+export const updateCoachById = (coachId: UUID | string, data: CoachInput) =>
+  supabase.from("coaches").update(data).eq("id", coachId).select();
 
 const sendClientPaymentLink = ({
   subscription,
