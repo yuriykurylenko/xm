@@ -58,17 +58,14 @@ const createAndConfirmStripeSubscription = async (
   stripe: Stripe | null,
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,
-  {
-    monthly_amount,
-    coach_stripe_price_id,
-  }: { monthly_amount: number; coach_stripe_price_id?: string }
+  { stripe_price_id }: { stripe_price_id?: string }
 ) => {
   try {
     const { data: stripeSubscription } = await createStripeSubscription({
       customerId,
       paymentMethodId,
       quantity: 1,
-      priceId: coach_stripe_price_id,
+      priceId: stripe_price_id,
     });
 
     const paymentIntent = stripeSubscription.latest_invoice.payment_intent;
@@ -109,15 +106,13 @@ export const handleStripeCardAndSubscriptionSetup = async (
   stripe: Stripe | null,
   StripeCardElementInstance: StripeCardElement | null,
   {
-    coach_stripe_price_id,
+    stripe_price_id,
     email,
     full_name,
-    monthly_amount,
   }: {
-    coach_stripe_price_id?: string;
+    stripe_price_id?: string;
     email: string;
     full_name: string;
-    monthly_amount: number;
   }
 ) => {
   const {
@@ -145,7 +140,7 @@ export const handleStripeCardAndSubscriptionSetup = async (
         stripe,
         customer_id,
         setupIntentData.payment_method,
-        { monthly_amount, coach_stripe_price_id }
+        { stripe_price_id }
       );
 
     return { data: subscriptionData, error };

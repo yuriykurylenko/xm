@@ -21,7 +21,6 @@ interface CheckoutFormProps {
   stripePriceId?: string;
   customerEmail: string;
   customerFullName: string;
-  subscriptionMonthlyAmount: number;
   onSubscriptionSuccess: (stripeSubscritionId: string) => void;
 }
 
@@ -35,7 +34,6 @@ const CheckoutFormContent = ({
   stripePriceId,
   customerEmail,
   customerFullName,
-  subscriptionMonthlyAmount,
   onSubscriptionSuccess,
 }: CheckoutFormProps) => {
   const stripe = useStripe();
@@ -49,10 +47,9 @@ const CheckoutFormContent = ({
             stripe,
             elements?.getElement(CardElement) || null,
             {
-              coach_stripe_price_id: stripePriceId,
+              stripe_price_id: stripePriceId,
               email: customerEmail,
               full_name: customerFullName,
-              monthly_amount: subscriptionMonthlyAmount,
             }
           );
 
