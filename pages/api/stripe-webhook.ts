@@ -75,9 +75,6 @@ export default async function handler(
       const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeInvoice.invoice_pdf}">Invoice</a></div>`;
       const invoiceText = `Invoice: ${stripeInvoice.invoice_pdf}`;
 
-      const receiptHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeCharge.receipt_url}">Receipt</a></div>`;
-      const receiptText = `Receipt: ${stripeCharge.receipt_url}`;
-
       const confirmHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeInvoice.hosted_invoice_url}">Confirm</a></div>`;
       const confirmText = `Confirm: ${stripeInvoice.hosted_invoice_url}`;
 
@@ -86,31 +83,19 @@ export default async function handler(
       let emailText;
 
       if (event.type === "invoice.payment_succeeded") {
-        emailSubject = `${coach?.full_name} - Invoice ${stripeInvoice.number} paid`;
-
-        emailHtml = `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
-          client?.full_name
-        },</p><p>Your recent invoice for a subscription with ${
-          coach?.full_name
-        } has been paid. Please find the details below:</p><p>Amount: ${
-          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
-        } ${stripeInvoice.currency}</p>${
-          stripeInvoice.invoice_pdf && invoiceHtml
-        }${stripeCharge.receipt_url ? receiptHtml : ""}<p>Thank you,</p><p>${
-          coach?.full_name
-        }</p></div>`;
-
-        emailText = `Dear ${
-          client?.full_name
-        },\n\nYour recent invoice for a subscription with ${
-          coach?.full_name
-        } has been paid. Please find the details below:\n\nAmount: ${
-          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
-        } ${stripeInvoice.currency}\n${
-          stripeInvoice.invoice_pdf ? invoiceText : ""
-        }\n${stripeCharge.receipt_url ? receiptText : ""}\n\nThank you,\n${
-          coach?.full_name
-        }`;
+        sgMail.send({
+          to: client?.email,
+          from: "yuriy.kurylenko@gmail.com",
+          templateId: "d-fee4c2f687e54d9e97b5068673742efd",
+          dynamicTemplateData: {
+            client_name: client?.full_name,
+            coach_name: coach?.full_name,
+            invoice_number: stripeInvoice.number,
+            amount:
+              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+            currency: stripeInvoice.currency.toUpperCase(),
+          },
+        });
       } else if (stripeCharge.failure_code === "authentication_required") {
         emailSubject = `${coach?.full_name} - Authentication required for your subscription payment`;
 
@@ -135,6 +120,14 @@ export default async function handler(
         }\nPlease confirm your payment below ${confirmText}\n\nThank you,\n${
           coach?.full_name
         }`;
+
+        await sgMail.send({
+          to: client?.email,
+          from: "yuriy.kurylenko@gmail.com",
+          subject: emailSubject,
+          text: emailText,
+          html: emailHtml,
+        });
       } else {
         emailSubject = `${coach?.full_name} - Your subscription payment failed`;
 
@@ -157,15 +150,15 @@ export default async function handler(
         } ${stripeInvoice.currency}\n${
           stripeInvoice.invoice_pdf ? invoiceText : ""
         }\n\nThank you,\n${coach?.full_name}`;
-      }
 
-      await sgMail.send({
-        to: client?.email,
-        from: "yuriy.kurylenko@gmail.com",
-        subject: emailSubject,
-        text: emailText,
-        html: emailHtml,
-      });
+        await sgMail.send({
+          to: client?.email,
+          from: "yuriy.kurylenko@gmail.com",
+          subject: emailSubject,
+          text: emailText,
+          html: emailHtml,
+        });
+      }
 
       res.json({ received: true });
     } else {
