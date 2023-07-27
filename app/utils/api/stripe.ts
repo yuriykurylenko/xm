@@ -159,7 +159,8 @@ export const createStripeProductAndPriceForCoach = async (
   coach: Coach
 ) => {
   const { data: product } = await createStripeProductForCoach(stripe, coach);
-  return await createStripePriceForProduct(stripe, product);
+  const { data: price } = await createStripePriceForProduct(stripe, product);
+  return { data: { price, product } };
 };
 
 const createStripeProductForCoach = async (stripe: StripeApi, coach: Coach) => {

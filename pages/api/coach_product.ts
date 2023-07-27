@@ -24,13 +24,13 @@ export default async function handler(
       return res.status(404).json({ error: "Coach not found" });
     }
 
-    const { data: price } = await createStripeProductAndPriceForCoach(
-      stripe,
-      coach as Coach
-    );
+    const {
+      data: { price, product },
+    } = await createStripeProductAndPriceForCoach(stripe, coach as Coach);
 
     const { error: updateError } = await updateCoachById(coach_id, {
       stripe_price_id: price.id,
+      stripe_product_id: product.id,
     });
 
     if (updateError) {
