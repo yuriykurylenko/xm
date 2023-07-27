@@ -75,9 +75,6 @@ export default async function handler(
       const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeInvoice.invoice_pdf}">Invoice</a></div>`;
       const invoiceText = `Invoice: ${stripeInvoice.invoice_pdf}`;
 
-      const confirmHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeInvoice.hosted_invoice_url}">Confirm</a></div>`;
-      const confirmText = `Confirm: ${stripeInvoice.hosted_invoice_url}`;
-
       let emailSubject;
       let emailHtml;
       let emailText;
@@ -94,39 +91,23 @@ export default async function handler(
             amount:
               (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
             currency: stripeInvoice.currency.toUpperCase(),
+            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
           },
         });
       } else if (stripeCharge.failure_code === "authentication_required") {
-        emailSubject = `${coach?.full_name} - Authentication required for your subscription payment`;
-
-        emailHtml = `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
-          client?.full_name
-        },</p><p>Authentication required to collect your payment for subscription with ${
-          coach?.full_name
-        }.</p><p>Amount: ${
-          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
-        } ${stripeInvoice.currency}</p>${confirmHtml}<p>Thank you,</p><p>${
-          coach?.full_name
-        }</p></div>`;
-
-        emailText = `Dear ${
-          client?.full_name
-        },\nAuthentication required to collect your payment for subscription with ${
-          coach?.full_name
-        }.\nAmount: ${
-          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
-        } ${
-          stripeInvoice.currency
-        }\nPlease confirm your payment below ${confirmText}\n\nThank you,\n${
-          coach?.full_name
-        }`;
-
-        await sgMail.send({
+        sgMail.send({
           to: client?.email,
           from: "yuriy.kurylenko@gmail.com",
-          subject: emailSubject,
-          text: emailText,
-          html: emailHtml,
+          templateId: "d-f467666dc085418ba8904d165d5f5a2b",
+          dynamicTemplateData: {
+            client_name: client?.full_name,
+            coach_name: coach?.full_name,
+            invoice_number: stripeInvoice.number,
+            amount:
+              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+            currency: stripeInvoice.currency.toUpperCase(),
+            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+          },
         });
       } else {
         emailSubject = `${coach?.full_name} - Your subscription payment failed`;
