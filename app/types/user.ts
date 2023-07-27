@@ -34,6 +34,5 @@ export type ClientInput = UserInput & {
 };
 
 export type CoachInput = UserInput & {
-  stripe_price_id?: string;
   stripe_product_id?: string;
 };

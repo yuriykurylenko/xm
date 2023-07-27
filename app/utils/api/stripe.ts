@@ -149,20 +149,6 @@ export const handleStripeCardAndSubscriptionSetup = async (
   return { data: null, error };
 };
 
-export const createStripeProductAndPriceForCoach = async (
-  stripe: StripeApi,
-  coach: Coach
-) => {
-  const { data: product } = await createStripeProductForCoach(stripe, coach);
-  const { data: price } = await createStripePriceForProduct(stripe, {
-    product: product.id,
-    unit_amount: coach.monthly_subscription_amount,
-    currency: coach.subscription_currency,
-    interval: "month",
-  });
-  return { data: { price, product } };
-};
-
 export const createStripeProductForCoach = async (
   stripe: StripeApi,
   coach: Coach
