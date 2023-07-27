@@ -67,7 +67,7 @@ const createAndConfirmStripeSubscription = async (
     const { data: stripeSubscription } = await createStripeSubscription({
       customerId,
       paymentMethodId,
-      quantity: monthly_amount / 100,
+      quantity: 1,
       priceId: coach_stripe_price_id,
     });
 
@@ -159,7 +159,12 @@ export const createStripeProductAndPriceForCoach = async (
   coach: Coach
 ) => {
   const { data: product } = await createStripeProductForCoach(stripe, coach);
-  const { data: price } = await createStripePriceForProduct(stripe, product);
+  const { data: price } = await createStripePriceForProduct(stripe, {
+    product: product.id,
+    unit_amount: coach.monthly_subscription_amount,
+    currency: coach.subscription_currency,
+    interval: "month",
+  });
   return { data: { price, product } };
 };
 
@@ -174,14 +179,61 @@ const createStripeProductForCoach = async (stripe: StripeApi, coach: Coach) => {
 
 const createStripePriceForProduct = async (
   stripe: StripeApi,
-  product: { id: string }
+  {
+    product,
+    unit_amount,
+    interval,
+    currency,
+  }: {
+    product: string;
+    interval: StripeApi.PriceCreateParams.Recurring.Interval;
+    unit_amount: number;
+    currency: string;
+  }
 ) => {
   const price = await stripe.prices.create({
-    unit_amount: 100,
-    currency: "USD",
-    recurring: { interval: "month" },
-    product: product.id,
+    product,
+    unit_amount,
+    currency,
+    recurring: { interval: interval },
   });
 
   return { data: price };
+};
+
+export const findOrCreateStripePrice = async (
+  stripe: StripeApi,
+  {
+    product,
+    interval,
+    unit_amount,
+    currency,
+  }: {
+    product: string;
+    interval: StripeApi.PriceCreateParams.Recurring.Interval;
+    unit_amount: number;
+    currency: string;
+  }
+) => {
+  const prices = await stripe.prices.list({
+    product,
+  });
+
+  const existingPrice = prices.data.find(
+    (price) =>
+      price.recurring?.interval === interval &&
+      price.unit_amount === unit_amount &&
+      price.currency.toLowerCase() === currency.toLowerCase()
+  );
+
+  if (!existingPrice) {
+    const { data: price } = await createStripePriceForProduct(stripe, {
+      product,
+      unit_amount,
+      interval,
+      currency,
+    });
+    return price;
+  }
+  return existingPrice;
 };

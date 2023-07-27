@@ -6,6 +6,7 @@ export type Subscription = {
   stripe_subscription_id: string;
   monthly_amount: number;
   currency: string;
+  stripe_price_id?: string;
 };
 
 export type Invoice = {

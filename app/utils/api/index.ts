@@ -106,26 +106,37 @@ export const createCoach = ({
     })
     .select();
 
-const createClientSubscription = (
+const createClientSubscription = async (
   clientId: UUID,
   {
+    productId,
     monthlyAmount,
     currency,
   }: {
+    productId: string;
     monthlyAmount: number;
     currency: string;
   }
-) =>
-  supabase
+) => {
+  const { data: price } = await axios.post("/api/find_or_create_price", {
+    product: productId,
+    interval: "month",
+    unit_amount: monthlyAmount,
+    currency,
+  });
+
+  return await supabase
     .from("subscriptions")
     .insert([
       {
         client_id: clientId,
         monthly_amount: monthlyAmount,
         currency,
+        stripe_price_id: price.id,
       },
     ])
     .select();
+};
 
 export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
   supabase.from("clients").update(data).eq("id", clientId).select();
@@ -155,7 +166,14 @@ export const sendClientOffer = async (
     currency: string;
   }
 ) => {
+  const { data: coach } = await fetchCoachByClientId(clientId);
+
+  if (!coach) {
+    return { data: null, error: "Coach not found" };
+  }
+
   const { data, error } = await createClientSubscription(clientId, {
+    productId: coach?.stripe_product_id,
     monthlyAmount,
     currency,
   });
