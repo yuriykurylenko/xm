@@ -63,83 +63,31 @@ export default async function handler(
           stripeInvoice.subscription as string
         );
 
-      const { data: client, error: clientError } = await fetchClientById(
-        subscription?.client_id
-      );
-      const { data: coach, error: coachError } = await fetchCoachByClientId(
+      const { data: client } = await fetchClientById(subscription?.client_id);
+      const { data: coach } = await fetchCoachByClientId(
         subscription?.client_id
       );
 
       sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
-      const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeInvoice.invoice_pdf}">Invoice</a></div>`;
-      const invoiceText = `Invoice: ${stripeInvoice.invoice_pdf}`;
-
-      let emailSubject;
-      let emailHtml;
-      let emailText;
-
-      if (event.type === "invoice.payment_succeeded") {
-        sgMail.send({
-          to: client?.email,
-          from: "yuriy.kurylenko@gmail.com",
-          templateId: "d-fee4c2f687e54d9e97b5068673742efd",
-          dynamicTemplateData: {
-            client_name: client?.full_name,
-            coach_name: coach?.full_name,
-            invoice_number: stripeInvoice.number,
-            amount:
-              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-            currency: stripeInvoice.currency.toUpperCase(),
-            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-          },
-        });
-      } else if (stripeCharge.failure_code === "authentication_required") {
-        sgMail.send({
-          to: client?.email,
-          from: "yuriy.kurylenko@gmail.com",
-          templateId: "d-f467666dc085418ba8904d165d5f5a2b",
-          dynamicTemplateData: {
-            client_name: client?.full_name,
-            coach_name: coach?.full_name,
-            invoice_number: stripeInvoice.number,
-            amount:
-              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-            currency: stripeInvoice.currency.toUpperCase(),
-            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-          },
-        });
-      } else {
-        emailSubject = `${coach?.full_name} - Your subscription payment failed`;
-
-        emailHtml = `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
-          client?.full_name
-        },</p><p>We failed to collect your payment for subscription with ${
-          coach?.full_name
-        }. Please find the details below:</p><p>Amount: ${
-          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
-        } ${stripeInvoice.currency}</p>${
-          stripeInvoice.invoice_pdf ? invoiceHtml : ""
-        }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
-
-        emailText = `Dear ${
-          client?.full_name
-        },\n\nWe failed to collect your payment for subscription with ${
-          coach?.full_name
-        }. Please find the details below:\n\nAmount: ${
-          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
-        } ${stripeInvoice.currency}\n${
-          stripeInvoice.invoice_pdf ? invoiceText : ""
-        }\n\nThank you,\n${coach?.full_name}`;
-
-        await sgMail.send({
-          to: client?.email,
-          from: "yuriy.kurylenko@gmail.com",
-          subject: emailSubject,
-          text: emailText,
-          html: emailHtml,
-        });
-      }
+      await sgMail.send({
+        to: client?.email,
+        from: "yuriy.kurylenko@gmail.com",
+        templateId:
+          event.type === "invoice.payment_succeeded"
+            ? "d-fee4c2f687e54d9e97b5068673742efd"
+            : stripeCharge.failure_code === "authentication_required"
+            ? "d-f467666dc085418ba8904d165d5f5a2b"
+            : "d-5e885ef0588e46b8b976eeaece239819",
+        dynamicTemplateData: {
+          client_name: client?.full_name,
+          coach_name: coach?.full_name,
+          invoice_number: stripeInvoice.number,
+          amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+          currency: stripeInvoice.currency.toUpperCase(),
+          hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+        },
+      });
 
       res.json({ received: true });
     } else {
