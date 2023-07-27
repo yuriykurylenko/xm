@@ -1,7 +1,7 @@
 import { stripe } from "@/app/utils/initStripe";
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { createStripeProductAndPriceForCoach } from "@/app/utils/api/stripe";
+import { createStripeProductForCoach } from "@/app/utils/api/stripe";
 import { fetchCoachById, updateCoachById } from "@/app/utils/api";
 import { Coach } from "@/app/types/user";
 
@@ -24,12 +24,12 @@ export default async function handler(
       return res.status(404).json({ error: "Coach not found" });
     }
 
-    const {
-      data: { price, product },
-    } = await createStripeProductAndPriceForCoach(stripe, coach as Coach);
+    const { data: product } = await createStripeProductForCoach(
+      stripe,
+      coach as Coach
+    );
 
     const { error: updateError } = await updateCoachById(coach_id, {
-      stripe_price_id: price.id,
       stripe_product_id: product.id,
     });
 
