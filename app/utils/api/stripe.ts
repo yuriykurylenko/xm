@@ -164,7 +164,7 @@ export const createStripeProductAndPriceForCoach = async (
 
 const createStripeProductForCoach = async (stripe: StripeApi, coach: Coach) => {
   const product = await stripe.products.create({
-    name: `${coach.slug}_monthly_subscription`,
+    name: `${coach.full_name} - coaching subscription`,
     type: "service",
   });
 
