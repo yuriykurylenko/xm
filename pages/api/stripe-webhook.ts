@@ -70,96 +70,68 @@ export default async function handler(
         subscription?.client_id
       );
 
-      const invoiceData: Invoice = {
-        subscription_id: subscription?.id,
-        stripe_invoice_id: stripeInvoice.id,
-        stripe_invoice_number: stripeInvoice.number as string,
-        amount_due: stripeInvoice.amount_due,
-        amount_paid: stripeInvoice.amount_paid,
-        currency: stripeInvoice.currency,
-        due_date: stripeInvoice.due_date
-          ? new Date(stripeInvoice.due_date * 1000)
-          : null,
-        last_charge_attempted_at: new Date(),
-        invoice_pdf: stripeInvoice.invoice_pdf,
-        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-      };
-
-      // @ts-ignore
-      const { data: invoice }: { data: Invoice } = await createInvoice(
-        invoiceData
-      );
-
-      const chargeData: Charge = {
-        invoice_id: invoice.id as UUID,
-        stripe_charge_id: stripeCharge.id,
-        amount: stripeCharge.amount,
-        amount_captured: stripeCharge.amount_captured,
-        amount_refunded: stripeCharge.amount_refunded,
-        currency: stripeCharge.currency,
-        failure_code: stripeCharge.failure_code,
-        failure_message: stripeCharge.failure_message,
-        status: stripeCharge.status,
-        receipt_url: stripeCharge.receipt_url,
-      };
-
-      // @ts-ignore
-      const { data: charge }: { data: Charge } = await createCharge(chargeData);
-
       sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
-      const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${invoice.invoice_pdf}">Invoice</a></div>`;
-      const invoiceText = `Invoice: ${invoice.invoice_pdf}`;
+      const invoiceHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeInvoice.invoice_pdf}">Invoice</a></div>`;
+      const invoiceText = `Invoice: ${stripeInvoice.invoice_pdf}`;
 
-      const receiptHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${charge.receipt_url}">Receipt</a></div>`;
-      const receiptText = `Receipt: ${charge.receipt_url}`;
+      const receiptHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeCharge.receipt_url}">Receipt</a></div>`;
+      const receiptText = `Receipt: ${stripeCharge.receipt_url}`;
 
-      const confirmHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${invoice.hosted_invoice_url}">Confirm</a></div>`;
-      const confirmText = `Confirm: ${invoice.hosted_invoice_url}`;
+      const confirmHtml = `<div style="margin: 20px 0;"><a style="display: inline-block; width: 100%; padding: 10px 0; background-color: #7c9efc; color: #FFFFFF; text-align: center; text-decoration: none; font-size: 14px; border-radius: 5px;" href="${stripeInvoice.hosted_invoice_url}">Confirm</a></div>`;
+      const confirmText = `Confirm: ${stripeInvoice.hosted_invoice_url}`;
 
       let emailSubject;
       let emailHtml;
       let emailText;
 
       if (event.type === "invoice.payment_succeeded") {
-        emailSubject = `${coach?.full_name} - Invoice ${invoice.stripe_invoice_number} paid`;
+        emailSubject = `${coach?.full_name} - Invoice ${stripeInvoice.number} paid`;
 
         emailHtml = `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
           client?.full_name
         },</p><p>Your recent invoice for a subscription with ${
           coach?.full_name
         } has been paid. Please find the details below:</p><p>Amount: ${
-          (invoice.amount_paid || invoice.amount_due) / 100
-        } ${invoice.currency}</p>${invoice.invoice_pdf && invoiceHtml}${
-          charge.receipt_url ? receiptHtml : ""
-        }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
+          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
+        } ${stripeInvoice.currency}</p>${
+          stripeInvoice.invoice_pdf && invoiceHtml
+        }${stripeCharge.receipt_url ? receiptHtml : ""}<p>Thank you,</p><p>${
+          coach?.full_name
+        }</p></div>`;
 
         emailText = `Dear ${
           client?.full_name
         },\n\nYour recent invoice for a subscription with ${
           coach?.full_name
         } has been paid. Please find the details below:\n\nAmount: ${
-          (invoice.amount_paid || invoice.amount_due) / 100
-        } ${invoice.currency}\n${invoice.invoice_pdf ? invoiceText : ""}\n${
-          charge.receipt_url ? receiptText : ""
-        }\n\nThank you,\n${coach?.full_name}`;
-      } else if (charge.failure_code === "authentication_required") {
+          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
+        } ${stripeInvoice.currency}\n${
+          stripeInvoice.invoice_pdf ? invoiceText : ""
+        }\n${stripeCharge.receipt_url ? receiptText : ""}\n\nThank you,\n${
+          coach?.full_name
+        }`;
+      } else if (stripeCharge.failure_code === "authentication_required") {
         emailSubject = `${coach?.full_name} - Authentication required for your subscription payment`;
 
         emailHtml = `<div border-radius: 10px; style="margin: 0 auto; max-width: 400px; background-color: #f1f1f1; padding: 20px; font-family: Arial, sans-serif;"><p>Dear ${
           client?.full_name
         },</p><p>Authentication required to collect your payment for subscription with ${
           coach?.full_name
-        }.</p><p>Amount: ${(invoice.amount_paid || invoice.amount_due) / 100} ${
-          invoice.currency
-        }</p>${confirmHtml}<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
+        }.</p><p>Amount: ${
+          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
+        } ${stripeInvoice.currency}</p>${confirmHtml}<p>Thank you,</p><p>${
+          coach?.full_name
+        }</p></div>`;
 
         emailText = `Dear ${
           client?.full_name
         },\nAuthentication required to collect your payment for subscription with ${
           coach?.full_name
-        }.\nAmount: ${(invoice.amount_paid || invoice.amount_due) / 100} ${
-          invoice.currency
+        }.\nAmount: ${
+          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
+        } ${
+          stripeInvoice.currency
         }\nPlease confirm your payment below ${confirmText}\n\nThank you,\n${
           coach?.full_name
         }`;
@@ -171,9 +143,9 @@ export default async function handler(
         },</p><p>We failed to collect your payment for subscription with ${
           coach?.full_name
         }. Please find the details below:</p><p>Amount: ${
-          (invoice.amount_paid || invoice.amount_due) / 100
-        } ${invoice.currency}</p>${
-          invoice.invoice_pdf ? invoiceHtml : ""
+          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
+        } ${stripeInvoice.currency}</p>${
+          stripeInvoice.invoice_pdf ? invoiceHtml : ""
         }<p>Thank you,</p><p>${coach?.full_name}</p></div>`;
 
         emailText = `Dear ${
@@ -181,9 +153,9 @@ export default async function handler(
         },\n\nWe failed to collect your payment for subscription with ${
           coach?.full_name
         }. Please find the details below:\n\nAmount: ${
-          (invoice.amount_paid || invoice.amount_due) / 100
-        } ${invoice.currency}\n${
-          invoice.invoice_pdf ? invoiceText : ""
+          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
+        } ${stripeInvoice.currency}\n${
+          stripeInvoice.invoice_pdf ? invoiceText : ""
         }\n\nThank you,\n${coach?.full_name}`;
       }
 
@@ -195,7 +167,7 @@ export default async function handler(
         html: emailHtml,
       });
 
-      res.json({ received: true, invoice, charge, subscription });
+      res.json({ received: true });
     } else {
       res.json({ received: true });
     }
