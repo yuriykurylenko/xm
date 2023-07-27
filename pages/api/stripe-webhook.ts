@@ -2,16 +2,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { stripe } from "@/app/utils/initStripe";
 import { buffer } from "micro";
-import { Invoice, Charge } from "@/app/types/subscription";
 import {
-  createInvoice,
-  createCharge,
   fetchSubscriptionByStripeSubscriptionId,
   fetchClientById,
   fetchCoachByClientId,
 } from "@/app/utils/api";
 import sgMail from "@sendgrid/mail";
-import { UUID } from "crypto";
 
 export const config = {
   api: {

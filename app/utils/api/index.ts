@@ -1,9 +1,8 @@
-import { Payment, Subscription } from "@/app/types/subscription";
+import { Subscription } from "@/app/types/subscription";
 import { Client, ClientInput, Coach, CoachInput } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
-import { Invoice, Charge } from "@/app/types/subscription";
 
 export const fetchCoachById = (id: UUID) =>
   supabase.from("coaches").select("*").eq("id", id).single();
@@ -218,18 +217,3 @@ export const activateClient = async (
   }
   await updateClientById(subscription.client_id, { status: "client" });
 };
-
-export const createPayment = async (payment: Payment) => {
-  const { data, error } = await supabase.from("payments").insert([payment]);
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
-};
-
-export const createInvoice = (invoice: Invoice) =>
-  supabase.from("invoices").insert([invoice]).select().single();
-export const createCharge = (charge: Charge) =>
-  supabase.from("charges").insert([charge]).select().single();
