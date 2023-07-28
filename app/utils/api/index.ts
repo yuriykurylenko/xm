@@ -153,10 +153,10 @@ export const updateClientSubscriptionByStripeSubscriptionId = (
     .eq("stripe_subscription_id", stripeSubscriptionId)
     .select();
 
-export const updateClientById = (clientId: UUID, data: ClientInput) =>
+export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
   supabase.from("clients").update(data).eq("id", clientId).select();
 
-export const updateCoachById = (coachId: UUID, data: CoachInput) =>
+export const updateCoachById = (coachId: UUID | string, data: CoachInput) =>
   supabase.from("coaches").update(data).eq("id", coachId).select();
 
 const sendClientPaymentLink = ({
