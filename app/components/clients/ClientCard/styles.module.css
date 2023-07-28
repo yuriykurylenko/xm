@@ -90,3 +90,34 @@
 .button-container button {
   margin-right: 0.5rem;
 }
+
+.payment-label {
+  width: fit-content;
+  padding: 5px 10px;
+  height: fit-content;
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.payment-label-active {
+  background-color: #56d779;
+  color: #fff;
+}
+
+.payment-label-incomplete {
+  background-color: #d7d156;
+  color: #fff;
+}
+
+.payment-label-pending {
+  background-color: #aaa;
+  color: #fff;
+}
+
+.payment-label-overdue {
+  background-color: #aaa;
+  color: #fff;
+}

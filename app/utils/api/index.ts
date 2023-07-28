@@ -34,9 +34,10 @@ export const fetchClientsByCoachId = async (
 
   let query = supabase
     .from("clients")
-    .select("*")
+    .select("*, subscriptions (status, updated_at)")
     .eq("coach_id", coachId)
     .is("archived_at", null);
+
   let totalQuery = supabase
     .from("clients")
     .select("id", { count: "exact" })
@@ -59,6 +60,17 @@ export const fetchClientsByCoachId = async (
 
   const response = await query.range(offset, offset + itemsPerPage - 1);
   const total = await totalQuery;
+
+  if (response.data) {
+    response.data = response.data.map((client) => ({
+      ...client,
+      subscription: client.subscriptions.sort(
+        (s1: Subscription, s2: Subscription) =>
+          new Date(s2.updated_at as Date).getTime() -
+          new Date(s1.updated_at as Date).getTime()
+      )[0],
+    }));
+  }
 
   return { ...response, total: total.count };
 };

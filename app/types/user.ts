@@ -1,4 +1,5 @@
 import { UUID } from "crypto";
+import { Subscription } from "@/app/types/subscription";
 
 export type User = {
   id?: UUID | string;
@@ -19,6 +20,7 @@ export type Client = User & {
   coach_id: UUID | string;
   status?: string;
   archived_at?: Date | string;
+  subscription?: Subscription;
 };
 
 export type UserInput = {

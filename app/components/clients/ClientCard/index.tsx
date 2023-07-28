@@ -51,13 +51,15 @@ const ClientCard: React.FC<ClientCardProps> = ({
         {item.full_name}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
-        {new Date(item.created_at as Date)
-          .toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })
-          .replace(/\//g, "/")}
+        <div
+          className={`${styles["payment-label"]} ${
+            styles["payment-label-" + item.subscription?.status]
+          }`}
+        >
+          {item.subscription?.status === "active"
+            ? "paid"
+            : item.subscription?.status}
+        </div>
       </div>
       <div
         className={`${styles["column"]} ${styles["actions-column"]} ${styles["button-container"]}`}
