@@ -108,7 +108,7 @@
 }
 
 .payment-label-incomplete {
-  background-color: #d7d156;
+  background-color: #ff9999;
   color: #fff;
 }
 
@@ -118,6 +118,6 @@
 }
 
 .payment-label-overdue {
-  background-color: #aaa;
+  background-color: #d75656;
   color: #fff;
 }
