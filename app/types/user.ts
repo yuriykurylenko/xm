@@ -21,6 +21,7 @@ export type Client = User & {
   status?: string;
   archived_at?: Date | string;
   subscription?: Subscription;
+  subscription_status: string;
 };
 
 export type UserInput = {

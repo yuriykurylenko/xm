@@ -53,12 +53,12 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         <div
           className={`${styles["payment-label"]} ${
-            styles["payment-label-" + item.subscription?.status]
+            styles["payment-label-" + item.subscription_status]
           }`}
         >
-          {item.subscription?.status === "active"
+          {item.subscription_status === "active"
             ? "paid"
-            : item.subscription?.status}
+            : item.subscription_status}
         </div>
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
