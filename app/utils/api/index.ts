@@ -54,7 +54,7 @@ export const fetchClientsByCoachId = async (
     totalQuery = totalQuery.ilike("full_name", `%${filterText}%`);
   }
 
-  if (sortColumn) {
+  if (sortColumn && sortColumn !== "subscription_status") {
     query = query.order(sortColumn, { ascending: sortDirection === "asc" });
   }
 
@@ -70,6 +70,22 @@ export const fetchClientsByCoachId = async (
           new Date(s1.updated_at as Date).getTime()
       )[0],
     }));
+
+    if (sortColumn === "subscription_status") {
+      response.data = response.data.sort(
+        // @ts-ignore
+        (c1: Client, c2: Client) =>
+          2 *
+            Number(
+              sortDirection === "asc"
+                ? // @ts-ignore
+                  c1.subscription.status > c2.subscription.status
+                : // @ts-ignore
+                  c1.subscription.status < c2.subscription.status
+            ) -
+          1
+      );
+    }
   }
 
   return { ...response, total: total.count };

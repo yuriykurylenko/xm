@@ -78,13 +78,13 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
           </div>
           <div
             className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
-            onClick={() => onSort("created_at")}
+            onClick={() => onSort("subscription_status")}
           >
             <span>Payment</span>
             <span className={styles["sorting-icon"]}>
               <SortIcon
                 sortColumn={sortColumn}
-                column="created_at"
+                column="subscription_status"
                 sortDirection={sortDirection}
               />
             </span>
