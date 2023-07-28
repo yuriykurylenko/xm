@@ -102,7 +102,7 @@ export async function getServerSideProps(context: {
   const { data: subscriptionData, error: subscriptionError } =
     await fetchSubscriptionById(subscription_id);
 
-  if (subscriptionError || !subscriptionData.stripe_subscription_id) {
+  if (subscriptionError) {
     return {
       notFound: true,
     };
