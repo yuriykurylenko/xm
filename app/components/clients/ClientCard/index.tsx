@@ -61,6 +61,15 @@ const ClientCard: React.FC<ClientCardProps> = ({
             : item.subscription?.status}
         </div>
       </div>
+      <div className={`${styles["column"]} ${styles["created-column"]}`}>
+        <div
+          className={`${styles["payment-label"]} ${
+            styles["payment-label-" + (item.user_id ? "active" : "inactive")]
+          }`}
+        >
+          {item.user_id ? "active" : "inactive"}
+        </div>
+      </div>
       <div
         className={`${styles["column"]} ${styles["actions-column"]} ${styles["button-container"]}`}
       >

@@ -72,7 +72,7 @@
 }
 
 .name-column {
-  flex: 0 0 calc(100% - 290px);
+  flex: 0 0 calc(100% - 442px);
 }
 
 .created-column {
@@ -113,6 +113,11 @@
 }
 
 .payment-label-pending {
+  background-color: #aaa;
+  color: #fff;
+}
+
+.payment-label-inactive {
   background-color: #aaa;
   color: #fff;
 }
