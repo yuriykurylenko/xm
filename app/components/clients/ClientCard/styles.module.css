@@ -72,7 +72,7 @@
 }
 
 .name-column {
-  flex: 0 0 calc(100% - 442px);
+  flex: 0 0 calc(100% - 440px);
 }
 
 .created-column {
