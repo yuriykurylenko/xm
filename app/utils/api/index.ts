@@ -1,4 +1,4 @@
-import { Subscription } from "@/app/types/subscription";
+import { Subscription, SubscriptionInput } from "@/app/types/subscription";
 import { Client, ClientInput, Coach, CoachInput } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
@@ -137,10 +137,26 @@ const createClientSubscription = async (
     .select();
 };
 
-export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
+export const updateClientSubscriptionById = (
+  subscriptionId: UUID,
+  data: SubscriptionInput
+) =>
+  supabase.from("subscriptions").update(data).eq("id", subscriptionId).select();
+
+export const updateClientSubscriptionByStripeSubscriptionId = (
+  stripeSubscriptionId: string,
+  data: SubscriptionInput
+) =>
+  supabase
+    .from("subscriptions")
+    .update(data)
+    .eq("stripe_subscription_id", stripeSubscriptionId)
+    .select();
+
+export const updateClientById = (clientId: UUID, data: ClientInput) =>
   supabase.from("clients").update(data).eq("id", clientId).select();
 
-export const updateCoachById = (coachId: UUID | string, data: CoachInput) =>
+export const updateCoachById = (coachId: UUID, data: CoachInput) =>
   supabase.from("coaches").update(data).eq("id", coachId).select();
 
 const sendClientPaymentLink = ({
@@ -191,13 +207,13 @@ export const sendClientOffer = async (
 
 const activateClientSubscription = (
   subscriptionId: UUID,
-  stripeSubscriptionId: string
+  stripeSubscription: any
 ) =>
   supabase
     .from("subscriptions")
     .update({
-      stripe_subscription_id: stripeSubscriptionId,
-      status: "active",
+      stripe_subscription_id: stripeSubscription.id,
+      status: stripeSubscription.status,
     })
     .eq("id", subscriptionId)
     .select()
@@ -205,11 +221,11 @@ const activateClientSubscription = (
 
 export const activateClient = async (
   subscriptionId: UUID,
-  stripeSubscriptionId: string
+  stripeSubscription: any
 ) => {
   const { data: subscription, error } = await activateClientSubscription(
     subscriptionId,
-    stripeSubscriptionId
+    stripeSubscription
   );
 
   if (error) {

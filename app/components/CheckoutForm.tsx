@@ -12,6 +12,7 @@ import { handleStripeCardAndSubscriptionSetup } from "@/app/utils/api/stripe";
 import styles from "@/app/components/Form/styles.module.css";
 import Form from "@/app/components/Form";
 import Button from "@/app/components/Form/Button";
+import { UUID } from "crypto";
 
 const stripePromise = loadStripe(
   "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
@@ -21,7 +22,8 @@ interface CheckoutFormProps {
   stripePriceId?: string;
   customerEmail: string;
   customerFullName: string;
-  onSubscriptionSuccess: (stripeSubscritionId: string) => void;
+  subscriptionId: UUID;
+  onSubscriptionSuccess: (stripeSubscription: any) => void;
 }
 
 const CheckoutForm = (props: JSX.IntrinsicAttributes & CheckoutFormProps) => (
@@ -34,6 +36,7 @@ const CheckoutFormContent = ({
   stripePriceId,
   customerEmail,
   customerFullName,
+  subscriptionId,
   onSubscriptionSuccess,
 }: CheckoutFormProps) => {
   const stripe = useStripe();
@@ -50,11 +53,14 @@ const CheckoutFormContent = ({
               stripe_price_id: stripePriceId,
               email: customerEmail,
               full_name: customerFullName,
+              metadata: {
+                subscription_id: subscriptionId,
+              },
             }
           );
 
         if (subscriptionData?.success) {
-          onSubscriptionSuccess(subscriptionData.stripeSubscriptionId);
+          onSubscriptionSuccess(subscriptionData.stripeSubscription);
           return { data: subscriptionData, error };
         }
 

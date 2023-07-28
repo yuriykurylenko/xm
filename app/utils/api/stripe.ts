@@ -8,6 +8,7 @@ import {
 } from "@stripe/stripe-js";
 import StripeApi from "stripe";
 import axios from "axios";
+import { UUID } from "crypto";
 
 const createStripeSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/setup_intent", { email });
@@ -41,24 +42,32 @@ const createStripeSubscription = ({
   paymentMethodId,
   quantity,
   priceId,
+  metadata,
 }: {
   customerId: string;
   paymentMethodId: string | PaymentMethod | null;
   quantity: number;
   priceId?: string;
+  metadata?: {
+    subscription_id: UUID;
+  };
 }) =>
   axios.post("/api/subscription", {
     customerId,
     paymentMethodId,
     quantity,
     priceId: priceId || "price_1N6JeAA4j0lnvK9GaP833Peg",
+    metadata,
   });
 
 const createAndConfirmStripeSubscription = async (
   stripe: Stripe | null,
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,
-  { stripe_price_id }: { stripe_price_id?: string }
+  {
+    stripe_price_id,
+    metadata,
+  }: { stripe_price_id?: string; metadata?: { subscription_id: UUID } }
 ) => {
   try {
     const { data: stripeSubscription } = await createStripeSubscription({
@@ -66,13 +75,14 @@ const createAndConfirmStripeSubscription = async (
       paymentMethodId,
       quantity: 1,
       priceId: stripe_price_id,
+      metadata,
     });
 
     const paymentIntent = stripeSubscription.latest_invoice.payment_intent;
 
     if (paymentIntent.status === "succeeded") {
       return {
-        data: { success: true, stripeSubscriptionId: stripeSubscription.id },
+        data: { success: true, stripeSubscription: stripeSubscription },
         error: null,
       };
     } else if (paymentIntent.status === "requires_action") {
@@ -88,7 +98,7 @@ const createAndConfirmStripeSubscription = async (
         return {
           data: {
             success: true,
-            stripeSubscriptionId: stripeSubscription.id,
+            stripeSubscription,
           },
           error: null,
         };
@@ -109,10 +119,12 @@ export const handleStripeCardAndSubscriptionSetup = async (
     stripe_price_id,
     email,
     full_name,
+    metadata,
   }: {
     stripe_price_id?: string;
     email: string;
     full_name: string;
+    metadata?: { subscription_id: UUID };
   }
 ) => {
   const {
@@ -140,7 +152,7 @@ export const handleStripeCardAndSubscriptionSetup = async (
         stripe,
         customer_id,
         setupIntentData.payment_method,
-        { stripe_price_id }
+        { stripe_price_id, metadata }
       );
 
     return { data: subscriptionData, error };

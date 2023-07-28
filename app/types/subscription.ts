@@ -8,3 +8,14 @@ export type Subscription = {
   currency: string;
   stripe_price_id?: string;
 };
+
+export type SubscriptionInput = {
+  client_id?: UUID;
+  stripe_subscription_id?: string;
+  status?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  monthly_amount?: number;
+  currency?: string;
+  stripe_price_id?: string;
+};

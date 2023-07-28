@@ -33,8 +33,8 @@ const SubscriptionPage = ({
     }).format(formattedAmount);
   };
 
-  async function onSubscriptionSuccess(stripeSubscriptionId: string) {
-    await activateClient(subscription.id, stripeSubscriptionId);
+  async function onSubscriptionSuccess(stripeSubscription: any) {
+    await activateClient(subscription.id, stripeSubscription);
     router.push(`/subscription/${subscription.id}/success`);
   }
 
@@ -66,6 +66,7 @@ const SubscriptionPage = ({
           customerEmail={client.email}
           customerFullName={client.full_name}
           onSubscriptionSuccess={onSubscriptionSuccess}
+          subscriptionId={subscription.id}
         />
       </PageContainer>
     </div>

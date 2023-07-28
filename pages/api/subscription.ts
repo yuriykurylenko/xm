@@ -6,7 +6,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { customerId, paymentMethodId, priceId, quantity } = req.body;
+    const { customerId, paymentMethodId, priceId, quantity, metadata } =
+      req.body;
 
     // Attach the payment method to the customer
     await stripe.paymentMethods.attach(paymentMethodId, {
@@ -25,6 +26,7 @@ export default async function handler(
       customer: customerId,
       items: [{ price: priceId, quantity }],
       expand: ["latest_invoice.payment_intent"],
+      metadata,
     });
 
     res.status(200).json(subscription);
