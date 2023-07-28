@@ -33,8 +33,8 @@ const SubscriptionPage = ({
     }).format(formattedAmount);
   };
 
-  async function onSubscriptionSuccess(stripeSubscription: any) {
-    await activateClient(subscription.id, stripeSubscription);
+  async function onSubscriptionSuccess() {
+    await activateClient(subscription.id);
     router.push(`/subscription/${subscription.id}/success`);
   }
 
@@ -77,7 +77,9 @@ export async function getServerSideProps(context: {
   params: { subscription_id: UUID };
 }) {
   const { subscription_id } = context.params;
-  const { data: subscription } = await fetchSubscriptionById(subscription_id);
+  const { data: subscription, error } = await fetchSubscriptionById(
+    subscription_id
+  );
 
   if (!subscription) {
     return {

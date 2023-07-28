@@ -213,19 +213,14 @@ const activateClientSubscription = (
     .from("subscriptions")
     .update({
       stripe_subscription_id: stripeSubscription.id,
-      status: stripeSubscription.status,
     })
     .eq("id", subscriptionId)
     .select()
     .single();
 
-export const activateClient = async (
-  subscriptionId: UUID,
-  stripeSubscription: any
-) => {
-  const { data: subscription, error } = await activateClientSubscription(
-    subscriptionId,
-    stripeSubscription
+export const activateClient = async (subscriptionId: UUID) => {
+  const { data: subscription, error } = await fetchSubscriptionById(
+    subscriptionId
   );
 
   if (error) {

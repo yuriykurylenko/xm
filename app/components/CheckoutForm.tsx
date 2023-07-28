@@ -23,7 +23,7 @@ interface CheckoutFormProps {
   customerEmail: string;
   customerFullName: string;
   subscriptionId: UUID;
-  onSubscriptionSuccess: (stripeSubscription: any) => void;
+  onSubscriptionSuccess: () => void;
 }
 
 const CheckoutForm = (props: JSX.IntrinsicAttributes & CheckoutFormProps) => (
@@ -60,7 +60,7 @@ const CheckoutFormContent = ({
           );
 
         if (subscriptionData?.success) {
-          onSubscriptionSuccess(subscriptionData.stripeSubscription);
+          onSubscriptionSuccess();
           return { data: subscriptionData, error };
         }
 
