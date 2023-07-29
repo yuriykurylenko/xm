@@ -79,8 +79,6 @@ const CheckoutFormContent = ({
     }
   }
 
-  console.log(trialPeriodDays);
-
   return (
     <Form onSubmit={onSubmit}>
       <div className={styles["input-container"]}>
