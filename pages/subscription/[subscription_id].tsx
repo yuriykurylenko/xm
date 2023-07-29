@@ -67,7 +67,7 @@ const SubscriptionPage = ({
           customerFullName={client.full_name}
           onSubscriptionSuccess={onSubscriptionSuccess}
           subscriptionId={subscription.id}
-          trialPeriodDays={14}
+          trialPeriodDays={subscription.trial_period_days}
         />
       </PageContainer>
     </div>

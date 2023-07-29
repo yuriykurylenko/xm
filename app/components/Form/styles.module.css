@@ -9,6 +9,10 @@
   width: 100%;
 }
 
+.input-container label {
+  cursor: pointer;
+}
+
 .input {
   padding: 10px 22px;
   padding-right: 6px;
@@ -21,6 +25,13 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+.input[type="checkbox"] {
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
+  appearance: checkbox;
+  margin-right: 15px;
 }
 
 .input:focus {

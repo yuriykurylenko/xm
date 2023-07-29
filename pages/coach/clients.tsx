@@ -18,6 +18,7 @@ import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
+import Input from "@/app/components/Form/Input";
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
@@ -41,15 +42,16 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const handleSendOfferToClient = async (
     client: Client,
-    data: { monthlyAmount: number | string }
+    data: { monthlyAmount: number | string; trialPeriod: boolean }
   ) => {
-    const { monthlyAmount } = data;
+    const { monthlyAmount, trialPeriod } = data;
 
     const { data: sendOfferData, error } = await sendClientOffer(
       client.id as UUID,
       {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
+        trialPeriodDays: trialPeriod ? 14 : 0,
       }
     );
 
@@ -92,6 +94,11 @@ const Clients = ({ user }: { user: Coach }) => {
             placeholder="Monthly price"
             required
             defaultValue={user.monthly_subscription_amount / 100}
+          />
+          <Input
+            name="trialPeriod"
+            type="checkbox"
+            placeholder="Offer trial period (14 days)"
           />
         </>
       ),

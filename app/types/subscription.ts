@@ -8,6 +8,7 @@ export type Subscription = {
   currency: string;
   status: string;
   stripe_price_id?: string;
+  trial_period_days: number;
   created_at?: Date;
   updated_at?: Date;
 };

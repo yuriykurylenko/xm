@@ -8,7 +8,7 @@ export type ValidationRule = {
   pattern?: { value: RegExp; message: string };
 };
 
-export type InputType = "email" | "password" | "number" | "text";
+export type InputType = "email" | "password" | "number" | "text" | "checkbox";
 
 export interface InputProps {
   name: string;
@@ -22,6 +22,7 @@ export interface InputProps {
   min?: number;
   max?: number;
   step?: number;
+  checked?: boolean;
 }
 
 export const Input: FC<InputProps> = ({
@@ -36,6 +37,7 @@ export const Input: FC<InputProps> = ({
   min,
   max,
   step,
+  checked,
 }) => {
   const validations: Record<InputType, ValidationRule> = {
     email: {
@@ -47,6 +49,7 @@ export const Input: FC<InputProps> = ({
     password: {},
     text: {},
     number: {},
+    checkbox: {},
   };
 
   const {
@@ -60,22 +63,32 @@ export const Input: FC<InputProps> = ({
     ...validation,
   };
 
+  const inputElement = (
+    <input
+      className={`${styles["input"]} ${errors[name] ? styles["error"] : ""}`}
+      type={type}
+      placeholder={placeholder}
+      disabled={disabled}
+      defaultValue={defaultValue}
+      {...register(name, inputValidation)}
+      min={min}
+      max={max}
+      step={step}
+      checked={checked}
+    />
+  );
+
   return (
     <>
       <div className={`${styles["input-container"]} ${className || ""}`}>
-        <input
-          className={`${styles["input"]} ${
-            errors[name] ? styles["error"] : ""
-          }`}
-          type={type}
-          placeholder={placeholder}
-          disabled={disabled}
-          defaultValue={defaultValue}
-          {...register(name, inputValidation)}
-          min={min}
-          max={max}
-          step={step}
-        />
+        {type === "checkbox" ? (
+          <label>
+            {inputElement}
+            {placeholder}
+          </label>
+        ) : (
+          inputElement
+        )}
         <p className={styles["error-message"]}>
           <>{errors[name] ? errors[name]?.message : ""}</>
         </p>
