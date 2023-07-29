@@ -61,7 +61,7 @@ const SubscriptionPage = ({
           {subscription?.trial_period_days > 0 && (
             <>
               {" "}
-              First {subscription?.trial_period_days} will be under a free trial
+              First {subscription?.trial_period_days} days will be under a free trial
               period.
             </>
           )}
