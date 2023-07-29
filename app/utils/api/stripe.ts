@@ -43,6 +43,7 @@ const createStripeSubscription = ({
   quantity,
   priceId,
   metadata,
+  trialPeriodDays,
 }: {
   customerId: string;
   paymentMethodId: string | PaymentMethod | null;
@@ -51,6 +52,7 @@ const createStripeSubscription = ({
   metadata?: {
     subscription_id: UUID;
   };
+  trialPeriodDays?: number;
 }) =>
   axios.post("/api/subscription", {
     customerId,
@@ -58,6 +60,7 @@ const createStripeSubscription = ({
     quantity,
     priceId: priceId || "price_1N6JeAA4j0lnvK9GaP833Peg",
     metadata,
+    trialPeriodDays,
   });
 
 const createAndConfirmStripeSubscription = async (
@@ -67,7 +70,12 @@ const createAndConfirmStripeSubscription = async (
   {
     stripe_price_id,
     metadata,
-  }: { stripe_price_id?: string; metadata?: { subscription_id: UUID } }
+    trial_period_days,
+  }: {
+    stripe_price_id?: string;
+    metadata?: { subscription_id: UUID };
+    trial_period_days?: number;
+  }
 ) => {
   try {
     const { data: stripeSubscription } = await createStripeSubscription({
@@ -76,35 +84,46 @@ const createAndConfirmStripeSubscription = async (
       quantity: 1,
       priceId: stripe_price_id,
       metadata,
+      trialPeriodDays: trial_period_days,
     });
 
     const paymentIntent = stripeSubscription.latest_invoice.payment_intent;
 
-    if (paymentIntent.status === "succeeded") {
-      return {
-        data: { success: true, stripeSubscription: stripeSubscription },
-        error: null,
-      };
-    } else if (paymentIntent.status === "requires_action") {
-      const paymentIntentResult = await stripe?.confirmCardPayment(
-        paymentIntent.client_secret
-      );
-      if (paymentIntentResult?.error) {
-        return { data: null, error: paymentIntentResult.error };
-      } else if (
-        paymentIntentResult?.paymentIntent &&
-        paymentIntentResult.paymentIntent.status === "succeeded"
-      ) {
+    if (paymentIntent) {
+      if (paymentIntent.status === "succeeded") {
         return {
-          data: {
-            success: true,
-            stripeSubscription,
-          },
+          data: { success: true, stripeSubscription: stripeSubscription },
           error: null,
         };
+      } else if (paymentIntent.status === "requires_action") {
+        const paymentIntentResult = await stripe?.confirmCardPayment(
+          paymentIntent.client_secret
+        );
+        if (paymentIntentResult?.error) {
+          return { data: null, error: paymentIntentResult.error };
+        } else if (
+          paymentIntentResult?.paymentIntent &&
+          paymentIntentResult.paymentIntent.status === "succeeded"
+        ) {
+          return {
+            data: {
+              success: true,
+              stripeSubscription,
+            },
+            error: null,
+          };
+        }
+      } else if (paymentIntent.last_payment_error) {
+        return { data: null, error: paymentIntent.last_payment_error };
       }
-    } else if (paymentIntent.last_payment_error) {
-      return { data: null, error: paymentIntent.last_payment_error };
+    } else {
+      return {
+        data: {
+          success: true,
+          stripeSubscription,
+        },
+        error: null,
+      };
     }
   } catch (error) {
     return { data: null, error: { message: "Error creating subscription" } };
@@ -120,11 +139,13 @@ export const handleStripeCardAndSubscriptionSetup = async (
     email,
     full_name,
     metadata,
+    trial_period_days,
   }: {
     stripe_price_id?: string;
     email: string;
     full_name: string;
     metadata?: { subscription_id: UUID };
+    trial_period_days: number;
   }
 ) => {
   const {
@@ -152,7 +173,7 @@ export const handleStripeCardAndSubscriptionSetup = async (
         stripe,
         customer_id,
         setupIntentData.payment_method,
-        { stripe_price_id, metadata }
+        { stripe_price_id, metadata, trial_period_days }
       );
 
     return { data: subscriptionData, error };
