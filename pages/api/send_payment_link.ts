@@ -25,6 +25,7 @@ export default async function handler(
           amount: subscription.monthly_amount / 100,
           currency: subscription.currency,
           payment_link: `${domain}/subscription/${subscription.id}`,
+          trial_period_days: subscription.trial_period_days,
         },
       });
     }

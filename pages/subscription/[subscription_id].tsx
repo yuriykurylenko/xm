@@ -57,14 +57,14 @@ const SubscriptionPage = ({
           <b>
             {formatAmount(subscription?.monthly_amount, subscription.currency)}
           </b>{" "}
-          monthly.
+          monthly
           {subscription?.trial_period_days > 0 && (
             <>
               {" "}
-              First {subscription?.trial_period_days} days will be under a free trial
-              period.
+              after a {subscription?.trial_period_days}-day free trial period
             </>
           )}
+          .
         </p>
         <p>Can&apos;t wait to get started!</p>
         <p>
