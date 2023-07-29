@@ -79,6 +79,8 @@ const CheckoutFormContent = ({
     }
   }
 
+  console.log(trialPeriodDays);
+
   return (
     <Form onSubmit={onSubmit}>
       <div className={styles["input-container"]}>
@@ -103,7 +105,7 @@ const CheckoutFormContent = ({
         </div>
       </div>
       <Button type="submit" submittingText="Processing...">
-        Pay
+        {trialPeriodDays === 0 ? "Pay" : "Add card"}
       </Button>
     </Form>
   );
