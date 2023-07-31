@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import sgMail from "@sendgrid/mail";
 import { fetchClientById, fetchCoachByClientId } from "@/app/utils/api";
 
+import { format } from "date-fns";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -26,6 +28,13 @@ export default async function handler(
           currency: subscription.currency,
           payment_link: `${domain}/subscription/${subscription.id}`,
           trial_period_days: subscription.trial_period_days,
+          start_date: format(
+            !subscription.start_date ||
+              new Date(subscription.start_date) < new Date()
+              ? new Date()
+              : new Date(subscription.start_date),
+            "dd/MM/yyyy"
+          ),
         },
       });
     }
