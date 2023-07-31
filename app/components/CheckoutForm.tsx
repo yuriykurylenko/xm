@@ -82,6 +82,8 @@ const CheckoutFormContent = ({
     }
   }
 
+  const startsNow = !startDate || new Date(startDate) <= new Date();
+
   return (
     <Form onSubmit={onSubmit}>
       <div className={styles["input-container"]}>
@@ -106,7 +108,7 @@ const CheckoutFormContent = ({
         </div>
       </div>
       <Button type="submit" submittingText="Processing...">
-        {trialPeriodDays === 0 ? "Pay" : "Add card"}
+        {trialPeriodDays === 0 && startsNow ? "Pay" : "Add card"}
       </Button>
     </Form>
   );
