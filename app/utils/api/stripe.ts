@@ -61,6 +61,7 @@ const createStripeSubscription = ({
     priceId: priceId || "price_1N6JeAA4j0lnvK9GaP833Peg",
     metadata,
     trialPeriodDays,
+    startDate: new Date(2023, 9, 1),
   });
 
 const createAndConfirmStripeSubscription = async (
@@ -87,7 +88,7 @@ const createAndConfirmStripeSubscription = async (
       trialPeriodDays: trial_period_days,
     });
 
-    const paymentIntent = stripeSubscription.latest_invoice.payment_intent;
+    const paymentIntent = stripeSubscription.latest_invoice?.payment_intent;
 
     if (paymentIntent) {
       if (paymentIntent.status === "succeeded") {
@@ -126,6 +127,7 @@ const createAndConfirmStripeSubscription = async (
       };
     }
   } catch (error) {
+    console.log(error);
     return { data: null, error: { message: "Error creating subscription" } };
   }
   return { data: null, error: null };

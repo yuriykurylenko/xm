@@ -13,6 +13,7 @@ export default async function handler(
       quantity,
       metadata,
       trialPeriodDays,
+      startDate,
     } = req.body;
 
     // Attach the payment method to the customer
@@ -27,16 +28,42 @@ export default async function handler(
       },
     });
 
-    // Create the subscription
-    const subscription = await stripe.subscriptions.create({
-      customer: customerId,
-      items: [{ price: priceId, quantity }],
-      expand: ["latest_invoice.payment_intent"],
-      metadata,
-      trial_period_days: trialPeriodDays,
-    });
+    // Check if the start date is in the future
+    if (new Date(startDate) > new Date()) {
+      let trialEndDate = new Date(startDate);
+      trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
 
-    res.status(200).json(subscription);
+      const subscriptionSchedule = await stripe.subscriptionSchedules.create({
+        customer: customerId,
+        start_date: Math.floor(new Date(startDate).getTime() / 1000),
+        end_behavior: "release",
+        phases: [
+          {
+            trial_end: Math.floor(trialEndDate.getTime() / 1000),
+            items: [
+              {
+                price: priceId,
+                quantity,
+                metadata,
+              },
+            ],
+          },
+        ],
+      });
+
+      res.status(200).json(subscriptionSchedule);
+    } else {
+      // Create the subscription
+      const subscription = await stripe.subscriptions.create({
+        customer: customerId,
+        items: [{ price: priceId, quantity }],
+        expand: ["latest_invoice.payment_intent"],
+        metadata,
+        trial_period_days: trialPeriodDays,
+      });
+
+      res.status(200).json(subscription);
+    }
   } else {
     res.setHeader("Allow", "POST");
     res.status(405).end("Method Not Allowed");
