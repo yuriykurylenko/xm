@@ -22,6 +22,7 @@ export type Client = User & {
   archived_at?: Date | string;
   subscription?: Subscription;
   subscription_status?: string;
+  start_date?: Date;
 };
 
 export type UserInput = {

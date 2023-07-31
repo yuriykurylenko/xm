@@ -2,6 +2,7 @@ import styles from "@/app/components/clients/ClientCard/styles.module.css";
 import { Client } from "@/app/types/user";
 import { useState } from "react";
 import ActionsBar from "@/app/components/ItemList/ActionsBar";
+import { format } from "date-fns";
 
 interface ClientCardProps {
   item: Client;
@@ -49,6 +50,9 @@ const ClientCard: React.FC<ClientCardProps> = ({
         className={`${styles["item-name"]} ${styles["name-column"]} ${styles["column"]}`}
       >
         {item.full_name}
+      </div>
+      <div className={`${styles["column"]} ${styles["created-column"]}`}>
+        {item.start_date && format(new Date(item.start_date), "dd/MM/yyyy")}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         <div
