@@ -36,7 +36,7 @@ const SubscriptionPage = ({
 
   async function onSubscriptionSuccess() {
     await activateClient(subscription.id);
-    router.push(`/subscription/${subscription.id}/success`);
+    router.push(`/subscription/${subscription.id}/account`);
   }
 
   return (
@@ -112,7 +112,7 @@ export async function getServerSideProps(context: {
   if (subscription.status === "active" || subscription.status === "trialing") {
     return {
       redirect: {
-        destination: `/subscription/${subscription_id}/success`,
+        destination: `/subscription/${subscription_id}/account`,
         permanent: false,
       },
     };
