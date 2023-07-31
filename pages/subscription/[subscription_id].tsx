@@ -36,7 +36,7 @@ const SubscriptionPage = ({
 
   async function onSubscriptionSuccess() {
     await activateClient(subscription.id);
-    router.push(`/subscription/${subscription.id}/account`);
+    router.push(`/subscription/${subscription.id}/success`);
   }
 
   return (
@@ -109,17 +109,17 @@ export async function getServerSideProps(context: {
     };
   }
 
-  if (subscription.status === "active" || subscription.status === "trialing") {
+  const { data: client } = await fetchClientById(subscription.client_id);
+  const { data: coach } = await fetchCoachById(client?.coach_id);
+
+  if (client && (client.status === "starting" || client.status === "client")) {
     return {
       redirect: {
-        destination: `/subscription/${subscription_id}/account`,
+        destination: `/subscription/${subscription_id}/success`,
         permanent: false,
       },
     };
   }
-
-  const { data: client } = await fetchClientById(subscription.client_id);
-  const { data: coach } = await fetchCoachById(client?.coach_id);
 
   return {
     props: {
