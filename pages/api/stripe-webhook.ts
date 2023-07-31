@@ -29,6 +29,7 @@ export default async function handler(
     const sig = req.headers["stripe-signature"] as string;
 
     let event: Stripe.Event;
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
     try {
       event = stripe.webhooks.constructEvent(
@@ -58,13 +59,32 @@ export default async function handler(
           }
         );
 
-        if (
-          clientSubscription &&
-          ["active", "trialing"].includes(clientSubscription.status)
-        ) {
-          await updateClientById(clientSubscription.clientId, {
-            status: "client",
-          });
+        if (clientSubscription) {
+          if (["active", "trialing"].includes(clientSubscription.status)) {
+            await updateClientById(clientSubscription.clientId, {
+              status: "client",
+            });
+          }
+
+          const { data: client } = await fetchClientById(
+            clientSubscription?.client_id
+          );
+          const { data: coach } = await fetchCoachByClientId(
+            clientSubscription.client_id
+          );
+
+          if (coach && client) {
+            await sgMail.send({
+              to: client.email,
+              from: "yuriy.kurylenko@gmail.com",
+              templateId: "d-bb7a32cfdef545308aea0cf7bbbee901",
+              dynamicTemplateData: {
+                client_name: client.full_name,
+                coach_name: coach.full_name,
+                subscription_id: clientSubscription.id,
+              },
+            });
+          }
         }
       }
 
@@ -99,8 +119,6 @@ export default async function handler(
       const { data: coach } = await fetchCoachByClientId(
         subscription?.client_id
       );
-
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
       await sgMail.send({
         to: client?.email,
