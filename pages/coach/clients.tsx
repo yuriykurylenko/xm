@@ -151,6 +151,7 @@ const Clients = ({ user }: { user: Coach }) => {
           filterStatusOptions={[
             { value: "lead", name: "Leads" },
             { value: "offerSent", name: "Sent Offers" },
+            { value: "starting", name: "Starting" },
             { value: "client", name: "Active" },
           ]}
           fetchItems={fetchClients}

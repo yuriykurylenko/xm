@@ -229,19 +229,6 @@ export const sendClientOffer = async (
   return updateClientById(clientId, { status: "offerSent" });
 };
 
-const activateClientSubscription = (
-  subscriptionId: UUID,
-  stripeSubscription: any
-) =>
-  supabase
-    .from("subscriptions")
-    .update({
-      stripe_subscription_id: stripeSubscription.id,
-    })
-    .eq("id", subscriptionId)
-    .select()
-    .single();
-
 export const activateClient = async (subscriptionId: UUID) => {
   const { data: subscription, error } = await fetchSubscriptionById(
     subscriptionId
@@ -250,5 +237,8 @@ export const activateClient = async (subscriptionId: UUID) => {
   if (error) {
     return { data: subscription, error };
   }
-  await updateClientById(subscription.client_id, { status: "client" });
+  await updateClientById(subscription.client_id, {
+    status:
+      new Date(subscription.start_date) <= new Date() ? "client" : "starting",
+  });
 };

@@ -39,7 +39,10 @@ export default async function handler(
         end_behavior: "release",
         phases: [
           {
-            trial_end: Math.floor(trialEndDate.getTime() / 1000),
+            trial_end:
+              trialPeriodDays > 0
+                ? Math.floor(trialEndDate.getTime() / 1000)
+                : undefined,
             items: [
               {
                 price: priceId,
