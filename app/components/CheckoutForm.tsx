@@ -23,8 +23,9 @@ interface CheckoutFormProps {
   customerEmail: string;
   customerFullName: string;
   subscriptionId: UUID;
-  onSubscriptionSuccess: () => void;
   trialPeriodDays: number;
+  startDate?: Date;
+  onSubscriptionSuccess: () => void;
 }
 
 const CheckoutForm = (props: JSX.IntrinsicAttributes & CheckoutFormProps) => (
@@ -39,6 +40,7 @@ const CheckoutFormContent = ({
   customerFullName,
   subscriptionId,
   trialPeriodDays,
+  startDate,
   onSubscriptionSuccess,
 }: CheckoutFormProps) => {
   const stripe = useStripe();
@@ -59,6 +61,7 @@ const CheckoutFormContent = ({
                 subscription_id: subscriptionId,
               },
               trial_period_days: trialPeriodDays,
+              start_date: startDate,
             }
           );
 

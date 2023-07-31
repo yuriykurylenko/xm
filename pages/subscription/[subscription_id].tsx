@@ -78,6 +78,7 @@ const SubscriptionPage = ({
           onSubscriptionSuccess={onSubscriptionSuccess}
           subscriptionId={subscription.id}
           trialPeriodDays={subscription.trial_period_days}
+          startDate={subscription.start_date}
         />
       </PageContainer>
     </div>

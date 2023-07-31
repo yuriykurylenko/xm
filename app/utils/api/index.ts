@@ -124,11 +124,13 @@ const createClientSubscription = async (
     monthlyAmount,
     currency,
     trialPeriodDays,
+    startDate,
   }: {
     productId: string;
     monthlyAmount: number;
     currency: string;
     trialPeriodDays: number;
+    startDate?: Date;
   }
 ) => {
   const { data: price } = await axios.post("/api/find_or_create_price", {
@@ -147,6 +149,7 @@ const createClientSubscription = async (
         currency,
         stripe_price_id: price.id,
         trial_period_days: trialPeriodDays,
+        start_date: startDate,
       },
     ])
     .select();
@@ -192,10 +195,12 @@ export const sendClientOffer = async (
     monthlyAmount,
     currency,
     trialPeriodDays,
+    startDate,
   }: {
     monthlyAmount: number;
     currency: string;
     trialPeriodDays: number;
+    startDate?: Date;
   }
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);
@@ -209,6 +214,7 @@ export const sendClientOffer = async (
     monthlyAmount,
     currency,
     trialPeriodDays,
+    startDate,
   });
 
   if (error) {

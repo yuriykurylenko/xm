@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -27,7 +27,7 @@ export interface InputProps {
   required?: boolean;
   validation?: ValidationRule;
   className?: string;
-  defaultValue?: string | number;
+  defaultValue?: string | number | Date;
   disabled?: boolean;
   min?: number;
   max?: number;
@@ -49,7 +49,7 @@ export const Input: FC<InputProps> = ({
   step,
   checked,
 }) => {
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(defaultValue as Date);
 
   const validations: Record<InputType, ValidationRule> = {
     email: {
@@ -68,6 +68,7 @@ export const Input: FC<InputProps> = ({
   const {
     register,
     formState: { errors },
+    control,
   } = useFormContext();
 
   const inputValidation = {
@@ -82,6 +83,7 @@ export const Input: FC<InputProps> = ({
       type={type}
       placeholder={placeholder}
       disabled={disabled}
+      // @ts-ignore
       defaultValue={defaultValue}
       {...register(name, inputValidation)}
       min={min}
@@ -102,11 +104,18 @@ export const Input: FC<InputProps> = ({
         ) : type === "date" ? (
           <label>
             <span className={styles["datepicker-label"]}>{placeholder}</span>
-            <DatePicker
-              className={`${styles["input"]} ${className || ""}`}
-              selected={date}
-              onChange={(date) => setDate(date as Date)}
-              minDate={new Date()}
+            <Controller
+              control={control}
+              name="startDate"
+              render={({ field: { onChange, value } }) => (
+                <DatePicker
+                  className={`${styles["input"]} ${className || ""}`}
+                  selected={value || new Date()}
+                  onChange={onChange}
+                  minDate={new Date()}
+                  dateFormat="dd/MM/yyyy"
+                />
+              )}
             />
           </label>
         ) : (

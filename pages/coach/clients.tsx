@@ -42,9 +42,13 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const handleSendOfferToClient = async (
     client: Client,
-    data: { monthlyAmount: number | string; trialPeriod: boolean }
+    data: {
+      monthlyAmount: number | string;
+      trialPeriod: boolean;
+      startDate: Date;
+    }
   ) => {
-    const { monthlyAmount, trialPeriod } = data;
+    const { monthlyAmount, trialPeriod, startDate } = data;
 
     const { data: sendOfferData, error } = await sendClientOffer(
       client.id as UUID,
@@ -52,6 +56,7 @@ const Clients = ({ user }: { user: Coach }) => {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
+        startDate,
       }
     );
 
@@ -95,7 +100,12 @@ const Clients = ({ user }: { user: Coach }) => {
             required
             defaultValue={user.monthly_subscription_amount / 100}
           />
-          <Input name="startDate" type="date" placeholder="Start date" />
+          <Input
+            name="startDate"
+            type="date"
+            placeholder="Start date"
+            defaultValue={new Date()}
+          />
           <Input
             name="trialPeriod"
             type="checkbox"

@@ -44,6 +44,7 @@ const createStripeSubscription = ({
   priceId,
   metadata,
   trialPeriodDays,
+  startDate,
 }: {
   customerId: string;
   paymentMethodId: string | PaymentMethod | null;
@@ -53,6 +54,7 @@ const createStripeSubscription = ({
     subscription_id: UUID;
   };
   trialPeriodDays?: number;
+  startDate?: Date;
 }) =>
   axios.post("/api/subscription", {
     customerId,
@@ -61,7 +63,7 @@ const createStripeSubscription = ({
     priceId: priceId || "price_1N6JeAA4j0lnvK9GaP833Peg",
     metadata,
     trialPeriodDays,
-    startDate: new Date(2023, 9, 1),
+    startDate,
   });
 
 const createAndConfirmStripeSubscription = async (
@@ -72,10 +74,12 @@ const createAndConfirmStripeSubscription = async (
     stripe_price_id,
     metadata,
     trial_period_days,
+    start_date,
   }: {
     stripe_price_id?: string;
     metadata?: { subscription_id: UUID };
     trial_period_days?: number;
+    start_date?: Date;
   }
 ) => {
   try {
@@ -86,6 +90,7 @@ const createAndConfirmStripeSubscription = async (
       priceId: stripe_price_id,
       metadata,
       trialPeriodDays: trial_period_days,
+      startDate: start_date,
     });
 
     const paymentIntent = stripeSubscription.latest_invoice?.payment_intent;
@@ -127,7 +132,6 @@ const createAndConfirmStripeSubscription = async (
       };
     }
   } catch (error) {
-    console.log(error);
     return { data: null, error: { message: "Error creating subscription" } };
   }
   return { data: null, error: null };
@@ -142,12 +146,14 @@ export const handleStripeCardAndSubscriptionSetup = async (
     full_name,
     metadata,
     trial_period_days,
+    start_date,
   }: {
     stripe_price_id?: string;
     email: string;
     full_name: string;
     metadata?: { subscription_id: UUID };
     trial_period_days: number;
+    start_date?: Date;
   }
 ) => {
   const {
@@ -175,7 +181,7 @@ export const handleStripeCardAndSubscriptionSetup = async (
         stripe,
         customer_id,
         setupIntentData.payment_method,
-        { stripe_price_id, metadata, trial_period_days }
+        { stripe_price_id, metadata, trial_period_days, start_date }
       );
 
     return { data: subscriptionData, error };

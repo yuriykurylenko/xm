@@ -29,7 +29,7 @@ export default async function handler(
     });
 
     // Check if the start date is in the future
-    if (new Date(startDate) > new Date()) {
+    if (startDate && new Date(startDate) > new Date()) {
       let trialEndDate = new Date(startDate);
       trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
 
