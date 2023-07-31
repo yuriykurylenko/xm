@@ -112,3 +112,7 @@
 .sign-up-log-in a {
   color: #5683d7;
 }
+
+.datepicker-label {
+  margin-right: 10px;
+}

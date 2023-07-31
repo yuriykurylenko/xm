@@ -95,6 +95,7 @@ const Clients = ({ user }: { user: Coach }) => {
             required
             defaultValue={user.monthly_subscription_amount / 100}
           />
+          <Input name="startDate" type="date" placeholder="Start date" />
           <Input
             name="trialPeriod"
             type="checkbox"

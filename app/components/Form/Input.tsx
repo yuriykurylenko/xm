@@ -1,5 +1,9 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useFormContext } from "react-hook-form";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import styles from "@/app/components/Form/styles.module.css";
 
 export type ValidationRule = {
@@ -8,7 +12,13 @@ export type ValidationRule = {
   pattern?: { value: RegExp; message: string };
 };
 
-export type InputType = "email" | "password" | "number" | "text" | "checkbox";
+export type InputType =
+  | "email"
+  | "password"
+  | "number"
+  | "text"
+  | "checkbox"
+  | "date";
 
 export interface InputProps {
   name: string;
@@ -39,6 +49,8 @@ export const Input: FC<InputProps> = ({
   step,
   checked,
 }) => {
+  const [date, setDate] = useState(new Date());
+
   const validations: Record<InputType, ValidationRule> = {
     email: {
       pattern: {
@@ -50,6 +62,7 @@ export const Input: FC<InputProps> = ({
     text: {},
     number: {},
     checkbox: {},
+    date: {},
   };
 
   const {
@@ -85,6 +98,16 @@ export const Input: FC<InputProps> = ({
           <label>
             {inputElement}
             {placeholder}
+          </label>
+        ) : type === "date" ? (
+          <label>
+            <span className={styles["datepicker-label"]}>{placeholder}</span>
+            <DatePicker
+              className={`${styles["input"]} ${className || ""}`}
+              selected={date}
+              onChange={(date) => setDate(date as Date)}
+              minDate={new Date()}
+            />
           </label>
         ) : (
           inputElement

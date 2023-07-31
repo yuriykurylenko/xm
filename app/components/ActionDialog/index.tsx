@@ -52,7 +52,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
       <PageContainer title={title}>
         <p className={styles["dialog-text"]}>{text}</p>
         <Form onSubmit={onConfirm}>
-          {children}
+          <div className={styles["dialog-form-content"]}>{children}</div>
           <div className={styles["buttons-container"]}>
             <div className={styles["button-container"]}>
               <BasicButton className={styles["cancel-btn"]} onClick={onCancel}>
