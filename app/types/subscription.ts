@@ -23,4 +23,5 @@ export type SubscriptionInput = {
   monthly_amount?: number;
   currency?: string;
   stripe_price_id?: string;
+  start_date?: Date;
 };

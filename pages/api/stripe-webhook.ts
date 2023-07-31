@@ -54,6 +54,7 @@ export default async function handler(
           {
             stripe_subscription_id: subscription.id,
             status: subscription.status,
+            start_date: new Date(subscription.start_date * 1000),
           }
         );
 
