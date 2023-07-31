@@ -109,7 +109,7 @@ export async function getServerSideProps(context: {
     };
   }
 
-  if (subscription.status === "active") {
+  if (subscription.status === "active" || subscription.status === "trialing") {
     return {
       redirect: {
         destination: `/subscription/${subscription_id}/success`,

@@ -118,6 +118,18 @@ export async function getServerSideProps(context: {
     };
   }
 
+  if (
+    subscriptionData.status === "active" ||
+    subscriptionData.status === "trialing"
+  ) {
+    return {
+      redirect: {
+        destination: `/login`,
+        permanent: false,
+      },
+    };
+  }
+
   const { data: coachData, error: coachError } = await fetchCoachById(
     clientData.coach_id
   );
