@@ -127,6 +127,15 @@ export async function getServerSideProps(context: {
     };
   }
 
+  if (clientData.status !== "client") {
+    return {
+      redirect: {
+        destination: `/subscription/${subscription_id}`,
+        permanent: false,
+      },
+    };
+  }
+
   const { data: coachData, error: coachError } = await fetchCoachById(
     clientData.coach_id
   );
