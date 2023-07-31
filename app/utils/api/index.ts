@@ -159,7 +159,12 @@ export const updateClientSubscriptionById = (
   subscriptionId: UUID,
   data: SubscriptionInput
 ) =>
-  supabase.from("subscriptions").update(data).eq("id", subscriptionId).select();
+  supabase
+    .from("subscriptions")
+    .update(data)
+    .eq("id", subscriptionId)
+    .select()
+    .single();
 
 export const updateClientSubscriptionByStripeSubscriptionId = (
   stripeSubscriptionId: string,
@@ -169,7 +174,8 @@ export const updateClientSubscriptionByStripeSubscriptionId = (
     .from("subscriptions")
     .update(data)
     .eq("stripe_subscription_id", stripeSubscriptionId)
-    .select();
+    .select()
+    .single();
 
 export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
   supabase.from("clients").update(data).eq("id", clientId).select();

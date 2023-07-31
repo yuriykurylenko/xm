@@ -8,9 +8,11 @@ import {
   fetchCoachByClientId,
   updateClientSubscriptionByStripeSubscriptionId,
   updateClientSubscriptionById,
+  updateClientById,
 } from "@/app/utils/api";
 import sgMail from "@sendgrid/mail";
 import { UUID } from "crypto";
+import { Subscription } from "@/app/types/subscription";
 
 export const config = {
   api: {
@@ -47,13 +49,22 @@ export default async function handler(
       const subscription = event.data.object as Stripe.Subscription;
 
       if (subscription.metadata.subscription_id) {
-        await updateClientSubscriptionById(
+        const { data: clientSubscription } = await updateClientSubscriptionById(
           subscription.metadata.subscription_id as UUID,
           {
             stripe_subscription_id: subscription.id,
             status: subscription.status,
           }
         );
+
+        if (
+          clientSubscription &&
+          ["active", "trialing"].includes(clientSubscription.status)
+        ) {
+          await updateClientById(clientSubscription.clientId, {
+            status: "client",
+          });
+        }
       }
 
       res.json({ received: true });
