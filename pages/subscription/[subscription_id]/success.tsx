@@ -118,10 +118,7 @@ export async function getServerSideProps(context: {
     };
   }
 
-  if (
-    subscriptionData.status === "active" ||
-    subscriptionData.status === "trialing"
-  ) {
+  if (clientData.user_id) {
     return {
       redirect: {
         destination: `/login`,
