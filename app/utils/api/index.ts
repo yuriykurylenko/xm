@@ -184,6 +184,9 @@ export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
 export const updateCoachById = (coachId: UUID | string, data: CoachInput) =>
   supabase.from("coaches").update(data).eq("id", coachId).select();
 
+export const deleteSubscriptionByClientId = async (clientId: UUID | string) =>
+  supabase.from("subscriptions").delete().eq("client_id", clientId);
+
 const sendClientPaymentLink = ({
   subscription,
   domain,
@@ -215,6 +218,8 @@ export const sendClientOffer = async (
   if (!coach) {
     return { data: null, error: "Coach not found" };
   }
+
+  await deleteSubscriptionByClientId(clientId);
 
   const { data, error } = await createClientSubscription(clientId, {
     productId: coach?.stripe_product_id,

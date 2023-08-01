@@ -18,6 +18,7 @@ import { UUID } from "crypto";
 import {
   faPaperPlane,
   faPowerOff,
+  faRotate,
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -77,6 +78,11 @@ const Clients = ({ user }: { user: Coach }) => {
   const sendOfferToClientAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
     return clientStatuses.length === 1 && clientStatuses[0] === "lead";
+  };
+
+  const resendOfferToClientAllowed = (client: Client | Client[]) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    return clientStatuses.length === 1 && clientStatuses[0] === "offerSent";
   };
 
   const cancelSubscriptionAllowed = (client: Client | Client[]) => {
@@ -183,6 +189,44 @@ const Clients = ({ user }: { user: Coach }) => {
         `${selectedClient.full_name} will receive an email with the link to subscribe and pay your specified amount monthly.`,
       dialogTextBulk: (selectedClients: Client[]) =>
         "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
+    },
+    {
+      name: "resendOffer",
+      title: "Resend offer",
+      titleBulk: "Resend offers",
+      icon: faRotate,
+      show: resendOfferToClientAllowed,
+      handler: handleSendOfferToClient,
+      onComplete: onSendOfferComplete,
+      DialogForm: () => (
+        <>
+          <PriceInput
+            name="monthlyAmount"
+            placeholder="Monthly price"
+            required
+            defaultValue={user.monthly_subscription_amount / 100}
+          />
+          <Input
+            name="startDate"
+            type="date"
+            placeholder="Start date"
+            defaultValue={new Date()}
+          />
+          <Input
+            name="trialPeriod"
+            type="checkbox"
+            placeholder="Offer trial period (14 days)"
+          />
+        </>
+      ),
+      dialogTitle: (selectedClient: Client) =>
+        `Resend offer to ${selectedClient.full_name}`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Resend offers to ${selectedClients.length + " clients"}`,
+      dialogText: (selectedClient: Client) =>
+        `${selectedClient.full_name} will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to the client will be canceled.`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to the client will be canceled.",
     },
     {
       name: "revokeAccess",
