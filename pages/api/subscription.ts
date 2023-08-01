@@ -50,6 +50,7 @@ export default async function handler(
                 metadata,
               },
             ],
+            metadata,
           },
         ],
         metadata,

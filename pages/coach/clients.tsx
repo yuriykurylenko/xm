@@ -24,6 +24,7 @@ import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Input from "@/app/components/Form/Input";
+import { startOfDay } from "date-fns";
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
@@ -61,7 +62,7 @@ const Clients = ({ user }: { user: Coach }) => {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate: startDate || new Date(),
+        startDate: startOfDay(startDate) || new Date(),
       }
     );
 
