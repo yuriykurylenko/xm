@@ -269,7 +269,8 @@ async function fetchSubscriptionsByClientId(clientId: UUID | string) {
 
 export const cancelClientSubscription = async (
   client: Client,
-  endImmediately: boolean
+  endImmediately: boolean,
+  accessAfterEndDate: boolean
 ) => {
   const { data: subscriptions } = await fetchSubscriptionsByClientId(
     client.id as string
@@ -281,7 +282,8 @@ export const cancelClientSubscription = async (
     try {
       await cancelStripeSubscription(
         subscription.stripe_subscription_id,
-        endImmediately
+        endImmediately,
+        accessAfterEndDate
       );
     } catch (error) {
       return { data: null, error };

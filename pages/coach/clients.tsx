@@ -114,10 +114,15 @@ const Clients = ({ user }: { user: Coach }) => {
     client: Client,
     data: {
       endImmediately: boolean;
+      accessAfterEndDate: boolean;
     }
   ) => {
-    const { endImmediately } = data;
-    return await cancelClientSubscription(client, endImmediately);
+    const { endImmediately, accessAfterEndDate } = data;
+    return await cancelClientSubscription(
+      client,
+      endImmediately,
+      accessAfterEndDate
+    );
   };
 
   const actions: Action<Client>[] = [
@@ -183,11 +188,18 @@ const Clients = ({ user }: { user: Coach }) => {
       show: cancelSubscriptionAllowed,
       handler: handleCancelClientSubscription,
       DialogForm: () => (
-        <Input
-          name="endImmediately"
-          type="checkbox"
-          placeholder="End immediately"
-        />
+        <>
+          <Input
+            name="endImmediately"
+            type="checkbox"
+            placeholder="End immediately"
+          />
+          <Input
+            name="accessAfterEndDate"
+            type="checkbox"
+            placeholder="Allow platform access after the client stops"
+          />
+        </>
       ),
       dialogTitle: (selectedClient: Client) =>
         `End ${selectedClient.full_name}'s subscription`,

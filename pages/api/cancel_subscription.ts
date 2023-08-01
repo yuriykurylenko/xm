@@ -5,7 +5,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
-      const { stripeSubscriptionId, endImmediately } = req.body;
+      const { stripeSubscriptionId, endImmediately, accessAfterEndDate } =
+        req.body;
 
       // Cancel the subscription in Stripe
       const canceledSubscription = endImmediately
@@ -14,12 +15,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             cancel_at_period_end: true,
           });
 
-      //   await updateClientSubscriptionByStripeSubscriptionId(
-      //     stripeSubscriptionId,
-      //     {
-      //       end_date: new Date(deletedSubscription.current_period_end * 1000),
-      //     }
-      //   );
+      await updateClientSubscriptionByStripeSubscriptionId(
+        stripeSubscriptionId,
+        {
+          access_after_end_date: accessAfterEndDate,
+        }
+      );
 
       res.status(200).json(canceledSubscription);
     } catch (err) {

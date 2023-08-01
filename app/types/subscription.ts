@@ -13,6 +13,7 @@ export type Subscription = {
   end_date?: Date;
   created_at?: Date;
   updated_at?: Date;
+  access_after_end_date?: Date;
 };
 
 export type SubscriptionInput = {
@@ -27,4 +28,5 @@ export type SubscriptionInput = {
   start_date?: Date;
   end_date?: Date;
   current_period_end_date?: Date;
+  access_after_end_date?: boolean;
 };

@@ -265,9 +265,11 @@ export const findOrCreateStripePrice = async (
 
 export const cancelStripeSubscription = (
   stripeSubscriptionId: string,
-  endImmediately: boolean
+  endImmediately: boolean,
+  accessAfterEndDate: boolean
 ) =>
   axios.post("/api/cancel_subscription", {
     stripeSubscriptionId,
     endImmediately,
+    accessAfterEndDate,
   });
