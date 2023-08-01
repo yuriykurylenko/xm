@@ -41,7 +41,17 @@ export default function useAuth() {
 
     if (user) {
       const profile = await getRoleAndProfile(user.id);
-      setUser({ ...user, ...profile });
+      setUser(profile ? { ...user, ...profile } : null);
+
+      if (!profile) {
+        setError("Access revoked");
+        return {
+          data: null,
+          error: {
+            message: "Your access was revoked. Please contact your coach",
+          },
+        };
+      }
     }
 
     return { data: user, error };
@@ -190,7 +200,8 @@ export default function useAuth() {
       return client as unknown as Client;
     }
 
-    throw new Error("Role not found.");
+    setRole("anonymous");
+    return null;
   }
 
   const logOut = async () => {
@@ -211,7 +222,7 @@ export default function useAuth() {
         if (data?.user) {
           const profile = await getRoleAndProfile(data?.user.id);
 
-          setUser({ ...data?.user, ...profile });
+          setUser(profile ? { ...data?.user, ...profile } : null);
         }
       } catch (error) {
         console.error("Error fetching user and role:", error);

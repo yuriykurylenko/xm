@@ -13,6 +13,7 @@ import {
 import sgMail from "@sendgrid/mail";
 import { UUID } from "crypto";
 import { SubscriptionInput } from "@/app/types/subscription";
+import { ClientInput } from "@/app/types/user";
 
 export const config = {
   api: {
@@ -134,9 +135,15 @@ export default async function handler(
         );
 
       if (clientSubscription && subscription.status === "canceled") {
-        await updateClientById(clientSubscription.client_id, {
+        let clientUpdateProps: ClientInput = {
           status: "ended",
-        });
+        };
+
+        if (!clientSubscription.access_after_end_date) {
+          clientUpdateProps.user_id = null;
+        }
+
+        await updateClientById(clientSubscription.client_id, clientUpdateProps);
       }
 
       res.json({ received: true });

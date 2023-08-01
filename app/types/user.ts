@@ -29,7 +29,7 @@ export type Client = User & {
 export type UserInput = {
   full_name?: string;
   email?: string;
-  user_id?: UUID | string;
+  user_id?: UUID | string | null;
 };
 
 export type ClientInput = UserInput & {
