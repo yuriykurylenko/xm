@@ -49,8 +49,6 @@ export const Input: FC<InputProps> = ({
   step,
   checked,
 }) => {
-  // const [date, setDate] = useState(defaultValue as Date);
-
   const validations: Record<InputType, ValidationRule> = {
     email: {
       pattern: {
