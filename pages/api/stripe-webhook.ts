@@ -12,7 +12,7 @@ import {
 } from "@/app/utils/api";
 import sgMail from "@sendgrid/mail";
 import { UUID } from "crypto";
-import { Subscription } from "@/app/types/subscription";
+import { Subscription, SubscriptionInput } from "@/app/types/subscription";
 
 export const config = {
   api: {
@@ -95,10 +95,24 @@ export default async function handler(
     ) {
       const subscription = event.data.object as Stripe.Subscription;
 
+      const subscriptionUpdateProps: SubscriptionInput = {
+        status: subscription.status,
+      };
+
+      if (
+        event.type === "customer.subscription.deleted" &&
+        subscription.canceled_at
+      ) {
+        subscriptionUpdateProps.end_date = new Date(
+          subscription.canceled_at * 1000
+        );
+      }
+
       const { data: clientSubscription } =
-        await updateClientSubscriptionByStripeSubscriptionId(subscription.id, {
-          status: subscription.status,
-        });
+        await updateClientSubscriptionByStripeSubscriptionId(
+          subscription.id,
+          subscriptionUpdateProps
+        );
 
       if (clientSubscription && subscription.status === "canceled") {
         await updateClientById(clientSubscription.client_id, {

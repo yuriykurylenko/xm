@@ -12,12 +12,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         stripeSubscriptionId
       );
 
-      await updateClientSubscriptionByStripeSubscriptionId(
-        stripeSubscriptionId,
-        {
-          end_date: new Date(deletedSubscription.current_period_end * 1000),
-        }
-      );
+      //   await updateClientSubscriptionByStripeSubscriptionId(
+      //     stripeSubscriptionId,
+      //     {
+      //       end_date: new Date(deletedSubscription.current_period_end * 1000),
+      //     }
+      //   );
 
       // Send the deleted subscription data back to the client
       res.status(200).json(deletedSubscription);
