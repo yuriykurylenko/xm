@@ -61,7 +61,7 @@ export default async function handler(
 
         if (clientSubscription) {
           if (["active", "trialing"].includes(clientSubscription.status)) {
-            await updateClientById(clientSubscription.clientId, {
+            await updateClientById(clientSubscription.client_id, {
               status: "client",
             });
           }
@@ -94,9 +94,17 @@ export default async function handler(
       event.type === "customer.subscription.deleted"
     ) {
       const subscription = event.data.object as Stripe.Subscription;
-      await updateClientSubscriptionByStripeSubscriptionId(subscription.id, {
-        status: subscription.status,
-      });
+
+      const { data: clientSubscription } =
+        await updateClientSubscriptionByStripeSubscriptionId(subscription.id, {
+          status: subscription.status,
+        });
+
+      if (clientSubscription && subscription.status === "canceled") {
+        await updateClientById(clientSubscription.client_id, {
+          status: "ended",
+        });
+      }
 
       res.json({ received: true });
     } else if (
