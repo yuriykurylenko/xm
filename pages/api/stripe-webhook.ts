@@ -117,6 +117,16 @@ export default async function handler(
         );
       }
 
+      if (
+        event.type === "customer.subscription.updated" &&
+        subscription.current_period_end &&
+        subscription.cancel_at_period_end
+      ) {
+        subscriptionUpdateProps.end_date = new Date(
+          subscription.current_period_end * 1000
+        );
+      }
+
       const { data: clientSubscription } =
         await updateClientSubscriptionByStripeSubscriptionId(
           subscription.id,

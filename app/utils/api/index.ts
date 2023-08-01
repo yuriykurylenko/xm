@@ -267,7 +267,10 @@ async function fetchSubscriptionsByClientId(clientId: UUID | string) {
   }
 }
 
-export const cancelClientSubscription = async (client: Client) => {
+export const cancelClientSubscription = async (
+  client: Client,
+  endImmediately: boolean
+) => {
   const { data: subscriptions } = await fetchSubscriptionsByClientId(
     client.id as string
   );
@@ -276,7 +279,10 @@ export const cancelClientSubscription = async (client: Client) => {
     ["active", "trialing", "past_due", "unpaid"].includes(s.status)
   )) {
     try {
-      await cancelStripeSubscription(subscription.stripe_subscription_id);
+      await cancelStripeSubscription(
+        subscription.stripe_subscription_id,
+        endImmediately
+      );
     } catch (error) {
       return { data: null, error };
     }

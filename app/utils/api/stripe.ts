@@ -263,5 +263,11 @@ export const findOrCreateStripePrice = async (
   return existingPrice;
 };
 
-export const cancelStripeSubscription = (stripeSubscriptionId: string) =>
-  axios.post("/api/cancel_subscription", { stripeSubscriptionId });
+export const cancelStripeSubscription = (
+  stripeSubscriptionId: string,
+  endImmediately: boolean
+) =>
+  axios.post("/api/cancel_subscription", {
+    stripeSubscriptionId,
+    endImmediately,
+  });

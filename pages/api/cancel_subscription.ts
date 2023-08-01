@@ -5,12 +5,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
-      const { stripeSubscriptionId } = req.body;
+      const { stripeSubscriptionId, endImmediately } = req.body;
 
       // Cancel the subscription in Stripe
-      const deletedSubscription = await stripe.subscriptions.del(
-        stripeSubscriptionId
-      );
+      const canceledSubscription = endImmediately
+        ? await stripe.subscriptions.del(stripeSubscriptionId)
+        : await stripe.subscriptions.update(stripeSubscriptionId, {
+            cancel_at_period_end: true,
+          });
 
       //   await updateClientSubscriptionByStripeSubscriptionId(
       //     stripeSubscriptionId,
@@ -19,8 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       //     }
       //   );
 
-      // Send the deleted subscription data back to the client
-      res.status(200).json(deletedSubscription);
+      res.status(200).json(canceledSubscription);
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err });
     }

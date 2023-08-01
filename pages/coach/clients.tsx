@@ -109,8 +109,15 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, error };
   };
 
-  const handleCancelClientSubscription = async (client: Client) =>
-    cancelClientSubscription(client);
+  const handleCancelClientSubscription = async (
+    client: Client,
+    data: {
+      endImmediately: boolean;
+    }
+  ) => {
+    const { endImmediately } = data;
+    return await cancelClientSubscription(client, endImmediately);
+  };
 
   const actions: Action<Client>[] = [
     {
