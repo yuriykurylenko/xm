@@ -174,14 +174,21 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faXmark,
       show: cancelSubscriptionAllowed,
       handler: handleCancelClientSubscription,
+      DialogForm: () => (
+        <Input
+          name="endImmediately"
+          type="checkbox"
+          placeholder="End immediately"
+        />
+      ),
       dialogTitle: (selectedClient: Client) =>
         `End ${selectedClient.full_name}'s subscription`,
       dialogTitleBulk: (selectedClients: Client[]) =>
         `End ${selectedClients.length + " clients"}`,
       dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to end ${selectedClient.full_name}?`,
+        `Are you sure you would like to end ${selectedClient.full_name}? The client will stop at the end of their monthly billing cycle.`,
       dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to end ${selectedClients.length} clients?`,
+        `Are you sure you would like to end ${selectedClients.length} clients? The client will be ended at the end of their respective monthly billing cycles.`,
     },
   ];
 
