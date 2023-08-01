@@ -1,3 +1,4 @@
+import { updateClientSubscriptionByStripeSubscriptionId } from "@/app/utils/api";
 import { stripe } from "@/app/utils/initStripe";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -9,6 +10,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       // Cancel the subscription in Stripe
       const deletedSubscription = await stripe.subscriptions.del(
         stripeSubscriptionId
+      );
+
+      await updateClientSubscriptionByStripeSubscriptionId(
+        stripeSubscriptionId,
+        {
+          end_date: new Date(deletedSubscription.current_period_end * 1000),
+        }
       );
 
       // Send the deleted subscription data back to the client

@@ -10,6 +10,7 @@ export type Subscription = {
   stripe_price_id?: string;
   trial_period_days: number;
   start_date?: Date;
+  end_date?: Date;
   created_at?: Date;
   updated_at?: Date;
 };
@@ -24,4 +25,5 @@ export type SubscriptionInput = {
   currency?: string;
   stripe_price_id?: string;
   start_date?: Date;
+  end_date?: Date;
 };

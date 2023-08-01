@@ -51,8 +51,8 @@ export default async function handler(
               },
             ],
           },
-          metadata,
         ],
+        metadata,
       });
 
       res.status(200).json(subscriptionSchedule);

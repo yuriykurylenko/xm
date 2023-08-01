@@ -55,6 +55,9 @@ const ClientCard: React.FC<ClientCardProps> = ({
         {item.start_date && format(new Date(item.start_date), "dd/MM/yyyy")}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
+        {item.end_date && format(new Date(item.end_date), "dd/MM/yyyy")}
+      </div>
+      <div className={`${styles["column"]} ${styles["created-column"]}`}>
         <div
           className={`${styles["payment-label"]} ${
             styles["payment-label-" + item.subscription_status]

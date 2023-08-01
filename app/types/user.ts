@@ -23,6 +23,7 @@ export type Client = User & {
   subscription?: Subscription;
   subscription_status?: string;
   start_date?: Date;
+  end_date?: Date;
 };
 
 export type UserInput = {
