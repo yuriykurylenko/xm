@@ -268,7 +268,7 @@ async function fetchSubscriptionsByClientId(clientId: UUID | string) {
 }
 
 export const cancelClientSubscription = async (client: Client) => {
-  const { data: subscriptions } = await fetchSubscriptionsByClientId(client.id);
+  const { data: subscriptions } = await fetchSubscriptionsByClientId(client.id as string);
 
   for (const subscription of (subscriptions || []).filter((s) =>
     ["active", "trialing", "past_due", "unpaid"].includes(s.status)
