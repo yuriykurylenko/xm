@@ -51,6 +51,7 @@ export default async function handler(
               },
             ],
           },
+          metadata,
         ],
       });
 
