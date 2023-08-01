@@ -198,6 +198,7 @@ const Clients = ({ user }: { user: Coach }) => {
             { value: "offerSent", name: "Sent Offers" },
             { value: "starting", name: "Starting" },
             { value: "client", name: "Active" },
+            { value: "ended", name: "Ended" },
           ]}
           fetchItems={fetchClients}
           actions={actions}
