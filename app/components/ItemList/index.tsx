@@ -18,7 +18,7 @@ export type Action<T, D = any, U = any> = {
   icon: IconDefinition;
   show: (item: T | T[]) => boolean;
   handler: (item: T, data: D) => Promise<U>;
-  onComplete?: (setFilterStatus: (filterStatus: string) => void) => void;
+  onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
   DialogForm?: React.ComponentType;
   dialogTitle: (selectedItem: T) => string;
   dialogTitleBulk: (selectedItems: T[]) => string;

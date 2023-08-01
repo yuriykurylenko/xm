@@ -99,8 +99,8 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const onSendOfferComplete = (
-    setFilterStatus: (filterStatus: string) => void
-  ) => setFilterStatus("offerSent");
+    setFilterStatus?: (filterStatus: string) => void
+  ) => setFilterStatus && setFilterStatus("offerSent");
 
   const handleArchiveClient = async (client: Client) => {
     const { data, error } = await updateClientById(client.id as UUID, {
