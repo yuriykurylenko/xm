@@ -152,20 +152,20 @@ const Clients = ({ user }: { user: Coach }) => {
         `Are you sure you would like to archive ${selectedClients.length} clients?`,
     },
     {
-      name: "cancelSubscription",
-      title: "Cancel subscription",
-      titleBulk: "Cancel subscriptions",
+      name: "endSubscription",
+      title: "End client",
+      titleBulk: "End clients",
       icon: faXmark,
       show: cancelSubscriptionAllowed,
       handler: handleArchiveClient,
       dialogTitle: (selectedClient: Client) =>
-        `Archive ${selectedClient.full_name}`,
+        `End ${selectedClient.full_name}'s subscription`,
       dialogTitleBulk: (selectedClients: Client[]) =>
-        `Archive ${selectedClients.length + " clients"}`,
+        `End ${selectedClients.length + " clients' subscription"}`,
       dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to archive ${selectedClient.full_name}?`,
+        `Are you sure you would like to end ${selectedClient.full_name}' subscription?`,
       dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to archive ${selectedClients.length} clients?`,
+        `Are you sure you would like to end ${selectedClients.length} clients' subscriptions?`,
     },
   ];
 
