@@ -17,6 +17,7 @@ import { UUID } from "crypto";
 
 import {
   faPaperPlane,
+  faPowerOff,
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -99,6 +100,18 @@ const Clients = ({ user }: { user: Coach }) => {
     );
   };
 
+  const revokeAccessAllowed = (client: Client | Client[]) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    const clientUserIds = [client].flat().map((c) => c.user_id);
+
+    console.log(clientUserIds);
+
+    return (
+      clientUserIds.every((val?: string) => val != null) &&
+      clientStatuses.every((val?: string) => val === "ended")
+    );
+  };
+
   const onSendOfferComplete = (
     setFilterStatus?: (filterStatus: string) => void
   ) => setFilterStatus && setFilterStatus("offerSent");
@@ -106,6 +119,13 @@ const Clients = ({ user }: { user: Coach }) => {
   const handleArchiveClient = async (client: Client) => {
     const { data, error } = await updateClientById(client.id as UUID, {
       archived_at: new Date(),
+    });
+    return { data, error };
+  };
+
+  const handleRevokeAccess = async (client: Client) => {
+    const { data, error } = await updateClientById(client.id as UUID, {
+      user_id: null,
     });
     return { data, error };
   };
@@ -165,20 +185,20 @@ const Clients = ({ user }: { user: Coach }) => {
         "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
-      name: "archive",
-      title: "Archive",
-      titleBulk: "Archive",
-      icon: faTrash,
-      show: archiveClientAllowed,
-      handler: handleArchiveClient,
+      name: "revokeAccess",
+      title: "Revoke platform access",
+      titleBulk: "Revoke platform access",
+      icon: faPowerOff,
+      show: revokeAccessAllowed,
+      handler: handleRevokeAccess,
       dialogTitle: (selectedClient: Client) =>
-        `Archive ${selectedClient.full_name}`,
+        `Revoke access for ${selectedClient.full_name}`,
       dialogTitleBulk: (selectedClients: Client[]) =>
-        `Archive ${selectedClients.length + " clients"}`,
+        `Revoke access for ${selectedClients.length + " clients"}`,
       dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to archive ${selectedClient.full_name}?`,
+        `Are you sure you would like to revoke platform access for ${selectedClient.full_name}?`,
       dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to archive ${selectedClients.length} clients?`,
+        `Are you sure you would like to revoke platform access for ${selectedClients.length} clients?`,
     },
     {
       name: "endSubscription",
@@ -209,6 +229,22 @@ const Clients = ({ user }: { user: Coach }) => {
         `Are you sure you would like to end ${selectedClient.full_name}? The client will stop at the end of their monthly billing cycle.`,
       dialogTextBulk: (selectedClients: Client[]) =>
         `Are you sure you would like to end ${selectedClients.length} clients? The client will be ended at the end of their respective monthly billing cycles.`,
+    },
+    {
+      name: "archive",
+      title: "Archive",
+      titleBulk: "Archive",
+      icon: faTrash,
+      show: archiveClientAllowed,
+      handler: handleArchiveClient,
+      dialogTitle: (selectedClient: Client) =>
+        `Archive ${selectedClient.full_name}`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Archive ${selectedClients.length + " clients"}`,
+      dialogText: (selectedClient: Client) =>
+        `Are you sure you would like to archive ${selectedClient.full_name}?`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        `Are you sure you would like to archive ${selectedClients.length} clients?`,
     },
   ];
 

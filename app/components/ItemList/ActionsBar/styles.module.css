@@ -20,10 +20,8 @@
   color: #56d779;
 }
 
-.action-btn-archive:hover {
-  color: #d75656;
-}
-
-.action-btn-endSubscription:hover {
+.action-btn-archive:hover,
+.action-btn-endSubscription:hover,
+.action-btn-revokeAccess:hover {
   color: #d75656;
 }

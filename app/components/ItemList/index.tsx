@@ -300,7 +300,6 @@ const ItemList = <T,>({
                         ? action.dialogText(selectedItems[0])
                         : action.dialogTextBulk(selectedItems)
                     }
-                    actionTitle={action.title}
                   >
                     {action.DialogForm && <action.DialogForm />}
                   </ActionDialog>

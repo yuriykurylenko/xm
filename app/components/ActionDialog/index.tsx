@@ -16,7 +16,6 @@ export interface ActionDialogProps {
   children?: React.ReactNode;
   title: string;
   text: string;
-  actionTitle: string;
 }
 
 const ActionDialog: React.FC<ActionDialogProps> = ({
@@ -25,7 +24,6 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
   children,
   title,
   text,
-  actionTitle,
 }) => {
   return (
     <Modal
@@ -60,9 +58,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
               </BasicButton>
             </div>
             <div className={styles["button-container"]}>
-              <Button type="submit" submittingText={actionTitle}>
-                {actionTitle}
-              </Button>
+              <Button type="submit">Confirm</Button>
             </div>
           </div>
         </Form>
