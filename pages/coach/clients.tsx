@@ -14,7 +14,11 @@ import EmptyList, { EmptyListProps } from "@/app/components/clients/EmptyList";
 import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
-import { faPaperPlane, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPaperPlane,
+  faTrash,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
@@ -70,6 +74,15 @@ const Clients = ({ user }: { user: Coach }) => {
   const sendOfferToClientAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
     return clientStatuses.length === 1 && clientStatuses[0] === "lead";
+  };
+
+  const cancelSubscriptionAllowed = (client: Client | Client[]) => {
+    const clientSubscriptionStatuses = [
+      ...new Set([client].flat().map((c) => c.subscription_status)),
+    ];
+    return clientSubscriptionStatuses.every((val?: string) =>
+      ["past_due", "unpaid", "active", "trialing"].includes(val as string)
+    );
   };
 
   const onSendOfferComplete = (
@@ -128,6 +141,22 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Archive",
       icon: faTrash,
       show: (client: Client | Client[]) => true,
+      handler: handleArchiveClient,
+      dialogTitle: (selectedClient: Client) =>
+        `Archive ${selectedClient.full_name}`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Archive ${selectedClients.length + " clients"}`,
+      dialogText: (selectedClient: Client) =>
+        `Are you sure you would like to archive ${selectedClient.full_name}?`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        `Are you sure you would like to archive ${selectedClients.length} clients?`,
+    },
+    {
+      name: "cancelSubscription",
+      title: "Cancel subscription",
+      titleBulk: "Cancel subscriptions",
+      icon: faXmark,
+      show: cancelSubscriptionAllowed,
       handler: handleArchiveClient,
       dialogTitle: (selectedClient: Client) =>
         `Archive ${selectedClient.full_name}`,
