@@ -2,6 +2,7 @@ import * as React from "react";
 import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
 import {
+  cancelClientSubscription,
   fetchClientsByCoachId,
   sendClientOffer,
   updateClientById,
@@ -96,6 +97,9 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, error };
   };
 
+  const handleCancelClientSubscription = async (client: Client) =>
+    cancelClientSubscription(client);
+
   const actions: Action<Client>[] = [
     {
       name: "sendOffer",
@@ -157,15 +161,15 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "End clients",
       icon: faXmark,
       show: cancelSubscriptionAllowed,
-      handler: handleArchiveClient,
+      handler: handleCancelClientSubscription,
       dialogTitle: (selectedClient: Client) =>
         `End ${selectedClient.full_name}'s subscription`,
       dialogTitleBulk: (selectedClients: Client[]) =>
-        `End ${selectedClients.length + " clients' subscription"}`,
+        `End ${selectedClients.length + " clients"}`,
       dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to end ${selectedClient.full_name}' subscription?`,
+        `Are you sure you would like to end ${selectedClient.full_name}?`,
       dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to end ${selectedClients.length} clients' subscriptions?`,
+        `Are you sure you would like to end ${selectedClients.length} clients?`,
     },
   ];
 

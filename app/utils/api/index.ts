@@ -3,6 +3,7 @@ import { Client, ClientInput, Coach, CoachInput } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
+import { cancelStripeSubscription } from "@/app/utils/api/stripe";
 
 export const fetchCoachById = (id: UUID) =>
   supabase.from("coaches").select("*").eq("id", id).single();
@@ -247,4 +248,37 @@ export const activateClient = async (subscriptionId: UUID) => {
     status:
       new Date(subscription.start_date) <= new Date() ? "client" : "starting",
   });
+};
+
+async function fetchSubscriptionsByClientId(clientId: UUID | string) {
+  try {
+    const { data, error } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("client_id", clientId);
+
+    if (error) {
+      return { data: null, error };
+    }
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: null, error };
+  }
+}
+
+export const cancelClientSubscription = async (client: Client) => {
+  const { data: subscriptions } = await fetchSubscriptionsByClientId(client.id);
+
+  for (const subscription of (subscriptions || []).filter((s) =>
+    ["active", "trialing", "past_due", "unpaid"].includes(s.status)
+  )) {
+    try {
+      await cancelStripeSubscription(subscription.stripe_subscription_id);
+    } catch (error) {
+      return { data: null, error };
+    }
+  }
+
+  return { data: subscriptions, error: null };
 };

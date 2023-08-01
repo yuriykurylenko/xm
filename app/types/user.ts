@@ -2,7 +2,7 @@ import { UUID } from "crypto";
 import { Subscription } from "@/app/types/subscription";
 
 export type User = {
-  id?: UUID | string;
+  id: UUID | string;
   full_name: string;
   email: string;
   created_at?: Date | string;

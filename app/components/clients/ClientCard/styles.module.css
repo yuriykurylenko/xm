@@ -131,3 +131,8 @@
   background-color: #d7d156;
   color: #fff;
 }
+
+.payment-label-canceled {
+  background-color: #aaa;
+  color: #fff;
+}

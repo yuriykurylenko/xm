@@ -89,7 +89,10 @@ export default async function handler(
       }
 
       res.json({ received: true });
-    } else if (event.type === "customer.subscription.updated") {
+    } else if (
+      event.type === "customer.subscription.updated" ||
+      event.type === "customer.subscription.deleted"
+    ) {
       const subscription = event.data.object as Stripe.Subscription;
       await updateClientSubscriptionByStripeSubscriptionId(subscription.id, {
         status: subscription.status,
