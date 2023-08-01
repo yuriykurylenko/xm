@@ -10,6 +10,7 @@
 .avatar {
   width: 30px;
   max-width: 30px;
+  min-width: 30px;
   height: 30px;
   border-radius: 50%;
   background-color: #ccc;
@@ -72,7 +73,7 @@
 }
 
 .name-column {
-  flex: 0 0 calc(100% - 730px);
+  flex: 0 0 calc(100% - 750px);
 }
 
 .created-column {

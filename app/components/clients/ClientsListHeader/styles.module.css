@@ -31,11 +31,13 @@
 .header-column-avatar {
   width: 30px;
   max-width: 30px;
+  min-width: 30px;
   margin: 0 15px;
 }
 
 .header-row-no-padding .header-column-bulk {
   max-width: 30px;
+  min-width: 30px;
   margin-right: 20px;
 }
 
@@ -44,7 +46,7 @@
 }
 
 .header-column-name {
-  flex: 0 0 calc(100% - 730px);
+  flex: 0 0 calc(100% - 750px);
 }
 
 .header-column-created {
