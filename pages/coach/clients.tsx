@@ -86,6 +86,18 @@ const Clients = ({ user }: { user: Coach }) => {
     );
   };
 
+  const archiveClientAllowed = (client: Client | Client[]) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    const clientSubscriptionStatuses = [
+      ...new Set([client].flat().map((c) => c.subscription_status)),
+    ];
+
+    return (
+      clientSubscriptionStatuses.every((val?: string) => val === "canceled") ||
+      clientStatuses.every((val?: string) => val === "lead")
+    );
+  };
+
   const onSendOfferComplete = (
     setFilterStatus: (filterStatus: string) => void
   ) => setFilterStatus("offerSent");
@@ -144,7 +156,7 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Archive",
       titleBulk: "Archive",
       icon: faTrash,
-      show: (client: Client | Client[]) => true,
+      show: archiveClientAllowed,
       handler: handleArchiveClient,
       dialogTitle: (selectedClient: Client) =>
         `Archive ${selectedClient.full_name}`,
