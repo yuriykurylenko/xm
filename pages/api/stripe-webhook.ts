@@ -12,7 +12,7 @@ import {
 } from "@/app/utils/api";
 import sgMail from "@sendgrid/mail";
 import { UUID } from "crypto";
-import { Subscription, SubscriptionInput } from "@/app/types/subscription";
+import { SubscriptionInput } from "@/app/types/subscription";
 
 export const config = {
   api: {
@@ -65,6 +65,15 @@ export default async function handler(
               status: "client",
             });
           }
+
+          await updateClientSubscriptionByStripeSubscriptionId(
+            subscription.id,
+            {
+              current_period_end_date: new Date(
+                subscription.current_period_end * 1000
+              ),
+            }
+          );
 
           const { data: client } = await fetchClientById(
             clientSubscription?.client_id
@@ -121,6 +130,17 @@ export default async function handler(
       }
 
       res.json({ received: true });
+    } else if (event.type === "invoice.created") {
+      const invoice = event.data.object as Stripe.Invoice;
+      const subscription = await stripe.subscriptions.retrieve(
+        invoice.subscription as string
+      );
+
+      await updateClientSubscriptionByStripeSubscriptionId(subscription.id, {
+        current_period_end_date: new Date(
+          subscription.current_period_end * 1000
+        ),
+      });
     } else if (
       event.type === "invoice.payment_succeeded" ||
       event.type === "invoice.payment_failed"

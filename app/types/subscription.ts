@@ -26,4 +26,5 @@ export type SubscriptionInput = {
   stripe_price_id?: string;
   start_date?: Date;
   end_date?: Date;
+  current_period_end_date?: Date;
 };
