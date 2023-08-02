@@ -171,6 +171,10 @@ const Clients = ({ user }: { user: Coach }) => {
     setFilterStatus?: (filterStatus: string) => void
   ) => setFilterStatus && setFilterStatus("lead");
 
+  const onCancelClientSubscriptionComplete = (
+    setFilterStatus?: (filterStatus: string) => void
+  ) => setFilterStatus && setFilterStatus("ended");
+
   const actions: Action<Client>[] = [
     {
       name: "sendOffer",
@@ -288,6 +292,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faXmark,
       show: cancelSubscriptionAllowed,
       handler: handleCancelClientSubscription,
+      onComplete: onCancelClientSubscriptionComplete,
       DialogForm: () => (
         <>
           <Input
