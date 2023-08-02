@@ -29,4 +29,5 @@ export type SubscriptionInput = {
   end_date?: Date;
   current_period_end_date?: Date;
   access_after_end_date?: boolean;
+  archived_at?: Date;
 };

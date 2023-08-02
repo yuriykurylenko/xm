@@ -77,7 +77,12 @@ export const fetchClientsByCoachId = async (
 };
 
 export const fetchSubscriptionById = (subscriptionId: UUID) =>
-  supabase.from("subscriptions").select("*").eq("id", subscriptionId).single();
+  supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("id", subscriptionId)
+    .is("archived_at", null)
+    .single();
 
 export const fetchSubscriptionByStripeSubscriptionId = (
   stripeSubscriptionId: string
@@ -86,6 +91,7 @@ export const fetchSubscriptionByStripeSubscriptionId = (
     .from("subscriptions")
     .select("*")
     .eq("stripe_subscription_id", stripeSubscriptionId)
+    .is("archived_at", null)
     .single();
 
 export const createClient = ({ full_name, email, coach_id }: Client) =>
@@ -184,8 +190,10 @@ export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
 export const updateCoachById = (coachId: UUID | string, data: CoachInput) =>
   supabase.from("coaches").update(data).eq("id", coachId).select();
 
-export const deleteSubscriptionByClientId = async (clientId: UUID | string) =>
-  supabase.from("subscriptions").delete().eq("client_id", clientId);
+export const updateSubscriptionByClientId = async (
+  clientId: UUID | string,
+  data: SubscriptionInput
+) => supabase.from("subscriptions").update(data).eq("client_id", clientId);
 
 const sendClientPaymentLink = ({
   subscription,
@@ -219,7 +227,7 @@ export const sendClientOffer = async (
     return { data: null, error: "Coach not found" };
   }
 
-  await deleteSubscriptionByClientId(clientId);
+  await updateSubscriptionByClientId(clientId, { archived_at: new Date() });
 
   const { data, error } = await createClientSubscription(clientId, {
     productId: coach?.stripe_product_id,
@@ -260,6 +268,7 @@ async function fetchSubscriptionsByClientId(clientId: UUID | string) {
     const { data, error } = await supabase
       .from("subscriptions")
       .select("*")
+      .is("archived_at", null)
       .eq("client_id", clientId);
 
     if (error) {
