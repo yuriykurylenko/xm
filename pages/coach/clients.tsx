@@ -6,6 +6,7 @@ import {
   fetchClientsByCoachId,
   sendClientOffer,
   updateClientById,
+  updateSubscriptionByClientId,
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 
@@ -94,6 +95,11 @@ const Clients = ({ user }: { user: Coach }) => {
     );
   };
 
+  const cancelOfferAllowed = (client: Client | Client[]) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    return clientStatuses.length === 1 && clientStatuses[0] === "offerSent";
+  };
+
   const archiveClientAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
     const clientSubscriptionStatuses = [
@@ -150,6 +156,17 @@ const Clients = ({ user }: { user: Coach }) => {
       accessAfterEndDate
     );
   };
+
+  const handleCancelClientOffer = async (client: Client) => {
+    await updateSubscriptionByClientId(client.id as string, {
+      archived_at: new Date(),
+    });
+    return await updateClientById(client.id as string, { status: "lead" });
+  };
+
+  const onCancelClientOfferComplete = (
+    setFilterStatus?: (filterStatus: string) => void
+  ) => setFilterStatus && setFilterStatus("lead");
 
   const actions: Action<Client>[] = [
     {
@@ -226,7 +243,24 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogText: (selectedClient: Client) =>
         `${selectedClient.full_name} will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to the client will be canceled.`,
       dialogTextBulk: (selectedClients: Client[]) =>
-        "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to the client will be canceled.",
+        "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled.",
+    },
+    {
+      name: "cancelOffer",
+      title: "Cancel offer",
+      titleBulk: "Cancel offers",
+      icon: faXmark,
+      show: cancelOfferAllowed,
+      handler: handleCancelClientOffer,
+      onComplete: onCancelClientOfferComplete,
+      dialogTitle: (selectedClient: Client) =>
+        `Cancel ${selectedClient.full_name}'s offer`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Cancel ${selectedClients.length + " clients' offers"}`,
+      dialogText: (selectedClient: Client) =>
+        `Are you sure you would like to cancel ${selectedClient.full_name}'s offer?`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        `Are you sure you would like to cancel ${selectedClients.length} clients' offers?`,
     },
     {
       name: "revokeAccess",

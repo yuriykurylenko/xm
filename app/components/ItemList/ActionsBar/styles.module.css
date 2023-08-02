@@ -16,12 +16,14 @@
   background-color: transparent;
 }
 
-.action-btn-sendOffer:hover {
+.action-btn-sendOffer:hover,
+.action-btn-resendOffer:hover {
   color: #56d779;
 }
 
 .action-btn-archive:hover,
 .action-btn-endSubscription:hover,
-.action-btn-revokeAccess:hover {
+.action-btn-revokeAccess:hover,
+.action-btn-cancelOffer:hover {
   color: #d75656;
 }
