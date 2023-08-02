@@ -99,8 +99,8 @@ const ItemList = <T,>({
   const [items, setItems] = useState<T[]>([]);
   const [selectedItems, setSelectedItems] = useState<T[]>([]);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const [sortColumn, setSortColumn] = useState("");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [sortColumn, setSortColumn] = useState("updated_at");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
 
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);

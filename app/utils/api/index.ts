@@ -27,9 +27,10 @@ export const fetchClientsByCoachId = async (
   page: number = 1,
   filterStatus: string = "all",
   filterText: string = "",
-  sortColumn: string = "",
-  sortDirection: "asc" | "desc" = "asc"
+  sortColumn: string = "updated_at",
+  sortDirection: "asc" | "desc" = "desc"
 ) => {
+  console.log(sortColumn, sortDirection);
   const itemsPerPage = 20;
   const offset = (page - 1) * itemsPerPage;
 

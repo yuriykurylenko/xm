@@ -116,8 +116,6 @@ const Clients = ({ user }: { user: Coach }) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
     const clientUserIds = [client].flat().map((c) => c.user_id);
 
-    console.log(clientUserIds);
-
     return (
       clientUserIds.every((val?: string) => val != null) &&
       clientStatuses.every((val?: string) => val === "ended")
@@ -160,6 +158,8 @@ const Clients = ({ user }: { user: Coach }) => {
   const handleCancelClientOffer = async (client: Client) => {
     await updateSubscriptionByClientId(client.id as string, {
       archived_at: new Date(),
+      start_date: null,
+      end_date: null,
     });
     return await updateClientById(client.id as string, { status: "lead" });
   };
