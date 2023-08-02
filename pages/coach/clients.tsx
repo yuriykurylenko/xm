@@ -84,7 +84,10 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const resendOfferToClientAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return clientStatuses.length === 1 && clientStatuses[0] === "offerSent";
+    return (
+      clientStatuses.length === 1 &&
+      ["offerSent", "starting"].includes(clientStatuses[0] as string)
+    );
   };
 
   const cancelSubscriptionAllowed = (client: Client | Client[]) => {
