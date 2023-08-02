@@ -47,12 +47,44 @@ export default async function handler(
       return;
     }
 
-    if (event.type === "customer.subscription.created") {
+    if (event.type === "subscription_schedule.created") {
+      const subscriptionSchedule = event.data
+        .object as Stripe.SubscriptionSchedule;
+
+      // Update the subscription in your database
+      if (subscriptionSchedule.metadata?.subscription_id) {
+        await updateClientSubscriptionById(
+          subscriptionSchedule.metadata.subscription_id,
+          { stripe_subscription_id: subscriptionSchedule.id }
+        );
+      }
+
+      res.json({ received: true });
+    } else if (event.type === "subscription_schedule.canceled") {
+      const subscriptionSchedule = event.data
+        .object as Stripe.SubscriptionSchedule;
+
+      // Update the subscription in your database
+      if (subscriptionSchedule.metadata?.subscription_id) {
+        const { data: clientSubscription } = await updateClientSubscriptionById(
+          subscriptionSchedule.metadata.subscription_id,
+          { start_date: null, end_date: null, archived_at: new Date() }
+        );
+
+        if (clientSubscription) {
+          await updateClientById(clientSubscription.client_id, {
+            status: "lead",
+          });
+        }
+      }
+
+      res.json({ received: true });
+    } else if (event.type === "customer.subscription.created") {
       const subscription = event.data.object as Stripe.Subscription;
 
       if (subscription.metadata.subscription_id) {
         const { data: clientSubscription } = await updateClientSubscriptionById(
-          subscription.metadata.subscription_id as UUID,
+          subscription.metadata.subscription_id,
           {
             stripe_subscription_id: subscription.id,
             status: subscription.status,

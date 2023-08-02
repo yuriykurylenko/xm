@@ -3,7 +3,10 @@ import { Client, ClientInput, Coach, CoachInput } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
-import { cancelStripeSubscription } from "@/app/utils/api/stripe";
+import {
+  cancelStripeSubscription,
+  cancelStripeSubscriptionSchedule,
+} from "@/app/utils/api/stripe";
 
 export const fetchCoachById = (id: UUID) =>
   supabase.from("coaches").select("*").eq("id", id).single();
@@ -30,7 +33,6 @@ export const fetchClientsByCoachId = async (
   sortColumn: string = "updated_at",
   sortDirection: "asc" | "desc" = "desc"
 ) => {
-  console.log(sortColumn, sortDirection);
   const itemsPerPage = 20;
   const offset = (page - 1) * itemsPerPage;
 
@@ -164,7 +166,7 @@ const createClientSubscription = async (
 };
 
 export const updateClientSubscriptionById = (
-  subscriptionId: UUID,
+  subscriptionId: UUID | string,
   data: SubscriptionInput
 ) =>
   supabase
@@ -299,6 +301,24 @@ export const cancelClientSubscription = async (
         subscription.stripe_subscription_id,
         endImmediately,
         accessAfterEndDate
+      );
+    } catch (error) {
+      return { data: null, error };
+    }
+  }
+
+  return { data: subscriptions, error: null };
+};
+
+export const cancelClientSubscriptionSchedule = async (client: Client) => {
+  const { data: subscriptions } = await fetchSubscriptionsByClientId(
+    client.id as string
+  );
+
+  for (const subscription of subscriptions || []) {
+    try {
+      await cancelStripeSubscriptionSchedule(
+        subscription.stripe_subscription_id
       );
     } catch (error) {
       return { data: null, error };

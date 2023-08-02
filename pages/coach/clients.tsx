@@ -3,6 +3,7 @@ import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
 import {
   cancelClientSubscription,
+  cancelClientSubscriptionSchedule,
   fetchClientsByCoachId,
   sendClientOffer,
   updateClientById,
@@ -100,6 +101,11 @@ const Clients = ({ user }: { user: Coach }) => {
     return clientStatuses.length === 1 && clientStatuses[0] === "offerSent";
   };
 
+  const cancelSubscriptionScheduleAllowed = (client: Client | Client[]) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    return clientStatuses.length === 1 && clientStatuses[0] === "starting";
+  };
+
   const archiveClientAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
     const clientSubscriptionStatuses = [
@@ -155,6 +161,10 @@ const Clients = ({ user }: { user: Coach }) => {
     );
   };
 
+  const handleCancelClientSubscriptionSchedule = async (client: Client) => {
+    return await cancelClientSubscriptionSchedule(client);
+  };
+
   const handleCancelClientOffer = async (client: Client) => {
     await updateSubscriptionByClientId(client.id as string, {
       archived_at: new Date(),
@@ -174,6 +184,10 @@ const Clients = ({ user }: { user: Coach }) => {
   const onCancelClientSubscriptionComplete = (
     setFilterStatus?: (filterStatus: string) => void
   ) => setFilterStatus && setFilterStatus("ended");
+
+  const onCancelClientSubscriptionScheduleComplete = (
+    setFilterStatus?: (filterStatus: string) => void
+  ) => setFilterStatus && setFilterStatus("lead");
 
   const actions: Action<Client>[] = [
     {
@@ -268,6 +282,23 @@ const Clients = ({ user }: { user: Coach }) => {
         `Are you sure you would like to cancel ${selectedClient.full_name}'s offer?`,
       dialogTextBulk: (selectedClients: Client[]) =>
         `Are you sure you would like to cancel ${selectedClients.length} clients' offers?`,
+    },
+    {
+      name: "cancelSubscriptionSchedule",
+      title: "Cancel starting client",
+      titleBulk: "Cancel starting clients",
+      icon: faXmark,
+      show: cancelSubscriptionScheduleAllowed,
+      handler: handleCancelClientSubscriptionSchedule,
+      onComplete: onCancelClientSubscriptionScheduleComplete,
+      dialogTitle: (selectedClient: Client) =>
+        `Cancel ${selectedClient.full_name}'s start`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Cancel ${selectedClients.length + " clients' start"}`,
+      dialogText: (selectedClient: Client) =>
+        `Are you sure you would like to cancel ${selectedClient.full_name}'s start?`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        `Are you sure you would like to cancel ${selectedClients.length} clients' start?`,
     },
     {
       name: "revokeAccess",

@@ -273,3 +273,10 @@ export const cancelStripeSubscription = (
     endImmediately,
     accessAfterEndDate,
   });
+
+export const cancelStripeSubscriptionSchedule = (
+  stripeSubscriptionScheduleId: string
+) =>
+  axios.post("/api/cancel_subscription_schedule", {
+    stripeSubscriptionScheduleId,
+  });
