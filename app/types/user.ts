@@ -35,6 +35,7 @@ export type UserInput = {
 export type ClientInput = UserInput & {
   coach_id?: UUID | string;
   status?: string;
+  subscription_status?: string | null;
   archived_at?: Date | string;
 };
 

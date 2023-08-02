@@ -161,7 +161,10 @@ const Clients = ({ user }: { user: Coach }) => {
       start_date: null,
       end_date: null,
     });
-    return await updateClientById(client.id as string, { status: "lead" });
+    return await updateClientById(client.id as string, {
+      status: "lead",
+      subscription_status: null,
+    });
   };
 
   const onCancelClientOfferComplete = (
