@@ -1,5 +1,4 @@
 import {
-  fetchClientById,
   fetchCoachByClientId,
   fetchSubscriptionByStripeSubscriptionId,
 } from "@/app/utils/api";
