@@ -86,7 +86,17 @@ const Clients = ({ user }: { user: Coach }) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
     return (
       clientStatuses.length === 1 &&
-      ["offerSent", "starting"].includes(clientStatuses[0] as string)
+      ["offerSent"].includes(clientStatuses[0] as string)
+    );
+  };
+
+  const changeClientSubscriptionScheduleAllowed = (
+    client: Client | Client[]
+  ) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    return (
+      clientStatuses.length === 1 &&
+      ["starting"].includes(clientStatuses[0] as string)
     );
   };
 
@@ -232,6 +242,44 @@ const Clients = ({ user }: { user: Coach }) => {
         "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
+      name: "changeStartingSubscrition",
+      title: "Change client's terms",
+      titleBulk: "Change clients' terms",
+      icon: faRotate,
+      show: changeClientSubscriptionScheduleAllowed,
+      handler: handleSendOfferToClient,
+      onComplete: onSendOfferComplete,
+      DialogForm: () => (
+        <>
+          <PriceInput
+            name="monthlyAmount"
+            placeholder="Monthly price"
+            required
+            defaultValue={user.monthly_subscription_amount / 100}
+          />
+          <Input
+            name="startDate"
+            type="date"
+            placeholder="Start date"
+            defaultValue={new Date()}
+          />
+          <Input
+            name="trialPeriod"
+            type="checkbox"
+            placeholder="Offer trial period (14 days)"
+          />
+        </>
+      ),
+      dialogTitle: (selectedClient: Client) =>
+        `Change terms for ${selectedClient.full_name}`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Change terms ${selectedClients.length + " clients"}`,
+      dialogText: (selectedClient: Client) =>
+        `Please specify the new price and start date for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        "Please specify the new price and start date for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
+    },
+    {
       name: "resendOffer",
       title: "Resend offer",
       titleBulk: "Resend offers",
@@ -267,7 +315,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogText: (selectedClient: Client) =>
         `${selectedClient.full_name} will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to the client will be canceled.`,
       dialogTextBulk: (selectedClients: Client[]) =>
-        "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled.",
+        "Your clients will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled.",
     },
     {
       name: "cancelOffer",
