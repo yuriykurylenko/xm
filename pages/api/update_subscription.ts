@@ -6,7 +6,6 @@ import {
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
 import { stripe } from "@/app/utils/initStripe";
 import { NextApiRequest, NextApiResponse } from "next";
-import Stripe from "stripe";
 
 export default async function handler(
   req: NextApiRequest,
