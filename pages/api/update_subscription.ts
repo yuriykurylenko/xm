@@ -68,7 +68,6 @@ export default async function handler(
       res.status(200).json(subscriptionSchedule);
     } else {
       // Create the subscription
-      console.log("subscription");
       const subscription = await stripe.subscriptions.create({
         customer: canceledSchedule.customer as string,
         items: [{ price: price.id, quantity: 1 }],
