@@ -4,6 +4,7 @@ import withAuth from "@/app/hoc/withAuth";
 import {
   cancelClientSubscription,
   cancelClientSubscriptionSchedule,
+  changeClientSubscriptionAmount,
   changeClientSubscriptionSchedule,
   fetchClientsByCoachId,
   sendClientOffer,
@@ -89,7 +90,7 @@ const Clients = ({ user }: { user: Coach }) => {
   ) => {
     const { monthlyAmount, trialPeriod, startDate } = data;
 
-    const { data: sendOfferData, error } =
+    const { data: changeClientSubscriptionScheduleData, error } =
       await changeClientSubscriptionSchedule(client.id as UUID, {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
@@ -98,7 +99,30 @@ const Clients = ({ user }: { user: Coach }) => {
       });
 
     if (error) {
-      return { data: sendOfferData, error };
+      return { data: changeClientSubscriptionScheduleData, error };
+    }
+
+    return { error: null };
+  };
+
+  const handleChangeClientSubscriptionAmount = async (
+    client: Client,
+    data: {
+      monthlyAmount: number | string;
+      trialPeriod: boolean;
+      startDate: Date;
+    }
+  ) => {
+    const { monthlyAmount, trialPeriod, startDate } = data;
+
+    const { data: changeClientSubscriptionScheduleData, error } =
+      await changeClientSubscriptionAmount(client.id as UUID, {
+        monthlyAmount: Number(monthlyAmount) * 100,
+        currency: "USD",
+      });
+
+    if (error) {
+      return { data: changeClientSubscriptionScheduleData, error };
     }
 
     return { error: null };
@@ -310,7 +334,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Change clients' monthly price",
       icon: faDollarSign,
       show: changeClientSubscriptionAmountAllowed,
-      handler: handleChangeClientSubscriptionSchedule,
+      handler: handleChangeClientSubscriptionAmount,
       DialogForm: () => (
         <>
           <PriceInput

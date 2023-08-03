@@ -1,6 +1,7 @@
 import {
   fetchCoachByClientId,
   fetchSubscriptionByStripeSubscriptionId,
+  updateClientSubscriptionByStripeSubscriptionId,
 } from "@/app/utils/api";
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
 import { stripe } from "@/app/utils/initStripe";
@@ -18,6 +19,7 @@ export default async function handler(
       trialPeriodDays,
       startDate,
       stripeSubscriptionId,
+      isActiveSubscription,
     } = req.body;
 
     const { data: subscription } =
@@ -30,6 +32,35 @@ export default async function handler(
       interval: "month",
       currency,
     });
+
+    if (isActiveSubscription) {
+      const subscription = await stripe.subscriptions.retrieve(
+        stripeSubscriptionId
+      );
+
+      await stripe.subscriptions.update(stripeSubscriptionId, {
+        cancel_at_period_end: false,
+        // TODO: look into this
+        proration_behavior: "none",
+        items: [
+          {
+            id: subscription.items.data[0].id,
+            price: price.id,
+            quantity: 1,
+          },
+        ],
+      });
+
+      await updateClientSubscriptionByStripeSubscriptionId(
+        stripeSubscriptionId,
+        {
+          monthly_amount: monthlyAmount,
+          currency,
+        }
+      );
+
+      return res.status(200).json(subscription);
+    }
 
     const canceledSchedule = await stripe.subscriptionSchedules.cancel(
       stripeSubscriptionId

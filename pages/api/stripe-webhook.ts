@@ -219,6 +219,40 @@ export default async function handler(
         }
 
         await updateClientById(clientSubscription.client_id, clientUpdateProps);
+      } else if (
+        event.type === "customer.subscription.updated" &&
+        clientSubscription
+      ) {
+        const pricingChanged =
+          (event.data.previous_attributes as any)?.plan?.amount ||
+          (event.data.previous_attributes as any)?.plan?.currency;
+
+        if (pricingChanged) {
+          const { data: client } = await fetchClientById(
+            clientSubscription.client_id
+          );
+          const { data: coach } = await fetchCoachByClientId(
+            clientSubscription.client_id
+          );
+
+          if (client && coach) {
+            await sgMail.send({
+              to: client.email,
+              from: "yuriy.kurylenko@gmail.com",
+              templateId: "d-776524b90fc34aa387b8337205142e8c",
+              dynamicTemplateData: {
+                client_name: client.full_name,
+                coach_name: coach.full_name,
+                amount: clientSubscription.monthly_amount / 100,
+                currency: clientSubscription.currency,
+                new_price_start_date: format(
+                  new Date(subscription.current_period_end * 1000),
+                  "dd/MM/yyyy"
+                ),
+              },
+            });
+          }
+        }
       }
 
       res.json({ received: true });
