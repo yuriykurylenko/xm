@@ -56,13 +56,13 @@ export default async function handler(
               {
                 price: price.id,
                 quantity: 1,
-                metadata,
+                metadata: { ...metadata, updated: true },
               },
             ],
-            metadata,
+            metadata: { ...metadata, updated: true },
           },
         ],
-        metadata,
+        metadata: { ...metadata, updated: true },
       });
 
       res.status(200).json(subscriptionSchedule);

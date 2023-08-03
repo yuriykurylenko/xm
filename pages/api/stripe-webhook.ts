@@ -15,6 +15,7 @@ import sgMail from "@sendgrid/mail";
 import { UUID } from "crypto";
 import { SubscriptionInput } from "@/app/types/subscription";
 import { ClientInput } from "@/app/types/user";
+import { format } from "date-fns";
 
 export const config = {
   api: {
@@ -63,6 +64,38 @@ export default async function handler(
           await updateClientById(clientSubscription.client_id, {
             status: "starting",
           });
+
+          if (subscriptionSchedule.metadata.updated) {
+            const { data: client } = await fetchClientById(
+              clientSubscription?.client_id
+            );
+            const { data: coach } = await fetchCoachByClientId(
+              clientSubscription.client_id
+            );
+
+            if (coach && client) {
+              await sgMail.send({
+                to: client.email,
+                from: "yuriy.kurylenko@gmail.com",
+                templateId: "d-306b9c3260cd4337b3528ee2e847bb31",
+                dynamicTemplateData: {
+                  client_name: client.full_name,
+                  coach_name: coach.full_name,
+                  subscription_id: clientSubscription.id,
+                  amount: clientSubscription.monthly_amount / 100,
+                  currency: clientSubscription.currency,
+                  trial_period_days: clientSubscription.trial_period_days,
+                  start_date: format(
+                    !clientSubscription.start_date ||
+                      new Date(clientSubscription.start_date) < new Date()
+                      ? new Date()
+                      : new Date(clientSubscription.start_date),
+                    "dd/MM/yyyy"
+                  ),
+                },
+              });
+            }
+          }
         }
       }
 
