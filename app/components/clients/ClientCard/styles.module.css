@@ -1,12 +1,3 @@
-.list-item {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 4px;
-  background-color: #f8f8f8;
-}
-
 .avatar {
   width: 30px;
   max-width: 30px;
@@ -50,6 +41,7 @@
   padding: 5px 10px;
   border-bottom: #ddd 1px solid;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .card-row-selected {
