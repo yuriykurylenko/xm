@@ -33,14 +33,14 @@ export default async function handler(
       currency,
     });
 
+    const canceledSchedule = await stripe.subscriptionSchedules.cancel(
+      stripeSubscriptionId
+    );
+
     // Check if the start date is in the future
     if (startDate && new Date(startDate) > new Date()) {
       let trialEndDate = new Date(startDate);
       trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
-
-      const canceledSchedule = await stripe.subscriptionSchedules.cancel(
-        stripeSubscriptionId
-      );
 
       const subscriptionSchedule = await stripe.subscriptionSchedules.create({
         customer: canceledSchedule.customer as string,
@@ -66,12 +66,21 @@ export default async function handler(
       });
 
       res.status(200).json(subscriptionSchedule);
+    } else {
+      // Create the subscription
+      console.log("subscription");
+      const subscription = await stripe.subscriptions.create({
+        customer: canceledSchedule.customer as string,
+        items: [{ price: price.id, quantity: 1 }],
+        expand: ["latest_invoice.payment_intent"],
+        metadata,
+        trial_period_days: trialPeriodDays,
+      });
+
+      res.status(200).json(subscription);
     }
   } else {
     res.setHeader("Allow", "POST");
     res.status(405).end("Method Not Allowed");
   }
-}
-function createStripePriceForProduct(stripe: Stripe) {
-  throw new Error("Function not implemented.");
 }
