@@ -19,6 +19,7 @@ import { Coach, Client } from "@/app/types/user";
 import { UUID } from "crypto";
 
 import {
+  faDollarSign,
   faPaperPlane,
   faPowerOff,
   faRotate,
@@ -110,20 +111,19 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const resendOfferToClientAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return (
-      clientStatuses.length === 1 &&
-      ["offerSent"].includes(clientStatuses[0] as string)
-    );
+    return clientStatuses.length === 1 && clientStatuses[0] === "offerSent";
   };
 
   const changeClientSubscriptionScheduleAllowed = (
     client: Client | Client[]
   ) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return (
-      clientStatuses.length === 1 &&
-      ["starting"].includes(clientStatuses[0] as string)
-    );
+    return clientStatuses.length === 1 && clientStatuses[0] === "starting";
+  };
+
+  const changeClientSubscriptionAmountAllowed = (client: Client | Client[]) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    return clientStatuses.length === 1 && clientStatuses[0] === "client";
   };
 
   const cancelSubscriptionAllowed = (client: Client | Client[]) => {
@@ -303,6 +303,32 @@ const Clients = ({ user }: { user: Coach }) => {
         `Please specify the new price and start date for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
       dialogTextBulk: (selectedClients: Client[]) =>
         "Please specify the new price and start date for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
+    },
+    {
+      name: "changeSubscritionAmount",
+      title: "Change client's monthly price",
+      titleBulk: "Change clients' monthly price",
+      icon: faDollarSign,
+      show: changeClientSubscriptionAmountAllowed,
+      handler: handleChangeClientSubscriptionSchedule,
+      DialogForm: () => (
+        <>
+          <PriceInput
+            name="monthlyAmount"
+            placeholder="Monthly price"
+            required
+            defaultValue={user.monthly_subscription_amount / 100}
+          />
+        </>
+      ),
+      dialogTitle: (selectedClient: Client) =>
+        `Change price for ${selectedClient.full_name}`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Change price ${selectedClients.length + " clients"}`,
+      dialogText: (selectedClient: Client) =>
+        `Please specify the new price for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        "Please specify the new price for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
       name: "resendOffer",
