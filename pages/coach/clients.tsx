@@ -147,7 +147,13 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const changeClientSubscriptionAmountAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return clientStatuses.length === 1 && clientStatuses[0] === "client";
+    const clientEndDates = [...new Set([client].flat().map((c) => c.end_date))];
+    return (
+      clientStatuses.length === 1 &&
+      clientStatuses[0] === "client" &&
+      clientEndDates.length === 1 &&
+      clientEndDates[0] === null
+    );
   };
 
   const cancelSubscriptionAllowed = (client: Client | Client[]) => {

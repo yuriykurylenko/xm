@@ -73,11 +73,11 @@
 }
 
 .name-column {
-  flex: 0 0 calc(100% - 750px);
+  flex: 0 0 calc(100% - 620px);
 }
 
 .created-column {
-  flex: 0 0 150px;
+  flex: 0 0 120px;
 }
 
 .actions-column {
