@@ -12,6 +12,16 @@ interface ClientCardProps {
   actions?: any;
 }
 
+// Helper function to format the subscription amount
+// TODO: abstract out
+const formatAmount = (amount: number, currency: string) => {
+  const formattedAmount = Number((amount / 100).toFixed(2));
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).format(formattedAmount);
+};
+
 const ClientCard: React.FC<ClientCardProps> = ({
   item,
   selectedItems,
@@ -56,6 +66,13 @@ const ClientCard: React.FC<ClientCardProps> = ({
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         {item.end_date && format(new Date(item.end_date), "dd/MM/yyyy")}
+      </div>
+      <div className={`${styles["column"]} ${styles["created-column"]}`}>
+        {item.subscription &&
+          `${formatAmount(
+            item.subscription.monthly_amount,
+            item.subscription.currency
+          )}/mo`}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         <div

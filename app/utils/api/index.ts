@@ -39,7 +39,7 @@ export const fetchClientsByCoachId = async (
 
   let query = supabase
     .from("clients")
-    .select("*, subscriptions (status, updated_at)")
+    .select("*, subscriptions (status, updated_at, monthly_amount, currency)")
     .eq("coach_id", coachId)
     .is("archived_at", null);
 
@@ -69,11 +69,13 @@ export const fetchClientsByCoachId = async (
   if (response.data) {
     response.data = response.data.map((client) => ({
       ...client,
-      subscription: client.subscriptions.sort(
-        (s1: Subscription, s2: Subscription) =>
-          new Date(s2.updated_at as Date).getTime() -
-          new Date(s1.updated_at as Date).getTime()
-      )[0],
+      subscription: client.subscriptions
+        .filter((s: Subscription) => s.archived_at == null)
+        .sort(
+          (s1: Subscription, s2: Subscription) =>
+            new Date(s2.updated_at as Date).getTime() -
+            new Date(s1.updated_at as Date).getTime()
+        )[0],
     }));
   }
 

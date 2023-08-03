@@ -13,6 +13,7 @@ export type Subscription = {
   end_date?: Date;
   created_at?: Date;
   updated_at?: Date;
+  archived_at?: Date;
   access_after_end_date?: Date;
 };
 

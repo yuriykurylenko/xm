@@ -104,9 +104,14 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
           </div>
           <div
             className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
-            onClick={() => onSort("subscription_status")}
           >
             <span>Payment</span>
+          </div>
+          <div
+            className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
+            onClick={() => onSort("subscription_status")}
+          >
+            <span>Status</span>
             <span className={styles["sorting-icon"]}>
               <SortIcon
                 sortColumn={sortColumn}
