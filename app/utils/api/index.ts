@@ -6,6 +6,7 @@ import { UUID } from "crypto";
 import {
   cancelStripeSubscription,
   cancelStripeSubscriptionSchedule,
+  updateStripeSubscription,
 } from "@/app/utils/api/stripe";
 
 export const fetchCoachById = (id: UUID) =>
@@ -79,7 +80,7 @@ export const fetchClientsByCoachId = async (
   return { ...response, total: total.count };
 };
 
-export const fetchSubscriptionById = (subscriptionId: UUID) =>
+export const fetchSubscriptionById = (subscriptionId: UUID | string) =>
   supabase
     .from("subscriptions")
     .select("*")
@@ -162,7 +163,8 @@ const createClientSubscription = async (
         start_date: startDate,
       },
     ])
-    .select();
+    .select()
+    .single();
 };
 
 export const updateClientSubscriptionById = (
@@ -196,7 +198,18 @@ export const updateCoachById = (coachId: UUID | string, data: CoachInput) =>
 export const updateSubscriptionByClientId = async (
   clientId: UUID | string,
   data: SubscriptionInput
-) => supabase.from("subscriptions").update(data).eq("client_id", clientId);
+) =>
+  supabase
+    .from("subscriptions")
+    .update(data)
+    .eq("client_id", clientId)
+    .select();
+
+export const updateSubscriptionById = async (
+  subscriptionId: UUID | string,
+  data: SubscriptionInput
+) =>
+  supabase.from("subscriptions").update(data).eq("id", subscriptionId).select();
 
 const sendClientPaymentLink = ({
   subscription,
@@ -245,11 +258,68 @@ export const sendClientOffer = async (
   }
   if (data) {
     sendClientPaymentLink({
-      subscription: data[0] as Subscription,
+      subscription: data as Subscription,
       domain: `${window.location.protocol}//${window.location.host}`,
     });
   }
   return updateClientById(clientId, { status: "offerSent" });
+};
+
+export const changeClientSubscriptionSchedule = async (
+  clientId: UUID,
+  {
+    monthlyAmount,
+    currency,
+    trialPeriodDays,
+    startDate,
+  }: {
+    monthlyAmount: number;
+    currency: string;
+    trialPeriodDays: number;
+    startDate?: Date;
+  }
+) => {
+  const { data: coach } = await fetchCoachByClientId(clientId);
+
+  if (!coach) {
+    return { data: null, error: "Coach not found" };
+  }
+
+  const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
+
+  if (!subscriptions?.length) {
+    return { data: null, error: "Client subscription not found" };
+  }
+
+  const subscription = subscriptions?.[0];
+
+  const { data: clientSubscription, error: clientSubscriptionError } =
+    await createClientSubscription(clientId, {
+      productId: coach?.stripe_product_id,
+      monthlyAmount,
+      currency,
+      trialPeriodDays,
+      startDate,
+    });
+
+  if (clientSubscriptionError || !clientSubscription) {
+    return { data: clientSubscription, error: clientSubscriptionError };
+  }
+
+  try {
+    await updateStripeSubscription({
+      stripeSubscriptionId: subscription.stripe_subscription_id,
+      metadata: { subscription_id: clientSubscription.id },
+      monthlyAmount,
+      currency,
+      trialPeriodDays,
+      startDate,
+    });
+  } catch (e) {
+    return { data: null, error: "Error updating client terms" };
+  }
+
+  return { data: clientSubscription, error: null };
 };
 
 export const activateClient = async (subscriptionId: UUID) => {

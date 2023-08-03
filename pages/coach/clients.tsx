@@ -4,6 +4,7 @@ import withAuth from "@/app/hoc/withAuth";
 import {
   cancelClientSubscription,
   cancelClientSubscriptionSchedule,
+  changeClientSubscriptionSchedule,
   fetchClientsByCoachId,
   sendClientOffer,
   updateClientById,
@@ -69,6 +70,31 @@ const Clients = ({ user }: { user: Coach }) => {
         startDate: startOfDay(startDate) || new Date(),
       }
     );
+
+    if (error) {
+      return { data: sendOfferData, error };
+    }
+
+    return { error: null };
+  };
+
+  const handleChangeClientSubscriptionSchedule = async (
+    client: Client,
+    data: {
+      monthlyAmount: number | string;
+      trialPeriod: boolean;
+      startDate: Date;
+    }
+  ) => {
+    const { monthlyAmount, trialPeriod, startDate } = data;
+
+    const { data: sendOfferData, error } =
+      await changeClientSubscriptionSchedule(client.id as UUID, {
+        monthlyAmount: Number(monthlyAmount) * 100,
+        currency: "USD",
+        trialPeriodDays: trialPeriod ? 14 : 0,
+        startDate: startOfDay(startDate) || new Date(),
+      });
 
     if (error) {
       return { data: sendOfferData, error };
@@ -247,8 +273,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Change clients' terms",
       icon: faRotate,
       show: changeClientSubscriptionScheduleAllowed,
-      handler: handleSendOfferToClient,
-      onComplete: onSendOfferComplete,
+      handler: handleChangeClientSubscriptionSchedule,
       DialogForm: () => (
         <>
           <PriceInput

@@ -66,6 +66,32 @@ const createStripeSubscription = ({
     startDate,
   });
 
+export const updateStripeSubscription = ({
+  stripeSubscriptionId,
+  metadata,
+  monthlyAmount,
+  currency,
+  trialPeriodDays,
+  startDate,
+}: {
+  stripeSubscriptionId: string;
+  metadata?: {
+    subscription_id: UUID;
+  };
+  monthlyAmount: number;
+  currency: string;
+  trialPeriodDays?: number;
+  startDate?: Date;
+}) =>
+  axios.post("/api/update_subscription", {
+    stripeSubscriptionId,
+    metadata,
+    monthlyAmount,
+    currency,
+    trialPeriodDays,
+    startDate,
+  });
+
 const createAndConfirmStripeSubscription = async (
   stripe: Stripe | null,
   customerId: string,

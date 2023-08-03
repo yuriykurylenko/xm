@@ -9,6 +9,7 @@ import {
   updateClientSubscriptionByStripeSubscriptionId,
   updateClientSubscriptionById,
   updateClientById,
+  fetchSubscriptionById,
 } from "@/app/utils/api";
 import sgMail from "@sendgrid/mail";
 import { UUID } from "crypto";
@@ -53,10 +54,16 @@ export default async function handler(
 
       // Update the subscription in your database
       if (subscriptionSchedule.metadata?.subscription_id) {
-        await updateClientSubscriptionById(
+        const { data: clientSubscription } = await updateClientSubscriptionById(
           subscriptionSchedule.metadata.subscription_id,
           { stripe_subscription_id: subscriptionSchedule.id }
         );
+
+        if (clientSubscription) {
+          await updateClientById(clientSubscription.client_id, {
+            status: "starting",
+          });
+        }
       }
 
       res.json({ received: true });
@@ -66,12 +73,16 @@ export default async function handler(
 
       // Update the subscription in your database
       if (subscriptionSchedule.metadata?.subscription_id) {
-        const { data: clientSubscription } = await updateClientSubscriptionById(
-          subscriptionSchedule.metadata.subscription_id,
-          { start_date: null, end_date: null, archived_at: new Date() }
+        const { data: clientSubscription } = await fetchSubscriptionById(
+          subscriptionSchedule.metadata.subscription_id
         );
 
-        if (clientSubscription) {
+        if (clientSubscription && !clientSubscription.archived_at) {
+          await updateClientSubscriptionById(
+            subscriptionSchedule.metadata.subscription_id,
+            { start_date: null, end_date: null, archived_at: new Date() }
+          );
+
           await updateClientById(clientSubscription.client_id, {
             status: "lead",
           });
