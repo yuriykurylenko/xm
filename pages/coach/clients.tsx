@@ -243,6 +243,8 @@ const Clients = ({ user }: { user: Coach }) => {
     return await updateClientById(client.id as string, {
       status: "lead",
       subscription_status: null,
+      start_date: null,
+      end_date: null,
     });
   };
 

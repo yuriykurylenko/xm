@@ -39,7 +39,9 @@ export const fetchClientsByCoachId = async (
 
   let query = supabase
     .from("clients")
-    .select("*, subscriptions (status, updated_at, monthly_amount, currency)")
+    .select(
+      "*, subscriptions (status, updated_at, monthly_amount, currency, archived_at)"
+    )
     .eq("coach_id", coachId)
     .is("archived_at", null);
 
@@ -78,6 +80,8 @@ export const fetchClientsByCoachId = async (
         )[0],
     }));
   }
+
+  console.log(filterStatus, response.data);
 
   return { ...response, total: total.count };
 };

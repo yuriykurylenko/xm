@@ -72,7 +72,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
           `${formatAmount(
             item.subscription.monthly_amount,
             item.subscription.currency
-          )}/mo`}
+          )}`}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         <div
