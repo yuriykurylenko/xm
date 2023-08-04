@@ -118,12 +118,24 @@ const ClientCard: React.FC<ClientCardProps> = ({
             </div>
           ) : (
             item.status === "offerSent" && (
-              <FontAwesomeIcon
-                icon={faCreditCard}
-                size="lg"
-                color="#7c9efc"
-                title="The client will start upon providing payment details"
-              />
+              <>
+                <FontAwesomeIcon
+                  icon={faCreditCard}
+                  size="lg"
+                  color="#7c9efc"
+                  title="The client will start upon providing payment details"
+                />{" "}
+                {item.subscription?.trial_period_days ? (
+                  <FontAwesomeIcon
+                    icon={faHandHoldingDollar}
+                    size="lg"
+                    color="#7c9efc"
+                    title="14-day free trial period"
+                  />
+                ) : (
+                  ""
+                )}
+              </>
             )
           ))}
       </div>
