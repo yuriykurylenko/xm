@@ -391,9 +391,9 @@ const Clients = ({ user }: { user: Coach }) => {
         </>
       ),
       dialogTitle: (selectedClient: Client) =>
-        `Reactivate ${selectedClient.full_name}`,
+        `Renew ${selectedClient.full_name}'s subscription`,
       dialogTitleBulk: (selectedClients: Client[]) =>
-        `Reactivate ${selectedClients.length + " clients"}`,
+        `Renew ${selectedClients.length + " clients'"} subscriptions`,
       dialogText: (selectedClient: Client) =>
         `Your client's subscription will be renewed. You can specify the new price for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
       dialogTextBulk: (selectedClients: Client[]) =>
