@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import DatePicker from "react-datepicker";
@@ -65,9 +65,16 @@ export const Input: FC<InputProps> = ({
 
   const {
     register,
+    setValue,
     formState: { errors },
     control,
   } = useFormContext();
+
+  useEffect(() => {
+    if (type === "date") {
+      setValue(name, (defaultValue && new Date(defaultValue)) || new Date());
+    }
+  }, [setValue, defaultValue]);
 
   const inputValidation = {
     ...validations[type],
@@ -91,8 +98,6 @@ export const Input: FC<InputProps> = ({
     />
   );
 
-  console.log(defaultValue);
-
   return (
     <>
       <div className={`${styles["input-container"]} ${className || ""}`}>
@@ -106,20 +111,28 @@ export const Input: FC<InputProps> = ({
             <span className={styles["datepicker-label"]}>{placeholder}</span>
             <Controller
               control={control}
-              name="startDate"
-              render={({ field: { onChange, value } }) => (
-                <DatePicker
-                  className={`${styles["input"]} ${className || ""}`}
-                  selected={
-                    value ||
-                    (defaultValue && new Date(defaultValue)) ||
-                    new Date()
-                  }
-                  onChange={onChange}
-                  minDate={new Date()}
-                  dateFormat="dd/MM/yyyy"
-                />
-              )}
+              name={name}
+              defaultValue={
+                (defaultValue && new Date(defaultValue)) || new Date()
+              }
+              render={({ field: { onChange, value, ref } }) => {
+                // If the field's value is undefined (i.e., it hasn't been set yet),
+                // manually trigger an onChange event with the default value.
+                if (value === undefined && defaultValue) {
+                  onChange(new Date(defaultValue));
+                }
+
+                return (
+                  <DatePicker
+                    className={`${styles["input"]} ${className || ""}`}
+                    selected={value || new Date()}
+                    onChange={onChange}
+                    minDate={new Date()}
+                    dateFormat="dd/MM/yyyy"
+                    ref={ref}
+                  />
+                );
+              }}
             />
           </label>
         ) : (

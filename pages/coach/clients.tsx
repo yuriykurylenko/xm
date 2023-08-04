@@ -75,7 +75,10 @@ const Clients = ({ user }: { user: Coach }) => {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate: startDate ? startOfUtcDay(startDate) : null,
+        startDate:
+          startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
+            ? startOfUtcDay(startDate)
+            : null,
       }
     );
 
@@ -101,7 +104,10 @@ const Clients = ({ user }: { user: Coach }) => {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate: startDate ? startOfUtcDay(startDate) : null,
+        startDate:
+          startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
+            ? startOfUtcDay(startDate)
+            : null,
       });
 
     if (error) {
@@ -459,8 +465,10 @@ const Clients = ({ user }: { user: Coach }) => {
             type="date"
             placeholder="Start date"
             defaultValue={
-              items.length === 1
-                ? items[0]?.start_date || new Date()
+              items.length === 1 &&
+              items[0]?.start_date &&
+              new Date(items[0]?.start_date) > new Date()
+                ? items[0]?.start_date
                 : new Date()
             }
           />
