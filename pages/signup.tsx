@@ -70,10 +70,10 @@ const Signup = () => {
           <Button type="submit" submittingText="Signing up...">
             Sign up
           </Button>
-          <p className={styles["sign-up-log-in"]}>
-            Already have an account? <Link href="/login">Log in</Link>
-          </p>
         </Form>
+        <p className={styles["sign-up-log-in"]}>
+          Already have an account? <Link href="/login">Log in</Link>
+        </p>
       </PageContainer>
     </div>
   );

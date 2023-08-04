@@ -16,7 +16,7 @@ export const Button: FC<FormButtonProps> = ({
   disabled,
   ...props
 }) => {
-  const { isSubmitting, errorMessage } = useFormStatus();
+  const { isSubmitting } = useFormStatus();
   const buttonText = isSubmitting
     ? submittingText || "Submitting..."
     : children;
@@ -26,9 +26,6 @@ export const Button: FC<FormButtonProps> = ({
       <BasicButton disabled={disabled || isSubmitting} {...props}>
         {buttonText}
       </BasicButton>
-      {errorMessage && (
-        <p className={styles["submit-error-message"]}>{errorMessage}</p>
-      )}
     </>
   );
 };

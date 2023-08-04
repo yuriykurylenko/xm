@@ -81,8 +81,6 @@ export const fetchClientsByCoachId = async (
     }));
   }
 
-  console.log(filterStatus, response.data);
-
   return { ...response, total: total.count };
 };
 

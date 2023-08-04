@@ -7,6 +7,7 @@ import {
   FieldValues,
   SubmitHandler,
 } from "react-hook-form";
+import styles from "@/app/components/Form/styles.module.css";
 
 interface FormProps<T extends FieldValues> extends UseFormProps {
   children: React.ReactNode;
@@ -47,6 +48,9 @@ export const FormStatusProvider: React.FC<FormStatusProviderProps> = ({
       value={{ isSubmitting, setIsSubmitting, errorMessage, setErrorMessage }}
     >
       {children}
+      {errorMessage && (
+        <p className={styles["submit-error-message"]}>{errorMessage}</p>
+      )}
     </FormStatusContext.Provider>
   );
 };

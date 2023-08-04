@@ -49,10 +49,10 @@ const Login = () => {
           <Button type="submit" submittingText="Logging in...">
             Log in
           </Button>
-          <p className={styles["sign-up-log-in"]}>
-            Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
-          </p>
         </Form>
+        <p className={styles["sign-up-log-in"]}>
+          Don&apos;t have an account yet? <Link href="/signup">Sign up</Link>
+        </p>
       </PageContainer>
     </div>
   );
