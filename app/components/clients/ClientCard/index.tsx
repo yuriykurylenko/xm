@@ -64,40 +64,53 @@ const ClientCard: React.FC<ClientCardProps> = ({
         {item.full_name}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
-        {item.start_date && new Date(item.start_date) > new Date() ? (
-          format(
-            Date.UTC(
-              new Date(item.start_date).getFullYear(),
-              new Date(item.start_date).getMonth(),
-              new Date(item.start_date).getDate()
-            ),
-            "dd/MM/yyyy"
-          )
-        ) : item.start_date && new Date(item.start_date) <= new Date() ? (
-          <div>
-            {format(
+        {item.status !== "lead" &&
+          (item.start_date && new Date(item.start_date) > new Date() ? (
+            format(
               Date.UTC(
                 new Date(item.start_date).getFullYear(),
                 new Date(item.start_date).getMonth(),
                 new Date(item.start_date).getDate()
               ),
               "dd/MM/yyyy"
-            )}{" "}
-            <FontAwesomeIcon
-              icon={faCreditCard}
-              size="lg"
-              color="#ff7f7f"
-              title="The client will start upon upon providing payment details"
-            />
-          </div>
-        ) : (
-          <FontAwesomeIcon
-            icon={faCreditCard}
-            size="lg"
-            color="#7c9efc"
-            title="The client will start upon providing payment details"
-          />
-        )}
+            )
+          ) : item.start_date && new Date(item.start_date) <= new Date() ? (
+            <div
+              className={
+                item.status === "offerSent" ? styles["error-text"] : ""
+              }
+              title={
+                item.status === "offerSent"
+                  ? "The client will start upon upon providing payment details"
+                  : ""
+              }
+            >
+              {format(
+                Date.UTC(
+                  new Date(item.start_date).getFullYear(),
+                  new Date(item.start_date).getMonth(),
+                  new Date(item.start_date).getDate()
+                ),
+                "dd/MM/yyyy"
+              )}{" "}
+              {item.status === "offerSent" && (
+                <FontAwesomeIcon
+                  icon={faCreditCard}
+                  size="xl"
+                  color="#ff7f7f"
+                />
+              )}
+            </div>
+          ) : (
+            item.status === "offerSent" && (
+              <FontAwesomeIcon
+                icon={faCreditCard}
+                size="2xl"
+                color="#7c9efc"
+                title="The client will start upon providing payment details"
+              />
+            )
+          ))}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         {item.end_date &&

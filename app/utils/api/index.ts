@@ -280,7 +280,7 @@ export const changeClientSubscriptionSchedule = async (
     monthlyAmount: number;
     currency: string;
     trialPeriodDays: number;
-    startDate?: Date | string;
+    startDate?: Date | string | null;
   }
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);
