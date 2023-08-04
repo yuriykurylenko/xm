@@ -75,7 +75,7 @@ const Clients = ({ user }: { user: Coach }) => {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate: startDate ? startOfUtcDay(startDate) : new Date(),
+        startDate: startDate ? startOfUtcDay(startDate) : null,
       }
     );
 

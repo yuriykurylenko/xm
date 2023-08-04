@@ -145,7 +145,7 @@ const createClientSubscription = async (
     monthlyAmount: number;
     currency: string;
     trialPeriodDays: number;
-    startDate?: Date | string;
+    startDate?: Date | string | null;
   }
 ) => {
   const { data: price } = await axios.post("/api/find_or_create_price", {
@@ -238,7 +238,7 @@ export const sendClientOffer = async (
     monthlyAmount: number;
     currency: string;
     trialPeriodDays: number;
-    startDate?: Date | string;
+    startDate?: Date | string | null;
   }
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);

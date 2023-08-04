@@ -3,6 +3,8 @@ import { Client } from "@/app/types/user";
 import { useState } from "react";
 import ActionsBar from "@/app/components/ItemList/ActionsBar";
 import { format } from "date-fns";
+import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface ClientCardProps {
   item: Client;
@@ -62,10 +64,51 @@ const ClientCard: React.FC<ClientCardProps> = ({
         {item.full_name}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
-        {item.start_date && format(new Date(item.start_date), "dd/MM/yyyy")}
+        {item.start_date && new Date(item.start_date) > new Date() ? (
+          format(
+            Date.UTC(
+              new Date(item.start_date).getFullYear(),
+              new Date(item.start_date).getMonth(),
+              new Date(item.start_date).getDate()
+            ),
+            "dd/MM/yyyy"
+          )
+        ) : item.start_date && new Date(item.start_date) <= new Date() ? (
+          <div>
+            {format(
+              Date.UTC(
+                new Date(item.start_date).getFullYear(),
+                new Date(item.start_date).getMonth(),
+                new Date(item.start_date).getDate()
+              ),
+              "dd/MM/yyyy"
+            )}{" "}
+            <FontAwesomeIcon
+              icon={faCreditCard}
+              size="lg"
+              color="#ff7f7f"
+              title="The client will start upon confirming the subscription"
+            />
+          </div>
+        ) : (
+          <FontAwesomeIcon
+            icon={faCreditCard}
+            size="lg"
+            color="#7c9efc"
+            title="The client will start upon confirming the subscription"
+          />
+        )}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
-        {item.end_date && format(new Date(item.end_date), "dd/MM/yyyy")}
+        {item.end_date &&
+          format(
+            Date.UTC(
+              new Date(item.end_date).getFullYear(),
+              new Date(item.end_date).getMonth(),
+              new Date(item.end_date).getDate()
+            ),
+            "dd/MM/yyyy"
+          )}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         {item.subscription &&
