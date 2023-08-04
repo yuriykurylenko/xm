@@ -82,7 +82,7 @@ export const updateStripeSubscription = ({
   monthlyAmount: number;
   currency: string;
   trialPeriodDays?: number;
-  startDate?: Date;
+  startDate?: Date | string;
   isActiveSubscription?: boolean;
 }) =>
   axios.post("/api/update_subscription", {

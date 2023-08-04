@@ -31,15 +31,12 @@ import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Input from "@/app/components/Form/Input";
-import { startOfDay } from "date-fns";
-import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
 
 // TODO: extract
 const startOfUtcDay = (date: Date) => {
-  const timeZone = "Europe/Copenhagen";
-  const zonedDate = utcToZonedTime(date, timeZone);
-  const startOfZonedDay = startOfDay(zonedDate);
-  return zonedTimeToUtc(startOfZonedDay, timeZone);
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  ).toISOString();
 };
 
 const Clients = ({ user }: { user: Coach }) => {
@@ -78,7 +75,7 @@ const Clients = ({ user }: { user: Coach }) => {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate: startOfUtcDay(startDate) || new Date(),
+        startDate: startDate ? startOfUtcDay(startDate) : new Date(),
       }
     );
 
