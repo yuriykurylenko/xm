@@ -47,7 +47,7 @@
 }
 
 .header-column-name {
-  flex: 0 0 calc(100% - 740px);
+  flex: 0 0 calc(100% - 760px);
 }
 
 .header-column-created {
@@ -55,7 +55,7 @@
 }
 
 .header-column-actions {
-  flex: 0 0 60px;
+  flex: 0 0 80px;
 }
 
 .sorting-icon {

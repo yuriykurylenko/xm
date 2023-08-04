@@ -65,7 +65,7 @@
 }
 
 .name-column {
-  flex: 0 0 calc(100% - 740px);
+  flex: 0 0 calc(100% - 760px);
 }
 
 .created-column {
@@ -73,7 +73,7 @@
 }
 
 .actions-column {
-  flex: 0 0 60px;
+  flex: 0 0 80px;
 }
 
 .button-container {

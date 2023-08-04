@@ -158,7 +158,7 @@ export default async function handler(
             clientSubscription.client_id
           );
 
-          if (coach && client) {
+          if (coach && client && !client.user_id) {
             await sgMail.send({
               to: client.email,
               from: "yuriy.kurylenko@gmail.com",
