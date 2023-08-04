@@ -135,7 +135,10 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const resendOfferToClientAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return clientStatuses.length === 1 && clientStatuses[0] === "offerSent";
+
+    return clientStatuses.every((val?: string) =>
+      ["offerSent", "ended"].includes(val as string)
+    );
   };
 
   const changeClientSubscriptionScheduleAllowed = (
@@ -364,8 +367,8 @@ const Clients = ({ user }: { user: Coach }) => {
     },
     {
       name: "resendOffer",
-      title: "Resend offer",
-      titleBulk: "Resend offers",
+      title: "Send a new offer",
+      titleBulk: "Send new offers",
       icon: faRotate,
       show: resendOfferToClientAllowed,
       handler: handleSendOfferToClient,
