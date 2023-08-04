@@ -191,9 +191,7 @@ export default async function handler(
         subscriptionUpdateProps.end_date = new Date(
           subscription.canceled_at * 1000
         );
-      }
-
-      if (
+      } else if (
         event.type === "customer.subscription.updated" &&
         subscription.current_period_end &&
         subscription.cancel_at_period_end
@@ -201,7 +199,10 @@ export default async function handler(
         subscriptionUpdateProps.end_date = new Date(
           subscription.current_period_end * 1000
         );
-      } else if (!subscription.cancel_at_period_end) {
+      } else if (
+        event.type === "customer.subscription.updated" &&
+        !subscription.cancel_at_period_end
+      ) {
         subscriptionUpdateProps.end_date = null;
       }
 
