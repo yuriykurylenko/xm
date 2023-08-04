@@ -319,6 +319,10 @@ const Clients = ({ user }: { user: Coach }) => {
             name="trialPeriod"
             type="checkbox"
             placeholder="Offer trial period (14 days)"
+            defaultValue={
+              items.length === 1 &&
+              Boolean(items[0]?.subscription?.trial_period_days)
+            }
           />
         </>
       ),
@@ -365,6 +369,10 @@ const Clients = ({ user }: { user: Coach }) => {
             name="trialPeriod"
             type="checkbox"
             placeholder="Offer trial period (14 days)"
+            defaultValue={
+              items.length === 1 &&
+              Boolean(items[0]?.subscription?.trial_period_days)
+            }
           />
         </>
       ),
@@ -476,17 +484,31 @@ const Clients = ({ user }: { user: Coach }) => {
             name="trialPeriod"
             type="checkbox"
             placeholder="Offer trial period (14 days)"
+            defaultValue={
+              items.length === 1 &&
+              Boolean(items[0]?.subscription?.trial_period_days)
+            }
           />
         </>
       ),
       dialogTitle: (selectedClient: Client) =>
-        `Resend offer to ${selectedClient.full_name}`,
+        `Send a new offer to ${selectedClient.full_name}`,
       dialogTitleBulk: (selectedClients: Client[]) =>
-        `Resend offers to ${selectedClients.length + " clients"}`,
+        `Send new offers to ${selectedClients.length + " clients"}`,
       dialogText: (selectedClient: Client) =>
-        `${selectedClient.full_name} will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to the client will be canceled.`,
+        `${
+          selectedClient.full_name
+        } will receive an email with the link to subscribe and pay your specified amount monthly. ${
+          selectedClient.status === "offerSent"
+            ? "Your previous offer to the client will be canceled."
+            : ""
+        }`,
       dialogTextBulk: (selectedClients: Client[]) =>
-        "Your clients will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled.",
+        `Your clients will receive an email with the link to subscribe and pay your specified amount monthly. ${
+          selectedClients.every((sc) => sc.status === "offerSent")
+            ? "Your previous offers to them will be canceled."
+            : ""
+        }`,
     },
     {
       name: "cancelOffer",

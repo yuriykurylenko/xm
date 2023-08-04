@@ -27,7 +27,7 @@ export interface InputProps {
   required?: boolean;
   validation?: ValidationRule;
   className?: string;
-  defaultValue?: string | number | Date;
+  defaultValue?: string | number | Date | boolean;
   disabled?: boolean;
   min?: number;
   max?: number;
@@ -72,7 +72,10 @@ export const Input: FC<InputProps> = ({
 
   useEffect(() => {
     if (type === "date") {
-      setValue(name, (defaultValue && new Date(defaultValue)) || new Date());
+      setValue(
+        name,
+        (defaultValue && new Date(defaultValue as Date)) || new Date()
+      );
     }
   }, [setValue, defaultValue]);
 
@@ -83,18 +86,26 @@ export const Input: FC<InputProps> = ({
   };
 
   const inputElement = (
-    <input
-      className={`${styles["input"]} ${errors[name] ? styles["error"] : ""}`}
-      type={type}
-      placeholder={placeholder}
-      disabled={disabled}
-      // @ts-ignore
+    <Controller
+      control={control}
+      name={name}
+      rules={inputValidation}
       defaultValue={defaultValue}
-      {...register(name, inputValidation)}
-      min={min}
-      max={max}
-      step={step}
-      checked={checked}
+      render={({ field }) => (
+        <input
+          className={`${styles["input"]} ${
+            errors[name] ? styles["error"] : ""
+          }`}
+          type={type}
+          placeholder={placeholder}
+          disabled={disabled}
+          {...field}
+          min={min}
+          max={max}
+          step={step}
+          checked={field.value}
+        />
+      )}
     />
   );
 
@@ -113,13 +124,13 @@ export const Input: FC<InputProps> = ({
               control={control}
               name={name}
               defaultValue={
-                (defaultValue && new Date(defaultValue)) || new Date()
+                (defaultValue && new Date(defaultValue as Date)) || new Date()
               }
               render={({ field: { onChange, value, ref } }) => {
                 // If the field's value is undefined (i.e., it hasn't been set yet),
                 // manually trigger an onChange event with the default value.
                 if (value === undefined && defaultValue) {
-                  onChange(new Date(defaultValue));
+                  onChange(new Date(defaultValue as Date));
                 }
 
                 return (
