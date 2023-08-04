@@ -87,7 +87,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
               icon={faCreditCard}
               size="lg"
               color="#ff7f7f"
-              title="The client will start upon confirming the subscription"
+              title="The client will start upon upon providing payment details"
             />
           </div>
         ) : (
@@ -95,7 +95,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
             icon={faCreditCard}
             size="lg"
             color="#7c9efc"
-            title="The client will start upon confirming the subscription"
+            title="The client will start upon providing payment details"
           />
         )}
       </div>
