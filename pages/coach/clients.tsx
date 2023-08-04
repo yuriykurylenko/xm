@@ -109,11 +109,9 @@ const Clients = ({ user }: { user: Coach }) => {
     client: Client,
     data: {
       monthlyAmount: number | string;
-      trialPeriod: boolean;
-      startDate: Date;
     }
   ) => {
-    const { monthlyAmount, trialPeriod, startDate } = data;
+    const { monthlyAmount } = data;
 
     const { data: changeClientSubscriptionScheduleData, error } =
       await changeClientSubscriptionAmount(client.id as UUID, {
@@ -156,6 +154,16 @@ const Clients = ({ user }: { user: Coach }) => {
       clientStatuses[0] === "client" &&
       clientEndDates.length === 1 &&
       clientEndDates[0] === null
+    );
+  };
+
+  const renewClientSubscriptionAllowed = (client: Client | Client[]) => {
+    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
+    const clientEndDates = [...new Set([client].flat().map((c) => c.end_date))];
+    return (
+      clientStatuses.length === 1 &&
+      clientStatuses[0] === "client" &&
+      clientEndDates.every((val?: Date) => val != null)
     );
   };
 
@@ -364,6 +372,32 @@ const Clients = ({ user }: { user: Coach }) => {
         `Please specify the new price for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
       dialogTextBulk: (selectedClients: Client[]) =>
         "Please specify the new price for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
+    },
+    {
+      name: "renewSubscrition",
+      title: "Renew client's subscription",
+      titleBulk: "Renew clients' subscriptions",
+      icon: faRotate,
+      show: renewClientSubscriptionAllowed,
+      handler: handleChangeClientSubscriptionAmount,
+      DialogForm: () => (
+        <>
+          <PriceInput
+            name="monthlyAmount"
+            placeholder="Monthly price"
+            required
+            defaultValue={user.monthly_subscription_amount / 100}
+          />
+        </>
+      ),
+      dialogTitle: (selectedClient: Client) =>
+        `Reactivate ${selectedClient.full_name}`,
+      dialogTitleBulk: (selectedClients: Client[]) =>
+        `Reactivate ${selectedClients.length + " clients"}`,
+      dialogText: (selectedClient: Client) =>
+        `Your client's subscription will be renewed. You can specify the new price for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
+      dialogTextBulk: (selectedClients: Client[]) =>
+        "Your clients' subscriptions will be renewed. You can specify the new price for them. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
       name: "resendOffer",

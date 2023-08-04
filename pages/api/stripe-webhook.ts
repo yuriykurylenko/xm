@@ -201,6 +201,8 @@ export default async function handler(
         subscriptionUpdateProps.end_date = new Date(
           subscription.current_period_end * 1000
         );
+      } else if (!subscription.cancel_at_period_end) {
+        subscriptionUpdateProps.end_date = null;
       }
 
       const { data: clientSubscription } =
@@ -227,7 +229,10 @@ export default async function handler(
           (event.data.previous_attributes as any)?.plan?.amount ||
           (event.data.previous_attributes as any)?.plan?.currency;
 
-        if (pricingChanged) {
+        const subscriptionRenewed = (event.data.previous_attributes as any)
+          .cancel_at_period_end;
+
+        if (pricingChanged || subscriptionRenewed) {
           const { data: client } = await fetchClientById(
             clientSubscription.client_id
           );
@@ -239,7 +244,9 @@ export default async function handler(
             await sgMail.send({
               to: client.email,
               from: "yuriy.kurylenko@gmail.com",
-              templateId: "d-776524b90fc34aa387b8337205142e8c",
+              templateId: subscriptionRenewed
+                ? "d-664503562b62462d9931a694b35c5155"
+                : "d-776524b90fc34aa387b8337205142e8c",
               dynamicTemplateData: {
                 client_name: client.full_name,
                 coach_name: coach.full_name,
