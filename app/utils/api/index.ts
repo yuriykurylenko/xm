@@ -244,7 +244,7 @@ export const sendClientOffer = async (
   const { data: coach } = await fetchCoachByClientId(clientId);
 
   if (!coach) {
-    return { data: null, error: "Coach not found" };
+    return { data: null, error: { message: "Coach not found" } };
   }
 
   await updateSubscriptionByClientId(clientId, { archived_at: new Date() });
@@ -286,13 +286,13 @@ export const changeClientSubscriptionSchedule = async (
   const { data: coach } = await fetchCoachByClientId(clientId);
 
   if (!coach) {
-    return { data: null, error: "Coach not found" };
+    return { data: null, error: { message: "Coach not found" } };
   }
 
   const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
 
   if (!subscriptions?.length) {
-    return { data: null, error: "Client subscription not found" };
+    return { data: null, error: { message: "Client subscription not found" } };
   }
 
   const subscription = subscriptions?.[0];
@@ -320,7 +320,7 @@ export const changeClientSubscriptionSchedule = async (
       startDate,
     });
   } catch (e) {
-    return { data: null, error: "Error updating client terms" };
+    return { data: null, error: { message: "Error updating client terms" } };
   }
 
   return { data: clientSubscription, error: null };
@@ -339,13 +339,13 @@ export const changeClientSubscriptionAmount = async (
   const { data: coach } = await fetchCoachByClientId(clientId);
 
   if (!coach) {
-    return { data: null, error: "Coach not found" };
+    return { data: null, error: { message: "Coach not found" } };
   }
 
   const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
 
   if (!subscriptions?.length) {
-    return { data: null, error: "Client subscription not found" };
+    return { data: null, error: { message: "Client subscription not found" } };
   }
 
   const subscription = subscriptions?.[0];
@@ -360,7 +360,7 @@ export const changeClientSubscriptionAmount = async (
 
     return { data: stripeSubscription, error: null };
   } catch (e) {
-    return { data: null, error: "Error updating client terms" };
+    return { data: null, error: { message: "Error updating client terms" } };
   }
 };
 
