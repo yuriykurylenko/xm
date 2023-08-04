@@ -32,6 +32,15 @@ import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Input from "@/app/components/Form/Input";
 import { startOfDay } from "date-fns";
+import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
+
+// TODO: extract
+const startOfUtcDay = (date: Date) => {
+  const timeZone = "Europe/Copenhagen";
+  const zonedDate = utcToZonedTime(date, timeZone);
+  const startOfZonedDay = startOfDay(zonedDate);
+  return zonedTimeToUtc(startOfZonedDay, timeZone);
+};
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
@@ -69,7 +78,7 @@ const Clients = ({ user }: { user: Coach }) => {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate: startOfDay(startDate) || new Date(),
+        startDate: startOfUtcDay(startDate) || new Date(),
       }
     );
 
@@ -95,7 +104,7 @@ const Clients = ({ user }: { user: Coach }) => {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate: startOfDay(startDate) || new Date(),
+        startDate: startOfUtcDay(startDate) || new Date(),
       });
 
     if (error) {
