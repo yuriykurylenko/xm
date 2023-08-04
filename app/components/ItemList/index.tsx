@@ -19,7 +19,7 @@ export type Action<T, D = any, U = any> = {
   show: (item: T | T[]) => boolean;
   handler: (item: T, data: D) => Promise<U>;
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
-  DialogForm?: React.ComponentType;
+  DialogForm?: React.ComponentType<{ items: T[] }>;
   dialogTitle: (selectedItem: T) => string;
   dialogTitleBulk: (selectedItems: T[]) => string;
   dialogText: (selectedItems: T) => string;
@@ -301,7 +301,9 @@ const ItemList = <T,>({
                         : action.dialogTextBulk(selectedItems)
                     }
                   >
-                    {action.DialogForm && <action.DialogForm />}
+                    {action.DialogForm && (
+                      <action.DialogForm items={selectedItems} />
+                    )}
                   </ActionDialog>
                 )
             )}

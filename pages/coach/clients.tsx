@@ -286,19 +286,28 @@ const Clients = ({ user }: { user: Coach }) => {
       show: sendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
-      DialogForm: () => (
+      DialogForm: ({ items }: { items: Client[] }) => (
         <>
           <PriceInput
             name="monthlyAmount"
             placeholder="Monthly price"
             required
-            defaultValue={user.monthly_subscription_amount / 100}
+            defaultValue={
+              items.length === 1
+                ? (items[0]?.subscription?.monthly_amount ||
+                    user.monthly_subscription_amount) / 100
+                : user.monthly_subscription_amount / 100
+            }
           />
           <Input
             name="startDate"
             type="date"
             placeholder="Start date"
-            defaultValue={new Date()}
+            defaultValue={
+              items.length === 1
+                ? items[0]?.start_date || new Date()
+                : new Date()
+            }
           />
           <Input
             name="trialPeriod"
@@ -323,19 +332,28 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faRotate,
       show: changeClientSubscriptionScheduleAllowed,
       handler: handleChangeClientSubscriptionSchedule,
-      DialogForm: () => (
+      DialogForm: ({ items }: { items: Client[] }) => (
         <>
           <PriceInput
             name="monthlyAmount"
             placeholder="Monthly price"
             required
-            defaultValue={user.monthly_subscription_amount / 100}
+            defaultValue={
+              items.length === 1
+                ? (items[0]?.subscription?.monthly_amount ||
+                    user.monthly_subscription_amount) / 100
+                : user.monthly_subscription_amount / 100
+            }
           />
           <Input
             name="startDate"
             type="date"
             placeholder="Start date"
-            defaultValue={new Date()}
+            defaultValue={
+              items.length === 1
+                ? items[0]?.start_date || new Date()
+                : new Date()
+            }
           />
           <Input
             name="trialPeriod"
@@ -360,13 +378,18 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faDollarSign,
       show: changeClientSubscriptionAmountAllowed,
       handler: handleChangeClientSubscriptionAmount,
-      DialogForm: () => (
+      DialogForm: ({ items }: { items: Client[] }) => (
         <>
           <PriceInput
             name="monthlyAmount"
             placeholder="Monthly price"
             required
-            defaultValue={user.monthly_subscription_amount / 100}
+            defaultValue={
+              items.length === 1
+                ? (items[0]?.subscription?.monthly_amount ||
+                    user.monthly_subscription_amount) / 100
+                : user.monthly_subscription_amount / 100
+            }
           />
         </>
       ),
@@ -386,13 +409,18 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faRotate,
       show: renewClientSubscriptionAllowed,
       handler: handleChangeClientSubscriptionAmount,
-      DialogForm: () => (
+      DialogForm: ({ items }: { items: Client[] }) => (
         <>
           <PriceInput
             name="monthlyAmount"
             placeholder="Monthly price"
             required
-            defaultValue={user.monthly_subscription_amount / 100}
+            defaultValue={
+              items.length === 1
+                ? (items[0]?.subscription?.monthly_amount ||
+                    user.monthly_subscription_amount) / 100
+                : user.monthly_subscription_amount / 100
+            }
           />
         </>
       ),
@@ -413,19 +441,28 @@ const Clients = ({ user }: { user: Coach }) => {
       show: resendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
-      DialogForm: () => (
+      DialogForm: ({ items }: { items: Client[] }) => (
         <>
           <PriceInput
             name="monthlyAmount"
             placeholder="Monthly price"
             required
-            defaultValue={user.monthly_subscription_amount / 100}
+            defaultValue={
+              items.length === 1
+                ? (items[0]?.subscription?.monthly_amount ||
+                    user.monthly_subscription_amount) / 100
+                : user.monthly_subscription_amount / 100
+            }
           />
           <Input
             name="startDate"
             type="date"
             placeholder="Start date"
-            defaultValue={new Date()}
+            defaultValue={
+              items.length === 1
+                ? items[0]?.start_date || new Date()
+                : new Date()
+            }
           />
           <Input
             name="trialPeriod"

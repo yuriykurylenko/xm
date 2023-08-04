@@ -91,6 +91,8 @@ export const Input: FC<InputProps> = ({
     />
   );
 
+  console.log(defaultValue);
+
   return (
     <>
       <div className={`${styles["input-container"]} ${className || ""}`}>
@@ -108,7 +110,11 @@ export const Input: FC<InputProps> = ({
               render={({ field: { onChange, value } }) => (
                 <DatePicker
                   className={`${styles["input"]} ${className || ""}`}
-                  selected={value || new Date()}
+                  selected={
+                    value ||
+                    (defaultValue && new Date(defaultValue)) ||
+                    new Date()
+                  }
                   onChange={onChange}
                   minDate={new Date()}
                   dateFormat="dd/MM/yyyy"
