@@ -40,7 +40,7 @@ export const fetchClientsByCoachId = async (
   let query = supabase
     .from("clients")
     .select(
-      "*, subscriptions (status, updated_at, monthly_amount, currency, archived_at)"
+      "*, subscriptions (status, updated_at, monthly_amount, currency, trial_period_days, archived_at)"
     )
     .eq("coach_id", coachId)
     .is("archived_at", null);

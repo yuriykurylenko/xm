@@ -3,7 +3,10 @@ import { Client } from "@/app/types/user";
 import { useState } from "react";
 import ActionsBar from "@/app/components/ItemList/ActionsBar";
 import { format } from "date-fns";
-import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCreditCard,
+  faHandHoldingDollar,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface ClientCardProps {
@@ -66,14 +69,26 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         {item.status !== "lead" &&
           (item.start_date && new Date(item.start_date) > new Date() ? (
-            format(
-              Date.UTC(
-                new Date(item.start_date).getFullYear(),
-                new Date(item.start_date).getMonth(),
-                new Date(item.start_date).getDate()
-              ),
-              "dd/MM/yyyy"
-            )
+            <div>
+              {format(
+                Date.UTC(
+                  new Date(item.start_date).getFullYear(),
+                  new Date(item.start_date).getMonth(),
+                  new Date(item.start_date).getDate()
+                ),
+                "dd/MM/yyyy"
+              )}{" "}
+              {item.subscription?.trial_period_days ? (
+                <FontAwesomeIcon
+                  icon={faHandHoldingDollar}
+                  size="lg"
+                  color="#7c9efc"
+                  title="14-day free trial period"
+                />
+              ) : (
+                ""
+              )}
+            </div>
           ) : item.start_date && new Date(item.start_date) <= new Date() ? (
             <div
               className={
@@ -96,7 +111,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
               {item.status === "offerSent" && (
                 <FontAwesomeIcon
                   icon={faCreditCard}
-                  size="xl"
+                  size="lg"
                   color="#ff7f7f"
                 />
               )}
@@ -105,7 +120,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
             item.status === "offerSent" && (
               <FontAwesomeIcon
                 icon={faCreditCard}
-                size="2xl"
+                size="lg"
                 color="#7c9efc"
                 title="The client will start upon providing payment details"
               />
