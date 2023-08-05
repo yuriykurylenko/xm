@@ -109,7 +109,12 @@ export default async function handler(
           subscriptionSchedule.metadata.subscription_id
         );
 
-        if (clientSubscription && !clientSubscription.archived_at) {
+        if (
+          clientSubscription &&
+          !clientSubscription.archived_at &&
+          clientSubscription.start_date &&
+          new Date(clientSubscription.start_date) >= new Date()
+        ) {
           await updateClientSubscriptionById(
             subscriptionSchedule.metadata.subscription_id,
             { start_date: null, end_date: null, archived_at: new Date() }
