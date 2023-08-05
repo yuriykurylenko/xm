@@ -123,6 +123,8 @@ export default async function handler(
           await updateClientById(clientSubscription.client_id, {
             status: "lead",
             subscription_status: null,
+            start_date: null, 
+            end_date: null,
           });
         }
       }
