@@ -24,6 +24,7 @@ export type Client = User & {
   subscription_status?: string;
   start_date?: Date;
   end_date?: Date;
+  access_revoked_at?: Date;
 };
 
 export type UserInput = {
@@ -39,6 +40,7 @@ export type ClientInput = UserInput & {
   start_date?: Date | null;
   end_date?: Date | null;
   archived_at?: Date | string;
+  access_revoked_at?: Date | string | null;
 };
 
 export type CoachInput = UserInput & {

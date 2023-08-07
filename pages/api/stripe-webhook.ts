@@ -123,7 +123,7 @@ export default async function handler(
           await updateClientById(clientSubscription.client_id, {
             status: "lead",
             subscription_status: null,
-            start_date: null, 
+            start_date: null,
             end_date: null,
           });
         }
@@ -226,7 +226,7 @@ export default async function handler(
         };
 
         if (!clientSubscription.access_after_end_date) {
-          clientUpdateProps.user_id = null;
+          clientUpdateProps.access_revoked_at = new Date();
         }
 
         await updateClientById(clientSubscription.client_id, clientUpdateProps);

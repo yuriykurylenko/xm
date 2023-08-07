@@ -171,10 +171,15 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         <div
           className={`${styles["payment-label"]} ${
-            styles["payment-label-" + (item.user_id ? "active" : "inactive")]
+            styles[
+              "payment-label-" +
+                (item.user_id && !item.access_revoked_at
+                  ? "active"
+                  : "inactive")
+            ]
           }`}
         >
-          {item.user_id ? "active" : "inactive"}
+          {item.user_id && !item.access_revoked_at ? "active" : "inactive"}
         </div>
       </div>
       <div

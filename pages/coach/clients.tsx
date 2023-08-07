@@ -233,7 +233,7 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const handleRevokeAccess = async (client: Client) => {
     const { data, error } = await updateClientById(client.id as UUID, {
-      user_id: null,
+      access_revoked_at: new Date(),
     });
     return { data, error };
   };

@@ -122,16 +122,16 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
           </div>
           <div
             className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
-            onClick={() => onSort("user_id")}
+            // onClick={() => onSort("user_id")}
           >
             <span>Account</span>
-            <span className={styles["sorting-icon"]}>
+            {/* <span className={styles["sorting-icon"]}>
               <SortIcon
                 sortColumn={sortColumn}
                 column="user_id"
                 sortDirection={sortDirection}
               />
-            </span>
+            </span> */}
           </div>
           <div
             className={`${styles["header-column"]} ${styles["header-column-actions"]}`}
