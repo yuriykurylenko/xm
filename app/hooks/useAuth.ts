@@ -43,7 +43,7 @@ export default function useAuth() {
       const profile = await getRoleAndProfile(user.id);
       setUser(profile ? { ...user, ...profile } : null);
 
-      if (!profile || (profile as Client)?.access_revoked_at) {
+      if (!profile) {
         setError("Access revoked");
         return {
           data: null,
@@ -193,6 +193,7 @@ export default function useAuth() {
       .from("clients")
       .select("*")
       .eq("user_id", userId)
+      .is("access_revoked_at", null)
       .single();
 
     if (client) {
