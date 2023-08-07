@@ -212,10 +212,12 @@ const Clients = ({ user }: { user: Coach }) => {
 
   const revokeAccessAllowed = (client: Client | Client[]) => {
     const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    const clientUserIds = [client].flat().map((c) => c.user_id);
+    const clientRevokeAccessDates = [client]
+      .flat()
+      .map((c) => c.access_revoked_at);
 
     return (
-      clientUserIds.every((val?: string) => val != null) &&
+      clientRevokeAccessDates.every((val?: Date) => val == null) &&
       clientStatuses.every((val?: string) => val === "ended")
     );
   };

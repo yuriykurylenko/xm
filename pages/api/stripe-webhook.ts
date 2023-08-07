@@ -147,6 +147,7 @@ export default async function handler(
           if (["active", "trialing"].includes(clientSubscription.status)) {
             await updateClientById(clientSubscription.client_id, {
               status: "client",
+              access_revoked_at: null,
             });
           }
 
