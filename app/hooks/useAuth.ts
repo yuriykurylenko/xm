@@ -43,7 +43,7 @@ export default function useAuth() {
       const profile = await getRoleAndProfile(user.id);
       setUser(profile ? { ...user, ...profile } : null);
 
-      if (!profile) {
+      if (!profile || (profile as Client)?.access_revoked_at) {
         setError("Access revoked");
         return {
           data: null,
