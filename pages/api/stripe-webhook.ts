@@ -178,6 +178,16 @@ export default async function handler(
                 subscription_id: clientSubscription.id,
               },
             });
+          } else if (coach && client && client.user_id) {
+            await sgMail.send({
+              to: client.email,
+              from: "yuriy.kurylenko@gmail.com",
+              templateId: "d-f33881ff79f24f07a10820b49bdc1713",
+              dynamicTemplateData: {
+                client_name: client.full_name,
+                coach_name: coach.full_name,
+              },
+            });
           }
         }
       }
