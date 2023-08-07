@@ -27,6 +27,7 @@
 .action-btn-archive:hover,
 .action-btn-endSubscription:hover,
 .action-btn-revokeAccess:hover,
-.action-btn-cancelOffer:hover {
+.action-btn-cancelOffer:hover,
+.action-btn-cancelSubscriptionSchedule:hover {
   color: #d75656;
 }
