@@ -85,7 +85,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Send offers to {{n}} clients",
       dialogText:
         "{{full_name}} will receive an email with the link to subscribe and pay your specified amount monthly.",
-      dialogTextBulk: (clients: Client[]) =>
+      dialogTextBulk:
         "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
@@ -101,7 +101,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Change terms {{n}} clients",
       dialogText:
         "Please specify the new price and start date for {{full_name}}. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
-      dialogTextBulk: (clients: Client[]) =>
+      dialogTextBulk:
         "Please specify the new price and start date for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
@@ -118,7 +118,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Change price for {{n}} clients",
       dialogText:
         "Please specify the new price for {{full_name}}. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
-      dialogTextBulk: (clients: Client[]) =>
+      dialogTextBulk:
         "Please specify the new price for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
@@ -135,7 +135,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Renew {{n}} clients' subscriptions",
       dialogText:
         "Your client's subscription will be renewed. You can specify the new price for {{full_name}}. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
-      dialogTextBulk: (clients: Client[]) =>
+      dialogTextBulk:
         "Your clients' subscriptions will be renewed. You can specify the new price for them. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
@@ -152,7 +152,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Send new offers to {{n}} clients",
       dialogText:
         "{{full_name}} will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to them will be canceled.",
-      dialogTextBulk: (clients: Client[]) =>
+      dialogTextBulk:
         "Your clients will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled",
     },
     {
@@ -169,7 +169,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Send new offers to {{n}} clients",
       dialogText:
         "{{full_name}} will receive an email with the link to subscribe and pay your specified amount monthly.",
-      dialogTextBulk: (clients: Client[]) =>
+      dialogTextBulk:
         "Your clients will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
@@ -186,8 +186,8 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Revoke access for {{n}} clients",
       dialogText:
         "Are you sure you would like to revoke platform access for {{full_name}}?",
-      dialogTextBulk: (clients: Client[]) =>
-        `Are you sure you would like to revoke platform access for ${clients.length} clients?`,
+      dialogTextBulk:
+        "Are you sure you would like to revoke platform access for {{n}} clients?",
     },
     {
       name: "cancelOffer",
@@ -201,8 +201,8 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Cancel {{n}} clients' offers",
       dialogText:
         "Are you sure you would like to cancel {{full_name}}'s offer?",
-      dialogTextBulk: (clients: Client[]) =>
-        `Are you sure you would like to cancel ${clients.length} clients' offers?`,
+      dialogTextBulk:
+        "Are you sure you would like to cancel {{n}} clients' offers?",
     },
     {
       name: "cancelSubscriptionSchedule",
@@ -216,8 +216,8 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "Cancel {{n}} clients' start",
       dialogText:
         "Are you sure you would like to cancel {{full_name}}'s start?",
-      dialogTextBulk: (clients: Client[]) =>
-        `Are you sure you would like to cancel ${clients.length} clients' start?`,
+      dialogTextBulk:
+        "Are you sure you would like to cancel {{n}} clients' start?",
     },
     {
       name: "endSubscription",
@@ -235,8 +235,8 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitleBulk: "End {{n}} clients",
       dialogText:
         "Are you sure you would like to end {{full_name}}? The client will stop at the end of their monthly billing cycle.",
-      dialogTextBulk: (clients: Client[]) =>
-        `Are you sure you would like to end ${clients.length} clients? The client will be ended at the end of their respective monthly billing cycles.`,
+      dialogTextBulk:
+        "Are you sure you would like to end {{n}} clients? Clients will stop at the end of their respective monthly billing cycles.",
     },
     {
       name: "archive",
@@ -249,8 +249,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitle: "Archive {{full_name}}",
       dialogTitleBulk: "Archive {{n}} clients",
       dialogText: "Are you sure you would like to archive {{full_name}}?",
-      dialogTextBulk: (clients: Client[]) =>
-        `Are you sure you would like to archive ${clients.length} clients?`,
+      dialogTextBulk: "Are you sure you would like to archive {{n}} clients?",
     },
   ];
 

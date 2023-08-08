@@ -26,7 +26,7 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   dialogTitle: string;
   dialogTitleBulk: string;
   dialogText: string;
-  dialogTextBulk: (items: T[]) => string;
+  dialogTextBulk: string;
 };
 
 interface ItemListProps<T extends { id: UUID | string }> {
@@ -293,6 +293,9 @@ const ItemList = <T extends { id: UUID | string }>({
                 action.dialogTitleBulk
               );
               const dialogTextTemplate = Handlebars.compile(action.dialogText);
+              const dialogTextBulkTemplate = Handlebars.compile(
+                action.dialogTextBulk
+              );
 
               return (
                 openActionDialogs.includes(action.name) && (
@@ -310,7 +313,7 @@ const ItemList = <T extends { id: UUID | string }>({
                     text={
                       selectedItems.length === 1
                         ? dialogTextTemplate(selectedItems[0])
-                        : action.dialogTextBulk(selectedItems)
+                        : dialogTextBulkTemplate({ n: selectedItems.length })
                     }
                   >
                     {action.DialogForm && (
