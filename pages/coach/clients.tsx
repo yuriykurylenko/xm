@@ -89,7 +89,7 @@ const Clients = ({ user }: { user: Coach }) => {
         "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
-      name: "changeStartingSubscrition",
+      name: "changeStartingSubscription",
       title: "Change client's terms",
       titleBulk: "Change clients' terms",
       icon: faRotate,
@@ -105,7 +105,7 @@ const Clients = ({ user }: { user: Coach }) => {
         "Please specify the new price and start date for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
-      name: "changeSubscritionAmount",
+      name: "changeSubscriptionAmount",
       title: "Change client's monthly price",
       titleBulk: "Change clients' monthly price",
       icon: faDollarSign,
@@ -122,7 +122,7 @@ const Clients = ({ user }: { user: Coach }) => {
         "Please specify the new price for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
-      name: "renewSubscrition",
+      name: "renewSubscription",
       title: "Renew client's subscription",
       titleBulk: "Renew clients' subscriptions",
       icon: faRotate,

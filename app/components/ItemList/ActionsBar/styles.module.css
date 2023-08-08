@@ -18,9 +18,9 @@
 
 .action-btn-sendOffer:hover,
 .action-btn-resendOffer:hover,
-.action-btn-changeStartingSubscrition:hover,
-.action-btn-changeSubscritionAmount:hover,
-.action-btn-renewSubscrition:hover {
+.action-btn-changeStartingSubscription:hover,
+.action-btn-changeSubscriptionAmount:hover,
+.action-btn-renewSubscription:hover {
   color: #56d779;
 }
 
