@@ -213,13 +213,12 @@ const Clients = ({ user }: { user: Coach }) => {
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
-      dialogTitle: (selectedClient: Client) =>
-        `Send offer to ${selectedClient.full_name}`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Send offers to ${selectedClients.length + " clients"}`,
-      dialogText: (selectedClient: Client) =>
-        `${selectedClient.full_name} will receive an email with the link to subscribe and pay your specified amount monthly.`,
-      dialogTextBulk: (selectedClients: Client[]) =>
+      dialogTitle: (client: Client) => `Send offer to ${client.full_name}`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Send offers to ${clients.length + " clients"}`,
+      dialogText: (client: Client) =>
+        `${client.full_name} will receive an email with the link to subscribe and pay your specified amount monthly.`,
+      dialogTextBulk: (clients: Client[]) =>
         "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
@@ -231,13 +230,12 @@ const Clients = ({ user }: { user: Coach }) => {
       handler: handleChangeClientSubscriptionSchedule,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
-      dialogTitle: (selectedClient: Client) =>
-        `Change terms for ${selectedClient.full_name}`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Change terms ${selectedClients.length + " clients"}`,
-      dialogText: (selectedClient: Client) =>
-        `Please specify the new price and start date for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
-      dialogTextBulk: (selectedClients: Client[]) =>
+      dialogTitle: (client: Client) => `Change terms for ${client.full_name}`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Change terms ${clients.length + " clients"}`,
+      dialogText: (client: Client) =>
+        `Please specify the new price and start date for ${client.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
+      dialogTextBulk: (clients: Client[]) =>
         "Please specify the new price and start date for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
@@ -250,13 +248,12 @@ const Clients = ({ user }: { user: Coach }) => {
       handler: handleChangeClientSubscriptionAmount,
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
-      dialogTitle: (selectedClient: Client) =>
-        `Change price for ${selectedClient.full_name}`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Change price for ${selectedClients.length + " clients"}`,
-      dialogText: (selectedClient: Client) =>
-        `Please specify the new price for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
-      dialogTextBulk: (selectedClients: Client[]) =>
+      dialogTitle: (client: Client) => `Change price for ${client.full_name}`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Change price for ${clients.length + " clients"}`,
+      dialogText: (client: Client) =>
+        `Please specify the new price for ${client.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
+      dialogTextBulk: (clients: Client[]) =>
         "Please specify the new price for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
@@ -269,13 +266,13 @@ const Clients = ({ user }: { user: Coach }) => {
       handler: handleChangeClientSubscriptionAmount,
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
-      dialogTitle: (selectedClient: Client) =>
-        `Renew ${selectedClient.full_name}'s subscription`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Renew ${selectedClients.length + " clients'"} subscriptions`,
-      dialogText: (selectedClient: Client) =>
-        `Your client's subscription will be renewed. You can specify the new price for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
-      dialogTextBulk: (selectedClients: Client[]) =>
+      dialogTitle: (client: Client) =>
+        `Renew ${client.full_name}'s subscription`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Renew ${clients.length + " clients'"} subscriptions`,
+      dialogText: (client: Client) =>
+        `Your client's subscription will be renewed. You can specify the new price for ${client.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
+      dialogTextBulk: (clients: Client[]) =>
         "Your clients' subscriptions will be renewed. You can specify the new price for them. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
@@ -289,21 +286,21 @@ const Clients = ({ user }: { user: Coach }) => {
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
-      dialogTitle: (selectedClient: Client) =>
-        `Send a new offer to ${selectedClient.full_name}`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Send new offers to ${selectedClients.length + " clients"}`,
-      dialogText: (selectedClient: Client) =>
+      dialogTitle: (client: Client) =>
+        `Send a new offer to ${client.full_name}`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Send new offers to ${clients.length + " clients"}`,
+      dialogText: (client: Client) =>
         `${
-          selectedClient.full_name
+          client.full_name
         } will receive an email with the link to subscribe and pay your specified amount monthly. ${
-          selectedClient.status === "offerSent"
+          client.status === "offerSent"
             ? "Your previous offer to the client will be canceled."
             : ""
         }`,
-      dialogTextBulk: (selectedClients: Client[]) =>
+      dialogTextBulk: (clients: Client[]) =>
         `Your clients will receive an email with the link to subscribe and pay your specified amount monthly. ${
-          selectedClients.every((sc) => sc.status === "offerSent")
+          clients.every((sc) => sc.status === "offerSent")
             ? "Your previous offers to them will be canceled."
             : ""
         }`,
@@ -316,14 +313,13 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (client: Client) => client.status === "offerSent",
       handler: handleCancelClientOffer,
       onComplete: onCancelClientOfferComplete,
-      dialogTitle: (selectedClient: Client) =>
-        `Cancel ${selectedClient.full_name}'s offer`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Cancel ${selectedClients.length + " clients' offers"}`,
-      dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to cancel ${selectedClient.full_name}'s offer?`,
-      dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to cancel ${selectedClients.length} clients' offers?`,
+      dialogTitle: (client: Client) => `Cancel ${client.full_name}'s offer`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Cancel ${clients.length + " clients' offers"}`,
+      dialogText: (client: Client) =>
+        `Are you sure you would like to cancel ${client.full_name}'s offer?`,
+      dialogTextBulk: (clients: Client[]) =>
+        `Are you sure you would like to cancel ${clients.length} clients' offers?`,
     },
     {
       name: "cancelSubscriptionSchedule",
@@ -333,14 +329,13 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (client: Client) => client.status === "starting",
       handler: handleCancelClientSubscriptionSchedule,
       onComplete: onCancelClientSubscriptionScheduleComplete,
-      dialogTitle: (selectedClient: Client) =>
-        `Cancel ${selectedClient.full_name}'s start`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Cancel ${selectedClients.length + " clients' start"}`,
-      dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to cancel ${selectedClient.full_name}'s start?`,
-      dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to cancel ${selectedClients.length} clients' start?`,
+      dialogTitle: (client: Client) => `Cancel ${client.full_name}'s start`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Cancel ${clients.length + " clients' start"}`,
+      dialogText: (client: Client) =>
+        `Are you sure you would like to cancel ${client.full_name}'s start?`,
+      dialogTextBulk: (clients: Client[]) =>
+        `Are you sure you would like to cancel ${clients.length} clients' start?`,
     },
     {
       name: "revokeAccess",
@@ -350,14 +345,13 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (client: Client) =>
         client.status === "ended" && client.access_revoked_at == null,
       handler: handleRevokeAccess,
-      dialogTitle: (selectedClient: Client) =>
-        `Revoke access for ${selectedClient.full_name}`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Revoke access for ${selectedClients.length + " clients"}`,
-      dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to revoke platform access for ${selectedClient.full_name}?`,
-      dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to revoke platform access for ${selectedClients.length} clients?`,
+      dialogTitle: (client: Client) => `Revoke access for ${client.full_name}`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Revoke access for ${clients.length + " clients"}`,
+      dialogText: (client: Client) =>
+        `Are you sure you would like to revoke platform access for ${client.full_name}?`,
+      dialogTextBulk: (clients: Client[]) =>
+        `Are you sure you would like to revoke platform access for ${clients.length} clients?`,
     },
     {
       name: "endSubscription",
@@ -371,14 +365,13 @@ const Clients = ({ user }: { user: Coach }) => {
       handler: handleCancelClientSubscription,
       onComplete: onCancelClientSubscriptionComplete,
       DialogForm: () => EndClientFields({}),
-      dialogTitle: (selectedClient: Client) =>
-        `End ${selectedClient.full_name}'s subscription`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `End ${selectedClients.length + " clients"}`,
-      dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to end ${selectedClient.full_name}? The client will stop at the end of their monthly billing cycle.`,
-      dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to end ${selectedClients.length} clients? The client will be ended at the end of their respective monthly billing cycles.`,
+      dialogTitle: (client: Client) => `End ${client.full_name}'s subscription`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `End ${clients.length + " clients"}`,
+      dialogText: (client: Client) =>
+        `Are you sure you would like to end ${client.full_name}? The client will stop at the end of their monthly billing cycle.`,
+      dialogTextBulk: (clients: Client[]) =>
+        `Are you sure you would like to end ${clients.length} clients? The client will be ended at the end of their respective monthly billing cycles.`,
     },
     {
       name: "archive",
@@ -388,14 +381,13 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (client: Client) =>
         client.status === "lead" || client.subscription_status === "canceled",
       handler: handleArchiveClient,
-      dialogTitle: (selectedClient: Client) =>
-        `Archive ${selectedClient.full_name}`,
-      dialogTitleBulk: (selectedClients: Client[]) =>
-        `Archive ${selectedClients.length + " clients"}`,
-      dialogText: (selectedClient: Client) =>
-        `Are you sure you would like to archive ${selectedClient.full_name}?`,
-      dialogTextBulk: (selectedClients: Client[]) =>
-        `Are you sure you would like to archive ${selectedClients.length} clients?`,
+      dialogTitle: (client: Client) => `Archive ${client.full_name}`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Archive ${clients.length + " clients"}`,
+      dialogText: (client: Client) =>
+        `Are you sure you would like to archive ${client.full_name}?`,
+      dialogTextBulk: (clients: Client[]) =>
+        `Are you sure you would like to archive ${clients.length} clients?`,
     },
   ];
 
