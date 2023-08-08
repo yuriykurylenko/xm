@@ -16,7 +16,7 @@ export type Action<T, D = any, U = any> = {
   title: string;
   titleBulk: string;
   icon: IconDefinition;
-  show: (item: T | T[]) => boolean;
+  show: (item: T) => boolean;
   handler: (item: T, data: D) => Promise<U>;
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
   DialogForm?: React.ComponentType<{ items: T[] }>;
@@ -259,7 +259,7 @@ const ItemList = <T,>({
           sortDirection={sortDirection}
         />
       )}
-      {isListLoaded ? (
+      {isListLoaded && items ? (
         items.length === 0 && EmptyListComponent ? (
           <EmptyListComponent isSearchResult={filterText !== ""} />
         ) : (

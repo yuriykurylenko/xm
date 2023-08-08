@@ -23,7 +23,7 @@ const ActionsBar = <T,>({ actions, selectedItems }: ActionsBarProps<T>) => {
     <div className={styles["action-buttons-container"]}>
       {actions.map(
         (action, index) =>
-          action.show(selectedItems) && (
+          selectedItems.every((item) => action.show(item)) && (
             <span
               title={
                 selectedItems.length === 1 ? action.title : action.titleBulk
