@@ -31,6 +31,7 @@ import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Input from "@/app/components/Form/Input";
+import { ClientTermsFormFields } from "@/app/components/clients/DialogForms/ClientTermsFormFields";
 
 // TODO: extract
 const startOfUtcDay = (date: Date) => {
@@ -294,40 +295,8 @@ const Clients = ({ user }: { user: Coach }) => {
       show: sendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
-      DialogForm: ({ items }: { items: Client[] }) => (
-        <>
-          <PriceInput
-            name="monthlyAmount"
-            placeholder="Monthly price"
-            required
-            defaultValue={
-              items.length === 1
-                ? (items[0]?.subscription?.monthly_amount ||
-                    user.monthly_subscription_amount) / 100
-                : user.monthly_subscription_amount / 100
-            }
-          />
-          <Input
-            name="startDate"
-            type="date"
-            placeholder="Start date"
-            defaultValue={
-              items.length === 1
-                ? items[0]?.start_date || new Date()
-                : new Date()
-            }
-          />
-          <Input
-            name="trialPeriod"
-            type="checkbox"
-            placeholder="Offer trial period (14 days)"
-            defaultValue={
-              items.length === 1 &&
-              Boolean(items[0]?.subscription?.trial_period_days)
-            }
-          />
-        </>
-      ),
+      DialogForm: ({ items }: { items: Client[] }) =>
+        ClientTermsFormFields({ items, coach: user }),
       dialogTitle: (selectedClient: Client) =>
         `Send offer to ${selectedClient.full_name}`,
       dialogTitleBulk: (selectedClients: Client[]) =>
@@ -344,40 +313,8 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faRotate,
       show: changeClientSubscriptionScheduleAllowed,
       handler: handleChangeClientSubscriptionSchedule,
-      DialogForm: ({ items }: { items: Client[] }) => (
-        <>
-          <PriceInput
-            name="monthlyAmount"
-            placeholder="Monthly price"
-            required
-            defaultValue={
-              items.length === 1
-                ? (items[0]?.subscription?.monthly_amount ||
-                    user.monthly_subscription_amount) / 100
-                : user.monthly_subscription_amount / 100
-            }
-          />
-          <Input
-            name="startDate"
-            type="date"
-            placeholder="Start date"
-            defaultValue={
-              items.length === 1
-                ? items[0]?.start_date || new Date()
-                : new Date()
-            }
-          />
-          <Input
-            name="trialPeriod"
-            type="checkbox"
-            placeholder="Offer trial period (14 days)"
-            defaultValue={
-              items.length === 1 &&
-              Boolean(items[0]?.subscription?.trial_period_days)
-            }
-          />
-        </>
-      ),
+      DialogForm: ({ items }: { items: Client[] }) =>
+        ClientTermsFormFields({ items, coach: user }),
       dialogTitle: (selectedClient: Client) =>
         `Change terms for ${selectedClient.full_name}`,
       dialogTitleBulk: (selectedClients: Client[]) =>
@@ -457,42 +394,8 @@ const Clients = ({ user }: { user: Coach }) => {
       show: resendOfferToClientAllowed,
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
-      DialogForm: ({ items }: { items: Client[] }) => (
-        <>
-          <PriceInput
-            name="monthlyAmount"
-            placeholder="Monthly price"
-            required
-            defaultValue={
-              items.length === 1
-                ? (items[0]?.subscription?.monthly_amount ||
-                    user.monthly_subscription_amount) / 100
-                : user.monthly_subscription_amount / 100
-            }
-          />
-          <Input
-            name="startDate"
-            type="date"
-            placeholder="Start date"
-            defaultValue={
-              items.length === 1 &&
-              items[0]?.start_date &&
-              new Date(items[0]?.start_date) > new Date()
-                ? items[0]?.start_date
-                : new Date()
-            }
-          />
-          <Input
-            name="trialPeriod"
-            type="checkbox"
-            placeholder="Offer trial period (14 days)"
-            defaultValue={
-              items.length === 1 &&
-              Boolean(items[0]?.subscription?.trial_period_days)
-            }
-          />
-        </>
-      ),
+      DialogForm: ({ items }: { items: Client[] }) =>
+        ClientTermsFormFields({ items, coach: user }),
       dialogTitle: (selectedClient: Client) =>
         `Send a new offer to ${selectedClient.full_name}`,
       dialogTitleBulk: (selectedClients: Client[]) =>
