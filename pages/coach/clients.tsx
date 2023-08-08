@@ -33,6 +33,7 @@ import PriceInput from "@/app/components/Form/PriceInput";
 import Input from "@/app/components/Form/Input";
 import { ClientTermsFormFields } from "@/app/components/clients/DialogForms/ClientTermsFields";
 import { PriceField } from "@/app/components/clients/DialogForms/PriceField";
+import { EndClientFields } from "@/app/components/clients/DialogForms/EndClientFields";
 
 // TODO: extract
 const startOfUtcDay = (date: Date) => {
@@ -448,20 +449,7 @@ const Clients = ({ user }: { user: Coach }) => {
       show: cancelSubscriptionAllowed,
       handler: handleCancelClientSubscription,
       onComplete: onCancelClientSubscriptionComplete,
-      DialogForm: () => (
-        <>
-          <Input
-            name="endImmediately"
-            type="checkbox"
-            placeholder="End immediately"
-          />
-          <Input
-            name="accessAfterEndDate"
-            type="checkbox"
-            placeholder="Allow platform access after the client stops"
-          />
-        </>
-      ),
+      DialogForm: () => EndClientFields({}),
       dialogTitle: (selectedClient: Client) =>
         `End ${selectedClient.full_name}'s subscription`,
       dialogTitleBulk: (selectedClients: Client[]) =>
