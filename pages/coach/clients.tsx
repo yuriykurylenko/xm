@@ -29,8 +29,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
-import PriceInput from "@/app/components/Form/PriceInput";
-import Input from "@/app/components/Form/Input";
 import { ClientTermsFormFields } from "@/app/components/clients/DialogForms/ClientTermsFields";
 import { PriceField } from "@/app/components/clients/DialogForms/PriceField";
 import { EndClientFields } from "@/app/components/clients/DialogForms/EndClientFields";
