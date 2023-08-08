@@ -2,7 +2,7 @@ import { UUID } from "crypto";
 import { Subscription } from "@/app/types/subscription";
 
 export type User = {
-  id?: UUID | string;
+  id: UUID | string;
   full_name: string;
   email: string;
   created_at?: Date | string;
@@ -17,6 +17,7 @@ export type Coach = User & {
 };
 
 export type Client = User & {
+  id: UUID;
   coach_id: UUID | string;
   status?: string;
   archived_at?: Date | string;
@@ -35,6 +36,8 @@ export type UserInput = {
 
 export type ClientInput = UserInput & {
   coach_id?: UUID | string;
+  full_name?: string;
+  email?: string;
   status?: string;
   subscription_status?: string | null;
   start_date?: Date | null;
@@ -45,4 +48,6 @@ export type ClientInput = UserInput & {
 
 export type CoachInput = UserInput & {
   stripe_product_id?: string;
+  monthly_subscription_amount?: number;
+  subscription_currency?: string;
 };

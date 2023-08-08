@@ -8,7 +8,7 @@ import withAuth from "@/app/hoc/withAuth";
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
-import { Client } from "@/app/types/user";
+import { Client, ClientInput } from "@/app/types/user";
 import { ClientApplicationPageProps } from "@/app/types/ClientApplicationPageProps";
 import { ClientApplicationPageContext } from "@/app/types/ClientApplicationPageContext";
 import { UUID } from "crypto";
@@ -16,7 +16,7 @@ import { UUID } from "crypto";
 const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
   const router = useRouter();
 
-  const onSubmit = async (data: Client) => {
+  const onSubmit = async (data: ClientInput) => {
     const { full_name, email } = data;
     const { data: client, error } = await createClient({
       full_name,

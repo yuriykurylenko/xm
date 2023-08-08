@@ -1,5 +1,5 @@
 import { Subscription, SubscriptionInput } from "@/app/types/subscription";
-import { Client, ClientInput, Coach, CoachInput } from "@/app/types/user";
+import { Client, ClientInput, CoachInput } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
@@ -102,7 +102,7 @@ export const fetchSubscriptionByStripeSubscriptionId = (
     .is("archived_at", null)
     .single();
 
-export const createClient = ({ full_name, email, coach_id }: Client) =>
+export const createClient = ({ full_name, email, coach_id }: ClientInput) =>
   supabase
     .from("clients")
     .insert([
@@ -120,7 +120,7 @@ export const createCoach = ({
   email,
   monthly_subscription_amount,
   subscription_currency,
-}: Coach) =>
+}: CoachInput) =>
   supabase
     .from("coaches")
     .insert({
@@ -397,12 +397,12 @@ async function fetchSubscriptionsByClientId(clientId: UUID | string) {
 }
 
 export const cancelClientSubscription = async (
-  client: Client,
+  clientId: UUID,
   endImmediately: boolean,
   accessAfterEndDate: boolean
 ) => {
   const { data: subscriptions } = await fetchSubscriptionsByClientId(
-    client.id as string
+    clientId as string
   );
 
   for (const subscription of (subscriptions || []).filter((s) =>
@@ -422,10 +422,8 @@ export const cancelClientSubscription = async (
   return { data: subscriptions, error: null };
 };
 
-export const cancelClientSubscriptionSchedule = async (client: Client) => {
-  const { data: subscriptions } = await fetchSubscriptionsByClientId(
-    client.id as string
-  );
+export const cancelClientSubscriptionSchedule = async (clientId: UUID) => {
+  const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
 
   for (const subscription of subscriptions || []) {
     try {

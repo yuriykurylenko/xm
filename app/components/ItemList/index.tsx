@@ -5,28 +5,29 @@ import Pagination from "@/app/components/ItemList/Pagination";
 import ActionDialog from "../ActionDialog";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import ItemSkeleton from "@/app/components/ItemList/ItemSkeleton";
+import { UUID } from "crypto";
 
 type FilterOption = {
   value: string;
   name: string;
 };
 
-export type Action<T, D = any, U = any> = {
+export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   name: string;
   title: string;
   titleBulk: string;
   icon: IconDefinition;
   show: (item: T) => boolean;
-  handler: (item: T, data: D) => Promise<U>;
+  handler: (itemId: UUID, data: D) => Promise<U>;
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
   DialogForm?: React.ComponentType<{ items: T[] }>;
-  dialogTitle: (selectedItem: T) => string;
-  dialogTitleBulk: (selectedItems: T[]) => string;
-  dialogText: (selectedItems: T) => string;
-  dialogTextBulk: (selectedItems: T[]) => string;
+  dialogTitle: (item: T) => string;
+  dialogTitleBulk: (items: T[]) => string;
+  dialogText: (item: T) => string;
+  dialogTextBulk: (items: T[]) => string;
 };
 
-interface ItemListProps<T> {
+interface ItemListProps<T extends { id: UUID | string }> {
   title: string;
   filterStatusOptions: FilterOption[];
   fetchItems: (
@@ -68,7 +69,7 @@ interface ItemListProps<T> {
   actions: any;
 }
 
-const ItemList = <T,>({
+const ItemList = <T extends { id: UUID | string }>({
   title,
   filterStatusOptions,
   fetchItems,
@@ -185,12 +186,13 @@ const ItemList = <T,>({
   };
 
   const enhancedActions = actions.map(
-    (action: { name: string; handler: (item?: T | T[]) => void }) => ({
+    (action: { name: string; handler: (itemId?: UUID) => void }) => ({
       ...action,
-      handler: (item?: T | T[]) => {
-        if (item) {
-          // @ts-ignore
-          setSelectedItems([item].flat());
+      handler: (itemId?: UUID | UUID[]) => {
+        if (itemId) {
+          setSelectedItems(
+            items.filter((i: T) => [itemId].flat().includes(i.id as UUID))
+          );
         }
         setOpenActionDialogs([action.name]);
       },
@@ -204,7 +206,7 @@ const ItemList = <T,>({
 
   const handleConfirmAction = async (action: any, data?: any) => {
     for (const item of selectedItems) {
-      const { error } = await action.handler(item, data);
+      const { error } = await action.handler(item.id, data);
 
       if (error) {
         return { error };

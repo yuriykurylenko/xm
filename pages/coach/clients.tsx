@@ -61,7 +61,7 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const handleSendOfferToClient = async (
-    client: Client,
+    clientId: UUID,
     data: {
       monthlyAmount: number | string;
       trialPeriod: boolean;
@@ -70,18 +70,15 @@ const Clients = ({ user }: { user: Coach }) => {
   ) => {
     const { monthlyAmount, trialPeriod, startDate } = data;
 
-    const { data: sendOfferData, error } = await sendClientOffer(
-      client.id as UUID,
-      {
-        monthlyAmount: Number(monthlyAmount) * 100,
-        currency: "USD",
-        trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate:
-          startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
-            ? startOfUtcDay(startDate)
-            : null,
-      }
-    );
+    const { data: sendOfferData, error } = await sendClientOffer(clientId, {
+      monthlyAmount: Number(monthlyAmount) * 100,
+      currency: "USD",
+      trialPeriodDays: trialPeriod ? 14 : 0,
+      startDate:
+        startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
+          ? startOfUtcDay(startDate)
+          : null,
+    });
 
     if (error) {
       return { data: sendOfferData, error };
@@ -91,7 +88,7 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const handleChangeClientSubscriptionSchedule = async (
-    client: Client,
+    clientId: UUID,
     data: {
       monthlyAmount: number | string;
       trialPeriod: boolean;
@@ -101,7 +98,7 @@ const Clients = ({ user }: { user: Coach }) => {
     const { monthlyAmount, trialPeriod, startDate } = data;
 
     const { data: changeClientSubscriptionScheduleData, error } =
-      await changeClientSubscriptionSchedule(client.id as UUID, {
+      await changeClientSubscriptionSchedule(clientId as UUID, {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
         trialPeriodDays: trialPeriod ? 14 : 0,
@@ -119,7 +116,7 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const handleChangeClientSubscriptionAmount = async (
-    client: Client,
+    clientId: UUID,
     data: {
       monthlyAmount: number | string;
     }
@@ -127,7 +124,7 @@ const Clients = ({ user }: { user: Coach }) => {
     const { monthlyAmount } = data;
 
     const { data: changeClientSubscriptionScheduleData, error } =
-      await changeClientSubscriptionAmount(client.id as UUID, {
+      await changeClientSubscriptionAmount(clientId, {
         monthlyAmount: Number(monthlyAmount) * 100,
         currency: "USD",
       });
@@ -139,26 +136,22 @@ const Clients = ({ user }: { user: Coach }) => {
     return { error: null };
   };
 
-  const onSendOfferComplete = (
-    setFilterStatus?: (filterStatus: string) => void
-  ) => setFilterStatus && setFilterStatus("offerSent");
-
-  const handleArchiveClient = async (client: Client) => {
-    const { data, error } = await updateClientById(client.id as UUID, {
+  const handleArchiveClient = async (clientId: UUID) => {
+    const { data, error } = await updateClientById(clientId, {
       archived_at: new Date(),
     });
     return { data, error };
   };
 
-  const handleRevokeAccess = async (client: Client) => {
-    const { data, error } = await updateClientById(client.id as UUID, {
+  const handleRevokeAccess = async (clientId: UUID) => {
+    const { data, error } = await updateClientById(clientId, {
       access_revoked_at: new Date(),
     });
     return { data, error };
   };
 
   const handleCancelClientSubscription = async (
-    client: Client,
+    clientId: UUID,
     data: {
       endImmediately: boolean;
       accessAfterEndDate: boolean;
@@ -166,29 +159,33 @@ const Clients = ({ user }: { user: Coach }) => {
   ) => {
     const { endImmediately, accessAfterEndDate } = data;
     return await cancelClientSubscription(
-      client,
+      clientId,
       endImmediately,
       accessAfterEndDate
     );
   };
 
-  const handleCancelClientSubscriptionSchedule = async (client: Client) => {
-    return await cancelClientSubscriptionSchedule(client);
+  const handleCancelClientSubscriptionSchedule = async (clientId: UUID) => {
+    return await cancelClientSubscriptionSchedule(clientId);
   };
 
-  const handleCancelClientOffer = async (client: Client) => {
-    await updateSubscriptionByClientId(client.id as string, {
+  const handleCancelClientOffer = async (clientId: UUID) => {
+    await updateSubscriptionByClientId(clientId, {
       archived_at: new Date(),
       start_date: null,
       end_date: null,
     });
-    return await updateClientById(client.id as string, {
+    return await updateClientById(clientId, {
       status: "lead",
       subscription_status: null,
       start_date: null,
       end_date: null,
     });
   };
+
+  const onSendOfferComplete = (
+    setFilterStatus?: (filterStatus: string) => void
+  ) => setFilterStatus && setFilterStatus("offerSent");
 
   const onCancelClientOfferComplete = (
     setFilterStatus?: (filterStatus: string) => void
@@ -306,6 +303,24 @@ const Clients = ({ user }: { user: Coach }) => {
         }`,
     },
     {
+      name: "revokeAccess",
+      title: "Revoke platform access",
+      titleBulk: "Revoke platform access",
+      icon: faPowerOff,
+      show: (client: Client) =>
+        !["starting", "client"].includes(client.status as string) &&
+        client.access_revoked_at == null &&
+        client.user_id != null,
+      handler: handleRevokeAccess,
+      dialogTitle: (client: Client) => `Revoke access for ${client.full_name}`,
+      dialogTitleBulk: (clients: Client[]) =>
+        `Revoke access for ${clients.length + " clients"}`,
+      dialogText: (client: Client) =>
+        `Are you sure you would like to revoke platform access for ${client.full_name}?`,
+      dialogTextBulk: (clients: Client[]) =>
+        `Are you sure you would like to revoke platform access for ${clients.length} clients?`,
+    },
+    {
       name: "cancelOffer",
       title: "Cancel offer",
       titleBulk: "Cancel offers",
@@ -336,22 +351,6 @@ const Clients = ({ user }: { user: Coach }) => {
         `Are you sure you would like to cancel ${client.full_name}'s start?`,
       dialogTextBulk: (clients: Client[]) =>
         `Are you sure you would like to cancel ${clients.length} clients' start?`,
-    },
-    {
-      name: "revokeAccess",
-      title: "Revoke platform access",
-      titleBulk: "Revoke platform access",
-      icon: faPowerOff,
-      show: (client: Client) =>
-        client.status === "ended" && client.access_revoked_at == null,
-      handler: handleRevokeAccess,
-      dialogTitle: (client: Client) => `Revoke access for ${client.full_name}`,
-      dialogTitleBulk: (clients: Client[]) =>
-        `Revoke access for ${clients.length + " clients"}`,
-      dialogText: (client: Client) =>
-        `Are you sure you would like to revoke platform access for ${client.full_name}?`,
-      dialogTextBulk: (clients: Client[]) =>
-        `Are you sure you would like to revoke platform access for ${clients.length} clients?`,
     },
     {
       name: "endSubscription",
