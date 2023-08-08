@@ -25,7 +25,7 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   DialogForm?: React.ComponentType<{ items: T[] }>;
   dialogTitle: string;
   dialogTitleBulk: string;
-  dialogText: (item: T) => string;
+  dialogText: string;
   dialogTextBulk: (items: T[]) => string;
 };
 
@@ -292,6 +292,7 @@ const ItemList = <T extends { id: UUID | string }>({
               const dialogTitleBulkTemplate = Handlebars.compile(
                 action.dialogTitleBulk
               );
+              const dialogTextTemplate = Handlebars.compile(action.dialogText);
 
               return (
                 openActionDialogs.includes(action.name) && (
@@ -308,7 +309,7 @@ const ItemList = <T extends { id: UUID | string }>({
                     }
                     text={
                       selectedItems.length === 1
-                        ? action.dialogText(selectedItems[0])
+                        ? dialogTextTemplate(selectedItems[0])
                         : action.dialogTextBulk(selectedItems)
                     }
                   >
