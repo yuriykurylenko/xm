@@ -60,34 +60,6 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, total } as { data: Client[]; total: number };
   };
 
-  const handleChangeClientSubscriptionSchedule = async (
-    clientId: UUID,
-    data: {
-      monthlyAmount: number | string;
-      trialPeriod: boolean;
-      startDate: Date;
-    }
-  ) => {
-    const { monthlyAmount, trialPeriod, startDate } = data;
-
-    const { data: changeClientSubscriptionScheduleData, error } =
-      await changeClientSubscriptionSchedule(clientId as UUID, {
-        monthlyAmount: Number(monthlyAmount) * 100,
-        currency: "USD",
-        trialPeriodDays: trialPeriod ? 14 : 0,
-        startDate:
-          startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
-            ? startOfUtcDay(startDate)
-            : null,
-      });
-
-    if (error) {
-      return { data: changeClientSubscriptionScheduleData, error };
-    }
-
-    return { error: null };
-  };
-
   const handleChangeClientSubscriptionAmount = async (
     clientId: UUID,
     data: {
@@ -197,7 +169,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Change clients' terms",
       icon: faRotate,
       show: (client: Client) => client.status === "starting",
-      handler: handleChangeClientSubscriptionSchedule,
+      handler: changeClientSubscriptionSchedule,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
       dialogTitle: (client: Client) => `Change terms for ${client.full_name}`,

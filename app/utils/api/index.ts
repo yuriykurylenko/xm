@@ -284,16 +284,22 @@ export const changeClientSubscriptionSchedule = async (
   clientId: UUID,
   {
     monthlyAmount,
-    currency,
+    currency = "USD",
     trialPeriodDays,
+    trialPeriod,
     startDate,
   }: {
     monthlyAmount: number;
     currency: string;
-    trialPeriodDays: number;
-    startDate?: Date | string | null;
+    trialPeriodDays?: number;
+    trialPeriod?: boolean;
+    startDate?: Date;
   }
 ) => {
+  const utcStartDate =
+    startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
+      ? startOfUtcDay(startDate)
+      : null;
   const { data: coach } = await fetchCoachByClientId(clientId);
 
   if (!coach) {
@@ -311,10 +317,10 @@ export const changeClientSubscriptionSchedule = async (
   const { data: clientSubscription, error: clientSubscriptionError } =
     await createClientSubscription(clientId, {
       productId: coach?.stripe_product_id,
-      monthlyAmount,
+      monthlyAmount: monthlyAmount * 100,
       currency,
-      trialPeriodDays,
-      startDate,
+      trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
+      startDate: utcStartDate,
     });
 
   if (clientSubscriptionError || !clientSubscription) {
@@ -327,8 +333,8 @@ export const changeClientSubscriptionSchedule = async (
       metadata: { subscription_id: clientSubscription.id },
       monthlyAmount,
       currency,
-      trialPeriodDays,
-      startDate,
+      trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
+      startDate: utcStartDate,
     });
   } catch (e) {
     return { data: null, error: { message: "Error updating client terms" } };
