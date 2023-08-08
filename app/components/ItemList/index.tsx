@@ -24,7 +24,7 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
   DialogForm?: React.ComponentType<{ items: T[] }>;
   dialogTitle: string;
-  dialogTitleBulk: (items: T[]) => string;
+  dialogTitleBulk: string;
   dialogText: (item: T) => string;
   dialogTextBulk: (items: T[]) => string;
 };
@@ -289,6 +289,9 @@ const ItemList = <T extends { id: UUID | string }>({
               const dialogTitleTemplate = Handlebars.compile(
                 action.dialogTitle
               );
+              const dialogTitleBulkTemplate = Handlebars.compile(
+                action.dialogTitleBulk
+              );
 
               return (
                 openActionDialogs.includes(action.name) && (
@@ -301,7 +304,7 @@ const ItemList = <T extends { id: UUID | string }>({
                     title={
                       selectedItems.length === 1
                         ? dialogTitleTemplate(selectedItems[0])
-                        : action.dialogTitleBulk(selectedItems)
+                        : dialogTitleBulkTemplate({ n: selectedItems.length })
                     }
                     text={
                       selectedItems.length === 1
