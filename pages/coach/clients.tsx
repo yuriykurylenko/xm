@@ -139,49 +139,35 @@ const Clients = ({ user }: { user: Coach }) => {
     return { error: null };
   };
 
-  const sendOfferToClientAllowed = (client: Client) => {
-    return client.status === "lead";
-  };
+  const sendOfferToClientAllowed = (client: Client) => client.status === "lead";
 
-  const resendOfferToClientAllowed = (client: Client) => {
-    return ["offerSent", "ended"].includes(client.status as string);
-  };
+  const resendOfferToClientAllowed = (client: Client) =>
+    ["offerSent", "ended"].includes(client.status as string);
 
-  const changeClientSubscriptionScheduleAllowed = (client: Client) => {
-    return client.status === "starting";
-  };
+  const changeClientSubscriptionScheduleAllowed = (client: Client) =>
+    client.status === "starting";
 
-  const changeClientSubscriptionAmountAllowed = (client: Client) => {
-    return client.status === "client" && client.end_date === null;
-  };
+  const changeClientSubscriptionAmountAllowed = (client: Client) =>
+    client.status === "client" && client.end_date === null;
 
-  const renewClientSubscriptionAllowed = (client: Client) => {
-    return client.status === "client" && client.end_date != null;
-  };
+  const renewClientSubscriptionAllowed = (client: Client) =>
+    client.status === "client" && client.end_date != null;
 
-  const cancelSubscriptionAllowed = (client: Client) => {
-    return ["past_due", "unpaid", "active", "trialing"].includes(
+  const cancelSubscriptionAllowed = (client: Client) =>
+    ["past_due", "unpaid", "active", "trialing"].includes(
       client.subscription_status as string
     );
-  };
 
-  const cancelOfferAllowed = (client: Client) => {
-    return client.status === "offerSent";
-  };
+  const cancelOfferAllowed = (client: Client) => client.status === "offerSent";
 
-  const cancelSubscriptionScheduleAllowed = (client: Client) => {
-    return client.status === "starting";
-  };
+  const cancelSubscriptionScheduleAllowed = (client: Client) =>
+    client.status === "starting";
 
-  const archiveClientAllowed = (client: Client) => {
-    return (
-      client.status === "lead" || client.subscription_status === "canceled"
-    );
-  };
+  const archiveClientAllowed = (client: Client) =>
+    client.status === "lead" || client.subscription_status === "canceled";
 
-  const revokeAccessAllowed = (client: Client) => {
-    return client.status === "ended" && client.access_revoked_at == null;
-  };
+  const revokeAccessAllowed = (client: Client) =>
+    client.status === "ended" && client.access_revoked_at == null;
 
   const onSendOfferComplete = (
     setFilterStatus?: (filterStatus: string) => void
