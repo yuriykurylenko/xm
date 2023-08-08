@@ -140,87 +140,63 @@ const Clients = ({ user }: { user: Coach }) => {
   };
 
   const sendOfferToClientAllowed = (client: Client | Client[]) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return clientStatuses.length === 1 && clientStatuses[0] === "lead";
+    return [client].flat().every((c) => c.status === "lead");
   };
 
   const resendOfferToClientAllowed = (client: Client | Client[]) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-
-    return clientStatuses.every((val?: string) =>
-      ["offerSent", "ended"].includes(val as string)
-    );
+    return [client]
+      .flat()
+      .every((c) => ["offerSent", "ended"].includes(c.status as string));
   };
 
   const changeClientSubscriptionScheduleAllowed = (
     client: Client | Client[]
   ) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return clientStatuses.length === 1 && clientStatuses[0] === "starting";
+    return [client].flat().every((c) => c.status === "starting");
   };
 
   const changeClientSubscriptionAmountAllowed = (client: Client | Client[]) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    const clientEndDates = [...new Set([client].flat().map((c) => c.end_date))];
-    return (
-      clientStatuses.length === 1 &&
-      clientStatuses[0] === "client" &&
-      clientEndDates.length === 1 &&
-      clientEndDates[0] === null
-    );
+    return [client]
+      .flat()
+      .every((c) => c.status === "client" && c.end_date === null);
   };
 
   const renewClientSubscriptionAllowed = (client: Client | Client[]) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    const clientEndDates = [...new Set([client].flat().map((c) => c.end_date))];
-    return (
-      clientStatuses.length === 1 &&
-      clientStatuses[0] === "client" &&
-      clientEndDates.every((val?: Date) => val != null)
-    );
+    return [client]
+      .flat()
+      .every((c) => c.status === "client" && c.end_date != null);
   };
 
   const cancelSubscriptionAllowed = (client: Client | Client[]) => {
-    const clientSubscriptionStatuses = [
-      ...new Set([client].flat().map((c) => c.subscription_status)),
-    ];
-    return clientSubscriptionStatuses.every((val?: string) =>
-      ["past_due", "unpaid", "active", "trialing"].includes(val as string)
-    );
+    return [client]
+      .flat()
+      .every((c) =>
+        ["past_due", "unpaid", "active", "trialing"].includes(
+          c.subscription_status as string
+        )
+      );
   };
 
   const cancelOfferAllowed = (client: Client | Client[]) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return clientStatuses.length === 1 && clientStatuses[0] === "offerSent";
+    return [client].flat().every((c) => c.status === "offerSent");
   };
 
   const cancelSubscriptionScheduleAllowed = (client: Client | Client[]) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    return clientStatuses.length === 1 && clientStatuses[0] === "starting";
+    return [client].flat().every((c) => c.status === "starting");
   };
 
   const archiveClientAllowed = (client: Client | Client[]) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    const clientSubscriptionStatuses = [
-      ...new Set([client].flat().map((c) => c.subscription_status)),
-    ];
-
-    return (
-      clientSubscriptionStatuses.every((val?: string) => val === "canceled") ||
-      clientStatuses.every((val?: string) => val === "lead")
-    );
+    return [client]
+      .flat()
+      .every(
+        (c) => c.status === "lead" || c.subscription_status === "canceled"
+      );
   };
 
   const revokeAccessAllowed = (client: Client | Client[]) => {
-    const clientStatuses = [...new Set([client].flat().map((c) => c.status))];
-    const clientRevokeAccessDates = [client]
+    return [client]
       .flat()
-      .map((c) => c.access_revoked_at);
-
-    return (
-      clientRevokeAccessDates.every((val?: Date) => val == null) &&
-      clientStatuses.every((val?: string) => val === "ended")
-    );
+      .every((c) => c.status === "ended" && c.access_revoked_at == null);
   };
 
   const onSendOfferComplete = (
@@ -336,7 +312,7 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitle: (selectedClient: Client) =>
         `Change price for ${selectedClient.full_name}`,
       dialogTitleBulk: (selectedClients: Client[]) =>
-        `Change price ${selectedClients.length + " clients"}`,
+        `Change price for ${selectedClients.length + " clients"}`,
       dialogText: (selectedClient: Client) =>
         `Please specify the new price for ${selectedClient.full_name}. They will receive an email confirming the change of the terms but would not need to add their credit card again.`,
       dialogTextBulk: (selectedClients: Client[]) =>
