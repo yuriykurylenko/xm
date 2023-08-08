@@ -9,6 +9,12 @@ import {
   updateStripeSubscription,
 } from "@/app/utils/api/stripe";
 
+const startOfUtcDay = (date: Date) => {
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  ).toISOString();
+};
+
 export const fetchCoachById = (id: UUID) =>
   supabase.from("coaches").select("*").eq("id", id).single();
 
@@ -231,14 +237,16 @@ export const sendClientOffer = async (
   clientId: UUID,
   {
     monthlyAmount,
-    currency,
+    currency = "USD",
     trialPeriodDays,
+    trialPeriod,
     startDate,
   }: {
     monthlyAmount: number;
     currency: string;
-    trialPeriodDays: number;
-    startDate?: Date | string | null;
+    trialPeriodDays?: number;
+    trialPeriod?: boolean;
+    startDate?: Date;
   }
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);
@@ -251,10 +259,13 @@ export const sendClientOffer = async (
 
   const { data, error } = await createClientSubscription(clientId, {
     productId: coach?.stripe_product_id,
-    monthlyAmount,
+    monthlyAmount: monthlyAmount * 100,
     currency,
-    trialPeriodDays,
-    startDate,
+    trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
+    startDate:
+      startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
+        ? startOfUtcDay(startDate)
+        : null,
   });
 
   if (error) {

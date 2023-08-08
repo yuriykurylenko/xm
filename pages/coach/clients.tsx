@@ -60,33 +60,6 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, total } as { data: Client[]; total: number };
   };
 
-  const handleSendOfferToClient = async (
-    clientId: UUID,
-    data: {
-      monthlyAmount: number | string;
-      trialPeriod: boolean;
-      startDate: Date;
-    }
-  ) => {
-    const { monthlyAmount, trialPeriod, startDate } = data;
-
-    const { data: sendOfferData, error } = await sendClientOffer(clientId, {
-      monthlyAmount: Number(monthlyAmount) * 100,
-      currency: "USD",
-      trialPeriodDays: trialPeriod ? 14 : 0,
-      startDate:
-        startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
-          ? startOfUtcDay(startDate)
-          : null,
-    });
-
-    if (error) {
-      return { data: sendOfferData, error };
-    }
-
-    return { error: null };
-  };
-
   const handleChangeClientSubscriptionSchedule = async (
     clientId: UUID,
     data: {
@@ -206,7 +179,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send offers",
       icon: faPaperPlane,
       show: (client: Client) => client.status === "lead",
-      handler: handleSendOfferToClient,
+      handler: sendClientOffer,
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
@@ -279,7 +252,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faRotate,
       show: (client: Client) =>
         ["offerSent", "ended"].includes(client.status as string),
-      handler: handleSendOfferToClient,
+      handler: sendClientOffer,
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
