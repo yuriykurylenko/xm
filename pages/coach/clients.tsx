@@ -139,36 +139,6 @@ const Clients = ({ user }: { user: Coach }) => {
     return { error: null };
   };
 
-  const sendOfferToClientAllowed = (client: Client) => client.status === "lead";
-
-  const resendOfferToClientAllowed = (client: Client) =>
-    ["offerSent", "ended"].includes(client.status as string);
-
-  const changeClientSubscriptionScheduleAllowed = (client: Client) =>
-    client.status === "starting";
-
-  const changeClientSubscriptionAmountAllowed = (client: Client) =>
-    client.status === "client" && client.end_date === null;
-
-  const renewClientSubscriptionAllowed = (client: Client) =>
-    client.status === "client" && client.end_date != null;
-
-  const cancelSubscriptionAllowed = (client: Client) =>
-    ["past_due", "unpaid", "active", "trialing"].includes(
-      client.subscription_status as string
-    );
-
-  const cancelOfferAllowed = (client: Client) => client.status === "offerSent";
-
-  const cancelSubscriptionScheduleAllowed = (client: Client) =>
-    client.status === "starting";
-
-  const archiveClientAllowed = (client: Client) =>
-    client.status === "lead" || client.subscription_status === "canceled";
-
-  const revokeAccessAllowed = (client: Client) =>
-    client.status === "ended" && client.access_revoked_at == null;
-
   const onSendOfferComplete = (
     setFilterStatus?: (filterStatus: string) => void
   ) => setFilterStatus && setFilterStatus("offerSent");
@@ -238,7 +208,7 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Send offer",
       titleBulk: "Send offers",
       icon: faPaperPlane,
-      show: sendOfferToClientAllowed,
+      show: (client: Client) => client.status === "lead",
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
@@ -257,7 +227,7 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Change client's terms",
       titleBulk: "Change clients' terms",
       icon: faRotate,
-      show: changeClientSubscriptionScheduleAllowed,
+      show: (client: Client) => client.status === "starting",
       handler: handleChangeClientSubscriptionSchedule,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
@@ -275,7 +245,8 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Change client's monthly price",
       titleBulk: "Change clients' monthly price",
       icon: faDollarSign,
-      show: changeClientSubscriptionAmountAllowed,
+      show: (client: Client) =>
+        client.status === "client" && client.end_date === null,
       handler: handleChangeClientSubscriptionAmount,
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
@@ -293,7 +264,8 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Renew client's subscription",
       titleBulk: "Renew clients' subscriptions",
       icon: faRotate,
-      show: renewClientSubscriptionAllowed,
+      show: (client: Client) =>
+        client.status === "client" && client.end_date != null,
       handler: handleChangeClientSubscriptionAmount,
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
@@ -311,7 +283,8 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Send a new offer",
       titleBulk: "Send new offers",
       icon: faRotate,
-      show: resendOfferToClientAllowed,
+      show: (client: Client) =>
+        ["offerSent", "ended"].includes(client.status as string),
       handler: handleSendOfferToClient,
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
@@ -340,7 +313,7 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Cancel offer",
       titleBulk: "Cancel offers",
       icon: faXmark,
-      show: cancelOfferAllowed,
+      show: (client: Client) => client.status === "offerSent",
       handler: handleCancelClientOffer,
       onComplete: onCancelClientOfferComplete,
       dialogTitle: (selectedClient: Client) =>
@@ -357,7 +330,7 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Cancel starting client",
       titleBulk: "Cancel starting clients",
       icon: faXmark,
-      show: cancelSubscriptionScheduleAllowed,
+      show: (client: Client) => client.status === "starting",
       handler: handleCancelClientSubscriptionSchedule,
       onComplete: onCancelClientSubscriptionScheduleComplete,
       dialogTitle: (selectedClient: Client) =>
@@ -374,7 +347,8 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Revoke platform access",
       titleBulk: "Revoke platform access",
       icon: faPowerOff,
-      show: revokeAccessAllowed,
+      show: (client: Client) =>
+        client.status === "ended" && client.access_revoked_at == null,
       handler: handleRevokeAccess,
       dialogTitle: (selectedClient: Client) =>
         `Revoke access for ${selectedClient.full_name}`,
@@ -390,7 +364,10 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "End client",
       titleBulk: "End clients",
       icon: faXmark,
-      show: cancelSubscriptionAllowed,
+      show: (client: Client) =>
+        ["past_due", "unpaid", "active", "trialing"].includes(
+          client.subscription_status as string
+        ),
       handler: handleCancelClientSubscription,
       onComplete: onCancelClientSubscriptionComplete,
       DialogForm: () => EndClientFields({}),
@@ -408,7 +385,8 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Archive",
       titleBulk: "Archive",
       icon: faTrash,
-      show: archiveClientAllowed,
+      show: (client: Client) =>
+        client.status === "lead" || client.subscription_status === "canceled",
       handler: handleArchiveClient,
       dialogTitle: (selectedClient: Client) =>
         `Archive ${selectedClient.full_name}`,
