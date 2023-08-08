@@ -471,3 +471,17 @@ export const cancelClientSubscriptionSchedule = async (clientId: UUID) => {
 
   return { data: subscriptions, error: null };
 };
+
+export const cancelClientOffer = async (clientId: UUID) => {
+  await updateSubscriptionByClientId(clientId, {
+    archived_at: new Date(),
+    start_date: null,
+    end_date: null,
+  });
+  return await updateClientById(clientId, {
+    status: "lead",
+    subscription_status: null,
+    start_date: null,
+    end_date: null,
+  });
+};

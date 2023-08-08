@@ -3,6 +3,7 @@ import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
 import {
   archiveClient,
+  cancelClientOffer,
   cancelClientSubscription,
   cancelClientSubscriptionSchedule,
   changeClientSubscriptionAmount,
@@ -10,8 +11,6 @@ import {
   fetchClientsByCoachId,
   revokeClientAccess,
   sendClientOffer,
-  updateClientById,
-  updateSubscriptionByClientId,
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 
@@ -53,20 +52,6 @@ const Clients = ({ user }: { user: Coach }) => {
     );
 
     return { data, total } as { data: Client[]; total: number };
-  };
-
-  const handleCancelClientOffer = async (clientId: UUID) => {
-    await updateSubscriptionByClientId(clientId, {
-      archived_at: new Date(),
-      start_date: null,
-      end_date: null,
-    });
-    return await updateClientById(clientId, {
-      status: "lead",
-      subscription_status: null,
-      start_date: null,
-      end_date: null,
-    });
   };
 
   const onSendOfferComplete = (
@@ -212,7 +197,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Cancel offers",
       icon: faXmark,
       show: (client: Client) => client.status === "offerSent",
-      handler: handleCancelClientOffer,
+      handler: cancelClientOffer,
       onComplete: onCancelClientOfferComplete,
       dialogTitle: (client: Client) => `Cancel ${client.full_name}'s offer`,
       dialogTitleBulk: (clients: Client[]) =>
