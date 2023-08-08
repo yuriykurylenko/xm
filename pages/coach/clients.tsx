@@ -55,10 +55,6 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, total } as { data: Client[]; total: number };
   };
 
-  const handleCancelClientSubscriptionSchedule = async (clientId: UUID) => {
-    return await cancelClientSubscriptionSchedule(clientId);
-  };
-
   const handleCancelClientOffer = async (clientId: UUID) => {
     await updateSubscriptionByClientId(clientId, {
       archived_at: new Date(),
@@ -232,7 +228,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Cancel starting clients",
       icon: faXmark,
       show: (client: Client) => client.status === "starting",
-      handler: handleCancelClientSubscriptionSchedule,
+      handler: cancelClientSubscriptionSchedule,
       onComplete: onCancelClientSubscriptionScheduleComplete,
       dialogTitle: (client: Client) => `Cancel ${client.full_name}'s start`,
       dialogTitleBulk: (clients: Client[]) =>
