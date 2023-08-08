@@ -143,8 +143,7 @@ const Clients = ({ user }: { user: Coach }) => {
       title: "Send a new offer",
       titleBulk: "Send new offers",
       icon: faRotate,
-      show: (client: Client) =>
-        ["offerSent", "ended"].includes(client.status as string),
+      show: (client: Client) => client.status === "offerSent",
       handler: sendClientOffer,
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
@@ -152,19 +151,26 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogTitle: "Send a new offer to {{full_name}}",
       dialogTitleBulk: "Send new offers to {{n}} clients",
       dialogText: (client: Client) =>
-        `${
-          client.full_name
-        } will receive an email with the link to subscribe and pay your specified amount monthly. ${
-          client.status === "offerSent"
-            ? "Your previous offer to the client will be canceled."
-            : ""
-        }`,
+        `${client.full_name} will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to the client will be canceled.`,
       dialogTextBulk: (clients: Client[]) =>
-        `Your clients will receive an email with the link to subscribe and pay your specified amount monthly. ${
-          clients.every((sc) => sc.status === "offerSent")
-            ? "Your previous offers to them will be canceled."
-            : ""
-        }`,
+        "Your clients will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled",
+    },
+    {
+      name: "sendOfferToEndedClient",
+      title: "Send a new offer",
+      titleBulk: "Send new offers",
+      icon: faRotate,
+      show: (client: Client) => client.status === "ended",
+      handler: sendClientOffer,
+      onComplete: onSendOfferComplete,
+      DialogForm: ({ items }: { items: Client[] }) =>
+        ClientTermsFormFields({ items, coach: user }),
+      dialogTitle: "Send a new offer to {{full_name}}",
+      dialogTitleBulk: "Send new offers to {{n}} clients",
+      dialogText: (client: Client) =>
+        `${client.full_name} will receive an email with the link to subscribe and pay your specified amount monthly.`,
+      dialogTextBulk: (clients: Client[]) =>
+        "Your clients will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
       name: "revokeAccess",
