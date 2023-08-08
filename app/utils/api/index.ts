@@ -388,6 +388,13 @@ export const archiveClient = async (clientId: UUID) => {
   return { data, error };
 };
 
+export const revokeClientAccess = async (clientId: UUID) => {
+  const { data, error } = await updateClientById(clientId, {
+    access_revoked_at: new Date(),
+  });
+  return { data, error };
+};
+
 export const activateClient = async (subscriptionId: UUID) => {
   const { data: subscription, error } = await fetchSubscriptionById(
     subscriptionId
@@ -422,9 +429,12 @@ async function fetchSubscriptionsByClientId(clientId: UUID | string) {
 
 export const cancelClientSubscription = async (
   clientId: UUID,
-  endImmediately: boolean,
-  accessAfterEndDate: boolean
+  data: {
+    endImmediately: boolean;
+    accessAfterEndDate: boolean;
+  }
 ) => {
+  const { endImmediately, accessAfterEndDate } = data;
   const { data: subscriptions } = await fetchSubscriptionsByClientId(
     clientId as string
   );

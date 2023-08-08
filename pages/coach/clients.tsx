@@ -8,6 +8,7 @@ import {
   changeClientSubscriptionAmount,
   changeClientSubscriptionSchedule,
   fetchClientsByCoachId,
+  revokeClientAccess,
   sendClientOffer,
   updateClientById,
   updateSubscriptionByClientId,
@@ -34,13 +35,6 @@ import { ClientTermsFormFields } from "@/app/components/clients/DialogForms/Clie
 import { PriceField } from "@/app/components/clients/DialogForms/PriceField";
 import { EndClientFields } from "@/app/components/clients/DialogForms/EndClientFields";
 
-// TODO: extract
-const startOfUtcDay = (date: Date) => {
-  return new Date(
-    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-  ).toISOString();
-};
-
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
     page: number,
@@ -59,28 +53,6 @@ const Clients = ({ user }: { user: Coach }) => {
     );
 
     return { data, total } as { data: Client[]; total: number };
-  };
-
-  const handleRevokeAccess = async (clientId: UUID) => {
-    const { data, error } = await updateClientById(clientId, {
-      access_revoked_at: new Date(),
-    });
-    return { data, error };
-  };
-
-  const handleCancelClientSubscription = async (
-    clientId: UUID,
-    data: {
-      endImmediately: boolean;
-      accessAfterEndDate: boolean;
-    }
-  ) => {
-    const { endImmediately, accessAfterEndDate } = data;
-    return await cancelClientSubscription(
-      clientId,
-      endImmediately,
-      accessAfterEndDate
-    );
   };
 
   const handleCancelClientSubscriptionSchedule = async (clientId: UUID) => {
@@ -229,7 +201,7 @@ const Clients = ({ user }: { user: Coach }) => {
         !["starting", "client"].includes(client.status as string) &&
         client.access_revoked_at == null &&
         client.user_id != null,
-      handler: handleRevokeAccess,
+      handler: revokeClientAccess,
       dialogTitle: (client: Client) => `Revoke access for ${client.full_name}`,
       dialogTitleBulk: (clients: Client[]) =>
         `Revoke access for ${clients.length + " clients"}`,
@@ -279,7 +251,7 @@ const Clients = ({ user }: { user: Coach }) => {
         ["past_due", "unpaid", "active", "trialing"].includes(
           client.subscription_status as string
         ),
-      handler: handleCancelClientSubscription,
+      handler: cancelClientSubscription,
       onComplete: onCancelClientSubscriptionComplete,
       DialogForm: () => EndClientFields({}),
       dialogTitle: (client: Client) => `End ${client.full_name}'s subscription`,
