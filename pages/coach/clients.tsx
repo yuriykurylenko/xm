@@ -31,7 +31,8 @@ import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Input from "@/app/components/Form/Input";
-import { ClientTermsFormFields } from "@/app/components/clients/DialogForms/ClientTermsFormFields";
+import { ClientTermsFormFields } from "@/app/components/clients/DialogForms/ClientTermsFields";
+import { PriceField } from "@/app/components/clients/DialogForms/PriceField";
 
 // TODO: extract
 const startOfUtcDay = (date: Date) => {
@@ -331,21 +332,8 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faDollarSign,
       show: changeClientSubscriptionAmountAllowed,
       handler: handleChangeClientSubscriptionAmount,
-      DialogForm: ({ items }: { items: Client[] }) => (
-        <>
-          <PriceInput
-            name="monthlyAmount"
-            placeholder="Monthly price"
-            required
-            defaultValue={
-              items.length === 1
-                ? (items[0]?.subscription?.monthly_amount ||
-                    user.monthly_subscription_amount) / 100
-                : user.monthly_subscription_amount / 100
-            }
-          />
-        </>
-      ),
+      DialogForm: ({ items }: { items: Client[] }) =>
+        PriceField({ items, coach: user }),
       dialogTitle: (selectedClient: Client) =>
         `Change price for ${selectedClient.full_name}`,
       dialogTitleBulk: (selectedClients: Client[]) =>
@@ -362,21 +350,8 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faRotate,
       show: renewClientSubscriptionAllowed,
       handler: handleChangeClientSubscriptionAmount,
-      DialogForm: ({ items }: { items: Client[] }) => (
-        <>
-          <PriceInput
-            name="monthlyAmount"
-            placeholder="Monthly price"
-            required
-            defaultValue={
-              items.length === 1
-                ? (items[0]?.subscription?.monthly_amount ||
-                    user.monthly_subscription_amount) / 100
-                : user.monthly_subscription_amount / 100
-            }
-          />
-        </>
-      ),
+      DialogForm: ({ items }: { items: Client[] }) =>
+        PriceField({ items, coach: user }),
       dialogTitle: (selectedClient: Client) =>
         `Renew ${selectedClient.full_name}'s subscription`,
       dialogTitleBulk: (selectedClients: Client[]) =>
