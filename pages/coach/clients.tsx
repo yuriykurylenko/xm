@@ -60,27 +60,6 @@ const Clients = ({ user }: { user: Coach }) => {
     return { data, total } as { data: Client[]; total: number };
   };
 
-  const handleChangeClientSubscriptionAmount = async (
-    clientId: UUID,
-    data: {
-      monthlyAmount: number | string;
-    }
-  ) => {
-    const { monthlyAmount } = data;
-
-    const { data: changeClientSubscriptionScheduleData, error } =
-      await changeClientSubscriptionAmount(clientId, {
-        monthlyAmount: Number(monthlyAmount) * 100,
-        currency: "USD",
-      });
-
-    if (error) {
-      return { data: changeClientSubscriptionScheduleData, error };
-    }
-
-    return { error: null };
-  };
-
   const handleArchiveClient = async (clientId: UUID) => {
     const { data, error } = await updateClientById(clientId, {
       archived_at: new Date(),
@@ -187,7 +166,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faDollarSign,
       show: (client: Client) =>
         client.status === "client" && client.end_date === null,
-      handler: handleChangeClientSubscriptionAmount,
+      handler: changeClientSubscriptionAmount,
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
       dialogTitle: (client: Client) => `Change price for ${client.full_name}`,
@@ -205,7 +184,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faRotate,
       show: (client: Client) =>
         client.status === "client" && client.end_date != null,
-      handler: handleChangeClientSubscriptionAmount,
+      handler: changeClientSubscriptionAmount,
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
       dialogTitle: (client: Client) =>

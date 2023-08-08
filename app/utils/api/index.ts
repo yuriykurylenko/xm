@@ -347,7 +347,7 @@ export const changeClientSubscriptionAmount = async (
   clientId: UUID,
   {
     monthlyAmount,
-    currency,
+    currency = "USD",
   }: {
     monthlyAmount: number;
     currency: string;
@@ -370,7 +370,7 @@ export const changeClientSubscriptionAmount = async (
   try {
     const { data: stripeSubscription } = await updateStripeSubscription({
       stripeSubscriptionId: subscription.stripe_subscription_id,
-      monthlyAmount,
+      monthlyAmount: monthlyAmount * 100,
       currency,
       isActiveSubscription: true,
     });
