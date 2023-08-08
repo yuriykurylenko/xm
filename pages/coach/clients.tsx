@@ -81,7 +81,7 @@ const Clients = ({ user }: { user: Coach }) => {
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
-      dialogTitle: (client: Client) => `Send offer to ${client.full_name}`,
+      dialogTitle: "Send offer to {{full_name}}",
       dialogTitleBulk: (clients: Client[]) =>
         `Send offers to ${clients.length + " clients"}`,
       dialogText: (client: Client) =>
@@ -98,7 +98,7 @@ const Clients = ({ user }: { user: Coach }) => {
       handler: changeClientSubscriptionSchedule,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
-      dialogTitle: (client: Client) => `Change terms for ${client.full_name}`,
+      dialogTitle: "Change terms for {{full_name}}",
       dialogTitleBulk: (clients: Client[]) =>
         `Change terms ${clients.length + " clients"}`,
       dialogText: (client: Client) =>
@@ -116,7 +116,7 @@ const Clients = ({ user }: { user: Coach }) => {
       handler: changeClientSubscriptionAmount,
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
-      dialogTitle: (client: Client) => `Change price for ${client.full_name}`,
+      dialogTitle: "Change price for {{full_name}}",
       dialogTitleBulk: (clients: Client[]) =>
         `Change price for ${clients.length + " clients"}`,
       dialogText: (client: Client) =>
@@ -134,8 +134,7 @@ const Clients = ({ user }: { user: Coach }) => {
       handler: changeClientSubscriptionAmount,
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
-      dialogTitle: (client: Client) =>
-        `Renew ${client.full_name}'s subscription`,
+      dialogTitle: "Renew {{full_name}}'s subscription",
       dialogTitleBulk: (clients: Client[]) =>
         `Renew ${clients.length + " clients'"} subscriptions`,
       dialogText: (client: Client) =>
@@ -154,8 +153,7 @@ const Clients = ({ user }: { user: Coach }) => {
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
-      dialogTitle: (client: Client) =>
-        `Send a new offer to ${client.full_name}`,
+      dialogTitle: "Send a new offer to {{full_name}}",
       dialogTitleBulk: (clients: Client[]) =>
         `Send new offers to ${clients.length + " clients"}`,
       dialogText: (client: Client) =>
@@ -183,7 +181,7 @@ const Clients = ({ user }: { user: Coach }) => {
         client.access_revoked_at == null &&
         client.user_id != null,
       handler: revokeClientAccess,
-      dialogTitle: (client: Client) => `Revoke access for ${client.full_name}`,
+      dialogTitle: "Revoke access for {{full_name}}",
       dialogTitleBulk: (clients: Client[]) =>
         `Revoke access for ${clients.length + " clients"}`,
       dialogText: (client: Client) =>
@@ -199,7 +197,7 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (client: Client) => client.status === "offerSent",
       handler: cancelClientOffer,
       onComplete: onCancelClientOfferComplete,
-      dialogTitle: (client: Client) => `Cancel ${client.full_name}'s offer`,
+      dialogTitle: "Cancel {{full_name}}'s offer",
       dialogTitleBulk: (clients: Client[]) =>
         `Cancel ${clients.length + " clients' offers"}`,
       dialogText: (client: Client) =>
@@ -215,7 +213,7 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (client: Client) => client.status === "starting",
       handler: cancelClientSubscriptionSchedule,
       onComplete: onCancelClientSubscriptionScheduleComplete,
-      dialogTitle: (client: Client) => `Cancel ${client.full_name}'s start`,
+      dialogTitle: "Cancel {{full_name}}'s start",
       dialogTitleBulk: (clients: Client[]) =>
         `Cancel ${clients.length + " clients' start"}`,
       dialogText: (client: Client) =>
@@ -235,7 +233,7 @@ const Clients = ({ user }: { user: Coach }) => {
       handler: cancelClientSubscription,
       onComplete: onCancelClientSubscriptionComplete,
       DialogForm: () => EndClientFields({}),
-      dialogTitle: (client: Client) => `End ${client.full_name}'s subscription`,
+      dialogTitle: "End {{full_name}}'s subscription",
       dialogTitleBulk: (clients: Client[]) =>
         `End ${clients.length + " clients"}`,
       dialogText: (client: Client) =>
@@ -251,7 +249,7 @@ const Clients = ({ user }: { user: Coach }) => {
       show: (client: Client) =>
         client.status === "lead" || client.subscription_status === "canceled",
       handler: archiveClient,
-      dialogTitle: (client: Client) => `Archive ${client.full_name}`,
+      dialogTitle: "Archive {{full_name}}",
       dialogTitleBulk: (clients: Client[]) =>
         `Archive ${clients.length + " clients"}`,
       dialogText: (client: Client) =>

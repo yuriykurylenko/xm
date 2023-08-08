@@ -7,6 +7,8 @@ import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import ItemSkeleton from "@/app/components/ItemList/ItemSkeleton";
 import { UUID } from "crypto";
 
+import Handlebars from "handlebars";
+
 type FilterOption = {
   value: string;
   name: string;
@@ -21,7 +23,7 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   handler: (itemId: UUID, data: D) => Promise<U>;
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
   DialogForm?: React.ComponentType<{ items: T[] }>;
-  dialogTitle: (item: T) => string;
+  dialogTitle: string;
   dialogTitleBulk: (items: T[]) => string;
   dialogText: (item: T) => string;
   dialogTextBulk: (items: T[]) => string;
@@ -283,8 +285,12 @@ const ItemList = <T extends { id: UUID | string }>({
               onNextPage={handleNextPage}
               onPrevPage={handlePrevPage}
             />
-            {actions.map(
-              (action: any) =>
+            {actions.map((action: any) => {
+              const dialogTitleTemplate = Handlebars.compile(
+                action.dialogTitle
+              );
+
+              return (
                 openActionDialogs.includes(action.name) && (
                   <ActionDialog
                     key={action.name}
@@ -294,7 +300,7 @@ const ItemList = <T extends { id: UUID | string }>({
                     onCancel={handleCloseDialog}
                     title={
                       selectedItems.length === 1
-                        ? action.dialogTitle(selectedItems[0])
+                        ? dialogTitleTemplate(selectedItems[0])
                         : action.dialogTitleBulk(selectedItems)
                     }
                     text={
@@ -308,7 +314,8 @@ const ItemList = <T extends { id: UUID | string }>({
                     )}
                   </ActionDialog>
                 )
-            )}
+              );
+            })}
           </>
         )
       ) : (
