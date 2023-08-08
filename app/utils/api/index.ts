@@ -381,6 +381,13 @@ export const changeClientSubscriptionAmount = async (
   }
 };
 
+export const archiveClient = async (clientId: UUID) => {
+  const { data, error } = await updateClientById(clientId, {
+    archived_at: new Date(),
+  });
+  return { data, error };
+};
+
 export const activateClient = async (subscriptionId: UUID) => {
   const { data: subscription, error } = await fetchSubscriptionById(
     subscriptionId

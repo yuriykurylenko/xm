@@ -2,6 +2,7 @@ import * as React from "react";
 import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
 import {
+  archiveClient,
   cancelClientSubscription,
   cancelClientSubscriptionSchedule,
   changeClientSubscriptionAmount,
@@ -58,13 +59,6 @@ const Clients = ({ user }: { user: Coach }) => {
     );
 
     return { data, total } as { data: Client[]; total: number };
-  };
-
-  const handleArchiveClient = async (clientId: UUID) => {
-    const { data, error } = await updateClientById(clientId, {
-      archived_at: new Date(),
-    });
-    return { data, error };
   };
 
   const handleRevokeAccess = async (clientId: UUID) => {
@@ -303,7 +297,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faTrash,
       show: (client: Client) =>
         client.status === "lead" || client.subscription_status === "canceled",
-      handler: handleArchiveClient,
+      handler: archiveClient,
       dialogTitle: (client: Client) => `Archive ${client.full_name}`,
       dialogTitleBulk: (clients: Client[]) =>
         `Archive ${clients.length + " clients"}`,
