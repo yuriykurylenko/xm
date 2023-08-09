@@ -8,6 +8,7 @@ import ItemSkeleton from "@/app/components/ItemList/ItemSkeleton";
 import { UUID } from "crypto";
 
 import Handlebars from "handlebars";
+import axios from "axios";
 
 type FilterOption = {
   value: string;
@@ -20,7 +21,7 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   titleBulk: string;
   icon: IconDefinition;
   show: (item: T) => boolean;
-  handler: (itemId: UUID, data: D) => Promise<U>;
+  handler?: (itemId: UUID, data: D) => Promise<U>;
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
   DialogForm?: React.ComponentType<{ items: T[] }>;
   dialogTitle: string;
@@ -187,19 +188,17 @@ const ItemList = <T extends { id: UUID | string }>({
     setFilterText(value);
   };
 
-  const enhancedActions = actions.map(
-    (action: { name: string; handler: (itemId?: UUID) => void }) => ({
-      ...action,
-      handler: (itemId?: UUID | UUID[]) => {
-        if (itemId) {
-          setSelectedItems(
-            items.filter((i: T) => [itemId].flat().includes(i.id as UUID))
-          );
-        }
-        setOpenActionDialogs([action.name]);
-      },
-    })
-  );
+  const enhancedActions = actions.map((action: { name: string }) => ({
+    ...action,
+    handler: (itemId?: UUID | UUID[]) => {
+      if (itemId) {
+        setSelectedItems(
+          items.filter((i: T) => [itemId].flat().includes(i.id as UUID))
+        );
+      }
+      setOpenActionDialogs([action.name]);
+    },
+  }));
 
   const handleCloseDialog = () => {
     setSelectedItems([]);
@@ -208,7 +207,9 @@ const ItemList = <T extends { id: UUID | string }>({
 
   const handleConfirmAction = async (action: any, data?: any) => {
     for (const item of selectedItems) {
-      const { error } = await action.handler(item.id, data);
+      const { error } = action.handler
+        ? await action.handler(item.id, data)
+        : await axios.put(`/api/clients/${item.id}/send_offer`, data);
 
       if (error) {
         return { error };

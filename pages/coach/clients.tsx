@@ -10,7 +10,6 @@ import {
   changeClientSubscriptionSchedule,
   fetchClientsByCoachId,
   revokeClientAccess,
-  sendClientOffer,
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 
@@ -77,7 +76,6 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send offers",
       icon: faPaperPlane,
       show: (client: Client) => client.status === "lead",
-      handler: sendClientOffer,
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
@@ -144,7 +142,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send new offers",
       icon: faRotate,
       show: (client: Client) => client.status === "offerSent",
-      handler: sendClientOffer,
+      // handler: sendClientOffer,
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
@@ -161,7 +159,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send new offers",
       icon: faRotate,
       show: (client: Client) => client.status === "ended",
-      handler: sendClientOffer,
+      // handler: sendClientOffer,
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),

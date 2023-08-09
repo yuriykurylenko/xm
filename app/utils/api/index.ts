@@ -1,13 +1,18 @@
 import { Subscription, SubscriptionInput } from "@/app/types/subscription";
-import { Client, ClientInput, CoachInput } from "@/app/types/user";
+import { ClientInput, CoachInput } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
 import axios from "axios";
 import { UUID } from "crypto";
 import {
   cancelStripeSubscription,
   cancelStripeSubscriptionSchedule,
+  findOrCreateStripePrice,
   updateStripeSubscription,
 } from "@/app/utils/api/stripe";
+import StripeApi from "stripe";
+import { format } from "date-fns";
+import { MailService } from "@sendgrid/mail";
+import sgMail from "../sgMail";
 
 const startOfUtcDay = (date: Date) => {
   return new Date(
@@ -138,39 +143,62 @@ export const createCoach = ({
     })
     .select();
 
-const createClientSubscription = async (
+export const createClientSubscription = async (
   clientId: UUID,
   {
-    productId,
     monthlyAmount,
     currency,
     trialPeriodDays,
     startDate,
   }: {
-    productId: string;
     monthlyAmount: number;
     currency: string;
     trialPeriodDays: number;
     startDate?: Date | string | null;
-  }
+  },
+  stripe?: StripeApi
 ) => {
-  const { data: price } = await axios.post("/api/find_or_create_price", {
-    product: productId,
-    interval: "month",
-    unit_amount: monthlyAmount,
-    currency,
-  });
+  const { data: coach } = await fetchCoachByClientId(clientId);
+
+  if (!coach) {
+    return { data: null, error: { message: "Coach not found" } };
+  }
+
+  let price;
+  const utcStartDate =
+    startDate && startOfUtcDay(new Date(startDate)) > startOfUtcDay(new Date())
+      ? startOfUtcDay(new Date(startDate))
+      : null;
+
+  if (stripe) {
+    await updateSubscriptionByClientId(clientId, { archived_at: new Date() });
+
+    price = await findOrCreateStripePrice(stripe, {
+      product: coach.stripe_product_id,
+      interval: "month",
+      unit_amount: monthlyAmount * 100,
+      currency,
+    });
+  } else {
+    const { data } = await axios.post("/api/find_or_create_price", {
+      product: coach.stripe_product_id,
+      interval: "month",
+      unit_amount: monthlyAmount * 100,
+      currency,
+    });
+    price = data;
+  }
 
   return await supabase
     .from("subscriptions")
     .insert([
       {
         client_id: clientId,
-        monthly_amount: monthlyAmount,
+        monthly_amount: monthlyAmount * 100,
         currency,
         stripe_price_id: price.id,
         trial_period_days: trialPeriodDays,
-        start_date: startDate,
+        start_date: utcStartDate,
       },
     ])
     .select()
@@ -221,17 +249,36 @@ export const updateSubscriptionById = async (
 ) =>
   supabase.from("subscriptions").update(data).eq("id", subscriptionId).select();
 
-const sendClientPaymentLink = ({
-  subscription,
-  domain,
-}: {
-  subscription: Subscription;
-  domain: string;
-}) =>
-  axios.post("/api/send_payment_link", {
-    subscription,
-    domain,
-  });
+export const sendClientPaymentLink = async (
+  subscription: Subscription,
+  sgMail: MailService
+) => {
+  const { data: client } = await fetchClientById(subscription.client_id);
+  const { data: coach } = await fetchCoachByClientId(subscription.client_id);
+
+  if (client && coach) {
+    await sgMail.send({
+      to: client.email,
+      from: "yuriy.kurylenko@gmail.com",
+      templateId: "d-cd682145f2884174bd1721ac483355b9",
+      dynamicTemplateData: {
+        client_name: client?.full_name,
+        coach_name: coach?.full_name,
+        amount: subscription.monthly_amount / 100,
+        currency: subscription.currency,
+        payment_link: `https://coaching-ten.vercel.app/subscription/${subscription.id}`,
+        trial_period_days: subscription.trial_period_days,
+        start_date: format(
+          !subscription.start_date ||
+            new Date(subscription.start_date) < new Date()
+            ? new Date()
+            : new Date(subscription.start_date),
+          "dd/MM/yyyy"
+        ),
+      },
+    });
+  }
+};
 
 export const sendClientOffer = async (
   clientId: UUID,
@@ -246,38 +293,35 @@ export const sendClientOffer = async (
     currency: string;
     trialPeriodDays?: number;
     trialPeriod?: boolean;
-    startDate?: Date;
-  }
+    startDate?: Date | string | null;
+  },
+  stripe: StripeApi,
+  sgMail: MailService
 ) => {
-  const { data: coach } = await fetchCoachByClientId(clientId);
+  const { data: subscription, error: subscriptionError } =
+    await createClientSubscription(
+      clientId as UUID,
+      {
+        monthlyAmount,
+        currency,
+        trialPeriodDays: trialPeriodDays || (trialPeriod ? 14 : 0),
+        startDate,
+      },
+      stripe
+    );
 
-  if (!coach) {
-    return { data: null, error: { message: "Coach not found" } };
+  if (subscriptionError) {
+    return { subscription, error: { message: "Error creating subscription" } };
   }
 
-  await updateSubscriptionByClientId(clientId, { archived_at: new Date() });
+  if (subscription) {
+    await sendClientPaymentLink(subscription as Subscription, sgMail);
+  }
 
-  const { data, error } = await createClientSubscription(clientId, {
-    productId: coach?.stripe_product_id,
-    monthlyAmount: monthlyAmount * 100,
-    currency,
-    trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
-    startDate:
-      startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
-        ? startOfUtcDay(startDate)
-        : null,
+  const { data, error } = await updateClientById(clientId as UUID, {
+    status: "offerSent",
   });
-
-  if (error) {
-    return { data, error };
-  }
-  if (data) {
-    sendClientPaymentLink({
-      subscription: data as Subscription,
-      domain: `${window.location.protocol}//${window.location.host}`,
-    });
-  }
-  return updateClientById(clientId, { status: "offerSent" });
+  return { data, error };
 };
 
 export const changeClientSubscriptionSchedule = async (
@@ -300,11 +344,6 @@ export const changeClientSubscriptionSchedule = async (
     startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
       ? startOfUtcDay(startDate)
       : null;
-  const { data: coach } = await fetchCoachByClientId(clientId);
-
-  if (!coach) {
-    return { data: null, error: { message: "Coach not found" } };
-  }
 
   const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
 
@@ -316,8 +355,7 @@ export const changeClientSubscriptionSchedule = async (
 
   const { data: clientSubscription, error: clientSubscriptionError } =
     await createClientSubscription(clientId, {
-      productId: coach?.stripe_product_id,
-      monthlyAmount: monthlyAmount * 100,
+      monthlyAmount: monthlyAmount,
       currency,
       trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
       startDate: utcStartDate,
