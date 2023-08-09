@@ -12,8 +12,7 @@ import { UUID } from "crypto";
 import {
   fetchCoachByClientId,
   fetchSubscriptionByStripeSubscriptionId,
-  updateClientSubscriptionByStripeSubscriptionId,
-} from ".";
+} from "@/app/utils/api";
 
 const createStripeSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/setup_intent", { email });
