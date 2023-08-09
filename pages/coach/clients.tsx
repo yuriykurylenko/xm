@@ -76,6 +76,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send offers",
       icon: faPaperPlane,
       show: (client: Client) => client.status === "lead",
+      apiOperation: "send_offer",
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
@@ -92,7 +93,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Change clients' terms",
       icon: faRotate,
       show: (client: Client) => client.status === "starting",
-      handler: changeClientSubscriptionSchedule,
+      apiOperation: "change_terms",
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
       dialogTitle: "Change terms for {{full_name}}",
@@ -142,7 +143,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send new offers",
       icon: faRotate,
       show: (client: Client) => client.status === "offerSent",
-      // handler: sendClientOffer,
+      apiOperation: "send_offer",
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),
@@ -159,7 +160,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Send new offers",
       icon: faRotate,
       show: (client: Client) => client.status === "ended",
-      // handler: sendClientOffer,
+      apiOperation: "send_offer",
       onComplete: onSendOfferComplete,
       DialogForm: ({ items }: { items: Client[] }) =>
         ClientTermsFormFields({ items, coach: user }),

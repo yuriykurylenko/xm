@@ -12,7 +12,6 @@ import {
 import StripeApi from "stripe";
 import { format } from "date-fns";
 import { MailService } from "@sendgrid/mail";
-import sgMail from "../sgMail";
 
 const startOfUtcDay = (date: Date) => {
   return new Date(
@@ -103,6 +102,14 @@ export const fetchSubscriptionById = (subscriptionId: UUID | string) =>
     .is("archived_at", null)
     .single();
 
+export const fetchSubscriptionByClientId = (clientId: UUID | string) =>
+  supabase
+    .from("subscriptions")
+    .select("*")
+    .eq("client_id", clientId)
+    .is("archived_at", null)
+    .single();
+
 export const fetchSubscriptionByStripeSubscriptionId = (
   stripeSubscriptionId: string
 ) =>
@@ -150,11 +157,13 @@ export const createClientSubscription = async (
     currency,
     trialPeriodDays,
     startDate,
+    stripeSubscriptionId,
   }: {
     monthlyAmount: number;
     currency: string;
     trialPeriodDays: number;
     startDate?: Date | string | null;
+    stripeSubscriptionId?: string | null;
   },
   stripe?: StripeApi
 ) => {
@@ -164,11 +173,11 @@ export const createClientSubscription = async (
     return { data: null, error: { message: "Coach not found" } };
   }
 
-  let price;
   const utcStartDate =
     startDate && startOfUtcDay(new Date(startDate)) > startOfUtcDay(new Date())
       ? startOfUtcDay(new Date(startDate))
       : null;
+  let price;
 
   if (stripe) {
     await updateSubscriptionByClientId(clientId, { archived_at: new Date() });
@@ -199,6 +208,7 @@ export const createClientSubscription = async (
         stripe_price_id: price.id,
         trial_period_days: trialPeriodDays,
         start_date: utcStartDate,
+        stripe_subscription_id: stripeSubscriptionId,
       },
     ])
     .select()
@@ -322,6 +332,100 @@ export const sendClientOffer = async (
     status: "offerSent",
   });
   return { data, error };
+};
+
+export const cancelStripeSubscriptionScheduleByClientId = async (
+  clientId: UUID,
+  stripe: StripeApi
+) => {
+  const { data: subscription } = await fetchSubscriptionByClientId(clientId);
+
+  return stripe.subscriptionSchedules.cancel(
+    subscription?.stripe_subscription_id
+  );
+};
+
+export const changeClientTerms = async (
+  clientId: UUID,
+  {
+    monthlyAmount,
+    currency = "USD",
+    trialPeriodDays,
+    trialPeriod,
+    startDate,
+  }: {
+    monthlyAmount: number;
+    currency: string;
+    trialPeriodDays?: number;
+    trialPeriod?: boolean;
+    startDate: Date;
+  },
+  stripe: StripeApi
+) => {
+  const utcStartDate =
+    startDate && startOfUtcDay(new Date(startDate)) > startOfUtcDay(new Date())
+      ? startOfUtcDay(new Date(startDate))
+      : startOfUtcDay(new Date());
+
+  trialPeriodDays = trialPeriodDays || (trialPeriod ? 14 : 0);
+
+  let trialEndDate = new Date(utcStartDate);
+  trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
+
+  const { data: subscription } = await fetchSubscriptionByClientId(clientId);
+  const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
+
+  const { customer } = await stripe.subscriptionSchedules.cancel(
+    subscription?.stripe_subscription_id
+  );
+
+  const price = await findOrCreateStripePrice(stripe, {
+    product: coach?.stripe_product_id,
+    unit_amount: monthlyAmount,
+    interval: "month",
+    currency,
+  });
+
+  const metadata = {
+    subscription_id: (subscription as Subscription).id,
+    updated: true,
+  };
+
+  const subbscriptionSchedule = await stripe.subscriptionSchedules.create({
+    // @ts-ignore
+    customer,
+    start_date: Math.floor(new Date(utcStartDate).getTime() / 1000),
+    end_behavior: "release",
+    phases: [
+      {
+        trial_end:
+          trialPeriodDays > 0
+            ? Math.floor(trialEndDate.getTime() / 1000)
+            : undefined,
+        items: [
+          {
+            price: price.id,
+            quantity: 1,
+            metadata,
+          },
+        ],
+        metadata,
+      },
+    ],
+    metadata,
+  });
+
+  return await createClientSubscription(
+    clientId,
+    {
+      monthlyAmount: monthlyAmount,
+      currency,
+      trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
+      startDate: utcStartDate,
+      stripeSubscriptionId: subbscriptionSchedule.id,
+    },
+    stripe
+  );
 };
 
 export const changeClientSubscriptionSchedule = async (

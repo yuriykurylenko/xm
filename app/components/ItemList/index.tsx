@@ -22,6 +22,7 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   icon: IconDefinition;
   show: (item: T) => boolean;
   handler?: (itemId: UUID, data: D) => Promise<U>;
+  apiOperation?: string;
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
   DialogForm?: React.ComponentType<{ items: T[] }>;
   dialogTitle: string;
@@ -209,7 +210,10 @@ const ItemList = <T extends { id: UUID | string }>({
     for (const item of selectedItems) {
       const { error } = action.handler
         ? await action.handler(item.id, data)
-        : await axios.put(`/api/clients/${item.id}/send_offer`, data);
+        : await axios.put(
+            `/api/clients/${item.id}/${action.apiOperation}`,
+            data
+          );
 
       if (error) {
         return { error };
