@@ -375,6 +375,21 @@ export const changeClientTerms = async (
   const { data: subscription } = await fetchSubscriptionByClientId(clientId);
   const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
 
+  const { data: clietSubscription, error } = await createClientSubscription(
+    clientId,
+    {
+      monthlyAmount: monthlyAmount,
+      currency,
+      trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
+      startDate: utcStartDate,
+    },
+    stripe
+  );
+
+  if (error) {
+    return { data: clietSubscription, error };
+  }
+
   const { customer } = await stripe.subscriptionSchedules.cancel(
     subscription?.stripe_subscription_id
   );
@@ -387,11 +402,11 @@ export const changeClientTerms = async (
   });
 
   const metadata = {
-    subscription_id: (subscription as Subscription).id,
+    subscription_id: clietSubscription?.id,
     updated: true,
   };
 
-  const subbscriptionSchedule = await stripe.subscriptionSchedules.create({
+  await stripe.subscriptionSchedules.create({
     // @ts-ignore
     customer,
     start_date: Math.floor(new Date(utcStartDate).getTime() / 1000),
@@ -415,17 +430,7 @@ export const changeClientTerms = async (
     metadata,
   });
 
-  return await createClientSubscription(
-    clientId,
-    {
-      monthlyAmount: monthlyAmount,
-      currency,
-      trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
-      startDate: utcStartDate,
-      stripeSubscriptionId: subbscriptionSchedule.id,
-    },
-    stripe
-  );
+  return { data: clietSubscription, error };
 };
 
 export const changeClientSubscriptionSchedule = async (
