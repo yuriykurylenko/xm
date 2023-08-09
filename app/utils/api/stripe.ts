@@ -271,11 +271,9 @@ export const findOrCreateStripePrice = async (
 export const updateStripeSubscription = async (
   {
     stripeSubscriptionId,
-    metadata,
     monthlyAmount,
     currency,
-    trialPeriodDays,
-    startDate,
+
     isActiveSubscription,
   }: {
     stripeSubscriptionId: string;
@@ -288,64 +286,48 @@ export const updateStripeSubscription = async (
     startDate?: Date | string | null;
     isActiveSubscription?: boolean;
   },
-  stripe?: StripeApi
+  stripe: StripeApi
 ) => {
   try {
-    if (!stripe) {
-      const response = await axios.post("/api/update_subscription", {
-        stripeSubscriptionId,
-        metadata,
-        monthlyAmount,
+    const { data: subscription } =
+      await fetchSubscriptionByStripeSubscriptionId(stripeSubscriptionId);
+    const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
+
+    if (isActiveSubscription) {
+      const price = await findOrCreateStripePrice(stripe, {
+        product: coach?.stripe_product_id,
+        unit_amount: monthlyAmount,
+        interval: "month",
         currency,
-        trialPeriodDays,
-        startDate,
-        isActiveSubscription,
       });
 
-      return { data: response };
-    } else {
-      const { data: subscription } =
-        await fetchSubscriptionByStripeSubscriptionId(stripeSubscriptionId);
-      const { data: coach } = await fetchCoachByClientId(
-        subscription?.client_id
+      const subscription = await stripe.subscriptions.retrieve(
+        stripeSubscriptionId
       );
 
-      if (isActiveSubscription) {
-        const price = await findOrCreateStripePrice(stripe, {
-          product: coach?.stripe_product_id,
-          unit_amount: monthlyAmount,
-          interval: "month",
-          currency,
-        });
+      const stripeSubscription = await stripe.subscriptions.update(
+        stripeSubscriptionId,
+        {
+          cancel_at_period_end: false,
+          // TODO: look into this
+          proration_behavior: "none",
+          items: [
+            {
+              id: subscription.items.data[0].id,
+              price: price.id,
+              quantity: 1,
+            },
+          ],
+        }
+      );
 
-        const subscription = await stripe.subscriptions.retrieve(
-          stripeSubscriptionId
-        );
-
-        const stripeSubscription = await stripe.subscriptions.update(
-          stripeSubscriptionId,
-          {
-            cancel_at_period_end: false,
-            // TODO: look into this
-            proration_behavior: "none",
-            items: [
-              {
-                id: subscription.items.data[0].id,
-                price: price.id,
-                quantity: 1,
-              },
-            ],
-          }
-        );
-
-        return { data: stripeSubscription };
-      }
-
-      return {
-        data: null,
-        error: { message: "Can't update price for inactive subscription" },
-      };
+      return { data: stripeSubscription };
     }
+
+    return {
+      data: null,
+      error: { message: "Can't update price for inactive subscription" },
+    };
   } catch (e) {
     return { data: null, error: { message: "Error updating subscription" } };
   }

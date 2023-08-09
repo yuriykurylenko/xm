@@ -433,63 +433,6 @@ export const changeClientTerms = async (
   return { data: clietSubscription, error };
 };
 
-export const changeClientSubscriptionSchedule = async (
-  clientId: UUID,
-  {
-    monthlyAmount,
-    currency = "USD",
-    trialPeriodDays,
-    trialPeriod,
-    startDate,
-  }: {
-    monthlyAmount: number;
-    currency: string;
-    trialPeriodDays?: number;
-    trialPeriod?: boolean;
-    startDate?: Date;
-  }
-) => {
-  const utcStartDate =
-    startDate && startOfUtcDay(startDate) > startOfUtcDay(new Date())
-      ? startOfUtcDay(startDate)
-      : null;
-
-  const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
-
-  if (!subscriptions?.length) {
-    return { data: null, error: { message: "Client subscription not found" } };
-  }
-
-  const subscription = subscriptions?.[0];
-
-  const { data: clientSubscription, error: clientSubscriptionError } =
-    await createClientSubscription(clientId, {
-      monthlyAmount: monthlyAmount,
-      currency,
-      trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
-      startDate: utcStartDate,
-    });
-
-  if (clientSubscriptionError || !clientSubscription) {
-    return { data: clientSubscription, error: clientSubscriptionError };
-  }
-
-  try {
-    await updateStripeSubscription({
-      stripeSubscriptionId: subscription.stripe_subscription_id,
-      metadata: { subscription_id: clientSubscription.id },
-      monthlyAmount,
-      currency,
-      trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
-      startDate: utcStartDate,
-    });
-  } catch (e) {
-    return { data: null, error: { message: "Error updating client terms" } };
-  }
-
-  return { data: clientSubscription, error: null };
-};
-
 export const changeClientPrice = async (
   clientId: UUID,
   {
