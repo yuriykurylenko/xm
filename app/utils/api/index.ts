@@ -490,7 +490,7 @@ export const changeClientSubscriptionSchedule = async (
   return { data: clientSubscription, error: null };
 };
 
-export const changeClientSubscriptionAmount = async (
+export const changeClientPrice = async (
   clientId: UUID,
   {
     monthlyAmount,
@@ -498,9 +498,11 @@ export const changeClientSubscriptionAmount = async (
   }: {
     monthlyAmount: number;
     currency: string;
-  }
+  },
+  stripe: StripeApi
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);
+  const { data: client } = await fetchClientById(clientId);
 
   if (!coach) {
     return { data: null, error: { message: "Coach not found" } };
@@ -515,14 +517,22 @@ export const changeClientSubscriptionAmount = async (
   const subscription = subscriptions?.[0];
 
   try {
-    const { data: stripeSubscription } = await updateStripeSubscription({
-      stripeSubscriptionId: subscription.stripe_subscription_id,
-      monthlyAmount: monthlyAmount * 100,
+    await updateStripeSubscription(
+      {
+        stripeSubscriptionId: subscription.stripe_subscription_id,
+        monthlyAmount: monthlyAmount * 100,
+        currency,
+        isActiveSubscription: true,
+      },
+      stripe
+    );
+
+    await updateClientSubscriptionById(subscription.id, {
+      monthly_amount: monthlyAmount * 100,
       currency,
-      isActiveSubscription: true,
     });
 
-    return { data: stripeSubscription, error: null };
+    return { data: client, error: null };
   } catch (e) {
     return { data: null, error: { message: "Error updating client terms" } };
   }

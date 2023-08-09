@@ -9,6 +9,11 @@ import {
 import StripeApi from "stripe";
 import axios from "axios";
 import { UUID } from "crypto";
+import {
+  fetchCoachByClientId,
+  fetchSubscriptionByStripeSubscriptionId,
+  updateClientSubscriptionByStripeSubscriptionId,
+} from ".";
 
 const createStripeSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/setup_intent", { email });
@@ -64,35 +69,6 @@ const createStripeSubscription = ({
     metadata,
     trialPeriodDays,
     startDate,
-  });
-
-export const updateStripeSubscription = ({
-  stripeSubscriptionId,
-  metadata,
-  monthlyAmount,
-  currency,
-  trialPeriodDays,
-  startDate,
-  isActiveSubscription,
-}: {
-  stripeSubscriptionId: string;
-  metadata?: {
-    subscription_id: UUID;
-  };
-  monthlyAmount: number;
-  currency: string;
-  trialPeriodDays?: number;
-  startDate?: Date | string | null;
-  isActiveSubscription?: boolean;
-}) =>
-  axios.post("/api/update_subscription", {
-    stripeSubscriptionId,
-    metadata,
-    monthlyAmount,
-    currency,
-    trialPeriodDays,
-    startDate,
-    isActiveSubscription,
   });
 
 const createAndConfirmStripeSubscription = async (
@@ -290,6 +266,89 @@ export const findOrCreateStripePrice = async (
     return price;
   }
   return existingPrice;
+};
+
+export const updateStripeSubscription = async (
+  {
+    stripeSubscriptionId,
+    metadata,
+    monthlyAmount,
+    currency,
+    trialPeriodDays,
+    startDate,
+    isActiveSubscription,
+  }: {
+    stripeSubscriptionId: string;
+    metadata?: {
+      subscription_id: UUID;
+    };
+    monthlyAmount: number;
+    currency: string;
+    trialPeriodDays?: number;
+    startDate?: Date | string | null;
+    isActiveSubscription?: boolean;
+  },
+  stripe?: StripeApi
+) => {
+  try {
+    if (!stripe) {
+      const response = await axios.post("/api/update_subscription", {
+        stripeSubscriptionId,
+        metadata,
+        monthlyAmount,
+        currency,
+        trialPeriodDays,
+        startDate,
+        isActiveSubscription,
+      });
+
+      return { data: response };
+    } else {
+      const { data: subscription } =
+        await fetchSubscriptionByStripeSubscriptionId(stripeSubscriptionId);
+      const { data: coach } = await fetchCoachByClientId(
+        subscription?.client_id
+      );
+
+      if (isActiveSubscription) {
+        const price = await findOrCreateStripePrice(stripe, {
+          product: coach?.stripe_product_id,
+          unit_amount: monthlyAmount,
+          interval: "month",
+          currency,
+        });
+
+        const subscription = await stripe.subscriptions.retrieve(
+          stripeSubscriptionId
+        );
+
+        const stripeSubscription = await stripe.subscriptions.update(
+          stripeSubscriptionId,
+          {
+            cancel_at_period_end: false,
+            // TODO: look into this
+            proration_behavior: "none",
+            items: [
+              {
+                id: subscription.items.data[0].id,
+                price: price.id,
+                quantity: 1,
+              },
+            ],
+          }
+        );
+
+        return { data: stripeSubscription };
+      }
+
+      return {
+        data: null,
+        error: { message: "Can't update price for inactive subscription" },
+      };
+    }
+  } catch (e) {
+    return { data: null, error: { message: "Error updating subscription" } };
+  }
 };
 
 export const cancelStripeSubscription = (

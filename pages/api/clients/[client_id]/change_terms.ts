@@ -1,4 +1,4 @@
-import { changeClientTerms, sendClientOffer } from "@/app/utils/api";
+import { changeClientTerms } from "@/app/utils/api";
 import { UUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 

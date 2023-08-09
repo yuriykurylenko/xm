@@ -6,8 +6,6 @@ import {
   cancelClientOffer,
   cancelClientSubscription,
   cancelClientSubscriptionSchedule,
-  changeClientSubscriptionAmount,
-  changeClientSubscriptionSchedule,
   fetchClientsByCoachId,
   revokeClientAccess,
 } from "@/app/utils/api";
@@ -110,7 +108,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faDollarSign,
       show: (client: Client) =>
         client.status === "client" && client.end_date === null,
-      handler: changeClientSubscriptionAmount,
+      apiOperation: "change_price",
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
       dialogTitle: "Change price for {{full_name}}",
@@ -127,7 +125,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faRotate,
       show: (client: Client) =>
         client.status === "client" && client.end_date != null,
-      handler: changeClientSubscriptionAmount,
+      apiOperation: "change_price",
       DialogForm: ({ items }: { items: Client[] }) =>
         PriceField({ items, coach: user }),
       dialogTitle: "Renew {{full_name}}'s subscription",
