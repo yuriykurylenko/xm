@@ -208,15 +208,22 @@ const ItemList = <T extends { id: UUID | string }>({
 
   const handleConfirmAction = async (action: any, data?: any) => {
     for (const item of selectedItems) {
-      const { error } = action.handler
-        ? await action.handler(item.id, data)
-        : await axios.put(
-            `/api/clients/${item.id}/${action.apiOperation}`,
-            data
-          );
+      try {
+        const { error } = action.handler
+          ? await action.handler(item.id, data)
+          : await axios.put(
+              `/api/clients/${item.id}/${action.apiOperation}`,
+              data
+            );
 
-      if (error) {
-        return { error };
+        if (error) {
+          return { error };
+        }
+      } catch (e: any) {
+        console.log(e);
+        return (
+          e.response?.data || { error: { message: "Something went wrong" } }
+        );
       }
     }
 

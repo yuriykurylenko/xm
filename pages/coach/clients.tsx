@@ -1,10 +1,7 @@
 import * as React from "react";
 import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
-import {
-  cancelClientSubscription,
-  fetchClientsByCoachId,
-} from "@/app/utils/api";
+import { fetchClientsByCoachId } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 
 import ItemList, { Action } from "@/app/components/ItemList";
