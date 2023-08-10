@@ -191,7 +191,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Cancel offers",
       icon: faXmark,
       show: (client: Client) => client.status === "offerSent",
-      handler: cancelClientOffer,
+      apiOperation: "cancel_offer",
       onComplete: onCancelClientOfferComplete,
       dialogTitle: "Cancel {{full_name}}'s offer",
       dialogTitleBulk: "Cancel {{n}} clients' offers",
