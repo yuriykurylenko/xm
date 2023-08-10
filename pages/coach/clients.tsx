@@ -2,8 +2,6 @@ import * as React from "react";
 import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
 import {
-  archiveClient,
-  cancelClientOffer,
   cancelClientSubscription,
   cancelClientSubscriptionSchedule,
   fetchClientsByCoachId,
@@ -241,7 +239,7 @@ const Clients = ({ user }: { user: Coach }) => {
       icon: faTrash,
       show: (client: Client) =>
         client.status === "lead" || client.subscription_status === "canceled",
-      handler: archiveClient,
+      apiOperation: "archive",
       dialogTitle: "Archive {{full_name}}",
       dialogTitleBulk: "Archive {{n}} clients",
       dialogText: "Are you sure you would like to archive {{full_name}}?",
