@@ -522,7 +522,10 @@ export const cancelClientSubscription = async (
         stripe
       );
     } catch (error) {
-      return { data: null, error };
+      return {
+        data: null,
+        error: { message: "Error cancelling client's subscription" },
+      };
     }
   }
 
