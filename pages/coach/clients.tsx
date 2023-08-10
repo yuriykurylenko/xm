@@ -221,7 +221,7 @@ const Clients = ({ user }: { user: Coach }) => {
         ["past_due", "unpaid", "active", "trialing"].includes(
           client.subscription_status as string
         ),
-      handler: cancelClientSubscription,
+      apiOperation: "cancel_subscription",
       onComplete: onCancelClientSubscriptionComplete,
       DialogForm: () => EndClientFields({}),
       dialogTitle: "End {{full_name}}'s subscription",

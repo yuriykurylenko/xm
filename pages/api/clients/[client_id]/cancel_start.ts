@@ -12,7 +12,6 @@ export default async function handler(
     return res.status(405).end("Method Not Allowed");
   }
   const clientId = req.query.client_id;
-  const offerDetails = req.body;
 
   try {
     const { data: client, error } = await cancelClientStart(

@@ -504,7 +504,8 @@ export const cancelClientSubscription = async (
   data: {
     endImmediately: boolean;
     accessAfterEndDate: boolean;
-  }
+  },
+  stripe?: StripeApi
 ) => {
   const { endImmediately, accessAfterEndDate } = data;
   const { data: subscriptions } = await fetchSubscriptionsByClientId(
@@ -518,7 +519,8 @@ export const cancelClientSubscription = async (
       await cancelStripeSubscription(
         subscription.stripe_subscription_id,
         endImmediately,
-        accessAfterEndDate
+        accessAfterEndDate,
+        stripe
       );
     } catch (error) {
       return { data: null, error };
