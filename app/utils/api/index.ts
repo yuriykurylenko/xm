@@ -165,7 +165,7 @@ export const createClientSubscription = async (
     startDate?: Date | string | null;
     stripeSubscriptionId?: string | null;
   },
-  stripe?: StripeApi
+  stripe: StripeApi
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);
 
@@ -179,24 +179,14 @@ export const createClientSubscription = async (
       : null;
   let price;
 
-  if (stripe) {
-    await updateSubscriptionByClientId(clientId, { archived_at: new Date() });
+  await updateSubscriptionByClientId(clientId, { archived_at: new Date() });
 
-    price = await findOrCreateStripePrice(stripe, {
-      product: coach.stripe_product_id,
-      interval: "month",
-      unit_amount: monthlyAmount * 100,
-      currency,
-    });
-  } else {
-    const { data } = await axios.post("/api/find_or_create_price", {
-      product: coach.stripe_product_id,
-      interval: "month",
-      unit_amount: monthlyAmount * 100,
-      currency,
-    });
-    price = data;
-  }
+  price = await findOrCreateStripePrice(stripe, {
+    product: coach.stripe_product_id,
+    interval: "month",
+    unit_amount: monthlyAmount * 100,
+    currency,
+  });
 
   return await supabase
     .from("subscriptions")
