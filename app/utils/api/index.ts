@@ -539,7 +539,10 @@ export const cancelClientStart = async (clientId: UUID, stripe: StripeApi) => {
         stripe
       );
     } catch (error) {
-      return { data: null, error };
+      return {
+        data: null,
+        error: { message: "Error cancelling client's start" },
+      };
     }
   }
 
