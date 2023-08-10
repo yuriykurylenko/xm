@@ -547,11 +547,16 @@ export const cancelClientStart = async (clientId: UUID, stripe: StripeApi) => {
 };
 
 export const cancelClientOffer = async (clientId: UUID) => {
-  await updateSubscriptionByClientId(clientId, {
+  const { error } = await updateSubscriptionByClientId(clientId, {
     archived_at: new Date(),
     start_date: null,
     end_date: null,
   });
+
+  if (error) {
+    return { data: null, error };
+  }
+
   return await updateClientById(clientId, {
     status: "lead",
     subscription_status: null,
