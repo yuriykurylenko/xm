@@ -20,7 +20,9 @@ export default async function handler(
       offerDetails,
       stripe
     );
-    return error ? res.status(500).json(error) : res.status(200).json(client);
+    return error
+      ? res.status(500).json({ error })
+      : res.status(200).json({ data: client });
   } catch (error) {
     return res.status(500).json({ message: "An unexpected error occurred" });
   }
