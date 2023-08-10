@@ -238,10 +238,10 @@ export const updateClientSubscriptionByStripeSubscriptionId = (
     .single();
 
 export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
-  supabase.from("clients").update(data).eq("id", clientId).select();
+  supabase.from("clients").update(data).eq("id", clientId).select().single();
 
 export const updateCoachById = (coachId: UUID | string, data: CoachInput) =>
-  supabase.from("coaches").update(data).eq("id", coachId).select();
+  supabase.from("coaches").update(data).eq("id", coachId).select().single();
 
 export const updateSubscriptionByClientId = async (
   clientId: UUID | string,
@@ -484,13 +484,6 @@ export const changeClientPrice = async (
 export const archiveClient = async (clientId: UUID) => {
   const { data, error } = await updateClientById(clientId, {
     archived_at: new Date(),
-  });
-  return { data, error };
-};
-
-export const revokeClientAccess = async (clientId: UUID) => {
-  const { data, error } = await updateClientById(clientId, {
-    access_revoked_at: new Date(),
   });
   return { data, error };
 };

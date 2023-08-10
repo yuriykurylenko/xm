@@ -7,7 +7,6 @@ import {
   cancelClientSubscription,
   cancelClientSubscriptionSchedule,
   fetchClientsByCoachId,
-  revokeClientAccess,
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 
@@ -178,7 +177,7 @@ const Clients = ({ user }: { user: Coach }) => {
         !["starting", "client"].includes(client.status as string) &&
         client.access_revoked_at == null &&
         client.user_id != null,
-      handler: revokeClientAccess,
+      apiOperation: "revoke_access",
       dialogTitle: "Revoke access for {{full_name}}",
       dialogTitleBulk: "Revoke access for {{n}} clients",
       dialogText:
