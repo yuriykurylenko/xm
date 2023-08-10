@@ -334,17 +334,6 @@ export const sendClientOffer = async (
   return { data, error };
 };
 
-export const cancelStripeSubscriptionScheduleByClientId = async (
-  clientId: UUID,
-  stripe: StripeApi
-) => {
-  const { data: subscription } = await fetchSubscriptionByClientId(clientId);
-
-  return stripe.subscriptionSchedules.cancel(
-    subscription?.stripe_subscription_id
-  );
-};
-
 export const changeClientTerms = async (
   clientId: UUID,
   {
@@ -549,13 +538,14 @@ export const cancelClientSubscription = async (
   return { data: subscriptions, error: null };
 };
 
-export const cancelClientSubscriptionSchedule = async (clientId: UUID) => {
+export const cancelClientStart = async (clientId: UUID, stripe: StripeApi) => {
   const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
 
   for (const subscription of subscriptions || []) {
     try {
       await cancelStripeSubscriptionSchedule(
-        subscription.stripe_subscription_id
+        subscription.stripe_subscription_id,
+        stripe
       );
     } catch (error) {
       return { data: null, error };

@@ -344,8 +344,6 @@ export const cancelStripeSubscription = (
   });
 
 export const cancelStripeSubscriptionSchedule = (
-  stripeSubscriptionScheduleId: string
-) =>
-  axios.post("/api/cancel_subscription_schedule", {
-    stripeSubscriptionScheduleId,
-  });
+  stripeSubscriptionScheduleId: string,
+  stripe: StripeApi
+) => stripe.subscriptionSchedules.cancel(stripeSubscriptionScheduleId);

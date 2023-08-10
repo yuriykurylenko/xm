@@ -3,7 +3,6 @@ import Head from "next/head";
 import withAuth from "@/app/hoc/withAuth";
 import {
   cancelClientSubscription,
-  cancelClientSubscriptionSchedule,
   fetchClientsByCoachId,
 } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
@@ -204,7 +203,7 @@ const Clients = ({ user }: { user: Coach }) => {
       titleBulk: "Cancel starting clients",
       icon: faXmark,
       show: (client: Client) => client.status === "starting",
-      handler: cancelClientSubscriptionSchedule,
+      apiOperation: "cancel_start",
       onComplete: onCancelClientSubscriptionScheduleComplete,
       dialogTitle: "Cancel {{full_name}}'s start",
       dialogTitleBulk: "Cancel {{n}} clients' start",
