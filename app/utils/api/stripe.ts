@@ -337,28 +337,20 @@ export const cancelStripeSubscription = async (
   stripeSubscriptionId: string,
   endImmediately: boolean,
   accessAfterEndDate: boolean,
-  stripe?: StripeApi
+  stripe: StripeApi
 ) => {
-  if (!stripe) {
-    return await axios.post("/api/cancel_subscription", {
-      stripeSubscriptionId,
-      endImmediately,
-      accessAfterEndDate,
-    });
-  } else {
-    // Cancel the subscription in Stripe
-    const canceledSubscription = endImmediately
-      ? await stripe.subscriptions.del(stripeSubscriptionId)
-      : await stripe.subscriptions.update(stripeSubscriptionId, {
-          cancel_at_period_end: true,
-        });
+  // Cancel the subscription in Stripe
+  const canceledSubscription = endImmediately
+    ? await stripe.subscriptions.del(stripeSubscriptionId)
+    : await stripe.subscriptions.update(stripeSubscriptionId, {
+        cancel_at_period_end: true,
+      });
 
-    await updateClientSubscriptionByStripeSubscriptionId(stripeSubscriptionId, {
-      access_after_end_date: accessAfterEndDate,
-    });
+  await updateClientSubscriptionByStripeSubscriptionId(stripeSubscriptionId, {
+    access_after_end_date: accessAfterEndDate,
+  });
 
-    return canceledSubscription;
-  }
+  return canceledSubscription;
 };
 
 export const cancelStripeSubscriptionSchedule = (

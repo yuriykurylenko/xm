@@ -1,7 +1,6 @@
 import { Subscription, SubscriptionInput } from "@/app/types/subscription";
 import { ClientInput, CoachInput } from "@/app/types/user";
 import supabase from "@/app/utils/supabaseClient";
-import axios from "axios";
 import { UUID } from "crypto";
 import {
   cancelStripeSubscription,
@@ -505,7 +504,7 @@ export const cancelClientSubscription = async (
     endImmediately: boolean;
     accessAfterEndDate: boolean;
   },
-  stripe?: StripeApi
+  stripe: StripeApi
 ) => {
   const { endImmediately, accessAfterEndDate } = data;
   const { data: subscriptions } = await fetchSubscriptionsByClientId(
