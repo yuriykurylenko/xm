@@ -73,6 +73,32 @@ const onClientTermsChanged = async (subscriptionId: UUID) => {
   }
 };
 
+const onClientStartCanceled = async (subscriptionId: UUID) => {
+  const { data: clientSubscription } = await fetchSubscriptionById(
+    subscriptionId
+  );
+
+  if (
+    clientSubscription &&
+    !clientSubscription.archived_at &&
+    clientSubscription.start_date &&
+    new Date(clientSubscription.start_date) >= new Date()
+  ) {
+    await updateClientSubscriptionById(subscriptionId, {
+      start_date: null,
+      end_date: null,
+      archived_at: new Date(),
+    });
+
+    await updateClientById(clientSubscription.client_id, {
+      status: "lead",
+      subscription_status: null,
+      start_date: null,
+      end_date: null,
+    });
+  }
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -121,30 +147,10 @@ export default async function handler(
       const subscriptionSchedule = event.data
         .object as Stripe.SubscriptionSchedule;
 
-      // Update the subscription in your database
       if (subscriptionSchedule.metadata?.subscription_id) {
-        const { data: clientSubscription } = await fetchSubscriptionById(
-          subscriptionSchedule.metadata.subscription_id
+        await onClientStartCanceled(
+          subscriptionSchedule.metadata?.subscription_id as UUID
         );
-
-        if (
-          clientSubscription &&
-          !clientSubscription.archived_at &&
-          clientSubscription.start_date &&
-          new Date(clientSubscription.start_date) >= new Date()
-        ) {
-          await updateClientSubscriptionById(
-            subscriptionSchedule.metadata.subscription_id,
-            { start_date: null, end_date: null, archived_at: new Date() }
-          );
-
-          await updateClientById(clientSubscription.client_id, {
-            status: "lead",
-            subscription_status: null,
-            start_date: null,
-            end_date: null,
-          });
-        }
       }
 
       res.json({ received: true });
