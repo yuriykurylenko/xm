@@ -69,24 +69,23 @@ const onClientTermsChanged = async (
   });
 };
 
-const onClientStartCanceled = async (subscriptionId: UUID) => {
-  const { data: clientSubscription } = await fetchSubscriptionById(
-    subscriptionId
-  );
-
+const onClientStartCanceled = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach
+) => {
   if (
-    clientSubscription &&
-    !clientSubscription.archived_at &&
-    clientSubscription.start_date &&
-    new Date(clientSubscription.start_date) >= new Date()
+    !subscription.archived_at &&
+    subscription.start_date &&
+    new Date(subscription.start_date) >= new Date()
   ) {
-    await updateClientSubscriptionById(subscriptionId, {
+    await updateClientSubscriptionById(subscription.id, {
       start_date: null,
       end_date: null,
       archived_at: new Date(),
     });
 
-    await updateClientById(clientSubscription.client_id, {
+    await updateClientById(client.id, {
       status: "lead",
       subscription_status: null,
       start_date: null,
@@ -162,8 +161,20 @@ export default async function handler(
         .object as Stripe.SubscriptionSchedule;
 
       if (subscriptionSchedule.metadata?.subscription_id) {
+        const { data: clientSubscription } = await fetchSubscriptionById(
+          subscriptionSchedule.metadata.subscription_id as UUID
+        );
+        const { data: client } = await fetchClientById(
+          clientSubscription?.client_id
+        );
+        const { data: coach } = await fetchCoachByClientId(
+          clientSubscription?.client_id
+        );
+
         await onClientStartCanceled(
-          subscriptionSchedule.metadata?.subscription_id as UUID
+          clientSubscription as Subscription,
+          client as Client,
+          coach as Coach
         );
       }
 
