@@ -41,38 +41,32 @@ const onClientStartScheduled = async (
   }
 };
 
-const onClientTermsChanged = async (subscriptionId: UUID) => {
-  const { data: clientSubscription } = await fetchSubscriptionById(
-    subscriptionId
-  );
-
-  const { data: client } = await fetchClientById(clientSubscription?.client_id);
-  const { data: coach } = await fetchCoachByClientId(
-    clientSubscription?.client_id
-  );
-
-  if (coach && client) {
-    await sgMail.send({
-      to: client.email,
-      from: "yuriy.kurylenko@gmail.com",
-      templateId: "d-306b9c3260cd4337b3528ee2e847bb31",
-      dynamicTemplateData: {
-        client_name: client.full_name,
-        coach_name: coach.full_name,
-        subscription_id: clientSubscription?.id,
-        amount: clientSubscription?.monthly_amount / 100,
-        currency: clientSubscription?.currency,
-        trial_period_days: clientSubscription?.trial_period_days,
-        start_date: format(
-          !clientSubscription?.start_date ||
-            new Date(clientSubscription.start_date) < new Date()
-            ? new Date()
-            : new Date(clientSubscription.start_date),
-          "dd/MM/yyyy"
-        ),
-      },
-    });
-  }
+const onClientTermsChanged = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach,
+  { stripeSubscriptionId }: { stripeSubscriptionId: string }
+) => {
+  await sgMail.send({
+    to: client.email,
+    from: "yuriy.kurylenko@gmail.com",
+    templateId: "d-306b9c3260cd4337b3528ee2e847bb31",
+    dynamicTemplateData: {
+      client_name: client.full_name,
+      coach_name: coach.full_name,
+      subscription_id: subscription?.id,
+      amount: subscription?.monthly_amount / 100,
+      currency: subscription?.currency,
+      trial_period_days: subscription?.trial_period_days,
+      start_date: format(
+        !subscription?.start_date ||
+          new Date(subscription.start_date) < new Date()
+          ? new Date()
+          : new Date(subscription.start_date),
+        "dd/MM/yyyy"
+      ),
+    },
+  });
 };
 
 const onClientStartCanceled = async (subscriptionId: UUID) => {
@@ -144,7 +138,13 @@ export default async function handler(
 
         if (subscriptionSchedule.metadata.updated) {
           await onClientTermsChanged(
-            subscriptionSchedule.metadata?.subscription_id as UUID
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach,
+            {
+              stripeSubscriptionId:
+                subscriptionSchedule.metadata.subscription_id,
+            }
           );
         } else {
           await onClientStartScheduled(
