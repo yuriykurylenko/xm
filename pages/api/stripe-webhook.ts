@@ -15,11 +15,62 @@ import sgMail from "@sendgrid/mail";
 import { SubscriptionInput } from "@/app/types/subscription";
 import { ClientInput } from "@/app/types/user";
 import { format } from "date-fns";
+import { UUID } from "crypto";
 
 export const config = {
   api: {
     bodyParser: false,
   },
+};
+
+const onClientStartScheduled = async (
+  subscriptionId: UUID,
+  stripeSubscriptionId: string
+) => {
+  const { data: clientSubscription } = await updateClientSubscriptionById(
+    subscriptionId,
+    { stripe_subscription_id: stripeSubscriptionId }
+  );
+
+  if (clientSubscription) {
+    await updateClientById(clientSubscription.client_id, {
+      status: "starting",
+    });
+  }
+};
+
+const onClientTermsChanged = async (subscriptionId: UUID) => {
+  const { data: clientSubscription } = await fetchSubscriptionById(
+    subscriptionId
+  );
+
+  const { data: client } = await fetchClientById(clientSubscription?.client_id);
+  const { data: coach } = await fetchCoachByClientId(
+    clientSubscription?.client_id
+  );
+
+  if (coach && client) {
+    await sgMail.send({
+      to: client.email,
+      from: "yuriy.kurylenko@gmail.com",
+      templateId: "d-306b9c3260cd4337b3528ee2e847bb31",
+      dynamicTemplateData: {
+        client_name: client.full_name,
+        coach_name: coach.full_name,
+        subscription_id: clientSubscription?.id,
+        amount: clientSubscription?.monthly_amount / 100,
+        currency: clientSubscription?.currency,
+        trial_period_days: clientSubscription?.trial_period_days,
+        start_date: format(
+          !clientSubscription?.start_date ||
+            new Date(clientSubscription.start_date) < new Date()
+            ? new Date()
+            : new Date(clientSubscription.start_date),
+          "dd/MM/yyyy"
+        ),
+      },
+    });
+  }
 };
 
 export default async function handler(
@@ -52,49 +103,16 @@ export default async function handler(
       const subscriptionSchedule = event.data
         .object as Stripe.SubscriptionSchedule;
 
-      // Update the subscription in your database
       if (subscriptionSchedule.metadata?.subscription_id) {
-        const { data: clientSubscription } = await updateClientSubscriptionById(
-          subscriptionSchedule.metadata.subscription_id,
-          { stripe_subscription_id: subscriptionSchedule.id }
-        );
-
-        if (clientSubscription) {
-          await updateClientById(clientSubscription.client_id, {
-            status: "starting",
-          });
-
-          if (subscriptionSchedule.metadata.updated) {
-            const { data: client } = await fetchClientById(
-              clientSubscription?.client_id
-            );
-            const { data: coach } = await fetchCoachByClientId(
-              clientSubscription.client_id
-            );
-
-            if (coach && client) {
-              await sgMail.send({
-                to: client.email,
-                from: "yuriy.kurylenko@gmail.com",
-                templateId: "d-306b9c3260cd4337b3528ee2e847bb31",
-                dynamicTemplateData: {
-                  client_name: client.full_name,
-                  coach_name: coach.full_name,
-                  subscription_id: clientSubscription.id,
-                  amount: clientSubscription.monthly_amount / 100,
-                  currency: clientSubscription.currency,
-                  trial_period_days: clientSubscription.trial_period_days,
-                  start_date: format(
-                    !clientSubscription.start_date ||
-                      new Date(clientSubscription.start_date) < new Date()
-                      ? new Date()
-                      : new Date(clientSubscription.start_date),
-                    "dd/MM/yyyy"
-                  ),
-                },
-              });
-            }
-          }
+        if (subscriptionSchedule.metadata.updated) {
+          await onClientTermsChanged(
+            subscriptionSchedule.metadata?.subscription_id as UUID
+          );
+        } else {
+          await onClientStartScheduled(
+            subscriptionSchedule.metadata?.subscription_id as UUID,
+            subscriptionSchedule.id
+          );
         }
       }
 
