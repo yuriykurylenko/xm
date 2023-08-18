@@ -92,6 +92,33 @@ const onClientStartCanceled = async (
   });
 };
 
+const onClientStarted = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach,
+  {
+    start_date,
+    current_period_end_date,
+  }: { start_date: Date; current_period_end_date: Date }
+) => {
+  await updateClientSubscriptionById(subscription?.id, {
+    stripe_subscription_id: subscription.id,
+    status: subscription.status,
+    start_date,
+  });
+
+  if (["active", "trialing"].includes(subscription.status)) {
+    await updateClientById(client.id, {
+      status: "client",
+      access_revoked_at: null,
+    });
+  }
+
+  await updateClientSubscriptionById(subscription.id, {
+    current_period_end_date,
+  });
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -198,24 +225,17 @@ export default async function handler(
         );
 
         if (clientSubscription) {
-          await updateClientSubscriptionById(clientSubscription?.id, {
-            stripe_subscription_id: subscription.id,
-            status: subscription.status,
-            start_date: new Date(subscription.start_date * 1000),
-          });
-
-          if (["active", "trialing"].includes(clientSubscription.status)) {
-            await updateClientById(clientSubscription.client_id, {
-              status: "client",
-              access_revoked_at: null,
-            });
-          }
-
-          await updateClientSubscriptionById(subscription.id, {
-            current_period_end_date: new Date(
-              subscription.current_period_end * 1000
-            ),
-          });
+          await onClientStarted(
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach,
+            {
+              start_date: new Date(subscription.start_date * 1000),
+              current_period_end_date: new Date(
+                subscription.current_period_end * 1000
+              ),
+            }
+          );
 
           if (coach && client && !client.user_id) {
             await sgMail.send({
