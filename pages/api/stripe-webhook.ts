@@ -12,8 +12,8 @@ import {
   fetchSubscriptionById,
 } from "@/app/utils/api";
 import sgMail from "@sendgrid/mail";
-import { SubscriptionInput } from "@/app/types/subscription";
-import { ClientInput } from "@/app/types/user";
+import { Subscription, SubscriptionInput } from "@/app/types/subscription";
+import { Client, ClientInput, Coach } from "@/app/types/user";
 import { format } from "date-fns";
 import { UUID } from "crypto";
 
@@ -24,16 +24,18 @@ export const config = {
 };
 
 const onClientStartScheduled = async (
-  subscriptionId: UUID,
-  stripeSubscriptionId: string
+  subscription: Subscription,
+  client: Client,
+  coach: Coach,
+  { stripeSubscriptionId }: { stripeSubscriptionId: string }
 ) => {
   const { data: clientSubscription } = await updateClientSubscriptionById(
-    subscriptionId,
+    subscription.id,
     { stripe_subscription_id: stripeSubscriptionId }
   );
 
   if (clientSubscription) {
-    await updateClientById(clientSubscription.client_id, {
+    await updateClientById(client.id, {
       status: "starting",
     });
   }
@@ -130,14 +132,26 @@ export default async function handler(
         .object as Stripe.SubscriptionSchedule;
 
       if (subscriptionSchedule.metadata?.subscription_id) {
+        const { data: clientSubscription } = await fetchSubscriptionById(
+          subscriptionSchedule.metadata.subscription_id as UUID
+        );
+        const { data: client } = await fetchClientById(
+          clientSubscription?.client_id
+        );
+        const { data: coach } = await fetchCoachByClientId(
+          clientSubscription?.client_id
+        );
+
         if (subscriptionSchedule.metadata.updated) {
           await onClientTermsChanged(
             subscriptionSchedule.metadata?.subscription_id as UUID
           );
         } else {
           await onClientStartScheduled(
-            subscriptionSchedule.metadata?.subscription_id as UUID,
-            subscriptionSchedule.id
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach,
+            { stripeSubscriptionId: subscriptionSchedule.id }
           );
         }
       }
