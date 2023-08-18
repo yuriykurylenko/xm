@@ -47,6 +47,10 @@ const onClientTermsChanged = async (
   coach: Coach,
   { stripeSubscriptionId }: { stripeSubscriptionId: string }
 ) => {
+  await updateClientSubscriptionById(subscription.id, {
+    stripe_subscription_id: stripeSubscriptionId,
+  });
+
   await sgMail.send({
     to: client.email,
     from: "yuriy.kurylenko@gmail.com",
@@ -74,24 +78,18 @@ const onClientStartCanceled = async (
   client: Client,
   coach: Coach
 ) => {
-  if (
-    !subscription.archived_at &&
-    subscription.start_date &&
-    new Date(subscription.start_date) >= new Date()
-  ) {
-    await updateClientSubscriptionById(subscription.id, {
-      start_date: null,
-      end_date: null,
-      archived_at: new Date(),
-    });
+  await updateClientSubscriptionById(subscription.id, {
+    start_date: null,
+    end_date: null,
+    archived_at: new Date(),
+  });
 
-    await updateClientById(client.id, {
-      status: "lead",
-      subscription_status: null,
-      start_date: null,
-      end_date: null,
-    });
-  }
+  await updateClientById(client.id, {
+    status: "lead",
+    subscription_status: null,
+    start_date: null,
+    end_date: null,
+  });
 };
 
 export default async function handler(
@@ -141,8 +139,7 @@ export default async function handler(
             client as Client,
             coach as Coach,
             {
-              stripeSubscriptionId:
-                subscriptionSchedule.metadata.subscription_id,
+              stripeSubscriptionId: subscriptionSchedule.id,
             }
           );
         } else {
@@ -171,11 +168,18 @@ export default async function handler(
           clientSubscription?.client_id
         );
 
-        await onClientStartCanceled(
-          clientSubscription as Subscription,
-          client as Client,
-          coach as Coach
-        );
+        if (
+          clientSubscription &&
+          !clientSubscription.archived_at &&
+          clientSubscription.start_date &&
+          new Date(clientSubscription.start_date) >= new Date()
+        ) {
+          await onClientStartCanceled(
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach
+          );
+        }
       }
 
       res.json({ received: true });
