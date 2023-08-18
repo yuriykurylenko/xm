@@ -187,16 +187,23 @@ export default async function handler(
       const subscription = event.data.object as Stripe.Subscription;
 
       if (subscription.metadata.subscription_id) {
-        const { data: clientSubscription } = await updateClientSubscriptionById(
-          subscription.metadata.subscription_id,
-          {
-            stripe_subscription_id: subscription.id,
-            status: subscription.status,
-            start_date: new Date(subscription.start_date * 1000),
-          }
+        const { data: clientSubscription } = await fetchSubscriptionById(
+          subscription.metadata.subscription_id as UUID
+        );
+        const { data: client } = await fetchClientById(
+          clientSubscription?.client_id
+        );
+        const { data: coach } = await fetchCoachByClientId(
+          clientSubscription?.client_id
         );
 
         if (clientSubscription) {
+          await updateClientSubscriptionById(clientSubscription?.id, {
+            stripe_subscription_id: subscription.id,
+            status: subscription.status,
+            start_date: new Date(subscription.start_date * 1000),
+          });
+
           if (["active", "trialing"].includes(clientSubscription.status)) {
             await updateClientById(clientSubscription.client_id, {
               status: "client",
@@ -204,21 +211,11 @@ export default async function handler(
             });
           }
 
-          await updateClientSubscriptionByStripeSubscriptionId(
-            subscription.id,
-            {
-              current_period_end_date: new Date(
-                subscription.current_period_end * 1000
-              ),
-            }
-          );
-
-          const { data: client } = await fetchClientById(
-            clientSubscription?.client_id
-          );
-          const { data: coach } = await fetchCoachByClientId(
-            clientSubscription.client_id
-          );
+          await updateClientSubscriptionById(subscription.id, {
+            current_period_end_date: new Date(
+              subscription.current_period_end * 1000
+            ),
+          });
 
           if (coach && client && !client.user_id) {
             await sgMail.send({
