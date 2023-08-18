@@ -119,6 +119,37 @@ const onClientStarted = async (
   });
 };
 
+const onClientPlatformAccessGranted = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach
+) =>
+  sgMail.send({
+    to: client.email,
+    from: "yuriy.kurylenko@gmail.com",
+    templateId: "d-bb7a32cfdef545308aea0cf7bbbee901",
+    dynamicTemplateData: {
+      client_name: client.full_name,
+      coach_name: coach.full_name,
+      subscription_id: subscription.id,
+    },
+  });
+
+const onClientPlatformAccessRestored = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach
+) =>
+  sgMail.send({
+    to: client.email,
+    from: "yuriy.kurylenko@gmail.com",
+    templateId: "d-f33881ff79f24f07a10820b49bdc1713",
+    dynamicTemplateData: {
+      client_name: client.full_name,
+      coach_name: coach.full_name,
+    },
+  });
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -238,26 +269,17 @@ export default async function handler(
           );
 
           if (coach && client && !client.user_id) {
-            await sgMail.send({
-              to: client.email,
-              from: "yuriy.kurylenko@gmail.com",
-              templateId: "d-bb7a32cfdef545308aea0cf7bbbee901",
-              dynamicTemplateData: {
-                client_name: client.full_name,
-                coach_name: coach.full_name,
-                subscription_id: clientSubscription.id,
-              },
-            });
+            await onClientPlatformAccessGranted(
+              clientSubscription as Subscription,
+              client as Client,
+              coach as Coach
+            );
           } else if (coach && client && client.user_id) {
-            await sgMail.send({
-              to: client.email,
-              from: "yuriy.kurylenko@gmail.com",
-              templateId: "d-f33881ff79f24f07a10820b49bdc1713",
-              dynamicTemplateData: {
-                client_name: client.full_name,
-                coach_name: coach.full_name,
-              },
-            });
+            await onClientPlatformAccessRestored(
+              clientSubscription as Subscription,
+              client as Client,
+              coach as Coach
+            );
           }
         }
       }
