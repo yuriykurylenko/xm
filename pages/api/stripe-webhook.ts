@@ -100,15 +100,17 @@ const onClientStarted = async (
     start_date,
     current_period_end_date,
     stripe_subscription_id,
+    status,
   }: {
     start_date: Date;
     current_period_end_date: Date;
     stripe_subscription_id: string;
+    status: string;
   }
 ) => {
   await updateClientSubscriptionById(subscription?.id, {
     stripe_subscription_id,
-    status: subscription.status,
+    status,
     start_date,
   });
 
@@ -271,6 +273,7 @@ export default async function handler(
                 subscription.current_period_end * 1000
               ),
               stripe_subscription_id: subscription.id,
+              status: subscription.status,
             }
           );
 
