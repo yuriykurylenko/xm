@@ -99,10 +99,15 @@ const onClientStarted = async (
   {
     start_date,
     current_period_end_date,
-  }: { start_date: Date; current_period_end_date: Date }
+    stripe_subscription_id,
+  }: {
+    start_date: Date;
+    current_period_end_date: Date;
+    stripe_subscription_id: string;
+  }
 ) => {
   await updateClientSubscriptionById(subscription?.id, {
-    stripe_subscription_id: subscription.id,
+    stripe_subscription_id,
     status: subscription.status,
     start_date,
   });
@@ -265,6 +270,7 @@ export default async function handler(
               current_period_end_date: new Date(
                 subscription.current_period_end * 1000
               ),
+              stripe_subscription_id: subscription.id,
             }
           );
 
@@ -404,6 +410,8 @@ export default async function handler(
         await fetchSubscriptionByStripeSubscriptionId(
           stripeInvoice.subscription as string
         );
+
+      console.log(event.type, subscription);
 
       const { data: client } = await fetchClientById(subscription?.client_id);
       const { data: coach } = await fetchCoachByClientId(
