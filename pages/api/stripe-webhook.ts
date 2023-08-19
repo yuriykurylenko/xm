@@ -411,8 +411,6 @@ export default async function handler(
           stripeInvoice.subscription as string
         );
 
-      console.log(event.type, subscription);
-
       const { data: client } = await fetchClientById(subscription?.client_id);
       const { data: coach } = await fetchCoachByClientId(
         subscription?.client_id
