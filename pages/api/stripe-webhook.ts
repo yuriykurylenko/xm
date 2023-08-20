@@ -124,6 +124,7 @@ const onClientStarted = async (
   await updateClientSubscriptionById(subscription.id, {
     current_period_end_date,
   });
+  console.log("client start completed")
 };
 
 const onClientPlatformAccessGranted = async (
@@ -249,6 +250,7 @@ export default async function handler(
 
       res.json({ received: true });
     } else if (event.type === "customer.subscription.created") {
+      console.log(event.type)
       const subscription = event.data.object as Stripe.Subscription;
 
       if (subscription.metadata.subscription_id) {
@@ -400,6 +402,7 @@ export default async function handler(
       event.type === "invoice.payment_failed"
     ) {
       const stripeInvoice = event.data.object as Stripe.Invoice;
+      console.log(event.type, stripeInvoice.subscription)
 
       if (!stripeInvoice.charge) {
         return res.json({ received: true });
