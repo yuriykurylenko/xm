@@ -194,6 +194,99 @@ const onPaymentAttempt = async (
   }
 };
 
+const onPaymentSucceeded = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach
+) => {
+  const stripeSubscription = await stripe.subscriptions.retrieve(
+    subscription.stripe_subscription_id
+  );
+  const stripeInvoice = stripeSubscription
+    ? await stripe.invoices.retrieve(
+        stripeSubscription.latest_invoice as string
+      )
+    : null;
+
+  if (stripeInvoice) {
+    await sgMail.send({
+      to: client?.email,
+      from: "yuriy.kurylenko@gmail.com",
+      templateId: "d-fee4c2f687e54d9e97b5068673742efd",
+      dynamicTemplateData: {
+        client_name: client?.full_name,
+        coach_name: coach?.full_name,
+        invoice_number: stripeInvoice.number,
+        amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+        currency: stripeInvoice.currency.toUpperCase(),
+        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+      },
+    });
+  }
+};
+
+const onPaymentFailed = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach
+) => {
+  const stripeSubscription = await stripe.subscriptions.retrieve(
+    subscription.stripe_subscription_id
+  );
+  const stripeInvoice = stripeSubscription
+    ? await stripe.invoices.retrieve(
+        stripeSubscription.latest_invoice as string
+      )
+    : null;
+
+  if (stripeInvoice) {
+    await sgMail.send({
+      to: client?.email,
+      from: "yuriy.kurylenko@gmail.com",
+      templateId: "d-5e885ef0588e46b8b976eeaece239819",
+      dynamicTemplateData: {
+        client_name: client?.full_name,
+        coach_name: coach?.full_name,
+        invoice_number: stripeInvoice.number,
+        amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+        currency: stripeInvoice.currency.toUpperCase(),
+        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+      },
+    });
+  }
+};
+
+const onPaymentAuthenticationRequired = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach
+) => {
+  const stripeSubscription = await stripe.subscriptions.retrieve(
+    subscription.stripe_subscription_id
+  );
+  const stripeInvoice = stripeSubscription
+    ? await stripe.invoices.retrieve(
+        stripeSubscription.latest_invoice as string
+      )
+    : null;
+
+  if (stripeInvoice) {
+    await sgMail.send({
+      to: client?.email,
+      from: "yuriy.kurylenko@gmail.com",
+      templateId: "d-f467666dc085418ba8904d165d5f5a2b",
+      dynamicTemplateData: {
+        client_name: client?.full_name,
+        coach_name: coach?.full_name,
+        invoice_number: stripeInvoice.number,
+        amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+        currency: stripeInvoice.currency.toUpperCase(),
+        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+      },
+    });
+  }
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -312,10 +405,6 @@ export default async function handler(
               stripe_subscription_id: subscription.id,
               status: subscription.status,
             }
-          );
-
-          const latestInvoice = await stripe.invoices.retrieve(
-            subscription.latest_invoice as string
           );
 
           if (coach && client && !client.user_id) {
@@ -461,25 +550,30 @@ export default async function handler(
           subscription?.client_id
         );
 
-        await sgMail.send({
-          to: client?.email,
-          from: "yuriy.kurylenko@gmail.com",
-          templateId:
-            event.type === "invoice.payment_succeeded"
-              ? "d-fee4c2f687e54d9e97b5068673742efd"
-              : stripeCharge.failure_code === "authentication_required"
-              ? "d-f467666dc085418ba8904d165d5f5a2b"
-              : "d-5e885ef0588e46b8b976eeaece239819",
-          dynamicTemplateData: {
-            client_name: client?.full_name,
-            coach_name: coach?.full_name,
-            invoice_number: stripeInvoice.number,
-            amount:
-              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-            currency: stripeInvoice.currency.toUpperCase(),
-            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-          },
-        });
+        if (stripeInvoice.billing_reason !== "subscription_create") {
+          if (event.type === "invoice.payment_succeeded") {
+            await onPaymentSucceeded(
+              subscription as Subscription,
+              client as Client,
+              coach as Coach
+            );
+          } else if (
+            event.type === "invoice.payment_failed" &&
+            stripeCharge.failure_code === "authentication_required"
+          ) {
+            await onPaymentAuthenticationRequired(
+              subscription as Subscription,
+              client as Client,
+              coach as Coach
+            );
+          } else if (event.type === "invoice.payment_failed") {
+            await onPaymentFailed(
+              subscription as Subscription,
+              client as Client,
+              coach as Coach
+            );
+          }
+        }
       }
 
       res.json({ received: true });
