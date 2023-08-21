@@ -112,6 +112,7 @@ const onClientStarted = async (
     stripe_subscription_id,
     status,
     start_date,
+    current_period_end_date,
   });
 
   if (["active", "trialing"].includes(subscription.status)) {
@@ -120,11 +121,7 @@ const onClientStarted = async (
       access_revoked_at: null,
     });
   }
-
-  await updateClientSubscriptionById(subscription.id, {
-    current_period_end_date,
-  });
-  console.log("client start completed")
+  console.log("client start completed");
 };
 
 const onClientPlatformAccessGranted = async (
@@ -250,7 +247,7 @@ export default async function handler(
 
       res.json({ received: true });
     } else if (event.type === "customer.subscription.created") {
-      console.log(event.type)
+      console.log(event.type);
       const subscription = event.data.object as Stripe.Subscription;
 
       if (subscription.metadata.subscription_id) {
@@ -402,7 +399,7 @@ export default async function handler(
       event.type === "invoice.payment_failed"
     ) {
       const stripeInvoice = event.data.object as Stripe.Invoice;
-      console.log(event.type, stripeInvoice.subscription)
+      console.log(event.type, stripeInvoice.subscription);
 
       if (!stripeInvoice.charge) {
         return res.json({ received: true });
@@ -417,29 +414,32 @@ export default async function handler(
           stripeInvoice.subscription as string
         );
 
-      const { data: client } = await fetchClientById(subscription?.client_id);
-      const { data: coach } = await fetchCoachByClientId(
-        subscription?.client_id
-      );
+      if (subscription) {
+        const { data: client } = await fetchClientById(subscription?.client_id);
+        const { data: coach } = await fetchCoachByClientId(
+          subscription?.client_id
+        );
 
-      await sgMail.send({
-        to: client?.email,
-        from: "yuriy.kurylenko@gmail.com",
-        templateId:
-          event.type === "invoice.payment_succeeded"
-            ? "d-fee4c2f687e54d9e97b5068673742efd"
-            : stripeCharge.failure_code === "authentication_required"
-            ? "d-f467666dc085418ba8904d165d5f5a2b"
-            : "d-5e885ef0588e46b8b976eeaece239819",
-        dynamicTemplateData: {
-          client_name: client?.full_name,
-          coach_name: coach?.full_name,
-          invoice_number: stripeInvoice.number,
-          amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-          currency: stripeInvoice.currency.toUpperCase(),
-          hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-        },
-      });
+        await sgMail.send({
+          to: client?.email,
+          from: "yuriy.kurylenko@gmail.com",
+          templateId:
+            event.type === "invoice.payment_succeeded"
+              ? "d-fee4c2f687e54d9e97b5068673742efd"
+              : stripeCharge.failure_code === "authentication_required"
+              ? "d-f467666dc085418ba8904d165d5f5a2b"
+              : "d-5e885ef0588e46b8b976eeaece239819",
+          dynamicTemplateData: {
+            client_name: client?.full_name,
+            coach_name: coach?.full_name,
+            invoice_number: stripeInvoice.number,
+            amount:
+              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+            currency: stripeInvoice.currency.toUpperCase(),
+            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+          },
+        });
+      }
 
       res.json({ received: true });
     } else {
