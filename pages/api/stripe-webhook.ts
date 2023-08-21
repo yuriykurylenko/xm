@@ -177,7 +177,7 @@ const onPaymentAttempt = async (
       )
     : null;
 
-  if (stripeInvoice?.status === "paid") {
+  if (stripeInvoice?.status === "paid" && stripeInvoice.amount_paid > 0) {
     await sgMail.send({
       to: client?.email,
       from: "yuriy.kurylenko@gmail.com",
