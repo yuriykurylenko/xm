@@ -108,12 +108,15 @@ const onClientStarted = async (
     status: string;
   }
 ) => {
-  await updateClientSubscriptionById(subscription?.id, {
-    stripe_subscription_id,
-    status,
-    start_date,
-    current_period_end_date,
-  });
+  const { data: updatedSubscription } = await updateClientSubscriptionById(
+    subscription?.id,
+    {
+      stripe_subscription_id,
+      status,
+      start_date,
+      current_period_end_date,
+    }
+  );
 
   if (["active", "trialing"].includes(subscription.status)) {
     await updateClientById(client.id, {
@@ -121,7 +124,12 @@ const onClientStarted = async (
       access_revoked_at: null,
     });
   }
-  console.log("client start completed");
+
+  await onPaymentAttempt(
+    updatedSubscription as unknown as Subscription,
+    client,
+    coach
+  );
 };
 
 const onClientPlatformAccessGranted = async (
@@ -154,6 +162,37 @@ const onClientPlatformAccessRestored = async (
       coach_name: coach.full_name,
     },
   });
+
+const onPaymentAttempt = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach
+) => {
+  const stripeSubscription = await stripe.subscriptions.retrieve(
+    subscription.stripe_subscription_id
+  );
+  const stripeInvoice = stripeSubscription
+    ? await stripe.invoices.retrieve(
+        stripeSubscription.latest_invoice as string
+      )
+    : null;
+
+  if (stripeInvoice?.status === "paid") {
+    await sgMail.send({
+      to: client?.email,
+      from: "yuriy.kurylenko@gmail.com",
+      templateId: "d-fee4c2f687e54d9e97b5068673742efd",
+      dynamicTemplateData: {
+        client_name: client?.full_name,
+        coach_name: coach?.full_name,
+        invoice_number: stripeInvoice.number,
+        amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+        currency: stripeInvoice.currency.toUpperCase(),
+        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+      },
+    });
+  }
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -247,7 +286,6 @@ export default async function handler(
 
       res.json({ received: true });
     } else if (event.type === "customer.subscription.created") {
-      console.log(event.type);
       const subscription = event.data.object as Stripe.Subscription;
 
       if (subscription.metadata.subscription_id) {
@@ -274,6 +312,10 @@ export default async function handler(
               stripe_subscription_id: subscription.id,
               status: subscription.status,
             }
+          );
+
+          const latestInvoice = await stripe.invoices.retrieve(
+            subscription.latest_invoice as string
           );
 
           if (coach && client && !client.user_id) {
@@ -399,7 +441,6 @@ export default async function handler(
       event.type === "invoice.payment_failed"
     ) {
       const stripeInvoice = event.data.object as Stripe.Invoice;
-      console.log(event.type, stripeInvoice.subscription);
 
       if (!stripeInvoice.charge) {
         return res.json({ received: true });
