@@ -340,6 +340,18 @@ const onClientSubscriptionRenewed = async (
   });
 };
 
+const onClientSubscriptionAutoRenewed = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach,
+  { current_period_end_date }: { current_period_end_date: Date | null }
+) => {
+  await updateClientSubscriptionById(subscription.id, {
+    current_period_end_date:
+      current_period_end_date && new Date(current_period_end_date),
+  });
+};
+
 const onClientSubscriptionCancelled = async (
   subscription: Subscription,
   client: Client,
@@ -583,11 +595,28 @@ export default async function handler(
         invoice.subscription as string
       );
 
-      await updateClientSubscriptionByStripeSubscriptionId(subscription.id, {
-        current_period_end_date: new Date(
-          subscription.current_period_end * 1000
-        ),
-      });
+      const { data: clientSubscription } =
+        await fetchSubscriptionByStripeSubscriptionId(subscription.id);
+
+      if (clientSubscription) {
+        const { data: client } = await fetchClientById(
+          clientSubscription.client_id
+        );
+        const { data: coach } = await fetchCoachByClientId(
+          clientSubscription.client_id
+        );
+
+        await onClientSubscriptionAutoRenewed(
+          clientSubscription as Subscription,
+          client as Client,
+          coach as Coach,
+          {
+            current_period_end_date: new Date(
+              subscription.current_period_end * 1000
+            ),
+          }
+        );
+      }
     } else if (
       event.type === "invoice.payment_succeeded" ||
       event.type === "invoice.payment_failed"
