@@ -10,6 +10,7 @@ import {
   updateClientSubscriptionById,
   updateClientById,
   fetchSubscriptionById,
+  updateSubscriptionById,
 } from "@/app/utils/api";
 import sgMail from "@sendgrid/mail";
 import { Subscription, SubscriptionInput } from "@/app/types/subscription";
@@ -287,6 +288,13 @@ const onPaymentAuthenticationRequired = async (
   }
 };
 
+const onClientSubscriptionCancellationScheduled = (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach,
+  { status, end_date }: { status: string; end_date: Date }
+) => updateSubscriptionById(subscription.id, { status, end_date });
+
 const onClientPricingChanged = async (
   subscription: Subscription,
   client: Client,
@@ -472,21 +480,6 @@ export default async function handler(
     } else if (event.type === "customer.subscription.updated") {
       const subscription = event.data.object as Stripe.Subscription;
 
-      const subscriptionUpdateProps: SubscriptionInput = {
-        status: subscription.status,
-      };
-
-      if (
-        subscription.current_period_end &&
-        subscription.cancel_at_period_end
-      ) {
-        subscriptionUpdateProps.end_date = new Date(
-          subscription.current_period_end * 1000
-        );
-      } else if (!subscription.cancel_at_period_end) {
-        subscriptionUpdateProps.end_date = null;
-      }
-
       const { data: clientSubscription } =
         await fetchSubscriptionByStripeSubscriptionId(subscription.id);
 
@@ -498,6 +491,9 @@ export default async function handler(
           clientSubscription.client_id
         );
 
+        const subscriptionCancellationScheduled =
+          subscription.current_period_end && subscription.cancel_at_period_end;
+
         const pricingChanged =
           ((event.data.previous_attributes as any)?.plan?.amount ||
             (event.data.previous_attributes as any)?.plan?.currency) &&
@@ -506,7 +502,17 @@ export default async function handler(
         const subscriptionRenewed = (event.data.previous_attributes as any)
           .cancel_at_period_end;
 
-        if (pricingChanged) {
+        if (subscriptionCancellationScheduled) {
+          await onClientSubscriptionCancellationScheduled(
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach,
+            {
+              status: subscription.status,
+              end_date: new Date(subscription.current_period_end * 1000),
+            }
+          );
+        } else if (pricingChanged) {
           await onClientPricingChanged(
             clientSubscription as Subscription,
             client as Client,
@@ -519,11 +525,7 @@ export default async function handler(
             coach as Coach,
             {
               status: subscription.status,
-              end_date:
-                subscription.current_period_end &&
-                subscription.cancel_at_period_end
-                  ? new Date(subscription.current_period_end * 1000)
-                  : null,
+              end_date: null,
             }
           );
         }
