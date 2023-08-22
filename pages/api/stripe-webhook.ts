@@ -287,6 +287,51 @@ const onPaymentAuthenticationRequired = async (
   }
 };
 
+const onClientPricingChanged = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach,
+) => {
+  await sgMail.send({
+    to: client.email,
+    from: "yuriy.kurylenko@gmail.com",
+    templateId: "d-776524b90fc34aa387b8337205142e8c",
+    dynamicTemplateData: {
+      client_name: client.full_name,
+      coach_name: coach.full_name,
+      amount: subscription.monthly_amount / 100,
+      currency: subscription.currency,
+      new_price_start_date:
+        subscription.current_period_end_date &&
+        format(subscription.current_period_end_date, "dd/MM/yyyy"),
+    },
+  });
+};
+
+const onClientSubscriptionRenewed = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach,
+  { status, end_date }: { status: string; end_date: Date | null }
+) => {
+  await updateClientSubscriptionById(subscription.id, { status, end_date });
+
+  await sgMail.send({
+    to: client.email,
+    from: "yuriy.kurylenko@gmail.com",
+    templateId: "d-664503562b62462d9931a694b35c5155",
+    dynamicTemplateData: {
+      client_name: client.full_name,
+      coach_name: coach.full_name,
+      amount: subscription.monthly_amount / 100,
+      currency: subscription.currency,
+      new_price_start_date:
+        subscription.current_period_end_date &&
+        format(subscription.current_period_end_date, "dd/MM/yyyy"),
+    },
+  });
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -443,19 +488,9 @@ export default async function handler(
       }
 
       const { data: clientSubscription } =
-        await updateClientSubscriptionByStripeSubscriptionId(
-          subscription.id,
-          subscriptionUpdateProps
-        );
+        await fetchSubscriptionByStripeSubscriptionId(subscription.id);
 
-      const pricingChanged =
-        (event.data.previous_attributes as any)?.plan?.amount ||
-        (event.data.previous_attributes as any)?.plan?.currency;
-
-      const subscriptionRenewed = (event.data.previous_attributes as any)
-        .cancel_at_period_end;
-
-      if (clientSubscription && (pricingChanged || subscriptionRenewed)) {
+      if (clientSubscription) {
         const { data: client } = await fetchClientById(
           clientSubscription.client_id
         );
@@ -463,24 +498,34 @@ export default async function handler(
           clientSubscription.client_id
         );
 
-        if (client && coach) {
-          await sgMail.send({
-            to: client.email,
-            from: "yuriy.kurylenko@gmail.com",
-            templateId: subscriptionRenewed
-              ? "d-664503562b62462d9931a694b35c5155"
-              : "d-776524b90fc34aa387b8337205142e8c",
-            dynamicTemplateData: {
-              client_name: client.full_name,
-              coach_name: coach.full_name,
-              amount: clientSubscription.monthly_amount / 100,
-              currency: clientSubscription.currency,
-              new_price_start_date: format(
-                new Date(subscription.current_period_end * 1000),
-                "dd/MM/yyyy"
-              ),
-            },
-          });
+        const pricingChanged =
+          ((event.data.previous_attributes as any)?.plan?.amount ||
+            (event.data.previous_attributes as any)?.plan?.currency) &&
+          !(event.data.previous_attributes as any).cancel_at_period_end;
+
+        const subscriptionRenewed = (event.data.previous_attributes as any)
+          .cancel_at_period_end;
+
+        if (pricingChanged) {
+          await onClientPricingChanged(
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach,
+          );
+        } else if (subscriptionRenewed) {
+          await onClientSubscriptionRenewed(
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach,
+            {
+              status: subscription.status,
+              end_date:
+                subscription.current_period_end &&
+                subscription.cancel_at_period_end
+                  ? new Date(subscription.current_period_end * 1000)
+                  : null,
+            }
+          );
         }
       }
 
