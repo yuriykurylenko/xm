@@ -27,16 +27,13 @@ const onClientStartScheduled = async (
   coach: Coach,
   { stripeSubscriptionId }: { stripeSubscriptionId: string }
 ) => {
-  const { data: clientSubscription } = await updateClientSubscriptionById(
-    subscription.id,
-    { stripe_subscription_id: stripeSubscriptionId }
-  );
+  await updateClientSubscriptionById(subscription.id, {
+    stripe_subscription_id: stripeSubscriptionId,
+  });
 
-  if (clientSubscription) {
-    await updateClientById(client.id, {
-      status: "starting",
-    });
-  }
+  await updateClientById(client.id, {
+    status: "starting",
+  });
 };
 
 const onClientTermsChanged = async (
@@ -427,47 +424,47 @@ export default async function handler(
       clientSubscription?.client_id
     );
 
-    switch (event.type) {
-      case "subscription_schedule.created":
-        const subscriptionSchedule = event.data
-          .object as Stripe.SubscriptionSchedule;
-        if (subscriptionSchedule.metadata?.updated) {
-          await onClientTermsChanged(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach,
-            {
-              stripeSubscriptionId: subscriptionSchedule.id,
-            }
-          );
-        } else {
-          await onClientStartScheduled(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach,
-            { stripeSubscriptionId: subscriptionSchedule.id }
-          );
-        }
-        break;
+    if (clientSubscription && client && coach) {
+      switch (event.type) {
+        case "subscription_schedule.created":
+          const subscriptionSchedule = event.data
+            .object as Stripe.SubscriptionSchedule;
 
-      case "subscription_schedule.canceled":
-        if (
-          clientSubscription &&
-          !clientSubscription.archived_at &&
-          clientSubscription.start_date &&
-          new Date(clientSubscription.start_date) >= new Date()
-        ) {
-          await onClientStartCanceled(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach
-          );
-        }
-        break;
+          if (subscriptionSchedule.metadata?.updated) {
+            await onClientTermsChanged(
+              clientSubscription as Subscription,
+              client as Client,
+              coach as Coach,
+              {
+                stripeSubscriptionId: subscriptionSchedule.id,
+              }
+            );
+          } else {
+            await onClientStartScheduled(
+              clientSubscription as Subscription,
+              client as Client,
+              coach as Coach,
+              { stripeSubscriptionId: subscriptionSchedule.id }
+            );
+          }
+          break;
 
-      case "customer.subscription.created":
-        const subscription = event.data.object as Stripe.Subscription;
-        if (clientSubscription) {
+        case "subscription_schedule.canceled":
+          if (
+            !clientSubscription.archived_at &&
+            clientSubscription.start_date &&
+            new Date(clientSubscription.start_date) >= new Date()
+          ) {
+            await onClientStartCanceled(
+              clientSubscription as Subscription,
+              client as Client,
+              coach as Coach
+            );
+          }
+          break;
+
+        case "customer.subscription.created":
+          const subscription = event.data.object as Stripe.Subscription;
           await onClientStarted(
             clientSubscription as Subscription,
             client as Client,
@@ -481,136 +478,142 @@ export default async function handler(
               status: subscription.status,
             }
           );
-          if (coach && client && !client.user_id) {
+          if (client.user_id) {
             await onClientPlatformAccessGranted(
               clientSubscription as Subscription,
               client as Client,
               coach as Coach
             );
-          } else if (coach && client && client.user_id) {
+          } else if (client.user_id) {
             await onClientPlatformAccessRestored(
               clientSubscription as Subscription,
               client as Client,
               coach as Coach
             );
           }
-        }
-        break;
+          break;
 
-      case "customer.subscription.updated":
-        const updatedSubscription = event.data.object as Stripe.Subscription;
-        const subscriptionCancellationScheduled =
-          updatedSubscription.current_period_end &&
-          updatedSubscription.cancel_at_period_end;
-        const pricingChanged =
-          ((event.data.previous_attributes as any)?.plan?.amount ||
-            (event.data.previous_attributes as any)?.plan?.currency) &&
-          !(event.data.previous_attributes as any).cancel_at_period_end;
-        const subscriptionRenewed = (event.data.previous_attributes as any)
-          .cancel_at_period_end;
+        case "customer.subscription.updated":
+          const updatedSubscription = event.data.object as Stripe.Subscription;
 
-        if (subscriptionCancellationScheduled) {
-          await onClientSubscriptionCancellationScheduled(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach,
-            {
-              status: updatedSubscription.status,
-              end_date: new Date(updatedSubscription.current_period_end * 1000),
-            }
-          );
-        } else if (pricingChanged) {
-          await onClientPricingChanged(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach
-          );
-        } else if (subscriptionRenewed) {
-          await onClientSubscriptionRenewed(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach,
-            {
-              status: updatedSubscription.status,
-              end_date: null,
-            }
-          );
-        }
-        break;
+          const subscriptionCancellationScheduled =
+            updatedSubscription.current_period_end &&
+            updatedSubscription.cancel_at_period_end;
 
-      case "customer.subscription.deleted":
-        const deletedSubscription = event.data.object as Stripe.Subscription;
-        await onClientSubscriptionCancelled(
-          clientSubscription as Subscription,
-          client as Client,
-          coach as Coach,
-          {
-            status: deletedSubscription.status,
-            end_date: deletedSubscription.canceled_at
-              ? new Date(deletedSubscription.canceled_at * 1000)
-              : null,
-          }
-        );
-        break;
+          const pricingChanged =
+            ((event.data.previous_attributes as any)?.plan?.amount ||
+              (event.data.previous_attributes as any)?.plan?.currency) &&
+            !(event.data.previous_attributes as any).cancel_at_period_end;
 
-      case "invoice.created":
-        const invoice = event.data.object as Stripe.Invoice;
-        const invoiceSubscription = await stripe.subscriptions.retrieve(
-          invoice.subscription as string
-        );
-        await onClientSubscriptionAutoRenewed(
-          clientSubscription as Subscription,
-          client as Client,
-          coach as Coach,
-          {
-            current_period_end_date: new Date(
-              invoiceSubscription.current_period_end * 1000
-            ),
-          }
-        );
-        break;
+          const subscriptionRenewed = (event.data.previous_attributes as any)
+            .cancel_at_period_end;
 
-      case "invoice.payment_succeeded":
-        const stripeInvoice = event.data.object as Stripe.Invoice;
-        if (stripeInvoice.billing_reason !== "subscription_create") {
-          await onPaymentSucceeded(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach
-          );
-        }
-        break;
-
-      case "invoice.payment_failed":
-        const failedStripeInvoice = event.data.object as Stripe.Invoice;
-        if (failedStripeInvoice.billing_reason !== "subscription_create") {
-          const stripeCharge = failedStripeInvoice.charge
-            ? await stripe.charges.retrieve(
-                failedStripeInvoice.charge as string
-              )
-            : null;
-          if (
-            stripeCharge &&
-            stripeCharge.failure_code === "authentication_required"
-          ) {
-            await onPaymentAuthenticationRequired(
+          if (subscriptionCancellationScheduled) {
+            await onClientSubscriptionCancellationScheduled(
+              clientSubscription as Subscription,
+              client as Client,
+              coach as Coach,
+              {
+                status: updatedSubscription.status,
+                end_date: new Date(
+                  updatedSubscription.current_period_end * 1000
+                ),
+              }
+            );
+          } else if (pricingChanged) {
+            await onClientPricingChanged(
               clientSubscription as Subscription,
               client as Client,
               coach as Coach
             );
-          } else {
-            await onPaymentFailed(
+          } else if (subscriptionRenewed) {
+            await onClientSubscriptionRenewed(
+              clientSubscription as Subscription,
+              client as Client,
+              coach as Coach,
+              {
+                status: updatedSubscription.status,
+                end_date: null,
+              }
+            );
+          }
+          break;
+
+        case "customer.subscription.deleted":
+          const deletedSubscription = event.data.object as Stripe.Subscription;
+          await onClientSubscriptionCancelled(
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach,
+            {
+              status: deletedSubscription.status,
+              end_date: deletedSubscription.canceled_at
+                ? new Date(deletedSubscription.canceled_at * 1000)
+                : null,
+            }
+          );
+          break;
+
+        case "invoice.created":
+          const invoice = event.data.object as Stripe.Invoice;
+          const invoiceSubscription = await stripe.subscriptions.retrieve(
+            invoice.subscription as string
+          );
+          await onClientSubscriptionAutoRenewed(
+            clientSubscription as Subscription,
+            client as Client,
+            coach as Coach,
+            {
+              current_period_end_date: new Date(
+                invoiceSubscription.current_period_end * 1000
+              ),
+            }
+          );
+          break;
+
+        case "invoice.payment_succeeded":
+          const stripeInvoice = event.data.object as Stripe.Invoice;
+          if (stripeInvoice.billing_reason !== "subscription_create") {
+            await onPaymentSucceeded(
               clientSubscription as Subscription,
               client as Client,
               coach as Coach
             );
           }
-        }
-        break;
+          break;
 
-      default:
-        res.json({ received: true });
-        return;
+        case "invoice.payment_failed":
+          const failedStripeInvoice = event.data.object as Stripe.Invoice;
+
+          if (failedStripeInvoice.billing_reason !== "subscription_create") {
+            const stripeCharge = failedStripeInvoice.charge
+              ? await stripe.charges.retrieve(
+                  failedStripeInvoice.charge as string
+                )
+              : null;
+            if (
+              stripeCharge &&
+              stripeCharge.failure_code === "authentication_required"
+            ) {
+              await onPaymentAuthenticationRequired(
+                clientSubscription as Subscription,
+                client as Client,
+                coach as Coach
+              );
+            } else {
+              await onPaymentFailed(
+                clientSubscription as Subscription,
+                client as Client,
+                coach as Coach
+              );
+            }
+          }
+          break;
+
+        default:
+          res.json({ received: true });
+          return;
+      }
     }
 
     res.json({ received: true });
