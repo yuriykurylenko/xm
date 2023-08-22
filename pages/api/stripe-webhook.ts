@@ -5,7 +5,6 @@ import { buffer } from "micro";
 import {
   fetchClientById,
   fetchCoachByClientId,
-  updateClientSubscriptionByStripeSubscriptionId,
   updateClientSubscriptionById,
   updateClientById,
   fetchSubscriptionById,
