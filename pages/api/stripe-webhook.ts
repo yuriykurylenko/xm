@@ -403,17 +403,15 @@ export default async function handler(
     switch (eventObject.object) {
       case "subscription_schedule":
       case "subscription":
-        // @ts-ignore
-        clientSubscription = (
-          await fetchSubscriptionById(eventObject.metadata.subscription_id)
-        )?.data;
+        clientSubscription = // @ts-ignore
+        (await fetchSubscriptionById(eventObject.metadata.subscription_id))
+          ?.data;
         break;
       case "invoice":
-        // @ts-ignore
         const stripeSubscription = await stripe.subscriptions.retrieve(
+          // @ts-ignore
           eventObject.subscription
         );
-        // @ts-ignore
         clientSubscription = (
           await fetchSubscriptionById(
             stripeSubscription.metadata.subscription_id
