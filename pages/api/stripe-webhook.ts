@@ -340,6 +340,23 @@ const onClientSubscriptionRenewed = async (
   });
 };
 
+const onClientSubscriptionCancelled = async (
+  subscription: Subscription,
+  client: Client,
+  coach: Coach,
+  { status, end_date }: { status: string; end_date: Date | null }
+) => {
+  await updateClientSubscriptionByStripeSubscriptionId(subscription.id, {
+    status,
+    end_date,
+  });
+
+  await updateClientById(subscription.client_id, {
+    status: "ended",
+    access_revoked_at: !subscription.access_after_end_date ? new Date() : null,
+  });
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -535,32 +552,28 @@ export default async function handler(
     } else if (event.type === "customer.subscription.deleted") {
       const subscription = event.data.object as Stripe.Subscription;
 
-      const subscriptionUpdateProps: SubscriptionInput = {
-        status: subscription.status,
-      };
-
-      if (subscription.canceled_at) {
-        subscriptionUpdateProps.end_date = new Date(
-          subscription.canceled_at * 1000
-        );
-      }
-
       const { data: clientSubscription } =
-        await updateClientSubscriptionByStripeSubscriptionId(
-          subscription.id,
-          subscriptionUpdateProps
+        await fetchSubscriptionByStripeSubscriptionId(subscription.id);
+
+      if (clientSubscription) {
+        const { data: client } = await fetchClientById(
+          clientSubscription.client_id
+        );
+        const { data: coach } = await fetchCoachByClientId(
+          clientSubscription.client_id
         );
 
-      if (clientSubscription && subscription.status === "canceled") {
-        let clientUpdateProps: ClientInput = {
-          status: "ended",
-        };
-
-        if (!clientSubscription.access_after_end_date) {
-          clientUpdateProps.access_revoked_at = new Date();
-        }
-
-        await updateClientById(clientSubscription.client_id, clientUpdateProps);
+        await onClientSubscriptionCancelled(
+          clientSubscription as Subscription,
+          client as Client,
+          coach as Coach,
+          {
+            status: subscription.status,
+            end_date: subscription.canceled_at
+              ? new Date(subscription.canceled_at * 1000)
+              : null,
+          }
+        );
       }
 
       res.json({ received: true });
