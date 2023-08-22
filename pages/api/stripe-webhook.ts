@@ -290,7 +290,7 @@ const onPaymentAuthenticationRequired = async (
 const onClientPricingChanged = async (
   subscription: Subscription,
   client: Client,
-  coach: Coach,
+  coach: Coach
 ) => {
   await sgMail.send({
     to: client.email,
@@ -303,7 +303,7 @@ const onClientPricingChanged = async (
       currency: subscription.currency,
       new_price_start_date:
         subscription.current_period_end_date &&
-        format(subscription.current_period_end_date, "dd/MM/yyyy"),
+        format(new Date(subscription.current_period_end_date), "dd/MM/yyyy"),
     },
   });
 };
@@ -327,7 +327,7 @@ const onClientSubscriptionRenewed = async (
       currency: subscription.currency,
       new_price_start_date:
         subscription.current_period_end_date &&
-        format(subscription.current_period_end_date, "dd/MM/yyyy"),
+        format(new Date(subscription.current_period_end_date), "dd/MM/yyyy"),
     },
   });
 };
@@ -510,7 +510,7 @@ export default async function handler(
           await onClientPricingChanged(
             clientSubscription as Subscription,
             client as Client,
-            coach as Coach,
+            coach as Coach
           );
         } else if (subscriptionRenewed) {
           await onClientSubscriptionRenewed(
