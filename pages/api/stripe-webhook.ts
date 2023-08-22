@@ -397,37 +397,48 @@ export default async function handler(
 
     const eventObject = event.data.object;
 
-    const { data: clientSubscription } =
-      // @ts-ignore
-      eventObject.object === "subscription_schedule" ||
-      eventObject === "subscription"
-        ? // @ts-ignore
-          await fetchSubscriptionById(eventObject.metadata.subscription_id)
-        : await fetchSubscriptionByStripeSubscriptionId(
-            // @ts-ignore
-            eventObject.object === "invoice"
-              ? // @ts-ignore
-                eventObject.subscription
-              : null
-          );
+    let clientSubscription;
 
-    console.log(clientSubscription, eventObject);
+    // @ts-ignore
+    switch (eventObject.object) {
+      case "subscription_schedule":
+      case "subscription":
+        // @ts-ignore
+        clientSubscription = (
+          await fetchSubscriptionById(eventObject.metadata.subscription_id)
+        )?.data;
+        break;
+      case "invoice":
+        // @ts-ignore
+        const stripeSubscription = await stripe.subscriptions.retrieve(
+          eventObject.subscription
+        );
+        // @ts-ignore
+        clientSubscription = (
+          await fetchSubscriptionById(
+            stripeSubscription.metadata.subscription_id
+          )
+        )?.data;
+        break;
+      default:
+        clientSubscription = null;
+        break;
+    }
+
+    const { data: client } = await fetchClientById(
+      clientSubscription?.client_id
+    );
+    const { data: coach } = await fetchCoachByClientId(
+      clientSubscription?.client_id
+    );
+
+    console.log(clientSubscription, client, coach);
 
     if (event.type === "subscription_schedule.created") {
       const subscriptionSchedule = event.data
         .object as Stripe.SubscriptionSchedule;
 
       if (subscriptionSchedule.metadata?.subscription_id) {
-        const { data: clientSubscription } = await fetchSubscriptionById(
-          subscriptionSchedule.metadata.subscription_id as UUID
-        );
-        const { data: client } = await fetchClientById(
-          clientSubscription?.client_id
-        );
-        const { data: coach } = await fetchCoachByClientId(
-          clientSubscription?.client_id
-        );
-
         if (subscriptionSchedule.metadata.updated) {
           await onClientTermsChanged(
             clientSubscription as Subscription,
