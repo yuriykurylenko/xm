@@ -483,36 +483,19 @@ export default async function handler(
           });
         }
       }
-    } else if (
-      event.type === "customer.subscription.updated" ||
-      event.type === "customer.subscription.deleted"
-    ) {
+
+      res.json({ received: true });
+    } else if (event.type === "customer.subscription.deleted") {
       const subscription = event.data.object as Stripe.Subscription;
 
       const subscriptionUpdateProps: SubscriptionInput = {
         status: subscription.status,
       };
 
-      if (
-        event.type === "customer.subscription.deleted" &&
-        subscription.canceled_at
-      ) {
+      if (subscription.canceled_at) {
         subscriptionUpdateProps.end_date = new Date(
           subscription.canceled_at * 1000
         );
-      } else if (
-        event.type === "customer.subscription.updated" &&
-        subscription.current_period_end &&
-        subscription.cancel_at_period_end
-      ) {
-        subscriptionUpdateProps.end_date = new Date(
-          subscription.current_period_end * 1000
-        );
-      } else if (
-        event.type === "customer.subscription.updated" &&
-        !subscription.cancel_at_period_end
-      ) {
-        subscriptionUpdateProps.end_date = null;
       }
 
       const { data: clientSubscription } =
@@ -531,45 +514,6 @@ export default async function handler(
         }
 
         await updateClientById(clientSubscription.client_id, clientUpdateProps);
-      } else if (
-        event.type === "customer.subscription.updated" &&
-        clientSubscription
-      ) {
-        const pricingChanged =
-          (event.data.previous_attributes as any)?.plan?.amount ||
-          (event.data.previous_attributes as any)?.plan?.currency;
-
-        const subscriptionRenewed = (event.data.previous_attributes as any)
-          .cancel_at_period_end;
-
-        if (pricingChanged || subscriptionRenewed) {
-          const { data: client } = await fetchClientById(
-            clientSubscription.client_id
-          );
-          const { data: coach } = await fetchCoachByClientId(
-            clientSubscription.client_id
-          );
-
-          if (client && coach) {
-            await sgMail.send({
-              to: client.email,
-              from: "yuriy.kurylenko@gmail.com",
-              templateId: subscriptionRenewed
-                ? "d-664503562b62462d9931a694b35c5155"
-                : "d-776524b90fc34aa387b8337205142e8c",
-              dynamicTemplateData: {
-                client_name: client.full_name,
-                coach_name: coach.full_name,
-                amount: clientSubscription.monthly_amount / 100,
-                currency: clientSubscription.currency,
-                new_price_start_date: format(
-                  new Date(subscription.current_period_end * 1000),
-                  "dd/MM/yyyy"
-                ),
-              },
-            });
-          }
-        }
       }
 
       res.json({ received: true });
