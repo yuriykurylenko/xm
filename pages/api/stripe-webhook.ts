@@ -484,7 +484,7 @@ export default async function handler(
               client as Client,
               coach as Coach
             );
-          } else if (client.user_id) {
+          } else {
             await onClientPlatformAccessRestored(
               clientSubscription as Subscription,
               client as Client,
