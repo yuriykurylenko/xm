@@ -395,6 +395,24 @@ export default async function handler(
       return;
     }
 
+    const eventObject = event.data.object;
+
+    const { data: clientSubscription } =
+      // @ts-ignore
+      eventObject.object === "subscription_schedule" ||
+      eventObject === "subscription"
+        ? // @ts-ignore
+          await fetchSubscriptionById(eventObject.metadata.subscription_id)
+        : await fetchSubscriptionByStripeSubscriptionId(
+            // @ts-ignore
+            eventObject.object === "invoice"
+              ? // @ts-ignore
+                eventObject.subscription
+              : null
+          );
+
+    console.log(clientSubscription, eventObject);
+
     if (event.type === "subscription_schedule.created") {
       const subscriptionSchedule = event.data
         .object as Stripe.SubscriptionSchedule;
