@@ -574,29 +574,28 @@ export default async function handler(
           ),
         }
       );
-    } else if (
-      event.type === "invoice.payment_succeeded" ||
-      event.type === "invoice.payment_failed"
-    ) {
+    } else if (event.type === "invoice.payment_succeeded") {
       const stripeInvoice = event.data.object as Stripe.Invoice;
 
-      if (!stripeInvoice.charge) {
-        return res.json({ received: true });
+      if (stripeInvoice.billing_reason !== "subscription_create") {
+        await onPaymentSucceeded(
+          clientSubscription as Subscription,
+          client as Client,
+          coach as Coach
+        );
       }
 
-      const stripeCharge = await stripe.charges.retrieve(
-        stripeInvoice.charge as string
-      );
+      res.json({ received: true });
+    } else if (event.type === "invoice.payment_failed") {
+      const stripeInvoice = event.data.object as Stripe.Invoice;
 
       if (stripeInvoice.billing_reason !== "subscription_create") {
-        if (event.type === "invoice.payment_succeeded") {
-          await onPaymentSucceeded(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach
-          );
-        } else if (
-          event.type === "invoice.payment_failed" &&
+        const stripeCharge = stripeInvoice.charge
+          ? await stripe.charges.retrieve(stripeInvoice.charge as string)
+          : null;
+
+        if (
+          stripeCharge &&
           stripeCharge.failure_code === "authentication_required"
         ) {
           await onPaymentAuthenticationRequired(
@@ -604,7 +603,7 @@ export default async function handler(
             client as Client,
             coach as Coach
           );
-        } else if (event.type === "invoice.payment_failed") {
+        } else {
           await onPaymentFailed(
             clientSubscription as Subscription,
             client as Client,
