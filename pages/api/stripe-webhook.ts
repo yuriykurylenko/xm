@@ -356,7 +356,7 @@ const onClientSubscriptionCancelled = async (
   coach: Coach,
   { status, end_date }: { status: string; end_date: Date | null }
 ) => {
-  await updateClientSubscriptionByStripeSubscriptionId(subscription.id, {
+  await updateClientSubscriptionById(subscription.id, {
     status,
     end_date,
   });
