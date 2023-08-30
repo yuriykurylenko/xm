@@ -241,24 +241,7 @@ const onClientSubscriptionRenewed = async (
   client: Client,
   coach: Coach,
   { status, end_date }: { status: string; end_date: Date | null }
-) => {
-  await updateClientSubscriptionById(subscription.id, { status, end_date });
-
-  await sgMail.send({
-    to: client.email,
-    from: "yuriy.kurylenko@gmail.com",
-    templateId: "d-664503562b62462d9931a694b35c5155",
-    dynamicTemplateData: {
-      client_name: client.full_name,
-      coach_name: coach.full_name,
-      amount: subscription.monthly_amount / 100,
-      currency: subscription.currency,
-      new_price_start_date:
-        subscription.current_period_end_date &&
-        format(new Date(subscription.current_period_end_date), "dd/MM/yyyy"),
-    },
-  });
-};
+) => updateClientSubscriptionById(subscription.id, { status, end_date });
 
 const onClientSubscriptionAutoRenewed = async (
   subscription: Subscription,
@@ -322,6 +305,11 @@ const events = [
   {
     name: "clientPricingChanged",
     emailTemplateId: "d-776524b90fc34aa387b8337205142e8c",
+  },
+  {
+    name: "clientSubscriptionRenewed",
+    handler: onClientSubscriptionRenewed,
+    emailTemplateId: "d-664503562b62462d9931a694b35c5155",
   },
 ];
 
@@ -548,10 +536,13 @@ export default async function handler(
               coach: coach as Coach,
             });
           } else if (subscriptionRenewed) {
-            await onClientSubscriptionRenewed(
-              clientSubscription as Subscription,
-              client as Client,
-              coach as Coach,
+            await triggerEvent(
+              "clientSubscriptionRenewed",
+              {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
               {
                 status: updatedSubscription.status,
                 end_date: null,
