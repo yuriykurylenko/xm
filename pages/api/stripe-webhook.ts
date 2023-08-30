@@ -99,37 +99,6 @@ const onClientStarted = async (
   }
 };
 
-const onPaymentFailed = async (
-  subscription: Subscription,
-  client: Client,
-  coach: Coach
-) => {
-  const stripeSubscription = await stripe.subscriptions.retrieve(
-    subscription.stripe_subscription_id
-  );
-  const stripeInvoice = stripeSubscription
-    ? await stripe.invoices.retrieve(
-        stripeSubscription.latest_invoice as string
-      )
-    : null;
-
-  if (stripeInvoice) {
-    await sgMail.send({
-      to: client?.email,
-      from: "yuriy.kurylenko@gmail.com",
-      templateId: "d-5e885ef0588e46b8b976eeaece239819",
-      dynamicTemplateData: {
-        client_name: client?.full_name,
-        coach_name: coach?.full_name,
-        invoice_number: stripeInvoice.number,
-        amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-        currency: stripeInvoice.currency.toUpperCase(),
-        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-      },
-    });
-  }
-};
-
 const onClientSubscriptionCancellationScheduled = (
   subscription: Subscription,
   client: Client,
@@ -226,6 +195,10 @@ const events = [
   {
     name: "paymentAuthenticationRequired",
     emailTemplateId: "d-f467666dc085418ba8904d165d5f5a2b",
+  },
+  {
+    name: "paymentFailed",
+    emailTemplateId: "d-5e885ef0588e46b8b976eeaece239819",
   },
 ];
 
@@ -584,10 +557,21 @@ export default async function handler(
                 }
               );
             } else {
-              await onPaymentFailed(
-                clientSubscription as Subscription,
-                client as Client,
-                coach as Coach
+              await triggerEvent(
+                "paymentFailed",
+                {
+                  subscription: clientSubscription as Subscription,
+                  client: client as Client,
+                  coach: coach as Coach,
+                },
+                {
+                  invoice_number: failedStripeInvoice.number,
+                  amount:
+                    (failedStripeInvoice.amount_paid ||
+                      failedStripeInvoice.amount_due) / 100,
+                  currency: failedStripeInvoice.currency.toUpperCase(),
+                  hosted_invoice_url: failedStripeInvoice.hosted_invoice_url,
+                }
               );
             }
           }
