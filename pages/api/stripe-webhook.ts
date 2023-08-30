@@ -336,6 +336,10 @@ const events = [
     name: "clientPlatformAccessRestored",
     emailTemplateId: "d-f33881ff79f24f07a10820b49bdc1713",
   },
+  {
+    name: "clientSubscriptionCancellationScheduled",
+    handler: onClientSubscriptionCancellationScheduled,
+  },
 ];
 
 const triggerEvent = async (
@@ -534,10 +538,13 @@ export default async function handler(
             .cancel_at_period_end;
 
           if (subscriptionCancellationScheduled) {
-            await onClientSubscriptionCancellationScheduled(
-              clientSubscription as Subscription,
-              client as Client,
-              coach as Coach,
+            await triggerEvent(
+              "clientSubscriptionCancellationScheduled",
+              {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
               {
                 status: updatedSubscription.status,
                 end_date: new Date(
