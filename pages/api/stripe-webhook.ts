@@ -105,21 +105,6 @@ const onClientStarted = async (
   );
 };
 
-const onClientPlatformAccessRestored = async (
-  subscription: Subscription,
-  client: Client,
-  coach: Coach
-) =>
-  sgMail.send({
-    to: client.email,
-    from: "yuriy.kurylenko@gmail.com",
-    templateId: "d-f33881ff79f24f07a10820b49bdc1713",
-    dynamicTemplateData: {
-      client_name: client.full_name,
-      coach_name: coach.full_name,
-    },
-  });
-
 const onPaymentAttempt = async (
   subscription: Subscription,
   client: Client,
@@ -347,6 +332,10 @@ const events = [
     name: "clientPlatformAccessGranted",
     emailTemplateId: "d-bb7a32cfdef545308aea0cf7bbbee901",
   },
+  {
+    name: "clientPlatformAccessRestored",
+    emailTemplateId: "d-f33881ff79f24f07a10820b49bdc1713",
+  },
 ];
 
 const triggerEvent = async (
@@ -515,11 +504,11 @@ export default async function handler(
           );
 
           if (client.user_id) {
-            await onClientPlatformAccessRestored(
-              clientSubscription as Subscription,
-              client as Client,
-              coach as Coach
-            );
+            await triggerEvent("clientPlatformAccessRestored", {
+              subscription: clientSubscription as Subscription,
+              client: client as Client,
+              coach: coach as Coach,
+            });
           } else {
             await triggerEvent("clientPlatformAccessGranted", {
               subscription: clientSubscription as Subscription,
