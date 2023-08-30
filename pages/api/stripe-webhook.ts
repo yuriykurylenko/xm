@@ -236,27 +236,6 @@ const onClientSubscriptionCancellationScheduled = (
   { status, end_date }: { status: string; end_date: Date }
 ) => updateSubscriptionById(subscription.id, { status, end_date });
 
-const onClientPricingChanged = async (
-  subscription: Subscription,
-  client: Client,
-  coach: Coach
-) => {
-  await sgMail.send({
-    to: client.email,
-    from: "yuriy.kurylenko@gmail.com",
-    templateId: "d-776524b90fc34aa387b8337205142e8c",
-    dynamicTemplateData: {
-      client_name: client.full_name,
-      coach_name: coach.full_name,
-      amount: subscription.monthly_amount / 100,
-      currency: subscription.currency,
-      new_price_start_date:
-        subscription.current_period_end_date &&
-        format(new Date(subscription.current_period_end_date), "dd/MM/yyyy"),
-    },
-  });
-};
-
 const onClientSubscriptionRenewed = async (
   subscription: Subscription,
   client: Client,
@@ -340,6 +319,10 @@ const events = [
     name: "clientSubscriptionCancellationScheduled",
     handler: onClientSubscriptionCancellationScheduled,
   },
+  {
+    name: "clientPricingChanged",
+    emailTemplateId: "d-776524b90fc34aa387b8337205142e8c",
+  },
 ];
 
 const triggerEvent = async (
@@ -377,6 +360,12 @@ const triggerEvent = async (
               : new Date(subscription.start_date),
             "dd/MM/yyyy"
           ),
+          new_price_start_date:
+            subscription.current_period_end_date &&
+            format(
+              new Date(subscription.current_period_end_date),
+              "dd/MM/yyyy"
+            ),
         },
       });
     }
@@ -553,11 +542,11 @@ export default async function handler(
               }
             );
           } else if (pricingChanged) {
-            await onClientPricingChanged(
-              clientSubscription as Subscription,
-              client as Client,
-              coach as Coach
-            );
+            await triggerEvent("clientPricingChanged", {
+              subscription: clientSubscription as Subscription,
+              client: client as Client,
+              coach: coach as Coach,
+            });
           } else if (subscriptionRenewed) {
             await onClientSubscriptionRenewed(
               clientSubscription as Subscription,
