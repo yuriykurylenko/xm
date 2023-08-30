@@ -303,7 +303,6 @@ const triggerEvent = async (
   data?: any
 ) => {
   const event = events.find((e) => e.name === name);
-  const { invoice_number, amount, currency, hosted_invoice_url } = data;
 
   if (event) {
     if (event.handler) {
@@ -319,8 +318,8 @@ const triggerEvent = async (
           client_name: client.full_name,
           coach_name: coach.full_name,
           subscription_id: subscription?.id,
-          amount: amount || subscription?.monthly_amount / 100,
-          currency: currency || subscription?.currency,
+          amount: data?.amount || subscription?.monthly_amount / 100,
+          currency: data?.currency || subscription?.currency,
           trial_period_days: subscription?.trial_period_days,
           start_date: format(
             !subscription?.start_date ||
@@ -335,8 +334,8 @@ const triggerEvent = async (
               new Date(subscription.current_period_end_date),
               "dd/MM/yyyy"
             ),
-          invoice_number,
-          hosted_invoice_url,
+          invoice_number: data?.invoice_number,
+          hosted_invoice_url: data?.hosted_invoice_url,
         },
       });
     }
