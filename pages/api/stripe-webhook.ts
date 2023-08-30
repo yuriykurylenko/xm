@@ -236,24 +236,23 @@ const onClientSubscriptionCancellationScheduled = (
   { status, end_date }: { status: string; end_date: Date }
 ) => updateSubscriptionById(subscription.id, { status, end_date });
 
-const onClientSubscriptionRenewed = async (
+const onClientSubscriptionRenewed = (
   subscription: Subscription,
   client: Client,
   coach: Coach,
   { status, end_date }: { status: string; end_date: Date | null }
 ) => updateClientSubscriptionById(subscription.id, { status, end_date });
 
-const onClientSubscriptionAutoRenewed = async (
+const onClientSubscriptionAutoRenewed = (
   subscription: Subscription,
   client: Client,
   coach: Coach,
   { current_period_end_date }: { current_period_end_date: Date | null }
-) => {
-  await updateClientSubscriptionById(subscription.id, {
+) =>
+  updateClientSubscriptionById(subscription.id, {
     current_period_end_date:
       current_period_end_date && new Date(current_period_end_date),
   });
-};
 
 const onClientSubscriptionCancelled = async (
   subscription: Subscription,
