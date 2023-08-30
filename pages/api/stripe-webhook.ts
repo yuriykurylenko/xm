@@ -311,6 +311,10 @@ const events = [
     emailTemplateId: "d-664503562b62462d9931a694b35c5155",
   },
   {
+    name: "clientSubscriptionAutoRenewed",
+    handler: onClientSubscriptionAutoRenewed,
+  },
+  {
     name: "clientSubscriptionCancelled",
     handler: onClientSubscriptionCancelled,
   },
@@ -578,10 +582,14 @@ export default async function handler(
           const invoiceSubscription = await stripe.subscriptions.retrieve(
             invoice.subscription as string
           );
-          await onClientSubscriptionAutoRenewed(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach,
+
+          await triggerEvent(
+            "clientSubscriptionAutoRenewed",
+            {
+              subscription: clientSubscription as Subscription,
+              client: client as Client,
+              coach: coach as Coach,
+            },
             {
               current_period_end_date: new Date(
                 invoiceSubscription.current_period_end * 1000
