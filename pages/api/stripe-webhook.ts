@@ -363,6 +363,57 @@ const onClientSubscriptionCancelled = async (
   });
 };
 
+const events = [
+  {
+    name: "clientStartScheduled",
+    handler: onClientStartScheduled,
+  },
+  {
+    name: "clientTermsChanged",
+    handler: onClientTermsChanged,
+    emailTemplateId: "d-306b9c3260cd4337b3528ee2e847bb31",
+  },
+];
+
+const triggerEvent = async (
+  name: string,
+  {
+    subscription,
+    client,
+    coach,
+  }: { subscription: Subscription; client: Client; coach: Coach },
+  data: any
+) => {
+  const event = events.find((e) => e.name === name);
+
+  if (event) {
+    await event.handler(subscription, client, coach, data);
+
+    if (event.emailTemplateId) {
+      await sgMail.send({
+        to: client.email,
+        from: "yuriy.kurylenko@gmail.com",
+        templateId: event.emailTemplateId,
+        dynamicTemplateData: {
+          client_name: client.full_name,
+          coach_name: coach.full_name,
+          subscription_id: subscription?.id,
+          amount: subscription?.monthly_amount / 100,
+          currency: subscription?.currency,
+          trial_period_days: subscription?.trial_period_days,
+          start_date: format(
+            !subscription?.start_date ||
+              new Date(subscription.start_date) < new Date()
+              ? new Date()
+              : new Date(subscription.start_date),
+            "dd/MM/yyyy"
+          ),
+        },
+      });
+    }
+  }
+};
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -431,19 +482,23 @@ export default async function handler(
             .object as Stripe.SubscriptionSchedule;
 
           if (subscriptionSchedule.metadata?.updated) {
-            await onClientTermsChanged(
-              clientSubscription as Subscription,
-              client as Client,
-              coach as Coach,
+            await triggerEvent(
+              "clientTermsChanged",
               {
-                stripeSubscriptionId: subscriptionSchedule.id,
-              }
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
+              { stripeSubscriptionId: subscriptionSchedule.id }
             );
           } else {
-            await onClientStartScheduled(
-              clientSubscription as Subscription,
-              client as Client,
-              coach as Coach,
+            await triggerEvent(
+              "clientStartScheduled",
+              {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
               { stripeSubscriptionId: subscriptionSchedule.id }
             );
           }
