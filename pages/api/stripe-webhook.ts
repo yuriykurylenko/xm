@@ -351,6 +351,10 @@ const events = [
     handler: onClientTermsChanged,
     emailTemplateId: "d-306b9c3260cd4337b3528ee2e847bb31",
   },
+  {
+    name: "clientStartCanceled",
+    handler: onClientStartCanceled,
+  },
 ];
 
 const triggerEvent = async (
@@ -360,7 +364,7 @@ const triggerEvent = async (
     client,
     coach,
   }: { subscription: Subscription; client: Client; coach: Coach },
-  data: any
+  data?: any
 ) => {
   const event = events.find((e) => e.name === name);
 
@@ -488,11 +492,11 @@ export default async function handler(
             clientSubscription.start_date &&
             new Date(clientSubscription.start_date) >= new Date()
           ) {
-            await onClientStartCanceled(
-              clientSubscription as Subscription,
-              client as Client,
-              coach as Coach
-            );
+            await triggerEvent("clientStartCanceled", {
+              subscription: clientSubscription as Subscription,
+              client: client as Client,
+              coach: coach as Coach,
+            });
           }
           break;
 
