@@ -97,43 +97,6 @@ const onClientStarted = async (
       access_revoked_at: null,
     });
   }
-
-  await onPaymentAttempt(
-    updatedSubscription as unknown as Subscription,
-    client,
-    coach
-  );
-};
-
-const onPaymentAttempt = async (
-  subscription: Subscription,
-  client: Client,
-  coach: Coach
-) => {
-  const stripeSubscription = await stripe.subscriptions.retrieve(
-    subscription.stripe_subscription_id
-  );
-  const stripeInvoice = stripeSubscription
-    ? await stripe.invoices.retrieve(
-        stripeSubscription.latest_invoice as string
-      )
-    : null;
-
-  if (stripeInvoice?.status === "paid" && stripeInvoice.amount_paid > 0) {
-    await sgMail.send({
-      to: client?.email,
-      from: "yuriy.kurylenko@gmail.com",
-      templateId: "d-fee4c2f687e54d9e97b5068673742efd",
-      dynamicTemplateData: {
-        client_name: client?.full_name,
-        coach_name: coach?.full_name,
-        invoice_number: stripeInvoice.number,
-        amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-        currency: stripeInvoice.currency.toUpperCase(),
-        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-      },
-    });
-  }
 };
 
 const onPaymentFailed = async (
@@ -421,6 +384,9 @@ export default async function handler(
 
         case "customer.subscription.created":
           const subscription = event.data.object as Stripe.Subscription;
+          const latestInvoice = await stripe.invoices.retrieve(
+            subscription.latest_invoice as string
+          );
 
           await triggerEvent(
             "clientStarted",
@@ -438,6 +404,27 @@ export default async function handler(
               status: subscription.status,
             }
           );
+
+          if (
+            latestInvoice?.status === "paid" &&
+            latestInvoice.amount_paid > 0
+          ) {
+            await triggerEvent(
+              "paymentSucceeded",
+              {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
+              {
+                invoice_number: latestInvoice.number,
+                amount:
+                  (latestInvoice.amount_paid || latestInvoice.amount_due) / 100,
+                currency: latestInvoice.currency.toUpperCase(),
+                hosted_invoice_url: latestInvoice.hosted_invoice_url,
+              }
+            );
+          }
 
           if (client.user_id) {
             await triggerEvent("clientPlatformAccessRestored", {
