@@ -113,7 +113,7 @@ const onClientStarted = async (
     }
   );
 
-  if (["active", "trialing"].includes(subscription.status)) {
+  if (["active", "trialing"].includes(status)) {
     await updateClientById(client.id, {
       status: "client",
       access_revoked_at: null,
@@ -478,14 +478,15 @@ export default async function handler(
               status: subscription.status,
             }
           );
+
           if (client.user_id) {
-            await onClientPlatformAccessGranted(
+            await onClientPlatformAccessRestored(
               clientSubscription as Subscription,
               client as Client,
               coach as Coach
             );
           } else {
-            await onClientPlatformAccessRestored(
+            await onClientPlatformAccessGranted(
               clientSubscription as Subscription,
               client as Client,
               coach as Coach
