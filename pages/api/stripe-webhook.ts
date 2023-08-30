@@ -310,6 +310,10 @@ const events = [
     handler: onClientSubscriptionRenewed,
     emailTemplateId: "d-664503562b62462d9931a694b35c5155",
   },
+  {
+    name: "clientSubscriptionCancelled",
+    handler: onClientSubscriptionCancelled,
+  },
 ];
 
 const triggerEvent = async (
@@ -552,10 +556,14 @@ export default async function handler(
 
         case "customer.subscription.deleted":
           const deletedSubscription = event.data.object as Stripe.Subscription;
-          await onClientSubscriptionCancelled(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach,
+
+          await triggerEvent(
+            "clientSubscriptionCancelled",
+            {
+              subscription: clientSubscription as Subscription,
+              client: client as Client,
+              coach: coach as Coach,
+            },
             {
               status: deletedSubscription.status,
               end_date: deletedSubscription.canceled_at
