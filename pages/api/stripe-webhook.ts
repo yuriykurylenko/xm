@@ -136,37 +136,6 @@ const onPaymentAttempt = async (
   }
 };
 
-const onPaymentSucceeded = async (
-  subscription: Subscription,
-  client: Client,
-  coach: Coach
-) => {
-  const stripeSubscription = await stripe.subscriptions.retrieve(
-    subscription.stripe_subscription_id
-  );
-  const stripeInvoice = stripeSubscription
-    ? await stripe.invoices.retrieve(
-        stripeSubscription.latest_invoice as string
-      )
-    : null;
-
-  if (stripeInvoice) {
-    await sgMail.send({
-      to: client?.email,
-      from: "yuriy.kurylenko@gmail.com",
-      templateId: "d-fee4c2f687e54d9e97b5068673742efd",
-      dynamicTemplateData: {
-        client_name: client?.full_name,
-        coach_name: coach?.full_name,
-        invoice_number: stripeInvoice.number,
-        amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-        currency: stripeInvoice.currency.toUpperCase(),
-        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-      },
-    });
-  }
-};
-
 const onPaymentFailed = async (
   subscription: Subscription,
   client: Client,
@@ -318,6 +287,10 @@ const events = [
     name: "clientSubscriptionCancelled",
     handler: onClientSubscriptionCancelled,
   },
+  {
+    name: "paymentSucceeded",
+    emailTemplateId: "d-fee4c2f687e54d9e97b5068673742efd",
+  },
 ];
 
 const triggerEvent = async (
@@ -330,6 +303,7 @@ const triggerEvent = async (
   data?: any
 ) => {
   const event = events.find((e) => e.name === name);
+  const { invoice_number, amount, currency, hosted_invoice_url } = data;
 
   if (event) {
     if (event.handler) {
@@ -345,8 +319,8 @@ const triggerEvent = async (
           client_name: client.full_name,
           coach_name: coach.full_name,
           subscription_id: subscription?.id,
-          amount: subscription?.monthly_amount / 100,
-          currency: subscription?.currency,
+          amount: amount || subscription?.monthly_amount / 100,
+          currency: currency || subscription?.currency,
           trial_period_days: subscription?.trial_period_days,
           start_date: format(
             !subscription?.start_date ||
@@ -361,6 +335,8 @@ const triggerEvent = async (
               new Date(subscription.current_period_end_date),
               "dd/MM/yyyy"
             ),
+          invoice_number,
+          hosted_invoice_url,
         },
       });
     }
@@ -601,10 +577,20 @@ export default async function handler(
         case "invoice.payment_succeeded":
           const stripeInvoice = event.data.object as Stripe.Invoice;
           if (stripeInvoice.billing_reason !== "subscription_create") {
-            await onPaymentSucceeded(
-              clientSubscription as Subscription,
-              client as Client,
-              coach as Coach
+            await triggerEvent(
+              "paymentSucceeded",
+              {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
+              {
+                invoice_number: stripeInvoice.number,
+                amount:
+                  (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+                currency: stripeInvoice.currency.toUpperCase(),
+                hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+              }
             );
           }
           break;
