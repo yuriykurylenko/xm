@@ -355,6 +355,10 @@ const events = [
     name: "clientStartCanceled",
     handler: onClientStartCanceled,
   },
+  {
+    name: "clientStarted",
+    handler: onClientStarted,
+  },
 ];
 
 const triggerEvent = async (
@@ -502,10 +506,14 @@ export default async function handler(
 
         case "customer.subscription.created":
           const subscription = event.data.object as Stripe.Subscription;
-          await onClientStarted(
-            clientSubscription as Subscription,
-            client as Client,
-            coach as Coach,
+
+          await triggerEvent(
+            "clientStarted",
+            {
+              subscription: clientSubscription as Subscription,
+              client: client as Client,
+              coach: coach as Coach,
+            },
             {
               start_date: new Date(subscription.start_date * 1000),
               current_period_end_date: new Date(
