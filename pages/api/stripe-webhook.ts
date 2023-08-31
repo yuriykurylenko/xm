@@ -96,6 +96,7 @@ export default async function handler(
           stripeSubscription.current_period_end * 1000
         ),
         invoice_number: stripeInvoice?.number,
+        // Bug with price change email
         amount:
           stripeInvoice &&
           (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
