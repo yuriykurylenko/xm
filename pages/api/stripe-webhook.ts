@@ -104,7 +104,6 @@ export default async function handler(
         currency: stripeInvoice?.currency?.toUpperCase(),
         hosted_invoice_url: stripeInvoice?.hosted_invoice_url,
       };
-      console.log(eventData);
 
       for (const event of events) {
         if (
