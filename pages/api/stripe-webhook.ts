@@ -211,6 +211,7 @@ const triggerEvent = async (
   }: { subscription: Subscription; client: Client; coach: Coach },
   data?: any
 ) => {
+  console.log(name);
   const event = events.find((e) => e.name === name);
 
   if (event) {
@@ -378,27 +379,6 @@ export default async function handler(
             }
           );
 
-          if (
-            latestInvoice?.status === "paid" &&
-            latestInvoice.amount_paid > 0
-          ) {
-            await triggerEvent(
-              "paymentSucceeded",
-              {
-                subscription: clientSubscription as Subscription,
-                client: client as Client,
-                coach: coach as Coach,
-              },
-              {
-                invoice_number: latestInvoice.number,
-                amount:
-                  (latestInvoice.amount_paid || latestInvoice.amount_due) / 100,
-                currency: latestInvoice.currency.toUpperCase(),
-                hosted_invoice_url: latestInvoice.hosted_invoice_url,
-              }
-            );
-          }
-
           if (client.user_id) {
             await triggerEvent("clientPlatformAccessRestored", {
               subscription: clientSubscription as Subscription,
@@ -508,23 +488,22 @@ export default async function handler(
 
         case "invoice.payment_succeeded":
           const stripeInvoice = event.data.object as Stripe.Invoice;
-          if (stripeInvoice.billing_reason !== "subscription_create") {
-            await triggerEvent(
-              "paymentSucceeded",
-              {
-                subscription: clientSubscription as Subscription,
-                client: client as Client,
-                coach: coach as Coach,
-              },
-              {
-                invoice_number: stripeInvoice.number,
-                amount:
-                  (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-                currency: stripeInvoice.currency.toUpperCase(),
-                hosted_invoice_url: stripeInvoice.hosted_invoice_url,
-              }
-            );
-          }
+
+          await triggerEvent(
+            "paymentSucceeded",
+            {
+              subscription: clientSubscription as Subscription,
+              client: client as Client,
+              coach: coach as Coach,
+            },
+            {
+              invoice_number: stripeInvoice.number,
+              amount:
+                (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+              currency: stripeInvoice.currency.toUpperCase(),
+              hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+            }
+          );
           break;
 
         case "invoice.payment_failed":
