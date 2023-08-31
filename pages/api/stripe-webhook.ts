@@ -211,7 +211,6 @@ const triggerEvent = async (
   }: { subscription: Subscription; client: Client; coach: Coach },
   data?: any
 ) => {
-  console.log(name);
   const event = events.find((e) => e.name === name);
 
   if (event) {
