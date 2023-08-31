@@ -21,6 +21,16 @@ export const config = {
   },
 };
 
+type StripeEventParams = {
+  stripeEventType: string;
+  stripeEventPreviousAttributes: any;
+  stripeSubscription: Stripe.Subscription;
+  stripeInvoice: Stripe.Invoice;
+  stripeCharge?: Stripe.Charge;
+  subscription: Subscription;
+  client: Client;
+};
+
 const onClientStartScheduled = async (
   subscription: Subscription,
   client: Client,
@@ -148,15 +158,7 @@ const events = [
     triggerConditions: ({
       stripeEventType,
       stripeSubscription,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeEventType === "subscription_schedule.created" &&
       !stripeSubscription.metadata?.updated,
   },
@@ -167,33 +169,14 @@ const events = [
     triggerConditions: ({
       stripeEventType,
       stripeSubscription,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeEventType === "subscription_schedule.created" &&
       stripeSubscription.metadata?.updated,
   },
   {
     name: "clientStartCanceled",
     handler: onClientStartCanceled,
-    triggerConditions: ({
-      stripeEventType,
-      subscription,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    triggerConditions: ({ stripeEventType, subscription }: StripeEventParams) =>
       stripeEventType === "subscription_schedule.canceled" &&
       !subscription.archived_at &&
       subscription.start_date &&
@@ -206,15 +189,7 @@ const events = [
       stripeEventType,
       stripeEventPreviousAttributes,
       stripeSubscription,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeSubscription.status === "active" &&
       (stripeEventType === "customer.subscription.created" ||
         (stripeEventType === "customer.subscription.updated" &&
@@ -228,15 +203,7 @@ const events = [
       stripeEventPreviousAttributes,
       stripeSubscription,
       client,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeSubscription.status === "active" &&
       !client.user_id &&
       (stripeEventType === "customer.subscription.created" ||
@@ -251,15 +218,7 @@ const events = [
       stripeEventPreviousAttributes,
       stripeSubscription,
       client,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeSubscription.status === "active" &&
       client.user_id &&
       (stripeEventType === "customer.subscription.created" ||
@@ -272,15 +231,7 @@ const events = [
     triggerConditions: ({
       stripeEventType,
       stripeSubscription,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeEventType === "customer.subscription.updated" &&
       stripeSubscription.current_period_end &&
       stripeSubscription.cancel_at_period_end,
@@ -291,15 +242,7 @@ const events = [
     triggerConditions: ({
       stripeEventType,
       stripeEventPreviousAttributes,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeEventType === "customer.subscription.updated" &&
       (stripeEventPreviousAttributes?.plan?.amount ||
         stripeEventPreviousAttributes?.plan?.currency) &&
@@ -312,62 +255,27 @@ const events = [
     triggerConditions: ({
       stripeEventType,
       stripeEventPreviousAttributes,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeEventType === "customer.subscription.updated" &&
       stripeEventPreviousAttributes.cancel_at_period_end,
   },
   {
     name: "clientSubscriptionAutoRenewed",
     handler: onClientSubscriptionAutoRenewed,
-    triggerConditions: ({
-      stripeEventType,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) => stripeEventType === "invoice.created",
+    triggerConditions: ({ stripeEventType }: StripeEventParams) =>
+      stripeEventType === "invoice.created",
   },
   {
     name: "clientSubscriptionCancelled",
     handler: onClientSubscriptionCancelled,
-    triggerConditions: ({
-      stripeEventType,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) => stripeEventType === "customer.subscription.deleted",
+    triggerConditions: ({ stripeEventType }: StripeEventParams) =>
+      stripeEventType === "customer.subscription.deleted",
   },
   {
     name: "paymentSucceeded",
     emailTemplateId: "d-fee4c2f687e54d9e97b5068673742efd",
-    triggerConditions: ({
-      stripeEventType,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) => stripeEventType === "invoice.payment_succeeded",
+    triggerConditions: ({ stripeEventType }: StripeEventParams) =>
+      stripeEventType === "invoice.payment_succeeded",
   },
   {
     name: "paymentAuthenticationRequired",
@@ -376,15 +284,7 @@ const events = [
       stripeEventType,
       stripeInvoice,
       stripeCharge,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeEventType === "invoice.payment_failed" &&
       stripeInvoice.billing_reason !== "subscription_create" &&
       stripeCharge &&
@@ -397,15 +297,7 @@ const events = [
       stripeEventType,
       stripeInvoice,
       stripeCharge,
-    }: {
-      stripeEventType: string;
-      stripeEventPreviousAttributes: any;
-      stripeSubscription: Stripe.Subscription;
-      stripeInvoice: Stripe.Invoice;
-      stripeCharge?: Stripe.Charge;
-      subscription: Subscription;
-      client: Client;
-    }) =>
+    }: StripeEventParams) =>
       stripeEventType === "invoice.payment_failed" &&
       stripeInvoice.billing_reason !== "subscription_create" &&
       stripeCharge &&
