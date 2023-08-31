@@ -51,7 +51,7 @@ export default async function handler(
 
     const stripeSubscription = [
       "subscription",
-      "subscriptionSchedule",
+      "subscription_schedule",
     ].includes(eventObject.object)
       ? eventObject
       : await stripe.subscriptions.retrieve(eventObject.subscription);
@@ -95,10 +95,12 @@ export default async function handler(
         current_period_end_date: new Date(
           stripeSubscription.current_period_end * 1000
         ),
-        invoice_number: stripeInvoice.number,
-        amount: (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
-        currency: stripeInvoice.currency.toUpperCase(),
-        hosted_invoice_url: stripeInvoice.hosted_invoice_url,
+        invoice_number: stripeInvoice?.number,
+        amount:
+          stripeInvoice &&
+          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+        currency: stripeInvoice?.currency?.toUpperCase(),
+        hosted_invoice_url: stripeInvoice?.hosted_invoice_url,
       };
 
       for (const event of events) {
