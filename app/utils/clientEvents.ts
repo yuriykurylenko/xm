@@ -23,10 +23,10 @@ const onClientStartScheduled = async (
   subscription: Subscription,
   client: Client,
   coach: Coach,
-  { stripeSubscriptionId }: { stripeSubscriptionId: string }
+  { stripe_subscription_id }: { stripe_subscription_id: string }
 ) => {
   await updateClientSubscriptionById(subscription.id, {
-    stripe_subscription_id: stripeSubscriptionId,
+    stripe_subscription_id,
   });
 
   await updateClientById(client.id, {
@@ -38,10 +38,10 @@ const onClientTermsChanged = async (
   subscription: Subscription,
   client: Client,
   coach: Coach,
-  { stripeSubscriptionId }: { stripeSubscriptionId: string }
+  { stripe_subscription_id }: { stripe_subscription_id: string }
 ) =>
   updateClientSubscriptionById(subscription.id, {
-    stripe_subscription_id: stripeSubscriptionId,
+    stripe_subscription_id,
   });
 
 const onClientStartCanceled = async (
@@ -79,15 +79,12 @@ const onClientStarted = async (
     status: string;
   }
 ) => {
-  const { data: updatedSubscription } = await updateClientSubscriptionById(
-    subscription?.id,
-    {
-      stripe_subscription_id,
-      status,
-      start_date,
-      current_period_end_date,
-    }
-  );
+  await updateClientSubscriptionById(subscription?.id, {
+    stripe_subscription_id,
+    status,
+    start_date,
+    current_period_end_date,
+  });
 
   if (["active", "trialing"].includes(status)) {
     await updateClientById(client.id, {

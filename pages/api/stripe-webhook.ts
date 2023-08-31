@@ -83,7 +83,6 @@ export default async function handler(
 
     if (clientSubscription && client && coach) {
       const eventData = {
-        stripeSubscriptionId: stripeSubscription.id,
         stripe_subscription_id: stripeSubscription.id,
         status: stripeSubscription.status,
         start_date: new Date(stripeSubscription.start_date * 1000),
