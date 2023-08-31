@@ -429,6 +429,20 @@ export default async function handler(
                 status: updatedSubscription.status,
               }
             );
+
+            if (client.user_id) {
+              await triggerEvent("clientPlatformAccessRestored", {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              });
+            } else {
+              await triggerEvent("clientPlatformAccessGranted", {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              });
+            }
           }
 
           if (subscriptionCancellationScheduled) {
