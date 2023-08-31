@@ -98,11 +98,13 @@ export default async function handler(
         invoice_number: stripeInvoice?.number,
         // Bug with price change email
         amount:
-          stripeInvoice &&
-          (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+          eventObject.object === "invoice" && stripeInvoice
+            ? (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
+            : clientSubscription.monthly_amount / 100,
         currency: stripeInvoice?.currency?.toUpperCase(),
         hosted_invoice_url: stripeInvoice?.hosted_invoice_url,
       };
+      console.log(eventData);
 
       for (const event of events) {
         if (
