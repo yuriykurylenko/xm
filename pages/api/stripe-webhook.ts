@@ -145,60 +145,271 @@ const events = [
   {
     name: "clientStartScheduled",
     handler: onClientStartScheduled,
+    triggerConditions: ({
+      stripeEventType,
+      stripeSubscription,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeEventType === "subscription_schedule.created" &&
+      !stripeSubscription.metadata?.updated,
   },
   {
     name: "clientTermsChanged",
     handler: onClientTermsChanged,
     emailTemplateId: "d-306b9c3260cd4337b3528ee2e847bb31",
+    triggerConditions: ({
+      stripeEventType,
+      stripeSubscription,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeEventType === "subscription_schedule.created" &&
+      stripeSubscription.metadata?.updated,
   },
   {
     name: "clientStartCanceled",
     handler: onClientStartCanceled,
+    triggerConditions: ({
+      stripeEventType,
+      subscription,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeEventType === "subscription_schedule.canceled" &&
+      !subscription.archived_at &&
+      subscription.start_date &&
+      new Date(subscription.start_date) >= new Date(),
   },
   {
     name: "clientStarted",
     handler: onClientStarted,
+    triggerConditions: ({
+      stripeEventType,
+      stripeEventPreviousAttributes,
+      stripeSubscription,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeSubscription.status === "active" &&
+      (stripeEventType === "customer.subscription.created" ||
+        (stripeEventType === "customer.subscription.updated" &&
+          stripeEventPreviousAttributes?.status)),
   },
   {
     name: "clientPlatformAccessGranted",
     emailTemplateId: "d-bb7a32cfdef545308aea0cf7bbbee901",
+    triggerConditions: ({
+      stripeEventType,
+      stripeEventPreviousAttributes,
+      stripeSubscription,
+      client,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeSubscription.status === "active" &&
+      !client.user_id &&
+      (stripeEventType === "customer.subscription.created" ||
+        (stripeEventType === "customer.subscription.updated" &&
+          stripeEventPreviousAttributes?.status)),
   },
   {
     name: "clientPlatformAccessRestored",
     emailTemplateId: "d-f33881ff79f24f07a10820b49bdc1713",
+    triggerConditions: ({
+      stripeEventType,
+      stripeEventPreviousAttributes,
+      stripeSubscription,
+      client,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeSubscription.status === "active" &&
+      client.user_id &&
+      (stripeEventType === "customer.subscription.created" ||
+        (stripeEventType === "customer.subscription.updated" &&
+          stripeEventPreviousAttributes?.status)),
   },
   {
     name: "clientSubscriptionCancellationScheduled",
     handler: onClientSubscriptionCancellationScheduled,
+    triggerConditions: ({
+      stripeEventType,
+      stripeSubscription,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeEventType === "customer.subscription.updated" &&
+      stripeSubscription.current_period_end &&
+      stripeSubscription.cancel_at_period_end,
   },
   {
     name: "clientPricingChanged",
     emailTemplateId: "d-776524b90fc34aa387b8337205142e8c",
+    triggerConditions: ({
+      stripeEventType,
+      stripeEventPreviousAttributes,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeEventType === "customer.subscription.updated" &&
+      (stripeEventPreviousAttributes?.plan?.amount ||
+        stripeEventPreviousAttributes?.plan?.currency) &&
+      !stripeEventPreviousAttributes.cancel_at_period_end,
   },
   {
     name: "clientSubscriptionRenewed",
     handler: onClientSubscriptionRenewed,
     emailTemplateId: "d-664503562b62462d9931a694b35c5155",
+    triggerConditions: ({
+      stripeEventType,
+      stripeEventPreviousAttributes,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeEventType === "customer.subscription.updated" &&
+      stripeEventPreviousAttributes.cancel_at_period_end,
   },
   {
     name: "clientSubscriptionAutoRenewed",
     handler: onClientSubscriptionAutoRenewed,
+    triggerConditions: ({
+      stripeEventType,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) => stripeEventType === "invoice.created",
   },
   {
     name: "clientSubscriptionCancelled",
     handler: onClientSubscriptionCancelled,
+    triggerConditions: ({
+      stripeEventType,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) => stripeEventType === "customer.subscription.deleted",
   },
   {
     name: "paymentSucceeded",
     emailTemplateId: "d-fee4c2f687e54d9e97b5068673742efd",
+    triggerConditions: ({
+      stripeEventType,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) => stripeEventType === "invoice.payment_succeeded",
   },
   {
     name: "paymentAuthenticationRequired",
     emailTemplateId: "d-f467666dc085418ba8904d165d5f5a2b",
+    triggerConditions: ({
+      stripeEventType,
+      stripeInvoice,
+      stripeCharge,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeEventType === "invoice.payment_failed" &&
+      stripeInvoice.billing_reason !== "subscription_create" &&
+      stripeCharge &&
+      stripeCharge.failure_code === "authentication_required",
   },
   {
     name: "paymentFailed",
     emailTemplateId: "d-5e885ef0588e46b8b976eeaece239819",
+    triggerConditions: ({
+      stripeEventType,
+      stripeInvoice,
+      stripeCharge,
+    }: {
+      stripeEventType: string;
+      stripeEventPreviousAttributes: any;
+      stripeSubscription: Stripe.Subscription;
+      stripeInvoice: Stripe.Invoice;
+      stripeCharge?: Stripe.Charge;
+      subscription: Subscription;
+      client: Client;
+    }) =>
+      stripeEventType === "invoice.payment_failed" &&
+      stripeInvoice.billing_reason !== "subscription_create" &&
+      stripeCharge &&
+      stripeCharge.failure_code !== "authentication_required",
   },
 ];
 
