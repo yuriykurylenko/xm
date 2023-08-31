@@ -277,23 +277,29 @@ export default async function handler(
       return;
     }
 
-    const eventObject = event.data.object;
+    const eventObject = event.data.object as any;
+    const previousAttributes = event.data.previous_attributes as any;
 
     let clientSubscription;
+    let stripeSubscription;
+    let stripeCharge;
+    let stripeInvoice;
 
-    // @ts-ignore
     switch (eventObject.object) {
       case "subscription_schedule":
       case "subscription":
-        clientSubscription = // @ts-ignore
-          (await fetchSubscriptionById(eventObject.metadata.subscription_id))
-            ?.data;
+        clientSubscription = (
+          await fetchSubscriptionById(eventObject.metadata.subscription_id)
+        )?.data;
         break;
       case "invoice":
-        const stripeSubscription = await stripe.subscriptions.retrieve(
-          // @ts-ignore
+        stripeInvoice = eventObject;
+        stripeSubscription = await stripe.subscriptions.retrieve(
           eventObject.subscription
         );
+        stripeCharge = eventObject.charge
+          ? await stripe.charges.retrieve(eventObject.charge as string)
+          : null;
         clientSubscription = (
           await fetchSubscriptionById(
             stripeSubscription.metadata.subscription_id
@@ -311,6 +317,197 @@ export default async function handler(
     const { data: coach } = await fetchCoachByClientId(
       clientSubscription?.client_id
     );
+
+    const events = [];
+
+    if (clientSubscription && client && coach) {
+      if (
+        event.type === "subscription_schedule.created" &&
+        eventObject.metadata?.updated
+      ) {
+        events.push({
+          name: "clientTermsChanged",
+          data: {
+            stripeSubscriptionId: eventObject.id,
+          },
+        });
+      }
+
+      if (
+        event.type === "subscription_schedule.created" &&
+        !eventObject.metadata?.updated
+      ) {
+        events.push({
+          name: "clientStartScheduled",
+          data: {
+            stripeSubscriptionId: eventObject.id,
+          },
+        });
+      }
+
+      if (
+        event.type === "subscription_schedule.canceled" &&
+        !clientSubscription.archived_at &&
+        clientSubscription.start_date &&
+        new Date(clientSubscription.start_date) >= new Date()
+      ) {
+        events.push({
+          name: "clientStartCanceled",
+        });
+      }
+
+      if (
+        eventObject.status === "active" &&
+        (event.type === "customer.subscription.created" ||
+          (event.type === "customer.subscription.updated" &&
+            previousAttributes?.status))
+      ) {
+        events.push({
+          name: "clientStarted",
+          data: {
+            start_date: new Date(eventObject.start_date * 1000),
+            current_period_end_date: new Date(
+              eventObject.current_period_end * 1000
+            ),
+            stripe_subscription_id: eventObject.id,
+            status: eventObject.status,
+          },
+        });
+      }
+
+      if (
+        eventObject.status === "active" &&
+        client.user_id &&
+        (event.type === "customer.subscription.created" ||
+          (event.type === "customer.subscription.updated" &&
+            previousAttributes?.status))
+      ) {
+        events.push({
+          name: "clientPlatformAccessRestored",
+        });
+      }
+
+      if (
+        eventObject.status === "active" &&
+        !client.user_id &&
+        (event.type === "customer.subscription.created" ||
+          (event.type === "customer.subscription.updated" &&
+            previousAttributes?.status))
+      ) {
+        events.push({
+          name: "clientPlatformAccessGranted",
+        });
+      }
+
+      if (
+        event.type === "customer.subscription.updated" &&
+        eventObject.current_period_end &&
+        eventObject.cancel_at_period_end
+      ) {
+        events.push({
+          name: "clientSubscriptionCancellationScheduled",
+          data: {
+            status: eventObject.status,
+            end_date: new Date(eventObject.current_period_end * 1000),
+          },
+        });
+      }
+
+      if (
+        event.type === "customer.subscription.updated" &&
+        (previousAttributes?.plan?.amount ||
+          previousAttributes?.plan?.currency) &&
+        !previousAttributes.cancel_at_period_end
+      ) {
+        events.push({
+          name: "clientPricingChanged",
+        });
+      }
+
+      if (
+        event.type === "customer.subscription.updated" &&
+        previousAttributes.cancel_at_period_end
+      ) {
+        events.push({
+          name: "clientSubscriptionRenewed",
+          data: {
+            status: eventObject.status,
+            end_date: null,
+          },
+        });
+      }
+
+      if (event.type === "customer.subscription.deleted") {
+        events.push({
+          name: "clientSubscriptionCancelled",
+          data: {
+            status: eventObject.status,
+            end_date: eventObject.canceled_at
+              ? new Date((eventObject.canceled_at as number) * 1000)
+              : null,
+          },
+        });
+      }
+
+      if (event.type === "invoice.created" && stripeSubscription) {
+        events.push({
+          name: "clientSubscriptionAutoRenewed",
+          data: {
+            current_period_end_date: new Date(
+              stripeSubscription.current_period_end * 1000
+            ),
+          },
+        });
+      }
+
+      if (event.type === "invoice.payment_succeeded") {
+        events.push({
+          name: "paymentSucceeded",
+          data: {
+            invoice_number: eventObject.number,
+            amount: (eventObject.amount_paid || eventObject.amount_due) / 100,
+            currency: eventObject.currency.toUpperCase(),
+            hosted_invoice_url: eventObject.hosted_invoice_url,
+          },
+        });
+      }
+
+      if (
+        event.type === "invoice.payment_failed" &&
+        stripeInvoice.billing_reason !== "subscription_create" &&
+        stripeCharge &&
+        stripeCharge.failure_code === "authentication_required"
+      ) {
+        events.push({
+          name: "paymentAuthenticationRequired",
+          data: {
+            invoice_number: eventObject.number,
+            amount: (eventObject.amount_paid || eventObject.amount_due) / 100,
+            currency: eventObject.currency.toUpperCase(),
+            hosted_invoice_url: eventObject.hosted_invoice_url,
+          },
+        });
+      }
+
+      if (
+        event.type === "invoice.payment_failed" &&
+        stripeInvoice.billing_reason !== "subscription_create" &&
+        (!stripeCharge ||
+          stripeCharge.failure_code !== "authentication_required")
+      ) {
+        events.push({
+          name: "paymentFailed",
+          data: {
+            invoice_number: eventObject.number,
+            amount: (eventObject.amount_paid || eventObject.amount_due) / 100,
+            currency: eventObject.currency.toUpperCase(),
+            hosted_invoice_url: eventObject.hosted_invoice_url,
+          },
+        });
+      }
+
+      console.log(events);
+    }
 
     if (clientSubscription && client && coach) {
       switch (event.type) {
