@@ -470,11 +470,11 @@ export default async function handler(
     const buf = await buffer(req);
     const sig = req.headers["stripe-signature"] as string;
 
-    let event: Stripe.Event;
+    let stripeEvent: Stripe.Event;
     sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
     try {
-      event = stripe.webhooks.constructEvent(
+      stripeEvent = stripe.webhooks.constructEvent(
         buf.toString(),
         sig,
         process.env.STRIPE_WEBHOOK_SECRET as string
@@ -488,8 +488,8 @@ export default async function handler(
       return;
     }
 
-    const eventObject = event.data.object as any;
-    const previousAttributes = event.data.previous_attributes as any;
+    const eventObject = stripeEvent.data.object as any;
+    const previousAttributes = stripeEvent.data.previous_attributes as any;
 
     const stripeSubscription = [
       "subscription",
@@ -523,151 +523,151 @@ export default async function handler(
       clientSubscription?.client_id
     );
 
-    const events = [];
+    // const events = [];
 
     if (clientSubscription && client && coach) {
-      if (
-        event.type === "subscription_schedule.created" &&
-        stripeSubscription.metadata?.updated
-      ) {
-        events.push({
-          name: "clientTermsChanged",
-          data: {
-            stripeSubscriptionId: stripeSubscription.id,
-          },
-        });
-      }
+      // if (
+      //   event.type === "subscription_schedule.created" &&
+      //   stripeSubscription.metadata?.updated
+      // ) {
+      //   events.push({
+      //     name: "clientTermsChanged",
+      //     data: {
+      //       stripeSubscriptionId: stripeSubscription.id,
+      //     },
+      //   });
+      // }
 
-      if (
-        event.type === "subscription_schedule.created" &&
-        !stripeSubscription.metadata?.updated
-      ) {
-        events.push({
-          name: "clientStartScheduled",
-          data: {
-            stripeSubscriptionId: stripeSubscription.id,
-          },
-        });
-      }
+      // if (
+      //   event.type === "subscription_schedule.created" &&
+      //   !stripeSubscription.metadata?.updated
+      // ) {
+      //   events.push({
+      //     name: "clientStartScheduled",
+      //     data: {
+      //       stripeSubscriptionId: stripeSubscription.id,
+      //     },
+      //   });
+      // }
 
-      if (
-        event.type === "subscription_schedule.canceled" &&
-        !clientSubscription.archived_at &&
-        clientSubscription.start_date &&
-        new Date(clientSubscription.start_date) >= new Date()
-      ) {
-        events.push({
-          name: "clientStartCanceled",
-        });
-      }
+      // if (
+      //   event.type === "subscription_schedule.canceled" &&
+      //   !clientSubscription.archived_at &&
+      //   clientSubscription.start_date &&
+      //   new Date(clientSubscription.start_date) >= new Date()
+      // ) {
+      //   events.push({
+      //     name: "clientStartCanceled",
+      //   });
+      // }
 
-      if (
-        stripeSubscription.status === "active" &&
-        (event.type === "customer.subscription.created" ||
-          (event.type === "customer.subscription.updated" &&
-            previousAttributes?.status))
-      ) {
-        events.push({
-          name: "clientStarted",
-        });
-      }
+      // if (
+      //   stripeSubscription.status === "active" &&
+      //   (event.type === "customer.subscription.created" ||
+      //     (event.type === "customer.subscription.updated" &&
+      //       previousAttributes?.status))
+      // ) {
+      //   events.push({
+      //     name: "clientStarted",
+      //   });
+      // }
 
-      if (
-        stripeSubscription.status === "active" &&
-        client.user_id &&
-        (event.type === "customer.subscription.created" ||
-          (event.type === "customer.subscription.updated" &&
-            previousAttributes?.status))
-      ) {
-        events.push({
-          name: "clientPlatformAccessRestored",
-        });
-      }
+      // if (
+      //   stripeSubscription.status === "active" &&
+      //   client.user_id &&
+      //   (event.type === "customer.subscription.created" ||
+      //     (event.type === "customer.subscription.updated" &&
+      //       previousAttributes?.status))
+      // ) {
+      //   events.push({
+      //     name: "clientPlatformAccessRestored",
+      //   });
+      // }
 
-      if (
-        stripeSubscription.status === "active" &&
-        !client.user_id &&
-        (event.type === "customer.subscription.created" ||
-          (event.type === "customer.subscription.updated" &&
-            previousAttributes?.status))
-      ) {
-        events.push({
-          name: "clientPlatformAccessGranted",
-        });
-      }
+      // if (
+      //   stripeSubscription.status === "active" &&
+      //   !client.user_id &&
+      //   (event.type === "customer.subscription.created" ||
+      //     (event.type === "customer.subscription.updated" &&
+      //       previousAttributes?.status))
+      // ) {
+      //   events.push({
+      //     name: "clientPlatformAccessGranted",
+      //   });
+      // }
 
-      if (
-        event.type === "customer.subscription.updated" &&
-        stripeSubscription.current_period_end &&
-        stripeSubscription.cancel_at_period_end
-      ) {
-        events.push({
-          name: "clientSubscriptionCancellationScheduled",
-        });
-      }
+      // if (
+      //   event.type === "customer.subscription.updated" &&
+      //   stripeSubscription.current_period_end &&
+      //   stripeSubscription.cancel_at_period_end
+      // ) {
+      //   events.push({
+      //     name: "clientSubscriptionCancellationScheduled",
+      //   });
+      // }
 
-      if (
-        event.type === "customer.subscription.updated" &&
-        (previousAttributes?.plan?.amount ||
-          previousAttributes?.plan?.currency) &&
-        !previousAttributes.cancel_at_period_end
-      ) {
-        events.push({
-          name: "clientPricingChanged",
-        });
-      }
+      // if (
+      //   event.type === "customer.subscription.updated" &&
+      //   (previousAttributes?.plan?.amount ||
+      //     previousAttributes?.plan?.currency) &&
+      //   !previousAttributes.cancel_at_period_end
+      // ) {
+      //   events.push({
+      //     name: "clientPricingChanged",
+      //   });
+      // }
 
-      if (
-        event.type === "customer.subscription.updated" &&
-        previousAttributes.cancel_at_period_end
-      ) {
-        events.push({
-          name: "clientSubscriptionRenewed",
-        });
-      }
+      // if (
+      //   event.type === "customer.subscription.updated" &&
+      //   previousAttributes.cancel_at_period_end
+      // ) {
+      //   events.push({
+      //     name: "clientSubscriptionRenewed",
+      //   });
+      // }
 
-      if (
-        event.type === "customer.subscription.deleted" &&
-        stripeSubscription
-      ) {
-        events.push({
-          name: "clientSubscriptionCancelled",
-        });
-      }
+      // if (
+      //   event.type === "customer.subscription.deleted" &&
+      //   stripeSubscription
+      // ) {
+      //   events.push({
+      //     name: "clientSubscriptionCancelled",
+      //   });
+      // }
 
-      if (event.type === "invoice.created" && stripeSubscription) {
-        events.push({
-          name: "clientSubscriptionAutoRenewed",
-        });
-      }
+      // if (event.type === "invoice.created" && stripeSubscription) {
+      //   events.push({
+      //     name: "clientSubscriptionAutoRenewed",
+      //   });
+      // }
 
-      if (event.type === "invoice.payment_succeeded") {
-        events.push({
-          name: "paymentSucceeded",
-        });
-      }
+      // if (event.type === "invoice.payment_succeeded") {
+      //   events.push({
+      //     name: "paymentSucceeded",
+      //   });
+      // }
 
-      if (
-        event.type === "invoice.payment_failed" &&
-        stripeInvoice.billing_reason !== "subscription_create" &&
-        stripeCharge &&
-        stripeCharge.failure_code === "authentication_required"
-      ) {
-        events.push({
-          name: "paymentAuthenticationRequired",
-        });
-      }
+      // if (
+      //   event.type === "invoice.payment_failed" &&
+      //   stripeInvoice.billing_reason !== "subscription_create" &&
+      //   stripeCharge &&
+      //   stripeCharge.failure_code === "authentication_required"
+      // ) {
+      //   events.push({
+      //     name: "paymentAuthenticationRequired",
+      //   });
+      // }
 
-      if (
-        event.type === "invoice.payment_failed" &&
-        stripeInvoice.billing_reason !== "subscription_create" &&
-        (!stripeCharge ||
-          stripeCharge.failure_code !== "authentication_required")
-      ) {
-        events.push({
-          name: "paymentFailed",
-        });
-      }
+      // if (
+      //   event.type === "invoice.payment_failed" &&
+      //   stripeInvoice.billing_reason !== "subscription_create" &&
+      //   (!stripeCharge ||
+      //     stripeCharge.failure_code !== "authentication_required")
+      // ) {
+      //   events.push({
+      //     name: "paymentFailed",
+      //   });
+      // }
 
       const eventData = {
         stripeSubscriptionId: stripeSubscription.id,
@@ -688,16 +688,39 @@ export default async function handler(
         hosted_invoice_url: stripeInvoice.hosted_invoice_url,
       };
 
+      console.log(events);
+
       for (const event of events) {
-        await triggerEvent(
-          event.name,
-          {
+        console.log({
+          stripeEventType: stripeEvent.type,
+          stripeEventPreviousAttributes: previousAttributes,
+          stripeSubscription,
+          stripeInvoice,
+          stripeCharge,
+          subscription: clientSubscription as Subscription,
+          client: client as Client,
+        });
+        if (
+          event.triggerConditions({
+            stripeEventType: eventObject.type,
+            stripeEventPreviousAttributes: previousAttributes,
+            stripeSubscription,
+            stripeInvoice,
+            stripeCharge,
             subscription: clientSubscription as Subscription,
             client: client as Client,
-            coach: coach as Coach,
-          },
-          eventData
-        );
+          })
+        ) {
+          await triggerEvent(
+            event.name,
+            {
+              subscription: clientSubscription as Subscription,
+              client: client as Client,
+              coach: coach as Coach,
+            },
+            eventData
+          );
+        }
       }
     }
 
