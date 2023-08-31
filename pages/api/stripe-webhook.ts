@@ -288,6 +288,7 @@ export default async function handler(
     switch (eventObject.object) {
       case "subscription_schedule":
       case "subscription":
+        stripeSubscription = eventObject;
         clientSubscription = (
           await fetchSubscriptionById(eventObject.metadata.subscription_id)
         )?.data;
@@ -323,24 +324,24 @@ export default async function handler(
     if (clientSubscription && client && coach) {
       if (
         event.type === "subscription_schedule.created" &&
-        eventObject.metadata?.updated
+        stripeSubscription.metadata?.updated
       ) {
         events.push({
           name: "clientTermsChanged",
           data: {
-            stripeSubscriptionId: eventObject.id,
+            stripeSubscriptionId: stripeSubscription.id,
           },
         });
       }
 
       if (
         event.type === "subscription_schedule.created" &&
-        !eventObject.metadata?.updated
+        !stripeSubscription.metadata?.updated
       ) {
         events.push({
           name: "clientStartScheduled",
           data: {
-            stripeSubscriptionId: eventObject.id,
+            stripeSubscriptionId: stripeSubscription.id,
           },
         });
       }
@@ -357,7 +358,7 @@ export default async function handler(
       }
 
       if (
-        eventObject.status === "active" &&
+        stripeSubscription.status === "active" &&
         (event.type === "customer.subscription.created" ||
           (event.type === "customer.subscription.updated" &&
             previousAttributes?.status))
@@ -365,18 +366,18 @@ export default async function handler(
         events.push({
           name: "clientStarted",
           data: {
-            start_date: new Date(eventObject.start_date * 1000),
+            start_date: new Date(stripeSubscription.start_date * 1000),
             current_period_end_date: new Date(
-              eventObject.current_period_end * 1000
+              stripeSubscription.current_period_end * 1000
             ),
-            stripe_subscription_id: eventObject.id,
-            status: eventObject.status,
+            stripe_subscription_id: stripeSubscription.id,
+            status: stripeSubscription.status,
           },
         });
       }
 
       if (
-        eventObject.status === "active" &&
+        stripeSubscription.status === "active" &&
         client.user_id &&
         (event.type === "customer.subscription.created" ||
           (event.type === "customer.subscription.updated" &&
@@ -388,7 +389,7 @@ export default async function handler(
       }
 
       if (
-        eventObject.status === "active" &&
+        stripeSubscription.status === "active" &&
         !client.user_id &&
         (event.type === "customer.subscription.created" ||
           (event.type === "customer.subscription.updated" &&
@@ -401,14 +402,14 @@ export default async function handler(
 
       if (
         event.type === "customer.subscription.updated" &&
-        eventObject.current_period_end &&
-        eventObject.cancel_at_period_end
+        stripeSubscription.current_period_end &&
+        stripeSubscription.cancel_at_period_end
       ) {
         events.push({
           name: "clientSubscriptionCancellationScheduled",
           data: {
-            status: eventObject.status,
-            end_date: new Date(eventObject.current_period_end * 1000),
+            status: stripeSubscription.status,
+            end_date: new Date(stripeSubscription.current_period_end * 1000),
           },
         });
       }
@@ -431,19 +432,22 @@ export default async function handler(
         events.push({
           name: "clientSubscriptionRenewed",
           data: {
-            status: eventObject.status,
+            status: stripeSubscription.status,
             end_date: null,
           },
         });
       }
 
-      if (event.type === "customer.subscription.deleted") {
+      if (
+        event.type === "customer.subscription.deleted" &&
+        stripeSubscription
+      ) {
         events.push({
           name: "clientSubscriptionCancelled",
           data: {
-            status: eventObject.status,
-            end_date: eventObject.canceled_at
-              ? new Date((eventObject.canceled_at as number) * 1000)
+            status: stripeSubscription.status,
+            end_date: stripeSubscription.canceled_at
+              ? new Date((stripeSubscription.canceled_at as number) * 1000)
               : null,
           },
         });
@@ -464,10 +468,11 @@ export default async function handler(
         events.push({
           name: "paymentSucceeded",
           data: {
-            invoice_number: eventObject.number,
-            amount: (eventObject.amount_paid || eventObject.amount_due) / 100,
-            currency: eventObject.currency.toUpperCase(),
-            hosted_invoice_url: eventObject.hosted_invoice_url,
+            invoice_number: stripeInvoice.number,
+            amount:
+              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+            currency: stripeInvoice.currency.toUpperCase(),
+            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
           },
         });
       }
@@ -481,10 +486,11 @@ export default async function handler(
         events.push({
           name: "paymentAuthenticationRequired",
           data: {
-            invoice_number: eventObject.number,
-            amount: (eventObject.amount_paid || eventObject.amount_due) / 100,
-            currency: eventObject.currency.toUpperCase(),
-            hosted_invoice_url: eventObject.hosted_invoice_url,
+            invoice_number: stripeInvoice.number,
+            amount:
+              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+            currency: stripeInvoice.currency.toUpperCase(),
+            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
           },
         });
       }
@@ -498,10 +504,11 @@ export default async function handler(
         events.push({
           name: "paymentFailed",
           data: {
-            invoice_number: eventObject.number,
-            amount: (eventObject.amount_paid || eventObject.amount_due) / 100,
-            currency: eventObject.currency.toUpperCase(),
-            hosted_invoice_url: eventObject.hosted_invoice_url,
+            invoice_number: stripeInvoice.number,
+            amount:
+              (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100,
+            currency: stripeInvoice.currency.toUpperCase(),
+            hosted_invoice_url: stripeInvoice.hosted_invoice_url,
           },
         });
       }
