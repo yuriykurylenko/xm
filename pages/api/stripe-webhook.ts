@@ -86,17 +86,17 @@ export default async function handler(
         stripe_subscription_id: stripeSubscription.id,
         status: stripeSubscription.status,
         start_date: new Date(stripeSubscription.start_date * 1000),
-        end_date: stripeSubscription.canceled_at
-          ? new Date((stripeSubscription.canceled_at as number) * 1000)
-          : stripeSubscription.cancel_at_period_end &&
-            stripeSubscription.current_period_end
-          ? new Date(stripeSubscription.current_period_end * 1000)
-          : null,
+        end_date:
+          stripeSubscription.cancel_at_period_end &&
+          stripeSubscription.current_period_end
+            ? new Date(stripeSubscription.current_period_end * 1000)
+            : stripeSubscription.canceled_at
+            ? new Date((stripeSubscription.canceled_at as number) * 1000)
+            : null,
         current_period_end_date: new Date(
           stripeSubscription.current_period_end * 1000
         ),
         invoice_number: stripeInvoice?.number,
-        // Bug with price change email
         amount:
           eventObject.object === "invoice" && stripeInvoice
             ? (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
