@@ -358,39 +358,38 @@ export default async function handler(
 
         case "customer.subscription.created":
           const subscription = event.data.object as Stripe.Subscription;
-          const latestInvoice = await stripe.invoices.retrieve(
-            subscription.latest_invoice as string
-          );
 
-          await triggerEvent(
-            "clientStarted",
-            {
-              subscription: clientSubscription as Subscription,
-              client: client as Client,
-              coach: coach as Coach,
-            },
-            {
-              start_date: new Date(subscription.start_date * 1000),
-              current_period_end_date: new Date(
-                subscription.current_period_end * 1000
-              ),
-              stripe_subscription_id: subscription.id,
-              status: subscription.status,
+          if (subscription.status === "active") {
+            await triggerEvent(
+              "clientStarted",
+              {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
+              {
+                start_date: new Date(subscription.start_date * 1000),
+                current_period_end_date: new Date(
+                  subscription.current_period_end * 1000
+                ),
+                stripe_subscription_id: subscription.id,
+                status: subscription.status,
+              }
+            );
+
+            if (client.user_id) {
+              await triggerEvent("clientPlatformAccessRestored", {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              });
+            } else {
+              await triggerEvent("clientPlatformAccessGranted", {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              });
             }
-          );
-
-          if (client.user_id) {
-            await triggerEvent("clientPlatformAccessRestored", {
-              subscription: clientSubscription as Subscription,
-              client: client as Client,
-              coach: coach as Coach,
-            });
-          } else {
-            await triggerEvent("clientPlatformAccessGranted", {
-              subscription: clientSubscription as Subscription,
-              client: client as Client,
-              coach: coach as Coach,
-            });
           }
           break;
 
@@ -408,6 +407,29 @@ export default async function handler(
 
           const subscriptionRenewed = (event.data.previous_attributes as any)
             .cancel_at_period_end;
+
+          const subscriptionActivated =
+            updatedSubscription.status === "active" &&
+            (event.data.previous_attributes as any)?.status;
+
+          if (subscriptionActivated) {
+            await triggerEvent(
+              "clientStarted",
+              {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
+              {
+                start_date: new Date(updatedSubscription.start_date * 1000),
+                current_period_end_date: new Date(
+                  updatedSubscription.current_period_end * 1000
+                ),
+                stripe_subscription_id: updatedSubscription.id,
+                status: updatedSubscription.status,
+              }
+            );
+          }
 
           if (subscriptionCancellationScheduled) {
             await triggerEvent(
