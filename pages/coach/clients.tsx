@@ -165,7 +165,7 @@ const Clients = ({ user }: { user: Coach }) => {
     {
       name: "revokeAccess",
       title: "Revoke platform access",
-      titleBulk: "Revoke platform access",
+      titleBulk: "Revoke access",
       icon: faPowerOff,
       show: (client: Client) =>
         !["starting", "client"].includes(client.status as string) &&
