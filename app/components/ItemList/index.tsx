@@ -140,6 +140,7 @@ const ItemList = <T extends { id: UUID | string }>({
     }
     setFilterStatus(status);
     setPage(1);
+    setSelectedItems([]);
   };
 
   const updateFilterCounts = async () => {
