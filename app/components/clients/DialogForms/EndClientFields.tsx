@@ -11,7 +11,7 @@ export const EndClientFields: React.FC = () => (
     <Input
       name="accessAfterEndDate"
       type="checkbox"
-      placeholder="Allow platform access after the client stops"
+      placeholder="Allow platform access after the end of the engagement"
     />
   </>
 );

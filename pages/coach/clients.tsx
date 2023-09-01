@@ -245,9 +245,9 @@ const Clients = ({ user }: { user: Coach }) => {
       dialogText: "Are you sure you would like to end {{full_name}}?",
       dialogTextBulk: "Are you sure you would like to end {{n}} clients?",
       dialogInfoText:
-        "{{full_name}} will stop at the end of their monthly billing cycle.",
+        "If you chose not to end the subscription immediately, {{full_name}} will stop at the end of their monthly billing cycle.",
       dialogInfoTextBulk:
-        "Your clients will stop at the end of their respective monthly billing cycles.",
+        "If you chose not to end the subscriptions immediately, your clients will stop at the end of their respective monthly billing cycles.",
     },
     {
       name: "archive",
