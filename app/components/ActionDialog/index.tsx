@@ -67,7 +67,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
       >
         <FontAwesomeIcon icon={faTimes} />
       </button>
-      <PageContainer title={title}>
+      <PageContainer title={title} fullHeight={false}>
         <div>{text && <p className={styles["dialog-text"]}>{text}</p>}</div>
         <div className={styles["dialog-form"]}>
           <Form onSubmit={onConfirm}>
