@@ -71,7 +71,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
         <div>{text && <p className={styles["dialog-text"]}>{text}</p>}</div>
         <div className={styles["dialog-form"]}>
           <Form onSubmit={onConfirm}>
-            <div className={styles["dialog-form-content"]}>{children}</div>
+            <div>{children}</div>
             {infoText && (
               <p className={styles["dialog-info-text"]}>{infoText}</p>
             )}
