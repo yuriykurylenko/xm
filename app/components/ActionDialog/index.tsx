@@ -7,6 +7,8 @@ import BasicButton from "@/app/components/BasicButton";
 import Button from "@/app/components/Form/Button";
 
 import styles from "@/app/components/ActionDialog/styles.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 Modal.setAppElement("#__next");
 
@@ -50,6 +52,21 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
         },
       }}
     >
+      <button
+        onClick={onCancel}
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          background: "transparent",
+          border: "none",
+          fontSize: "1.5em",
+          cursor: "pointer",
+          color: "#aaa",
+        }}
+      >
+        <FontAwesomeIcon icon={faTimes} />
+      </button>
       <PageContainer title={title}>
         <div>{text && <p className={styles["dialog-text"]}>{text}</p>}</div>
         <div className={styles["dialog-form"]}>
