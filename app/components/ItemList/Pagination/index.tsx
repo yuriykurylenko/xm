@@ -17,12 +17,12 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
   return totalPages > 1 ? (
     <div className={styles["pagination-container"]}>
-      <BasicButton onClick={onPrevPage} disabled={currentPage === 1}>
-        Previous
-      </BasicButton>
       <span>
         Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
       </span>
+      <BasicButton onClick={onPrevPage} disabled={currentPage === 1}>
+        Previous
+      </BasicButton>
       <BasicButton onClick={onNextPage} disabled={currentPage >= totalPages}>
         Next
       </BasicButton>
