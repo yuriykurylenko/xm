@@ -15,7 +15,8 @@ export interface ActionDialogProps {
   onCancel: () => void;
   children?: React.ReactNode;
   title: string;
-  text: string;
+  text?: string;
+  infoText?: string;
 }
 
 const ActionDialog: React.FC<ActionDialogProps> = ({
@@ -24,6 +25,7 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
   children,
   title,
   text,
+  infoText,
 }) => {
   return (
     <Modal
@@ -48,7 +50,8 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
       }}
     >
       <PageContainer title={title}>
-        <p className={styles["dialog-text"]}>{text}</p>
+        {text && <p>{text}</p>}
+        {infoText && <p className={styles["dialog-text"]}>{infoText}</p>}
         <Form onSubmit={onConfirm}>
           <div className={styles["dialog-form-content"]}>{children}</div>
           <div className={styles["buttons-container"]}>

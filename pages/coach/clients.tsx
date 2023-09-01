@@ -73,10 +73,13 @@ const Clients = ({ user }: { user: Coach }) => {
         ClientTermsFormFields({ items, coach: user }),
       dialogTitle: "Send offer to {{full_name}}",
       dialogTitleBulk: "Send offers to {{n}} clients",
+      dialogText: "Please specify the price and start date for {{full_name}}.",
+      dialogTextBulk:
+        "Please specify the price and start date for your clients.",
       dialogInfoText:
         "{{full_name}} will receive an email with the link to subscribe and pay your specified amount monthly.",
       dialogInfoTextBulk:
-        "Your clients  will receive an email with the link to subscribe and pay your specified amount monthly.",
+        "Your clients will receive an email with the link to subscribe and pay your specified amount monthly.",
     },
     {
       name: "changeStartingSubscription",
@@ -89,10 +92,14 @@ const Clients = ({ user }: { user: Coach }) => {
         ClientTermsFormFields({ items, coach: user }),
       dialogTitle: "Change terms for {{full_name}}",
       dialogTitleBulk: "Change terms {{n}} clients",
+      dialogText:
+        "Please specify the new price and start date for {{full_name}}.",
+      dialogTextBulk:
+        "Please specify the new price and start date for your clients.",
       dialogInfoText:
-        "Please specify the new price and start date for {{full_name}}. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
+        "{{full_name}} will receive an email confirming the change of the terms but would not need to add their credit card again.",
       dialogInfoTextBulk:
-        "Please specify the new price and start date for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
+        "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
       name: "changeSubscriptionAmount",
@@ -106,10 +113,12 @@ const Clients = ({ user }: { user: Coach }) => {
         PriceField({ items, coach: user }),
       dialogTitle: "Change price for {{full_name}}",
       dialogTitleBulk: "Change price for {{n}} clients",
+      dialogText: "Please specify the new price for {{full_name}}.",
+      dialogTextBulk: "Please specify the new price for your clients.",
       dialogInfoText:
-        "Please specify the new price for {{full_name}}. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
+        "{{full_name}} will receive an email confirming the change of the terms but would not need to add their credit card again.",
       dialogInfoTextBulk:
-        "Please specify the new price for selected clients. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
+        "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again.",
     },
     {
       name: "renewSubscription",
@@ -123,6 +132,9 @@ const Clients = ({ user }: { user: Coach }) => {
         PriceField({ items, coach: user }),
       dialogTitle: "Renew {{full_name}}'s subscription",
       dialogTitleBulk: "Renew {{n}} clients' subscriptions",
+      dialogText: "Please specify the new price for {{full_name}} if applies.",
+      dialogTextBulk:
+        "Please specify the new price for your clients if applies.",
       dialogInfoText:
         "Your client's subscription will be renewed. You can specify the new price for {{full_name}}. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
       dialogInfoTextBulk:
@@ -140,6 +152,10 @@ const Clients = ({ user }: { user: Coach }) => {
         ClientTermsFormFields({ items, coach: user }),
       dialogTitle: "Send a new offer to {{full_name}}",
       dialogTitleBulk: "Send new offers to {{n}} clients",
+      dialogText:
+        "Please specify the new price and start date for {{full_name}}.",
+      dialogTextBulk:
+        "Please specify the new price and start date for your clients.",
       dialogInfoText:
         "{{full_name}} will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to them will be canceled.",
       dialogInfoTextBulk:
@@ -157,6 +173,9 @@ const Clients = ({ user }: { user: Coach }) => {
         ClientTermsFormFields({ items, coach: user }),
       dialogTitle: "Send a new offer to {{full_name}}",
       dialogTitleBulk: "Send new offers to {{n}} clients",
+      dialogText: "Please specify the price and start date for {{full_name}}.",
+      dialogTextBulk:
+        "Please specify the price and start date for your clients.",
       dialogInfoText:
         "{{full_name}} will receive an email with the link to subscribe and pay your specified amount monthly.",
       dialogInfoTextBulk:
@@ -174,9 +193,9 @@ const Clients = ({ user }: { user: Coach }) => {
       apiOperation: "revoke_access",
       dialogTitle: "Revoke access for {{full_name}}",
       dialogTitleBulk: "Revoke access for {{n}} clients",
-      dialogInfoText:
+      dialogText:
         "Are you sure you would like to revoke platform access for {{full_name}}?",
-      dialogInfoTextBulk:
+      dialogTextBulk:
         "Are you sure you would like to revoke platform access for {{n}} clients?",
     },
     {
@@ -189,9 +208,9 @@ const Clients = ({ user }: { user: Coach }) => {
       onComplete: onCancelClientOfferComplete,
       dialogTitle: "Cancel {{full_name}}'s offer",
       dialogTitleBulk: "Cancel {{n}} clients' offers",
-      dialogInfoText:
+      dialogText:
         "Are you sure you would like to cancel {{full_name}}'s offer?",
-      dialogInfoTextBulk:
+      dialogTextBulk:
         "Are you sure you would like to cancel {{n}} clients' offers?",
     },
     {
@@ -204,9 +223,9 @@ const Clients = ({ user }: { user: Coach }) => {
       onComplete: onCancelClientSubscriptionScheduleComplete,
       dialogTitle: "Cancel {{full_name}}'s start",
       dialogTitleBulk: "Cancel {{n}} clients' start",
-      dialogInfoText:
+      dialogText:
         "Are you sure you would like to cancel {{full_name}}'s start?",
-      dialogInfoTextBulk:
+      dialogTextBulk:
         "Are you sure you would like to cancel {{n}} clients' start?",
     },
     {
@@ -223,10 +242,12 @@ const Clients = ({ user }: { user: Coach }) => {
       DialogForm: () => EndClientFields({}),
       dialogTitle: "End {{full_name}}'s subscription",
       dialogTitleBulk: "End {{n}} clients",
+      dialogText: "Are you sure you would like to end {{full_name}}?",
+      dialogTextBulk: "Are you sure you would like to end {{n}} clients?",
       dialogInfoText:
-        "Are you sure you would like to end {{full_name}}? The client will stop at the end of their monthly billing cycle.",
+        "{{full_name}} will stop at the end of their monthly billing cycle.",
       dialogInfoTextBulk:
-        "Are you sure you would like to end {{n}} clients? Clients will stop at the end of their respective monthly billing cycles.",
+        "Your clients will stop at the end of their respective monthly billing cycles.",
     },
     {
       name: "archive",
@@ -238,9 +259,8 @@ const Clients = ({ user }: { user: Coach }) => {
       apiOperation: "archive",
       dialogTitle: "Archive {{full_name}}",
       dialogTitleBulk: "Archive {{n}} clients",
-      dialogInfoText: "Are you sure you would like to archive {{full_name}}?",
-      dialogInfoTextBulk:
-        "Are you sure you would like to archive {{n}} clients?",
+      dialogText: "Are you sure you would like to archive {{full_name}}?",
+      dialogTextBulk: "Are you sure you would like to archive {{n}} clients?",
     },
   ];
 
