@@ -81,7 +81,7 @@ const Clients = ({ user }: { user: Coach }) => {
     {
       name: "changeStartingSubscription",
       title: "Change client's terms",
-      titleBulk: "Change clients' terms",
+      titleBulk: "Change terms",
       icon: faRotate,
       show: (client: Client) => client.status === "starting",
       apiOperation: "change_terms",
@@ -97,7 +97,7 @@ const Clients = ({ user }: { user: Coach }) => {
     {
       name: "changeSubscriptionAmount",
       title: "Change client's monthly price",
-      titleBulk: "Change clients' monthly price",
+      titleBulk: "Change price",
       icon: faDollarSign,
       show: (client: Client) =>
         client.status === "client" && client.end_date === null,
@@ -114,7 +114,7 @@ const Clients = ({ user }: { user: Coach }) => {
     {
       name: "renewSubscription",
       title: "Renew client's subscription",
-      titleBulk: "Renew clients' subscriptions",
+      titleBulk: "Renew subscriptions",
       icon: faRotate,
       show: (client: Client) =>
         client.status === "client" && client.end_date != null,
@@ -197,7 +197,7 @@ const Clients = ({ user }: { user: Coach }) => {
     {
       name: "cancelSubscriptionSchedule",
       title: "Cancel starting client",
-      titleBulk: "Cancel starting clients",
+      titleBulk: "Cancel start",
       icon: faXmark,
       show: (client: Client) => client.status === "starting",
       apiOperation: "cancel_start",

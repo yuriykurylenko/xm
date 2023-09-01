@@ -12,7 +12,7 @@
   margin-right: 0.8rem !important;
   text-transform: none;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .action-btn:hover {
@@ -30,10 +30,12 @@
 
 .action-buttons-container-full .action-btn {
   padding: 8px;
+  color: #555555;
+  font-size: 13px;
 }
 
 .action-buttons-container-full .action-btn .action-btn-icon {
-  margin-right: 5px;
+  margin-right: 8px;
 }
 
 .action-btn-sendOffer:hover,
