@@ -58,6 +58,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
     onBulkSelect: () => void;
     selectedItems: T[];
     actions: Action<T>[];
+    totalItemsCount: number;
   }>;
   CardComponent: React.ComponentType<{
     item: T;
@@ -274,6 +275,7 @@ const ItemList = <T extends { id: UUID | string }>({
           onSort={handleSort}
           sortColumn={sortColumn}
           sortDirection={sortDirection}
+          totalItemsCount={filterCounts[filterStatus]}
         />
       )}
       {isListLoaded && items ? (
