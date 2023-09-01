@@ -3,14 +3,15 @@
   align-items: center;
   padding: 0 10px;
   background-color: #f0f0f0;
-  font-weight: bold;
+  font-weight: 600;
   border-top: #ddd 1px solid;
   border-bottom: #ddd 1px solid;
   position: sticky;
   top: 44px;
   line-height: 42px;
   height: 42px;
-  font-size: 14px;
+  font-size: 13px;
+  color: #555555;
 }
 
 .header-row-no-padding {
