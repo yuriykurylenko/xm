@@ -10,10 +10,30 @@
   border: none;
   padding: 0;
   margin-right: 0.8rem !important;
+  text-transform: none;
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .action-btn:hover {
   background-color: transparent;
+}
+
+.action-buttons-container-full .action-btn:hover {
+  background-color: #7c9efc;
+  color: #fff;
+}
+
+.action-buttons-container-full {
+  min-width: 500px;
+}
+
+.action-buttons-container-full .action-btn {
+  padding: 8px;
+}
+
+.action-buttons-container-full .action-btn .action-btn-icon {
+  margin-right: 5px;
 }
 
 .action-btn-sendOffer:hover,

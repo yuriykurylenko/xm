@@ -17,14 +17,20 @@ interface Action<T> {
 interface ActionsBarProps<T> {
   actions: Action<T>[];
   selectedItems: T[];
+  showTitles?: boolean;
 }
 
 const ActionsBar = <T extends { id: UUID }>({
   actions,
   selectedItems,
+  showTitles = false,
 }: ActionsBarProps<T>) => {
   return (
-    <div className={styles["action-buttons-container"]}>
+    <div
+      className={`${styles["action-buttons-container"]} ${
+        showTitles ? styles["action-buttons-container-full"] : ""
+      }`}
+    >
       {actions.map(
         (action, index) =>
           selectedItems.every((item) => action.show(item)) && (
@@ -42,7 +48,11 @@ const ActionsBar = <T extends { id: UUID }>({
                   action.handler(selectedItems.map((item) => item.id))
                 }
               >
-                <FontAwesomeIcon icon={action.icon} />
+                <FontAwesomeIcon
+                  icon={action.icon}
+                  className={styles["action-btn-icon"]}
+                />
+                {showTitles ? action.titleBulk : null}
               </BasicButton>
             </span>
           )

@@ -48,6 +48,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             <ActionsBar<Client>
               actions={actions}
               selectedItems={selectedItems}
+              showTitles
             />
           </div>
           <div
