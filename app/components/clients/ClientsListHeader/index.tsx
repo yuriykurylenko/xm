@@ -44,16 +44,16 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
       </div>
       {isBulkSelected ? (
         <>
-          <div
-            className={`${styles["header-column"]} ${styles["header-column-selected"]}`}
-          >
-            {`${selectedItems.length} selected`}
-          </div>
           <div className={styles["header-column"]}>
             <ActionsBar<Client>
               actions={actions}
               selectedItems={selectedItems}
             />
+          </div>
+          <div
+            className={`${styles["header-column"]} ${styles["header-column-selected"]}`}
+          >
+            {`${selectedItems.length} selected`}
           </div>
         </>
       ) : (
