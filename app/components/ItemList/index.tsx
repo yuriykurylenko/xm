@@ -27,8 +27,8 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   DialogForm?: React.ComponentType<{ items: T[] }>;
   dialogTitle: string;
   dialogTitleBulk: string;
-  dialogText: string;
-  dialogTextBulk: string;
+  dialogInfoText: string;
+  dialogInfoTextBulk: string;
 };
 
 interface ItemListProps<T extends { id: UUID | string }> {
@@ -307,9 +307,11 @@ const ItemList = <T extends { id: UUID | string }>({
               const dialogTitleBulkTemplate = Handlebars.compile(
                 action.dialogTitleBulk
               );
-              const dialogTextTemplate = Handlebars.compile(action.dialogText);
-              const dialogTextBulkTemplate = Handlebars.compile(
-                action.dialogTextBulk
+              const dialogInfoTextTemplate = Handlebars.compile(
+                action.dialogInfoText
+              );
+              const dialogInfoTextBulkTemplate = Handlebars.compile(
+                action.dialogInfoTextBulk
               );
 
               return (
@@ -327,8 +329,10 @@ const ItemList = <T extends { id: UUID | string }>({
                     }
                     text={
                       selectedItems.length === 1
-                        ? dialogTextTemplate(selectedItems[0])
-                        : dialogTextBulkTemplate({ n: selectedItems.length })
+                        ? dialogInfoTextTemplate(selectedItems[0])
+                        : dialogInfoTextBulkTemplate({
+                            n: selectedItems.length,
+                          })
                     }
                   >
                     {action.DialogForm && (
