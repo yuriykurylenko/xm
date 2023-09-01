@@ -39,13 +39,14 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
         content: {
           maxWidth: "510px",
           height: "fit-content",
-          margin: "auto auto",
+          margin: "auto",
           backgroundColor: "transparent",
           border: "none",
           borderRadius: "4px",
           boxShadow: "0 0 10px rgba(0, 0, 0, 0.05)",
           display: "flex",
           flexDirection: "column",
+          padding: "0 20px",
         },
       }}
     >
