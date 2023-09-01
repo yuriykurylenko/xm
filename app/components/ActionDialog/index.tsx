@@ -50,21 +50,28 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
       }}
     >
       <PageContainer title={title}>
-        {text && <p>{text}</p>}
-        {infoText && <p className={styles["dialog-text"]}>{infoText}</p>}
-        <Form onSubmit={onConfirm}>
-          <div className={styles["dialog-form-content"]}>{children}</div>
-          <div className={styles["buttons-container"]}>
-            <div className={styles["button-container"]}>
-              <BasicButton className={styles["cancel-btn"]} onClick={onCancel}>
-                Cancel
-              </BasicButton>
+        <div>
+          {text && <p className={styles["dialog-text"]}>{text}</p>}
+          {infoText && <p className={styles["dialog-info-text"]}>{infoText}</p>}
+        </div>
+        <div className={styles["dialog-form"]}>
+          <Form onSubmit={onConfirm}>
+            <div className={styles["dialog-form-content"]}>{children}</div>
+            <div className={styles["buttons-container"]}>
+              <div className={styles["button-container"]}>
+                <BasicButton
+                  className={styles["cancel-btn"]}
+                  onClick={onCancel}
+                >
+                  Cancel
+                </BasicButton>
+              </div>
+              <div className={styles["button-container"]}>
+                <Button type="submit">Confirm</Button>
+              </div>
             </div>
-            <div className={styles["button-container"]}>
-              <Button type="submit">Confirm</Button>
-            </div>
-          </div>
-        </Form>
+          </Form>
+        </div>
       </PageContainer>
     </Modal>
   );

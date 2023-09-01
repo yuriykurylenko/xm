@@ -11,7 +11,7 @@
   background-color: #aaa;
 }
 
-.dialog-text {
+.dialog-info-text {
   margin-top: 0;
   font-size: 14px;
   background-color: #f7f8fe;
@@ -20,4 +20,14 @@
   border: #3c67b2 1.5px solid;
   border-radius: 4px;
   line-height: 20px;
+}
+
+.dialog-text {
+  margin-top: 0;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.dialog-form {
+  margin-top: 25px;
 }
