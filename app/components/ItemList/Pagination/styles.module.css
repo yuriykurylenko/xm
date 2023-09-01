@@ -11,10 +11,9 @@
 }
 
 .pagination-container button {
-  min-width: 100px;
   width: auto;
   font-size: 12px;
-  padding: 10px 8px;
+  padding: 8px 10px;
   margin-left: 10px;
   height: 31.5px;
   line-height: 0;
