@@ -51,13 +51,13 @@ const ActionDialog: React.FC<ActionDialogProps> = ({
       }}
     >
       <PageContainer title={title}>
-        <div>
-          {text && <p className={styles["dialog-text"]}>{text}</p>}
-          {infoText && <p className={styles["dialog-info-text"]}>{infoText}</p>}
-        </div>
+        <div>{text && <p className={styles["dialog-text"]}>{text}</p>}</div>
         <div className={styles["dialog-form"]}>
           <Form onSubmit={onConfirm}>
             <div className={styles["dialog-form-content"]}>{children}</div>
+            {infoText && (
+              <p className={styles["dialog-info-text"]}>{infoText}</p>
+            )}
             <div className={styles["buttons-container"]}>
               <div className={styles["button-container"]}>
                 <BasicButton
