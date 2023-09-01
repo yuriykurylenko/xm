@@ -36,7 +36,11 @@ const ActionsBar = <T extends { id: UUID }>({
           selectedItems.every((item) => action.show(item)) && (
             <span
               title={
-                selectedItems.length === 1 ? action.title : action.titleBulk
+                showTitles
+                  ? undefined
+                  : selectedItems.length === 1
+                  ? action.title
+                  : action.titleBulk
               }
               key={index}
             >
