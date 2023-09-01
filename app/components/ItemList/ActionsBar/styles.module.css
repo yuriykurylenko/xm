@@ -42,7 +42,8 @@
 .action-btn-resendOffer:hover,
 .action-btn-changeStartingSubscription:hover,
 .action-btn-changeSubscriptionAmount:hover,
-.action-btn-renewSubscription:hover {
+.action-btn-renewSubscription:hover,
+.action-btn-sendOfferToEndedClient:hover {
   color: #56d779;
 }
 
