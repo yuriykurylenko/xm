@@ -3,7 +3,6 @@ import styles from "@/app/components/ItemList/styles.module.css";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/ItemList/Pagination";
 import ActionDialog from "../ActionDialog";
-import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import ItemSkeleton from "@/app/components/ItemList/ItemSkeleton";
 import { UUID } from "crypto";
 
@@ -11,28 +10,11 @@ import Handlebars from "handlebars";
 import axios from "axios";
 import useAuth from "@/app/hooks/useAuth";
 import { Client, Coach } from "@/types/user";
+import { Action } from "@/types/action";
 
 type FilterOption = {
   value: string;
   name: string;
-};
-
-export type Action<T extends { id: UUID | string }, D = any, U = any> = {
-  name: string;
-  title: string;
-  titleBulk: string;
-  icon: IconDefinition;
-  show: (item: T) => boolean;
-  handler?: (itemId: UUID, data: D) => Promise<U>;
-  apiOperation?: string;
-  onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
-  DialogForm?: React.ComponentType<{ items: T[]; user: Client | Coach }>;
-  dialogTitle: string;
-  dialogTitleBulk: string;
-  dialogText?: string;
-  dialogTextBulk?: string;
-  dialogInfoText?: string;
-  dialogInfoTextBulk?: string;
 };
 
 interface ItemListProps<T extends { id: UUID | string }> {

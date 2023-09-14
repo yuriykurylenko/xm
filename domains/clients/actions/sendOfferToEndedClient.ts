@@ -1,4 +1,4 @@
-import { Action } from "@/app/components/ItemList";
+import { Action } from "@/types/action";
 import { Client, Coach } from "@/types/user";
 
 import { ClientTermsFormFields } from "@/domains/clients/components/DialogForms/TermsFields";

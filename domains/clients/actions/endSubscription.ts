@@ -1,4 +1,4 @@
-import { Action } from "@/app/components/ItemList";
+import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 
 import { EndClientFields } from "@/domains/clients/components/DialogForms/EndSubscriptionFields";

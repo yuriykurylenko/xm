@@ -3,7 +3,6 @@ import styles from "@/domains/clients/components/ListHeader/styles.module.css";
 import ActionsBar from "@/app/components/ItemList/ActionsBar";
 import { Client } from "@/types/user";
 import SortIcon from "@/app/components/SortIcon";
-import { Action } from "@/app/components/ItemList";
 
 interface ClientsListHeaderProps {
   onBulkSelect: () => void;
