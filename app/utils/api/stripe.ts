@@ -61,7 +61,7 @@ const createStripeSubscription = ({
   trialPeriodDays?: number;
   startDate?: Date;
 }) =>
-  axios.post("/api/subscription", {
+  axios.post("/api/stripe/subscription", {
     customerId,
     paymentMethodId,
     quantity,
