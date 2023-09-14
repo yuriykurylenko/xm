@@ -1,4 +1,4 @@
-import { stripe } from "@/app/utils/initStripe";
+import { stripe } from "@/initializers/stripe";
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { createStripeProductForCoach } from "@/app/utils/api/stripe";

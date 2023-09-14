@@ -1,4 +1,4 @@
-import { stripe } from "@/app/utils/initStripe";
+import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

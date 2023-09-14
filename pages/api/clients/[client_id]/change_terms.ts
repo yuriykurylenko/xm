@@ -2,7 +2,7 @@ import { changeClientTerms } from "@/app/utils/api";
 import { UUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { stripe } from "@/app/utils/initStripe";
+import { stripe } from "@/initializers/stripe";
 
 export default async function handler(
   req: NextApiRequest,

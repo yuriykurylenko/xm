@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
-import { stripe } from "@/app/utils/initStripe";
+import { stripe } from "@/initializers/stripe";
 import { buffer } from "micro";
 import {
   fetchClientById,

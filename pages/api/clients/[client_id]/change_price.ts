@@ -1,7 +1,7 @@
 import { UUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { stripe } from "@/app/utils/initStripe";
+import { stripe } from "@/initializers/stripe";
 import { changeClientPrice } from "@/app/utils/api";
 
 export default async function handler(
