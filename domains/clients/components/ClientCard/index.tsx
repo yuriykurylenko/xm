@@ -1,4 +1,4 @@
-import styles from "@/app/components/clients/ClientCard/styles.module.css";
+import styles from "@/domains/clients/components/ClientCard/styles.module.css";
 import { Client } from "@/types/user";
 import { useState } from "react";
 import ActionsBar from "@/app/components/ItemList/ActionsBar";

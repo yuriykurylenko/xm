@@ -5,8 +5,8 @@ import { fetchClientsByCoachId } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 
 import ItemList, { Action } from "@/app/components/ItemList";
-import ClientCard from "@/app/components/clients/ClientCard";
-import EmptyList, { EmptyListProps } from "@/app/components/clients/EmptyList";
+import ClientCard from "@/domains/clients/components/ClientCard";
+import EmptyList, { EmptyListProps } from "@/domains/clients/components/EmptyList";
 import { Coach, Client } from "@/types/user";
 import { UUID } from "crypto";
 
@@ -18,11 +18,11 @@ import {
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import ClientsListHeader from "@/app/components/clients/ClientsListHeader";
+import ClientsListHeader from "@/domains/clients/components/ClientsListHeader";
 import SearchInput from "@/app/components/SearchInput";
-import { ClientTermsFormFields } from "@/app/components/clients/DialogForms/ClientTermsFields";
-import { PriceField } from "@/app/components/clients/DialogForms/PriceField";
-import { EndClientFields } from "@/app/components/clients/DialogForms/EndClientFields";
+import { ClientTermsFormFields } from "@/domains/clients/components/DialogForms/ClientTermsFields";
+import { PriceField } from "@/domains/clients/components/DialogForms/PriceField";
+import { EndClientFields } from "@/domains/clients/components/DialogForms/EndClientFields";
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import ClientCard from "@/app/components/clients/ClientCard";
+import ClientCard from "@/domains/clients/components/ClientCard";
 import { Client } from "@/types/user";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
@@ -28,7 +28,6 @@ describe("ClientCard", () => {
   it("renders client name and status", () => {
     render(
       <ClientCard
-        filterStatus="lead"
         item={client}
         selectedItems={[]}
         onSelect={() => {}}
@@ -49,7 +48,6 @@ describe("ClientCard", () => {
 
     render(
       <ClientCard
-        filterStatus="lead"
         item={client}
         selectedItems={[]}
         onSelect={() => {}}
