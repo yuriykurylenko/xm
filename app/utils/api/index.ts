@@ -1,6 +1,6 @@
 import { Subscription, SubscriptionInput } from "@/app/types/subscription";
 import { ClientInput, CoachInput } from "@/app/types/user";
-import supabase from "@/app/utils/supabaseClient";
+import supabase from "@/initializers/supabaseClient";
 import { UUID } from "crypto";
 import {
   cancelStripeSubscription,
