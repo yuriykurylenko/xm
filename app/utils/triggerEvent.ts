@@ -1,7 +1,7 @@
 import { Subscription } from "@/app/types/subscription";
 import { Client, Coach } from "@/app/types/user";
 
-import sgMail from "@/app/utils/sgMail";
+import sgMail from "@/initializers/sgMail";
 import events from "@/app/utils/clientEvents";
 
 import { format } from "date-fns";

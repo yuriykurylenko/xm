@@ -3,7 +3,7 @@ import { UUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { stripe } from "@/app/utils/initStripe";
-import sgMail from "@/app/utils/sgMail";
+import sgMail from "@/initializers/sgMail";
 
 export default async function handler(
   req: NextApiRequest,
