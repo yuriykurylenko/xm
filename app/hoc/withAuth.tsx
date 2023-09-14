@@ -8,7 +8,7 @@ import Loading from "@/app/components/Loading";
 import { useRouter } from "next/router";
 import { User } from "@/types/user";
 
-import "@/app/globals.css";
+import "@/styles/globals.css";
 
 const DEFAULT_ROUTES: Record<string, string> = {
   anonymous: "/signup",
