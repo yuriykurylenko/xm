@@ -26,9 +26,9 @@ const endSubscription: Action<Client> = {
   dialogText: "Are you sure you would like to end {{full_name}}?",
   dialogTextBulk: "Are you sure you would like to end {{n}} clients?",
   dialogInfoText:
-    "If you chose not to end the subscription immediately, {{full_name}} will stop at the end of their monthly billing cycle.",
+    "If you choose not to end the subscription immediately, {{full_name}} will stop at the end of their monthly billing cycle.",
   dialogInfoTextBulk:
-    "If you chose not to end the subscriptions immediately, your clients will stop at the end of their respective monthly billing cycles.",
+    "If you choose not to end the subscriptions immediately, your clients will stop at the end of their respective monthly billing cycles.",
 };
 
 export default endSubscription;
