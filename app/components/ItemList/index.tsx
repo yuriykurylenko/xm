@@ -61,7 +61,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
     sortDirection: "desc" | "asc";
     onBulkSelect: () => void;
     selectedItems: T[];
-    actions: Action<T>[];
+    actions: any;
     totalItemsCount: number;
   }>;
   CardComponent: React.ComponentType<{
@@ -75,7 +75,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
   EmptyListComponent?: React.ComponentType<{
     isSearchResult: boolean;
   }>;
-  actions: any;
+  actions: string[];
 }
 
 const ItemList = <T extends { id: UUID | string }>({
@@ -91,6 +91,7 @@ const ItemList = <T extends { id: UUID | string }>({
 }: ItemListProps<T>) => {
   const { user } = useAuth();
 
+  const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>(
     filterStatusOptions && FilterBarComponent
       ? filterStatusOptions[0].value
@@ -116,6 +117,21 @@ const ItemList = <T extends { id: UUID | string }>({
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
 
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadActions = async () => {
+      try {
+        const modules = await Promise.all(
+          actions.map((action) => import(`@/domains/clients/actions/${action}`))
+        );
+        setActionDefinitions(modules.map((module) => module.default));
+      } catch (error) {
+        console.error("Error loading modules:", error);
+      }
+    };
+
+    loadActions();
+  }, []);
 
   const prepareData = async () => {
     setIsListLoaded(false);
@@ -197,7 +213,7 @@ const ItemList = <T extends { id: UUID | string }>({
     setFilterText(value);
   };
 
-  const enhancedActions = actions.map((action: { name: string }) => ({
+  const enhancedActions = actionDefinitions.map((action: { name: string }) => ({
     ...action,
     handler: (itemId?: UUID | UUID[]) => {
       if (itemId) {
@@ -306,7 +322,7 @@ const ItemList = <T extends { id: UUID | string }>({
               onNextPage={handleNextPage}
               onPrevPage={handlePrevPage}
             />
-            {actions.map((action: any) => {
+            {actionDefinitions.map((action: any) => {
               const dialogTitleTemplate = Handlebars.compile(
                 action.dialogTitle
               );

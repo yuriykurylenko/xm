@@ -14,7 +14,6 @@ import { UUID } from "crypto";
 
 import ClientsListHeader from "@/domains/clients/components/ListHeader";
 import SearchInput from "@/app/components/SearchInput";
-import actions from "@/domains/clients/actions";
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
@@ -52,7 +51,19 @@ const Clients = ({ user }: { user: Coach }) => {
             { value: "ended", name: "Ended" },
           ]}
           fetchItems={fetchClients}
-          actions={actions}
+          actions={[
+            "sendOffer",
+            "changeStartingSubscription",
+            "changeSubscriptionAmount",
+            "renewSubscription",
+            "resendOffer",
+            "sendOfferToEndedClient",
+            "revokeAccess",
+            "cancelOffer",
+            "cancelSubscriptionSchedule",
+            "endSubscription",
+            "archive",
+          ]}
           SearchInputComponent={SearchInput}
           FilterBarComponent={FilterBar}
           HeaderComponent={ClientsListHeader}
