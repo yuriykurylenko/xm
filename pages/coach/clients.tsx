@@ -7,7 +7,7 @@ import FilterBar from "@/app/components/FilterBar";
 import ItemList, { Action } from "@/app/components/ItemList";
 import ClientCard from "@/app/components/clients/ClientCard";
 import EmptyList, { EmptyListProps } from "@/app/components/clients/EmptyList";
-import { Coach, Client } from "@/app/types/user";
+import { Coach, Client } from "@/types/user";
 import { UUID } from "crypto";
 
 import {

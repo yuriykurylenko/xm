@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 
-import { Subscription } from "@/app/types/subscription";
-import { Client, Coach } from "@/app/types/user";
+import { Subscription } from "@/types/subscription";
+import { Client, Coach } from "@/types/user";
 
 import {
   updateClientSubscriptionById,

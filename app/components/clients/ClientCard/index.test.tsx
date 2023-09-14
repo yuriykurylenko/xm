@@ -1,7 +1,7 @@
 import * as React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import ClientCard from "@/app/components/clients/ClientCard";
-import { Client } from "@/app/types/user";
+import { Client } from "@/types/user";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 

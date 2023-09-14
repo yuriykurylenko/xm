@@ -3,8 +3,8 @@ import Head from "next/head";
 import { fetchCoachBySlug } from "@/app/utils/api";
 import PageContainer from "@/app/components/PageContainer";
 import withAuth from "@/app/hoc/withAuth";
-import { ClientApplicationPageProps } from "@/app/types/ClientApplicationPageProps";
-import { ClientApplicationPageContext } from "@/app/types/ClientApplicationPageContext";
+import { ClientApplicationPageProps } from "@/types/ClientApplicationPageProps";
+import { ClientApplicationPageContext } from "@/types/ClientApplicationPageContext";
 
 const Success = ({ coach }: ClientApplicationPageProps) => {
   return (

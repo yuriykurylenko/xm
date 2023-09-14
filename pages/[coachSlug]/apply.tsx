@@ -8,9 +8,9 @@ import withAuth from "@/app/hoc/withAuth";
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
-import { Client, ClientInput } from "@/app/types/user";
-import { ClientApplicationPageProps } from "@/app/types/ClientApplicationPageProps";
-import { ClientApplicationPageContext } from "@/app/types/ClientApplicationPageContext";
+import { Client, ClientInput } from "@/types/user";
+import { ClientApplicationPageProps } from "@/types/ClientApplicationPageProps";
+import { ClientApplicationPageContext } from "@/types/ClientApplicationPageContext";
 import { UUID } from "crypto";
 
 const ClientApplication = ({ coach }: ClientApplicationPageProps) => {

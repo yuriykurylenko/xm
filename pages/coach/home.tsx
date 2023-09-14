@@ -1,5 +1,5 @@
 import withAuth from "@/app/hoc/withAuth";
-import { Coach } from "@/app/types/user";
+import { Coach } from "@/types/user";
 
 const Home = ({ user }: { user: Coach }) => {
   return (

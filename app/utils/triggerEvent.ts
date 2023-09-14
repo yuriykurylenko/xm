@@ -1,5 +1,5 @@
-import { Subscription } from "@/app/types/subscription";
-import { Client, Coach } from "@/app/types/user";
+import { Subscription } from "@/types/subscription";
+import { Client, Coach } from "@/types/user";
 
 import sgMail from "@/initializers/sgMail";
 import events from "@/app/utils/clientEvents";

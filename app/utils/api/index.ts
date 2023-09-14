@@ -1,5 +1,5 @@
-import { Subscription, SubscriptionInput } from "@/app/types/subscription";
-import { ClientInput, CoachInput } from "@/app/types/user";
+import { Subscription, SubscriptionInput } from "@/types/subscription";
+import { ClientInput, CoachInput } from "@/types/user";
 import supabase from "@/initializers/supabaseClient";
 import { UUID } from "crypto";
 import {

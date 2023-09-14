@@ -1,4 +1,4 @@
-import { Client, Coach } from "@/app/types/user";
+import { Client, Coach } from "@/types/user";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Input from "@/app/components/Form/Input";
 

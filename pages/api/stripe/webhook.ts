@@ -8,8 +8,8 @@ import {
   fetchSubscriptionById,
 } from "@/app/utils/api";
 import sgMail from "@sendgrid/mail";
-import { Subscription } from "@/app/types/subscription";
-import { Client, Coach } from "@/app/types/user";
+import { Subscription } from "@/types/subscription";
+import { Client, Coach } from "@/types/user";
 
 import events from "@/app/utils/clientEvents";
 import triggerEvent from "@/app/utils/triggerEvent";

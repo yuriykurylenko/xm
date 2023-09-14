@@ -1,4 +1,4 @@
-import { Coach } from "@/app/types/user";
+import { Coach } from "@/types/user";
 import {
   PaymentMethod,
   SetupIntent,

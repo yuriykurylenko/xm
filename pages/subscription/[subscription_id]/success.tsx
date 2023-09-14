@@ -10,7 +10,7 @@ import {
   fetchSubscriptionById,
 } from "@/app/utils/api";
 import PageContainer from "@/app/components/PageContainer";
-import { Coach, Client } from "@/app/types/user";
+import { Coach, Client } from "@/types/user";
 import { UUID } from "crypto";
 import { format } from "date-fns";
 

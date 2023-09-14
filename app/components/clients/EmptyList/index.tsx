@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/app/components/clients/EmptyList/styles.module.css";
-import { Coach } from "@/app/types/user";
+import { Coach } from "@/types/user";
 
 export interface EmptyListProps {
   user?: Coach;

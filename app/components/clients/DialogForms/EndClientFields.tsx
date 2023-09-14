@@ -1,4 +1,4 @@
-import { Client, Coach } from "@/app/types/user";
+import { Client, Coach } from "@/types/user";
 import Input from "@/app/components/Form/Input";
 
 export const EndClientFields: React.FC = () => (

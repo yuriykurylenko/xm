@@ -6,7 +6,7 @@ import ClientLayout from "@/app/layouts/Client";
 import useAuth from "@/app/hooks/useAuth";
 import Loading from "@/app/components/Loading";
 import { useRouter } from "next/router";
-import { User } from "@/app/types/user";
+import { User } from "@/types/user";
 
 import "@/app/globals.css";
 

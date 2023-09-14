@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { Subscription } from "@/app/types/subscription";
+import { Subscription } from "@/types/subscription";
 
 export type User = {
   id: UUID | string;

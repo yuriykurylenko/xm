@@ -3,7 +3,7 @@ import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
 import { createStripeProductForCoach } from "@/app/utils/api/stripe";
 import { fetchCoachById, updateCoachById } from "@/app/utils/api";
-import { Coach } from "@/app/types/user";
+import { Coach } from "@/types/user";
 
 export default async function handler(
   req: NextApiRequest,
