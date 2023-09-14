@@ -16,7 +16,7 @@ import {
 } from "@/app/utils/api";
 
 const createStripeSetupIntent = ({ email }: { email: string }) =>
-  axios.post("/api/setup_intent", { email });
+  axios.post("/api/stripe/setup_intent", { email });
 
 const confirmStripeCardSetup = async (
   stripe: Stripe | null,
