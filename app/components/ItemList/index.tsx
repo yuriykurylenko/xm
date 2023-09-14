@@ -9,6 +9,8 @@ import { UUID } from "crypto";
 
 import Handlebars from "handlebars";
 import axios from "axios";
+import useAuth from "@/app/hooks/useAuth";
+import { Client, Coach } from "@/types/user";
 
 type FilterOption = {
   value: string;
@@ -24,7 +26,7 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   handler?: (itemId: UUID, data: D) => Promise<U>;
   apiOperation?: string;
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
-  DialogForm?: React.ComponentType<{ items: T[] }>;
+  DialogForm?: React.ComponentType<{ items: T[]; user: Client | Coach }>;
   dialogTitle: string;
   dialogTitleBulk: string;
   dialogText?: string;
@@ -87,6 +89,8 @@ const ItemList = <T extends { id: UUID | string }>({
   EmptyListComponent,
   actions,
 }: ItemListProps<T>) => {
+  const { user } = useAuth();
+
   const [filterStatus, setFilterStatus] = useState<string>(
     filterStatusOptions && FilterBarComponent
       ? filterStatusOptions[0].value
@@ -351,7 +355,7 @@ const ItemList = <T extends { id: UUID | string }>({
                     }
                   >
                     {action.DialogForm && (
-                      <action.DialogForm items={selectedItems} />
+                      <action.DialogForm items={selectedItems} user={user} />
                     )}
                   </ActionDialog>
                 )
