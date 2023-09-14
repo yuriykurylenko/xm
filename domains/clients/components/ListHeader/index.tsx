@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/domains/clients/components/ClientsListHeader/styles.module.css";
+import styles from "@/domains/clients/components/ListHeader/styles.module.css";
 import ActionsBar from "@/app/components/ItemList/ActionsBar";
 import { Client } from "@/types/user";
 import SortIcon from "@/app/components/SortIcon";

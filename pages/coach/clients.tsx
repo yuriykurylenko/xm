@@ -5,7 +5,7 @@ import { fetchClientsByCoachId } from "@/app/utils/api";
 import FilterBar from "@/app/components/FilterBar";
 
 import ItemList, { Action } from "@/app/components/ItemList";
-import ClientCard from "@/domains/clients/components/ClientCard";
+import ClientCard from "@/domains/clients/components/ListCard";
 import EmptyList, { EmptyListProps } from "@/domains/clients/components/EmptyList";
 import { Coach, Client } from "@/types/user";
 import { UUID } from "crypto";
@@ -18,11 +18,11 @@ import {
   faTrash,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import ClientsListHeader from "@/domains/clients/components/ClientsListHeader";
+import ClientsListHeader from "@/domains/clients/components/ListHeader";
 import SearchInput from "@/app/components/SearchInput";
-import { ClientTermsFormFields } from "@/domains/clients/components/DialogForms/ClientTermsFields";
+import { ClientTermsFormFields } from "@/domains/clients/components/DialogForms/TermsFields";
 import { PriceField } from "@/domains/clients/components/DialogForms/PriceField";
-import { EndClientFields } from "@/domains/clients/components/DialogForms/EndClientFields";
+import { EndClientFields } from "@/domains/clients/components/DialogForms/EndSubscriptionFields";
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (
