@@ -2,7 +2,7 @@ import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
 import sgMail from "@/initializers/sgMail";
-import events from "@/app/utils/clientEvents";
+import events from "@/domains/clients/events";
 
 import { format } from "date-fns";
 

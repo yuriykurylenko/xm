@@ -11,7 +11,7 @@ import sgMail from "@sendgrid/mail";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-import events from "@/app/utils/clientEvents";
+import events from "@/domains/clients/events";
 import triggerEvent from "@/app/utils/triggerEvent";
 
 export const config = {
