@@ -92,7 +92,7 @@ export default function useAuth() {
         return { data: null, error: insertError };
       }
 
-      const response = await fetch("/api/coach_product", {
+      const response = await fetch("/api/stripe/product", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -39,7 +39,7 @@ export default async function handler(
 
     return res
       .status(200)
-      .json({ message: "Stripe product and price created successfully" });
+      .json({ message: "Stripe product created successfully" });
   } else {
     res.setHeader("Allow", "POST");
     res.status(405).end("Method Not Allowed");
