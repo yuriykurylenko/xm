@@ -1,13 +1,19 @@
 import StripeApi from "stripe";
+import { MailService } from "@sendgrid/mail";
+import { format } from "date-fns";
 
 import {
+  createClientSubscription,
   fetchClientById,
   fetchCoachByClientId,
   fetchSubscriptionsByClientId,
+  updateClientById,
   updateClientSubscriptionById,
 } from "@/app/utils/api";
+
 import { updateStripeSubscription } from "@/app/utils/api/stripe";
 import { UUID } from "crypto";
+import { Subscription } from "@/types/subscription";
 
 export const changePriceOrRenewSubscription = async (
   clientId: UUID,
@@ -55,4 +61,78 @@ export const changePriceOrRenewSubscription = async (
   } catch (e) {
     return { data: null, error: { message: "Error updating client terms" } };
   }
+};
+
+const sendPaymentLink = async (
+  subscription: Subscription,
+  sgMail: MailService
+) => {
+  const { data: client } = await fetchClientById(subscription.client_id);
+  const { data: coach } = await fetchCoachByClientId(subscription.client_id);
+
+  if (client && coach) {
+    await sgMail.send({
+      to: client.email,
+      from: "yuriy.kurylenko@gmail.com",
+      templateId: "d-cd682145f2884174bd1721ac483355b9",
+      dynamicTemplateData: {
+        client_name: client?.full_name,
+        coach_name: coach?.full_name,
+        amount: subscription.monthly_amount / 100,
+        currency: subscription.currency,
+        payment_link: `https://coaching-ten.vercel.app/subscription/${subscription.id}`,
+        trial_period_days: subscription.trial_period_days,
+        start_date: format(
+          !subscription.start_date ||
+            new Date(subscription.start_date) < new Date()
+            ? new Date()
+            : new Date(subscription.start_date),
+          "dd/MM/yyyy"
+        ),
+      },
+    });
+  }
+};
+
+export const sendOffer = async (
+  clientId: UUID,
+  {
+    monthlyAmount,
+    currency = "USD",
+    trialPeriodDays,
+    trialPeriod,
+    startDate,
+  }: {
+    monthlyAmount: number;
+    currency: string;
+    trialPeriodDays?: number;
+    trialPeriod?: boolean;
+    startDate?: Date | string | null;
+  },
+  { stripe, sgMail }: { stripe: StripeApi; sgMail: MailService }
+) => {
+  const { data: subscription, error: subscriptionError } =
+    await createClientSubscription(
+      clientId as UUID,
+      {
+        monthlyAmount,
+        currency,
+        trialPeriodDays: trialPeriodDays || (trialPeriod ? 14 : 0),
+        startDate,
+      },
+      stripe
+    );
+
+  if (subscriptionError) {
+    return { subscription, error: { message: "Error creating subscription" } };
+  }
+
+  if (subscription) {
+    await sendPaymentLink(subscription as Subscription, sgMail);
+  }
+
+  const { data, error } = await updateClientById(clientId as UUID, {
+    status: "offerSent",
+  });
+  return { data, error };
 };
