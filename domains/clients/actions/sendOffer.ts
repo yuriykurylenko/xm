@@ -14,7 +14,7 @@ import {
 } from "@/app/utils/api";
 import { Subscription } from "@/types/subscription";
 
-export const sendClientOffer = async (
+const sendClientOffer = async (
   clientId: UUID,
   {
     monthlyAmount,
