@@ -480,7 +480,7 @@ export const activateClient = async (subscriptionId: UUID) => {
   });
 };
 
-async function fetchSubscriptionsByClientId(clientId: UUID | string) {
+export async function fetchSubscriptionsByClientId(clientId: UUID | string) {
   try {
     const { data, error } = await supabase
       .from("subscriptions")

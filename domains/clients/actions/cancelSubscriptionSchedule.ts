@@ -1,6 +1,35 @@
+import StripeApi from "stripe";
+
+import { cancelStripeSubscriptionSchedule } from "@/app/utils/api/stripe";
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { UUID } from "crypto";
+import { fetchSubscriptionsByClientId } from "@/app/utils/api";
+
+const cancelClientStart = async (
+  clientId: UUID,
+  _: any,
+  { stripe }: { stripe: StripeApi }
+) => {
+  const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
+
+  for (const subscription of subscriptions || []) {
+    try {
+      await cancelStripeSubscriptionSchedule(
+        subscription.stripe_subscription_id,
+        stripe
+      );
+    } catch (error) {
+      return {
+        data: null,
+        error: { message: "Error cancelling client's start" },
+      };
+    }
+  }
+
+  return { data: subscriptions, error: null };
+};
 
 const onCancelClientSubscriptionScheduleComplete = (
   setFilterStatus?: (filterStatus: string) => void
@@ -12,7 +41,8 @@ const cancelSubscriptionSchedule: Action<Client> = {
   titleBulk: "Cancel start",
   icon: faXmark,
   show: (client: Client) => client.status === "starting",
-  apiOperation: "cancel_start",
+  apiOperation: "cancelSubscriptionSchedule",
+  apiHandler: cancelClientStart,
   onComplete: onCancelClientSubscriptionScheduleComplete,
   dialogTitle: "Cancel {{full_name}}'s start",
   dialogTitleBulk: "Cancel {{n}} clients' start",

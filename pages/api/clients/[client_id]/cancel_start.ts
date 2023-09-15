@@ -1,4 +1,4 @@
-import { cancelClientStart, changeClientTerms } from "@/app/utils/api";
+import { cancelClientStart } from "@/app/utils/api";
 import { UUID } from "crypto";
 import { NextApiRequest, NextApiResponse } from "next";
 
