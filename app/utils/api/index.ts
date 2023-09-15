@@ -4,8 +4,6 @@ import supabase from "@/initializers/supabaseClient";
 import { UUID } from "crypto";
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
 import StripeApi from "stripe";
-import { format } from "date-fns";
-import { MailService } from "@sendgrid/mail";
 
 export const startOfUtcDay = (date: Date) => {
   return new Date(
