@@ -2,12 +2,7 @@ import { Subscription, SubscriptionInput } from "@/types/subscription";
 import { ClientInput, CoachInput } from "@/types/user";
 import supabase from "@/initializers/supabaseClient";
 import { UUID } from "crypto";
-import {
-  cancelStripeSubscription,
-  cancelStripeSubscriptionSchedule,
-  findOrCreateStripePrice,
-  updateStripeSubscription,
-} from "@/app/utils/api/stripe";
+import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
 import StripeApi from "stripe";
 import { format } from "date-fns";
 import { MailService } from "@sendgrid/mail";
