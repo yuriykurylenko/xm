@@ -11,8 +11,24 @@ import sgMail from "@sendgrid/mail";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-import events from "@/domains/clients/events";
 import triggerEvent from "@/app/utils/triggerEvent";
+
+const events = [
+  "clientPlatformAccessGranted",
+  "clientPlatformAccessRestored",
+  "clientPricingChanged",
+  "clientStartCanceled",
+  "clientStarted",
+  "clientStartScheduled",
+  "clientSubscriptionAutoRenewed",
+  "clientSubscriptionCancellationScheduled",
+  "clientSubscriptionCancelled",
+  "clientSubscriptionRenewed",
+  "clientTermsChanged",
+  "paymentAuthenticationRequired",
+  "paymentFailed",
+  "paymentSucceeded",
+];
 
 export const config = {
   api: {
@@ -105,28 +121,37 @@ export default async function handler(
         hosted_invoice_url: stripeInvoice?.hosted_invoice_url,
       };
 
-      for (const event of events) {
-        if (
-          event.triggerConditions({
-            stripeEventType: stripeEvent.type,
-            stripeEventPreviousAttributes: previousAttributes,
-            stripeSubscription,
-            stripeInvoice,
-            stripeCharge,
-            subscription: clientSubscription as Subscription,
-            client: client as Client,
-          })
-        ) {
-          await triggerEvent(
-            event.name,
-            {
+      try {
+        for (const event of events) {
+          const { default: eventDefinition } = await import(
+            `@/domains/clients/events/${event}`
+          );
+
+          if (
+            eventDefinition.triggerConditions({
+              stripeEventType: stripeEvent.type,
+              stripeEventPreviousAttributes: previousAttributes,
+              stripeSubscription,
+              stripeInvoice,
+              stripeCharge,
               subscription: clientSubscription as Subscription,
               client: client as Client,
-              coach: coach as Coach,
-            },
-            eventData
-          );
+            })
+          ) {
+            await triggerEvent(
+              event,
+              {
+                subscription: clientSubscription as Subscription,
+                client: client as Client,
+                coach: coach as Coach,
+              },
+              eventData
+            );
+          }
         }
+      } catch (e) {
+        console.log(e);
+        return res.status(500).json({ error: "Failed to trigger events" });
       }
     }
 

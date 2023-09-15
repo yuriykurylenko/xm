@@ -2,7 +2,6 @@ import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
 import sgMail from "@/initializers/sgMail";
-import events from "@/domains/clients/events";
 
 import { format } from "date-fns";
 
@@ -15,18 +14,24 @@ const triggerEvent = async (
   }: { subscription: Subscription; client: Client; coach: Coach },
   data?: any
 ) => {
-  const event = events.find((e) => e.name === name);
+  const { default: eventDefinition } = await import(
+    `@/domains/clients/events/${name}`
+  );
 
-  if (event) {
-    if (event.handler) {
-      await event.handler(subscription, client, coach, data);
+  if (!eventDefinition) {
+    throw new Error(`Event ${name} not found.`);
+  }
+
+  if (eventDefinition) {
+    if (eventDefinition.handler) {
+      await eventDefinition.handler(subscription, client, coach, data);
     }
 
-    if (event.emailTemplateId) {
+    if (eventDefinition.emailTemplateId) {
       await sgMail.send({
         to: client.email,
         from: "yuriy.kurylenko@gmail.com",
-        templateId: event.emailTemplateId,
+        templateId: eventDefinition.emailTemplateId,
         dynamicTemplateData: {
           client_name: client.full_name,
           coach_name: coach.full_name,
