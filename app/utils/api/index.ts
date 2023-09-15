@@ -243,37 +243,6 @@ export const updateSubscriptionById = async (
 ) =>
   supabase.from("subscriptions").update(data).eq("id", subscriptionId).select();
 
-export const sendClientPaymentLink = async (
-  subscription: Subscription,
-  sgMail: MailService
-) => {
-  const { data: client } = await fetchClientById(subscription.client_id);
-  const { data: coach } = await fetchCoachByClientId(subscription.client_id);
-
-  if (client && coach) {
-    await sgMail.send({
-      to: client.email,
-      from: "yuriy.kurylenko@gmail.com",
-      templateId: "d-cd682145f2884174bd1721ac483355b9",
-      dynamicTemplateData: {
-        client_name: client?.full_name,
-        coach_name: coach?.full_name,
-        amount: subscription.monthly_amount / 100,
-        currency: subscription.currency,
-        payment_link: `https://coaching-ten.vercel.app/subscription/${subscription.id}`,
-        trial_period_days: subscription.trial_period_days,
-        start_date: format(
-          !subscription.start_date ||
-            new Date(subscription.start_date) < new Date()
-            ? new Date()
-            : new Date(subscription.start_date),
-          "dd/MM/yyyy"
-        ),
-      },
-    });
-  }
-};
-
 export const activateClient = async (subscriptionId: UUID) => {
   const { data: subscription, error } = await fetchSubscriptionById(
     subscriptionId
