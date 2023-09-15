@@ -12,7 +12,7 @@ import StripeApi from "stripe";
 import { format } from "date-fns";
 import { MailService } from "@sendgrid/mail";
 
-const startOfUtcDay = (date: Date) => {
+export const startOfUtcDay = (date: Date) => {
   return new Date(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
   ).toISOString();
