@@ -1,9 +1,67 @@
+import StripeApi from "stripe";
+
 import { Action } from "@/types/action";
 import { Client, Coach } from "@/types/user";
 
 import { PriceField } from "@/domains/clients/components/DialogForms/PriceField";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { UUID } from "crypto";
+import {
+  fetchClientById,
+  fetchCoachByClientId,
+  fetchSubscriptionsByClientId,
+  updateClientSubscriptionById,
+} from "@/app/utils/api";
+import { updateStripeSubscription } from "@/app/utils/api/stripe";
+
+const changeClientPrice = async (
+  clientId: UUID,
+  {
+    monthlyAmount,
+    currency = "USD",
+  }: {
+    monthlyAmount: number;
+    currency: string;
+  },
+  { stripe }: { stripe: StripeApi }
+) => {
+  const { data: coach } = await fetchCoachByClientId(clientId);
+  const { data: client } = await fetchClientById(clientId);
+
+  if (!coach) {
+    return { data: null, error: { message: "Coach not found" } };
+  }
+
+  const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
+
+  if (!subscriptions?.length) {
+    return { data: null, error: { message: "Client subscription not found" } };
+  }
+
+  const subscription = subscriptions?.[0];
+
+  try {
+    await updateStripeSubscription(
+      {
+        stripeSubscriptionId: subscription.stripe_subscription_id,
+        monthlyAmount: monthlyAmount * 100,
+        currency,
+        isActiveSubscription: true,
+      },
+      stripe
+    );
+
+    await updateClientSubscriptionById(subscription.id, {
+      monthly_amount: monthlyAmount * 100,
+      currency,
+    });
+
+    return { data: client, error: null };
+  } catch (e) {
+    return { data: null, error: { message: "Error updating client terms" } };
+  }
+};
 
 const renewSubscription: Action<Client> = {
   name: "renewSubscription",
@@ -12,7 +70,8 @@ const renewSubscription: Action<Client> = {
   icon: faRotate,
   show: (client: Client) =>
     client.status === "client" && client.end_date != null,
-  apiOperation: "change_price",
+  apiOperation: "renewSubscription",
+  apiHandler: changeClientPrice,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     PriceField({ items, coach: user as Coach }),
   dialogTitle: "Renew {{full_name}}'s subscription",
