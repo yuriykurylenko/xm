@@ -47,7 +47,6 @@ export const Input: FC<InputProps> = ({
   min,
   max,
   step,
-  checked,
 }) => {
   const validations: Record<InputType, ValidationRule> = {
     email: {
@@ -64,7 +63,6 @@ export const Input: FC<InputProps> = ({
   };
 
   const {
-    register,
     setValue,
     formState: { errors },
     control,
@@ -141,6 +139,7 @@ export const Input: FC<InputProps> = ({
                     minDate={new Date()}
                     dateFormat="dd/MM/yyyy"
                     ref={ref}
+                    popperPlacement="right-start"
                   />
                 );
               }}
