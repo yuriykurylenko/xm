@@ -1,7 +1,17 @@
+import { updateClientById } from "@/app/utils/api";
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import { UUID } from "crypto";
+
+const revokeClientAccess = async (clientId: UUID) => {
+  const { data, error } = await updateClientById(clientId as UUID, {
+    access_revoked_at: new Date(),
+  });
+
+  return { data, error };
+};
 
 const revokeAccess: Action<Client> = {
   name: "revokeAccess",
@@ -12,7 +22,8 @@ const revokeAccess: Action<Client> = {
     !["starting", "client"].includes(client.status as string) &&
     client.access_revoked_at == null &&
     client.user_id != null,
-  apiOperation: "revoke_access",
+  apiOperation: "revokeAccess",
+  apiHandler: revokeClientAccess,
   dialogTitle: "Revoke access for {{full_name}}",
   dialogTitleBulk: "Revoke access for {{n}} clients",
   dialogText:
