@@ -13,7 +13,7 @@ export default async function handler(
 
   const clientId = req.query.client_id;
   const action = req.query.action;
-  const offerDetails = req.body;
+  const data = req.body;
 
   try {
     const { default: actionDefinition } = await import(
@@ -27,7 +27,7 @@ export default async function handler(
 
     const { data: client, error } = await actionHandler(
       clientId as UUID,
-      offerDetails,
+      data,
       { stripe, sgMail }
     );
     return error

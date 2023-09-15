@@ -1,6 +1,30 @@
+import {
+  updateClientById,
+  updateSubscriptionByClientId,
+} from "@/app/utils/api";
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { UUID } from "crypto";
+
+export const cancelClientOffer = async (clientId: UUID) => {
+  const { error } = await updateSubscriptionByClientId(clientId, {
+    archived_at: new Date(),
+    start_date: null,
+    end_date: null,
+  });
+
+  if (error) {
+    return { data: null, error };
+  }
+
+  return await updateClientById(clientId, {
+    status: "lead",
+    subscription_status: null,
+    start_date: null,
+    end_date: null,
+  });
+};
 
 const onCancelClientOfferComplete = (
   setFilterStatus?: (filterStatus: string) => void
@@ -12,7 +36,8 @@ const cancelOffer: Action<Client> = {
   titleBulk: "Cancel offers",
   icon: faXmark,
   show: (client: Client) => client.status === "offerSent",
-  apiOperation: "cancel_offer",
+  apiHandler: cancelClientOffer,
+  apiOperation: "cancelOffer",
   onComplete: onCancelClientOfferComplete,
   dialogTitle: "Cancel {{full_name}}'s offer",
   dialogTitleBulk: "Cancel {{n}} clients' offers",
