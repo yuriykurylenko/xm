@@ -1,9 +1,48 @@
+import StripeApi from "stripe";
+
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 
 import { EndClientFields } from "@/domains/clients/components/DialogForms/EndSubscriptionFields";
 
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { UUID } from "crypto";
+import { fetchSubscriptionsByClientId } from "@/app/utils/api";
+import { cancelStripeSubscription } from "@/app/utils/api/stripe";
+
+export const cancelClientSubscription = async (
+  clientId: UUID,
+  data: {
+    endImmediately: boolean;
+    accessAfterEndDate: boolean;
+  },
+  { stripe }: { stripe: StripeApi }
+) => {
+  const { endImmediately, accessAfterEndDate } = data;
+  const { data: subscriptions } = await fetchSubscriptionsByClientId(
+    clientId as string
+  );
+
+  for (const subscription of (subscriptions || []).filter((s) =>
+    ["active", "trialing", "past_due", "unpaid"].includes(s.status)
+  )) {
+    try {
+      await cancelStripeSubscription(
+        subscription.stripe_subscription_id,
+        endImmediately,
+        accessAfterEndDate,
+        stripe
+      );
+    } catch (error) {
+      return {
+        data: null,
+        error: { message: "Error cancelling client's subscription" },
+      };
+    }
+  }
+
+  return { data: subscriptions, error: null };
+};
 
 const onCancelClientSubscriptionComplete = (
   setFilterStatus?: (filterStatus: string) => void
@@ -18,7 +57,8 @@ const endSubscription: Action<Client> = {
     ["past_due", "unpaid", "active", "trialing"].includes(
       client.subscription_status as string
     ),
-  apiOperation: "cancel_subscription",
+  apiOperation: "endSubscription",
+  apiHandler: cancelClientSubscription,
   onComplete: onCancelClientSubscriptionComplete,
   DialogForm: () => EndClientFields({}),
   dialogTitle: "End {{full_name}}'s subscription",
