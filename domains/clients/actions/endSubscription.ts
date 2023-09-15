@@ -10,7 +10,7 @@ import { UUID } from "crypto";
 import { fetchSubscriptionsByClientId } from "@/app/utils/api";
 import { cancelStripeSubscription } from "@/app/utils/api/stripe";
 
-export const cancelClientSubscription = async (
+const cancelClientSubscription = async (
   clientId: UUID,
   data: {
     endImmediately: boolean;

@@ -14,7 +14,7 @@ import {
 } from "@/app/utils/api";
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
 
-export const changeClientTerms = async (
+const changeClientTerms = async (
   clientId: UUID,
   {
     monthlyAmount,

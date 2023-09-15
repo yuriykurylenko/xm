@@ -7,7 +7,7 @@ import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 
-export const cancelClientOffer = async (clientId: UUID) => {
+const cancelClientOffer = async (clientId: UUID) => {
   const { error } = await updateSubscriptionByClientId(clientId, {
     archived_at: new Date(),
     start_date: null,
