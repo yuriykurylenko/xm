@@ -7,7 +7,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { fetchSubscriptionsByClientId } from "@/app/utils/api";
 
-const cancelClientStart = async (
+const apiHandler = async (
   clientId: UUID,
   _: any,
   { stripe }: { stripe: StripeApi }
@@ -31,23 +31,22 @@ const cancelClientStart = async (
   return { data: subscriptions, error: null };
 };
 
-const onCancelClientSubscriptionScheduleComplete = (
-  setFilterStatus?: (filterStatus: string) => void
-) => setFilterStatus && setFilterStatus("lead");
+const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
+  setFilterStatus && setFilterStatus("lead");
 
-const cancelSubscriptionSchedule: Action<Client> = {
+const cancelSubscriptionScheduleAction: Action<Client> = {
   name: "cancelSubscriptionSchedule",
   title: "Cancel starting client",
   titleBulk: "Cancel start",
   icon: faXmark,
   show: (client: Client) => client.status === "starting",
   apiOperation: "cancelSubscriptionSchedule",
-  apiHandler: cancelClientStart,
-  onComplete: onCancelClientSubscriptionScheduleComplete,
+  apiHandler,
+  onComplete,
   dialogTitle: "Cancel {{full_name}}'s start",
   dialogTitleBulk: "Cancel {{n}} clients' start",
   dialogText: "Are you sure you would like to cancel {{full_name}}'s start?",
   dialogTextBulk: "Are you sure you would like to cancel {{n}} clients' start?",
 };
 
-export default cancelSubscriptionSchedule;
+export default cancelSubscriptionScheduleAction;

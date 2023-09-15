@@ -2,13 +2,12 @@ import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 
 import { ClientTermsFormFields } from "@/domains/clients/components/DialogForms/TermsFields";
-import { sendOffer } from "@/domains/clients/actions/common/handlers";
+import {
+  onSendOfferComplete,
+  sendOffer,
+} from "@/domains/clients/actions/common/handlers";
 
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-
-const onSendOfferComplete = (
-  setFilterStatus?: (filterStatus: string) => void
-) => setFilterStatus && setFilterStatus("offerSent");
 
 const sendOfferAction: Action<Client> = {
   name: "sendOffer",

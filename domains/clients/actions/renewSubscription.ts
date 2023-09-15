@@ -6,7 +6,7 @@ import { changePriceOrRenewSubscription } from "./common/handlers";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
-const renewSubscription: Action<Client> = {
+const renewSubscriptionAction: Action<Client> = {
   name: "renewSubscription",
   title: "Renew client's subscription",
   titleBulk: "Renew subscriptions",
@@ -27,4 +27,4 @@ const renewSubscription: Action<Client> = {
     "Your clients' subscriptions will be renewed. You can specify the new price for them. They will receive an email confirming the change of the terms but would not need to add their credit card again.",
 };
 
-export default renewSubscription;
+export default renewSubscriptionAction;

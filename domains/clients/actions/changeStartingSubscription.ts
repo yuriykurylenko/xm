@@ -14,7 +14,7 @@ import {
 } from "@/app/utils/api";
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
 
-const changeClientTerms = async (
+const apiHandler = async (
   clientId: UUID,
   {
     monthlyAmount,
@@ -102,14 +102,14 @@ const changeClientTerms = async (
   return { data: clietSubscription, error };
 };
 
-const changeStartingSubscription: Action<Client> = {
+const changeStartingSubscriptionAction: Action<Client> = {
   name: "changeStartingSubscription",
   title: "Change client's terms",
   titleBulk: "Change terms",
   icon: faRotate,
   show: (client: Client) => client.status === "starting",
   apiOperation: "changeStartingSubscription",
-  apiHandler: changeClientTerms,
+  apiHandler,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     ClientTermsFormFields({ items, coach: user as Coach }),
   dialogTitle: "Change terms for {{full_name}}",
@@ -123,4 +123,4 @@ const changeStartingSubscription: Action<Client> = {
     "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again.",
 };
 
-export default changeStartingSubscription;
+export default changeStartingSubscriptionAction;

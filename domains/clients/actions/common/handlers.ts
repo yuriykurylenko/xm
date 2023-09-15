@@ -136,3 +136,7 @@ export const sendOffer = async (
   });
   return { data, error };
 };
+
+export const onSendOfferComplete = (
+  setFilterStatus?: (filterStatus: string) => void
+) => setFilterStatus && setFilterStatus("offerSent");

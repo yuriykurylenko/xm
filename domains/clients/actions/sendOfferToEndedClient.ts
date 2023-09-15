@@ -2,15 +2,14 @@ import { Action } from "@/types/action";
 import { Client, Coach } from "@/types/user";
 
 import { ClientTermsFormFields } from "@/domains/clients/components/DialogForms/TermsFields";
-import { sendOffer } from "@/domains/clients/actions/common/handlers";
+import {
+  onSendOfferComplete,
+  sendOffer,
+} from "@/domains/clients/actions/common/handlers";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
-const onSendOfferComplete = (
-  setFilterStatus?: (filterStatus: string) => void
-) => setFilterStatus && setFilterStatus("offerSent");
-
-const sendOfferToEndedClient: Action<Client> = {
+const sendOfferToEndedClientAction: Action<Client> = {
   name: "sendOfferToEndedClient",
   title: "Send a new offer",
   titleBulk: "Send new offers",
@@ -31,4 +30,4 @@ const sendOfferToEndedClient: Action<Client> = {
     "Your clients will receive an email with the link to subscribe and pay your specified amount monthly.",
 };
 
-export default sendOfferToEndedClient;
+export default sendOfferToEndedClientAction;

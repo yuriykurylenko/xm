@@ -2,15 +2,14 @@ import { Action } from "@/types/action";
 import { Client, Coach } from "@/types/user";
 
 import { ClientTermsFormFields } from "@/domains/clients/components/DialogForms/TermsFields";
-import { sendOffer } from "@/domains/clients/actions/common/handlers";
+import {
+  onSendOfferComplete,
+  sendOffer,
+} from "@/domains/clients/actions/common/handlers";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
-const onSendOfferComplete = (
-  setFilterStatus?: (filterStatus: string) => void
-) => setFilterStatus && setFilterStatus("offerSent");
-
-const resendOffer: Action<Client> = {
+const resendOfferAction: Action<Client> = {
   name: "resendOffer",
   title: "Send a new offer",
   titleBulk: "Send new offers",
@@ -32,4 +31,4 @@ const resendOffer: Action<Client> = {
     "Your clients will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled",
 };
 
-export default resendOffer;
+export default resendOfferAction;

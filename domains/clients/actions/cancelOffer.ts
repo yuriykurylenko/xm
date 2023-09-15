@@ -7,7 +7,7 @@ import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 
-const cancelClientOffer = async (clientId: UUID) => {
+const apiHandler = async (clientId: UUID) => {
   const { error } = await updateSubscriptionByClientId(clientId, {
     archived_at: new Date(),
     start_date: null,
@@ -26,19 +26,18 @@ const cancelClientOffer = async (clientId: UUID) => {
   });
 };
 
-const onCancelClientOfferComplete = (
-  setFilterStatus?: (filterStatus: string) => void
-) => setFilterStatus && setFilterStatus("lead");
+const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
+  setFilterStatus && setFilterStatus("lead");
 
-const cancelOffer: Action<Client> = {
+const cancelOfferAction: Action<Client> = {
   name: "cancelOffer",
   title: "Cancel offer",
   titleBulk: "Cancel offers",
   icon: faXmark,
   show: (client: Client) => client.status === "offerSent",
-  apiHandler: cancelClientOffer,
+  apiHandler,
   apiOperation: "cancelOffer",
-  onComplete: onCancelClientOfferComplete,
+  onComplete,
   dialogTitle: "Cancel {{full_name}}'s offer",
   dialogTitleBulk: "Cancel {{n}} clients' offers",
   dialogText: "Are you sure you would like to cancel {{full_name}}'s offer?",
@@ -46,4 +45,4 @@ const cancelOffer: Action<Client> = {
     "Are you sure you would like to cancel {{n}} clients' offers?",
 };
 
-export default cancelOffer;
+export default cancelOfferAction;

@@ -10,7 +10,7 @@ import { UUID } from "crypto";
 import { fetchSubscriptionsByClientId } from "@/app/utils/api";
 import { cancelStripeSubscription } from "@/app/utils/api/stripe";
 
-const cancelClientSubscription = async (
+const apiHandler = async (
   clientId: UUID,
   data: {
     endImmediately: boolean;
@@ -44,11 +44,10 @@ const cancelClientSubscription = async (
   return { data: subscriptions, error: null };
 };
 
-const onCancelClientSubscriptionComplete = (
-  setFilterStatus?: (filterStatus: string) => void
-) => setFilterStatus && setFilterStatus("ended");
+const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
+  setFilterStatus && setFilterStatus("ended");
 
-const endSubscription: Action<Client> = {
+const endSubscriptionAction: Action<Client> = {
   name: "endSubscription",
   title: "End client",
   titleBulk: "End clients",
@@ -58,8 +57,8 @@ const endSubscription: Action<Client> = {
       client.subscription_status as string
     ),
   apiOperation: "endSubscription",
-  apiHandler: cancelClientSubscription,
-  onComplete: onCancelClientSubscriptionComplete,
+  apiHandler,
+  onComplete,
   DialogForm: () => EndClientFields({}),
   dialogTitle: "End {{full_name}}'s subscription",
   dialogTitleBulk: "End {{n}} clients",
@@ -71,4 +70,4 @@ const endSubscription: Action<Client> = {
     "If you choose not to end the subscriptions immediately, your clients will stop at the end of their respective monthly billing cycles.",
 };
 
-export default endSubscription;
+export default endSubscriptionAction;

@@ -6,7 +6,7 @@ import { changePriceOrRenewSubscription } from "@/domains/clients/actions/common
 
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
-const changeSubscriptionAmount: Action<Client> = {
+const changeSubscriptionAmountAction: Action<Client> = {
   name: "changeSubscriptionAmount",
   title: "Change client's monthly price",
   titleBulk: "Change price",
@@ -27,4 +27,4 @@ const changeSubscriptionAmount: Action<Client> = {
     "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again.",
 };
 
-export default changeSubscriptionAmount;
+export default changeSubscriptionAmountAction;

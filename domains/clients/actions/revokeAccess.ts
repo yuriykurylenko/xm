@@ -5,7 +5,7 @@ import { Client } from "@/types/user";
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 
-const revokeClientAccess = async (clientId: UUID) => {
+const apiHandler = async (clientId: UUID) => {
   const { data, error } = await updateClientById(clientId as UUID, {
     access_revoked_at: new Date(),
   });
@@ -13,7 +13,7 @@ const revokeClientAccess = async (clientId: UUID) => {
   return { data, error };
 };
 
-const revokeAccess: Action<Client> = {
+const revokeAccessAction: Action<Client> = {
   name: "revokeAccess",
   title: "Revoke platform access",
   titleBulk: "Revoke access",
@@ -23,7 +23,7 @@ const revokeAccess: Action<Client> = {
     client.access_revoked_at == null &&
     client.user_id != null,
   apiOperation: "revokeAccess",
-  apiHandler: revokeClientAccess,
+  apiHandler,
   dialogTitle: "Revoke access for {{full_name}}",
   dialogTitleBulk: "Revoke access for {{n}} clients",
   dialogText:
@@ -32,4 +32,4 @@ const revokeAccess: Action<Client> = {
     "Are you sure you would like to revoke platform access for {{n}} clients?",
 };
 
-export default revokeAccess;
+export default revokeAccessAction;
