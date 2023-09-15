@@ -3,12 +3,26 @@ import StripeApi from "stripe";
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 
-import { EndClientFields } from "@/domains/clients/components/DialogForms/EndSubscriptionFields";
-
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { fetchSubscriptionsByClientId } from "@/app/utils/api";
 import { cancelStripeSubscription } from "@/app/utils/api/stripe";
+import Input from "@/app/components/Form/Input";
+
+const DialogForm: React.FC = () => (
+  <>
+    <Input
+      name="endImmediately"
+      type="checkbox"
+      placeholder="End immediately"
+    />
+    <Input
+      name="accessAfterEndDate"
+      type="checkbox"
+      placeholder="Allow platform access after the end of the engagement"
+    />
+  </>
+);
 
 const apiHandler = async (
   clientId: UUID,
@@ -59,7 +73,7 @@ const endSubscriptionAction: Action<Client> = {
   apiOperation: "endSubscription",
   apiHandler,
   onComplete,
-  DialogForm: () => EndClientFields({}),
+  DialogForm: () => DialogForm({}),
   dialogTitle: "End {{full_name}}'s subscription",
   dialogTitleBulk: "End {{n}} clients",
   dialogText: "Are you sure you would like to end {{full_name}}?",

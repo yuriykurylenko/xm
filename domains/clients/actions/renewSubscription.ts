@@ -1,7 +1,7 @@
 import { Action } from "@/types/action";
 import { Client, Coach } from "@/types/user";
 
-import { PriceField } from "@/domains/clients/components/DialogForms/PriceField";
+import { PriceField } from "@/domains/clients/actions/common/components/DialogForms/PriceField";
 import { changePriceOrRenewSubscription } from "./common/handlers";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";

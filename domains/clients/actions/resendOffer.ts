@@ -1,7 +1,7 @@
 import { Action } from "@/types/action";
 import { Client, Coach } from "@/types/user";
 
-import { ClientTermsFormFields } from "@/domains/clients/components/DialogForms/TermsFields";
+import { ClientTermsFormFields } from "@/domains/clients/actions/common/components/DialogForms/TermsFields";
 import {
   onSendOfferComplete,
   sendOffer,
