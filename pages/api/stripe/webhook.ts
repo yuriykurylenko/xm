@@ -99,9 +99,17 @@ export default async function handler(
 
     if (clientSubscription && client && coach) {
       const eventData = {
+        client_name: client.full_name,
+        coach_name: coach.full_name,
+        subscription_id: clientSubscription?.id,
         stripe_subscription_id: stripeSubscription.id,
         status: stripeSubscription.status,
-        start_date: new Date(stripeSubscription.start_date * 1000),
+        start_date: stripeSubscription.start_date
+          ? new Date(stripeSubscription.start_date * 1000)
+          : !clientSubscription?.start_date ||
+            new Date(clientSubscription.start_date) < new Date()
+          ? new Date()
+          : new Date(clientSubscription.start_date),
         end_date:
           stripeSubscription.cancel_at_period_end &&
           stripeSubscription.current_period_end
@@ -112,13 +120,19 @@ export default async function handler(
         current_period_end_date: new Date(
           stripeSubscription.current_period_end * 1000
         ),
+        new_price_start_date: new Date(
+          clientSubscription.current_period_end_date
+        ),
         invoice_number: stripeInvoice?.number,
         amount:
           eventObject.object === "invoice" && stripeInvoice
             ? (stripeInvoice.amount_paid || stripeInvoice.amount_due) / 100
             : clientSubscription.monthly_amount / 100,
-        currency: stripeInvoice?.currency?.toUpperCase(),
+        currency:
+          stripeInvoice?.currency?.toUpperCase() || clientSubscription.currency,
+        trial_period_days: clientSubscription?.trial_period_days,
         hosted_invoice_url: stripeInvoice?.hosted_invoice_url,
+        notification_email: client?.email,
       };
 
       const eventContext = {

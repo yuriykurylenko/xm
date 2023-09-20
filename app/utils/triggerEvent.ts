@@ -39,29 +39,21 @@ const triggerEvent = async (
 
     if (eventDefinition.emailTemplateId) {
       await sgMail.send({
-        to: client.email,
+        to: data?.notification_email,
         from: "yuriy.kurylenko@gmail.com",
         templateId: eventDefinition.emailTemplateId,
         dynamicTemplateData: {
-          client_name: client.full_name,
-          coach_name: coach.full_name,
-          subscription_id: subscription?.id,
-          amount: data?.amount || subscription?.monthly_amount / 100,
-          currency: data?.currency || subscription?.currency,
-          trial_period_days: subscription?.trial_period_days,
-          start_date: format(
-            !subscription?.start_date ||
-              new Date(subscription.start_date) < new Date()
-              ? new Date()
-              : new Date(subscription.start_date),
-            "dd/MM/yyyy"
-          ),
+          client_name: data?.client_name,
+          coach_name: data?.coach_name,
+          subscription_id: data?.subscription_id,
+          amount: data?.amount,
+          currency: data?.currency,
+          trial_period_days: data?.trial_period_days,
+          start_date:
+            data?.start_date && format(data?.start_date, "dd/MM/yyyy"),
           new_price_start_date:
-            subscription.current_period_end_date &&
-            format(
-              new Date(subscription.current_period_end_date),
-              "dd/MM/yyyy"
-            ),
+            data?.new_price_start_date &&
+            format(data?.new_price_start_date, "dd/MM/yyyy"),
           invoice_number: data?.invoice_number,
           hosted_invoice_url: data?.hosted_invoice_url,
         },
