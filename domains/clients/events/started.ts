@@ -6,7 +6,7 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const onClientStarted = async (
+const handler = async (
   subscription: Subscription,
   client: Client,
   coach: Coach,
@@ -37,9 +37,9 @@ const onClientStarted = async (
   }
 };
 
-const clientStartedEvent = {
-  name: "clientStarted",
-  handler: onClientStarted,
+const startedEvent = {
+  name: "started",
+  handler,
   triggerConditions: ({
     stripeEventType,
     stripeEventPreviousAttributes,
@@ -51,4 +51,4 @@ const clientStartedEvent = {
         stripeEventPreviousAttributes?.status)),
 };
 
-export default clientStartedEvent;
+export default startedEvent;

@@ -1,7 +1,7 @@
 import { StripeEventParams } from "@/types/StripeEventParams";
 
-const clientPricingChangedEvent = {
-  name: "clientPricingChanged",
+const pricingChangedEvent = {
+  name: "pricingChanged",
   emailTemplateId: "d-776524b90fc34aa387b8337205142e8c",
   triggerConditions: ({
     stripeEventType,
@@ -13,4 +13,4 @@ const clientPricingChangedEvent = {
     !stripeEventPreviousAttributes.cancel_at_period_end,
 };
 
-export default clientPricingChangedEvent;
+export default pricingChangedEvent;

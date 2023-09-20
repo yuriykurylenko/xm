@@ -1,8 +1,8 @@
 import { StripeEventParams } from "@/types/StripeEventParams";
 
-const clientPlatformAccessRestoredEvent = {
-  name: "clientPlatformAccessRestored",
-  emailTemplateId: "d-f33881ff79f24f07a10820b49bdc1713",
+const platformAccessGrantedEvent = {
+  name: "platformAccessGranted",
+  emailTemplateId: "d-bb7a32cfdef545308aea0cf7bbbee901",
   triggerConditions: ({
     stripeEventType,
     stripeEventPreviousAttributes,
@@ -10,10 +10,10 @@ const clientPlatformAccessRestoredEvent = {
     client,
   }: StripeEventParams) =>
     stripeSubscription.status === "active" &&
-    client.user_id &&
+    !client.user_id &&
     (stripeEventType === "customer.subscription.created" ||
       (stripeEventType === "customer.subscription.updated" &&
         stripeEventPreviousAttributes?.status)),
 };
 
-export default clientPlatformAccessRestoredEvent;
+export default platformAccessGrantedEvent;

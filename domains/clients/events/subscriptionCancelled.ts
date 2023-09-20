@@ -6,7 +6,7 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const onClientSubscriptionCancelled = async (
+const handler = async (
   subscription: Subscription,
   client: Client,
   coach: Coach,
@@ -23,11 +23,11 @@ const onClientSubscriptionCancelled = async (
   });
 };
 
-const clientSubscriptionCancelledEvent = {
-  name: "clientSubscriptionCancelled",
-  handler: onClientSubscriptionCancelled,
+const subscriptionCancelledEvent = {
+  name: "subscriptionCancelled",
+  handler,
   triggerConditions: ({ stripeEventType }: StripeEventParams) =>
     stripeEventType === "customer.subscription.deleted",
 };
 
-export default clientSubscriptionCancelledEvent;
+export default subscriptionCancelledEvent;

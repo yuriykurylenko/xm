@@ -3,20 +3,16 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const onClientStartCanceled = (
-  subscription: Subscription,
-  client: Client,
-  coach: Coach
-) =>
+const handler = (subscription: Subscription, client: Client, coach: Coach) =>
   updateClientSubscriptionById(subscription.id, {
     start_date: null,
     end_date: null,
     archived_at: new Date(),
   });
 
-const clientStartCanceledEvent = {
-  name: "clientStartCanceled",
-  handler: onClientStartCanceled,
+const startCanceledEvent = {
+  name: "startCanceled",
+  handler,
   triggerConditions: ({ stripeEventType, subscription }: StripeEventParams) =>
     stripeEventType === "subscription_schedule.canceled" &&
     !subscription.archived_at &&
@@ -24,4 +20,4 @@ const clientStartCanceledEvent = {
     new Date(subscription.start_date) >= new Date(),
 };
 
-export default clientStartCanceledEvent;
+export default startCanceledEvent;

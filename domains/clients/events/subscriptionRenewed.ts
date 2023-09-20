@@ -3,16 +3,16 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const onClientSubscriptionRenewed = (
+const handler = (
   subscription: Subscription,
   client: Client,
   coach: Coach,
   { status, end_date }: { status: string; end_date: Date | null }
 ) => updateClientSubscriptionById(subscription.id, { status, end_date });
 
-const clientSubscriptionRenewedEvent = {
-  name: "clientSubscriptionRenewed",
-  handler: onClientSubscriptionRenewed,
+const subscriptionRenewedEvent = {
+  name: "subscriptionRenewed",
+  handler,
   emailTemplateId: "d-664503562b62462d9931a694b35c5155",
   triggerConditions: ({
     stripeEventType,
@@ -22,4 +22,4 @@ const clientSubscriptionRenewedEvent = {
     stripeEventPreviousAttributes.cancel_at_period_end,
 };
 
-export default clientSubscriptionRenewedEvent;
+export default subscriptionRenewedEvent;
