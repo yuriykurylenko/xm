@@ -42,18 +42,7 @@ const triggerEvent = async (
         to: data?.notification_email,
         from: "yuriy.kurylenko@gmail.com",
         templateId: eventDefinition.emailTemplateId,
-        dynamicTemplateData: {
-          client_name: data?.client_name,
-          coach_name: data?.coach_name,
-          subscription_id: data?.subscription_id,
-          amount: data?.amount,
-          currency: data?.currency,
-          trial_period_days: data?.trial_period_days,
-          start_date: data?.start_date,
-          new_price_start_date: data?.new_price_start_date,
-          invoice_number: data?.invoice_number,
-          hosted_invoice_url: data?.hosted_invoice_url,
-        },
+        dynamicTemplateData: data,
       });
     }
   }
