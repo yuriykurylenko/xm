@@ -82,13 +82,11 @@ const sendPaymentLink = async (
         currency: subscription.currency,
         payment_link: `https://coaching-ten.vercel.app/subscription/${subscription.id}`,
         trial_period_days: subscription.trial_period_days,
-        start_date: format(
+        start_date:
           !subscription.start_date ||
-            new Date(subscription.start_date) < new Date()
+          new Date(subscription.start_date) < new Date()
             ? new Date()
             : new Date(subscription.start_date),
-          "dd/MM/yyyy"
-        ),
       },
     });
   }

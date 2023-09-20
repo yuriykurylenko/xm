@@ -49,11 +49,8 @@ const triggerEvent = async (
           amount: data?.amount,
           currency: data?.currency,
           trial_period_days: data?.trial_period_days,
-          start_date:
-            data?.start_date && format(data?.start_date, "dd/MM/yyyy"),
-          new_price_start_date:
-            data?.new_price_start_date &&
-            format(data?.new_price_start_date, "dd/MM/yyyy"),
+          start_date: data?.start_date,
+          new_price_start_date: data?.new_price_start_date,
           invoice_number: data?.invoice_number,
           hosted_invoice_url: data?.hosted_invoice_url,
         },

@@ -117,12 +117,12 @@ export default async function handler(
             : stripeSubscription.canceled_at
             ? new Date((stripeSubscription.canceled_at as number) * 1000)
             : null,
-        current_period_end_date: new Date(
-          stripeSubscription.current_period_end * 1000
-        ),
-        new_price_start_date: new Date(
-          clientSubscription.current_period_end_date
-        ),
+        current_period_end_date:
+          stripeSubscription.current_period_end &&
+          new Date(stripeSubscription.current_period_end * 1000),
+        new_price_start_date:
+          clientSubscription.current_period_end_date &&
+          new Date(clientSubscription.current_period_end_date),
         invoice_number: stripeInvoice?.number,
         amount:
           eventObject.object === "invoice" && stripeInvoice
