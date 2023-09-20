@@ -12,7 +12,8 @@ const triggerEvent = async (
     client,
     coach,
   }: { subscription: Subscription; client: Client; coach: Coach },
-  data?: any
+  data?: any,
+  context?: any
 ) => {
   const [domain, eventName] = name.split(".");
 
@@ -25,6 +26,13 @@ const triggerEvent = async (
   }
 
   if (eventDefinition) {
+    if (
+      eventDefinition.triggerConditions &&
+      !eventDefinition.triggerConditions(context)
+    ) {
+      return;
+    }
+
     if (eventDefinition.handler) {
       await eventDefinition.handler(subscription, client, coach, data);
     }

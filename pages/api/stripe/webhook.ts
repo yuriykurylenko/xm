@@ -121,35 +121,28 @@ export default async function handler(
         hosted_invoice_url: stripeInvoice?.hosted_invoice_url,
       };
 
+      const eventContext = {
+        stripeEventType: stripeEvent.type,
+        stripeEventPreviousAttributes: previousAttributes,
+        stripeSubscription,
+        stripeInvoice,
+        stripeCharge,
+        subscription: clientSubscription as Subscription,
+        client: client as Client,
+      };
+
       try {
         for (const event of events) {
-          const [domain, eventName] = event.split(".");
-
-          const { default: eventDefinition } = await import(
-            `@/domains/${domain}/events/${eventName}`
-          );
-
-          if (
-            eventDefinition.triggerConditions({
-              stripeEventType: stripeEvent.type,
-              stripeEventPreviousAttributes: previousAttributes,
-              stripeSubscription,
-              stripeInvoice,
-              stripeCharge,
+          await triggerEvent(
+            event,
+            {
               subscription: clientSubscription as Subscription,
               client: client as Client,
-            })
-          ) {
-            await triggerEvent(
-              event,
-              {
-                subscription: clientSubscription as Subscription,
-                client: client as Client,
-                coach: coach as Coach,
-              },
-              eventData
-            );
-          }
+              coach: coach as Coach,
+            },
+            eventData,
+            eventContext
+          );
         }
       } catch (e) {
         console.log(e);
