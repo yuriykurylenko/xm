@@ -19,6 +19,7 @@ type FilterOption = {
 
 interface ItemListProps<T extends { id: UUID | string }> {
   title: string;
+  domain: string;
   filterStatusOptions: FilterOption[];
   fetchItems: (
     page: number,
@@ -62,6 +63,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
 
 const ItemList = <T extends { id: UUID | string }>({
   title,
+  domain,
   filterStatusOptions,
   fetchItems,
   SearchInputComponent,
@@ -104,7 +106,9 @@ const ItemList = <T extends { id: UUID | string }>({
     const loadActions = async () => {
       try {
         const modules = await Promise.all(
-          actions.map((action) => import(`@/domains/clients/actions/${action}`))
+          actions.map(
+            (action) => import(`@/domains/${domain}/actions/${action}`)
+          )
         );
         setActionDefinitions(modules.map((module) => module.default));
       } catch (error) {

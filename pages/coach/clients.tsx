@@ -43,6 +43,7 @@ const Clients = ({ user }: { user: Coach }) => {
       <>
         <ItemList<Client>
           title="Clients"
+          domain="clients"
           filterStatusOptions={[
             { value: "lead", name: "Leads" },
             { value: "offerSent", name: "Sent Offers" },
