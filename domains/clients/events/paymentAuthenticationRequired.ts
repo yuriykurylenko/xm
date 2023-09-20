@@ -1,7 +1,6 @@
 import { StripeEventParams } from "@/types/StripeEventParams";
 
 const paymentAuthenticationRequiredEvent = {
-  name: "paymentAuthenticationRequired",
   emailTemplateId: "d-f467666dc085418ba8904d165d5f5a2b",
   triggerConditions: ({
     stripeEventType,

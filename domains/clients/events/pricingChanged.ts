@@ -1,7 +1,6 @@
 import { StripeEventParams } from "@/types/StripeEventParams";
 
 const pricingChangedEvent = {
-  name: "pricingChanged",
   emailTemplateId: "d-776524b90fc34aa387b8337205142e8c",
   triggerConditions: ({
     stripeEventType,

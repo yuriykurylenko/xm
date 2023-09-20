@@ -24,7 +24,6 @@ const handler = async (
 };
 
 const subscriptionCancelledEvent = {
-  name: "subscriptionCancelled",
   handler,
   triggerConditions: ({ stripeEventType }: StripeEventParams) =>
     stripeEventType === "customer.subscription.deleted",

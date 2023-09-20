@@ -15,7 +15,6 @@ const handler = (
   });
 
 const subscriptionAutoRenewedEvent = {
-  name: "subscriptionAutoRenewed",
   handler,
   triggerConditions: ({ stripeEventType }: StripeEventParams) =>
     stripeEventType === "invoice.created",

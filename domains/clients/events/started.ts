@@ -38,7 +38,6 @@ const handler = async (
 };
 
 const startedEvent = {
-  name: "started",
   handler,
   triggerConditions: ({
     stripeEventType,

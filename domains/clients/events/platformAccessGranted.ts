@@ -1,7 +1,6 @@
 import { StripeEventParams } from "@/types/StripeEventParams";
 
 const platformAccessGrantedEvent = {
-  name: "platformAccessGranted",
   emailTemplateId: "d-bb7a32cfdef545308aea0cf7bbbee901",
   triggerConditions: ({
     stripeEventType,

@@ -23,7 +23,6 @@ const handler = async (
 };
 
 const startCanceledEvent = {
-  name: "startCanceled",
   handler,
   triggerConditions: ({ stripeEventType, subscription }: StripeEventParams) =>
     stripeEventType === "subscription_schedule.canceled" &&

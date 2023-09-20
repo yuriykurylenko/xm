@@ -11,7 +11,6 @@ const handler = (
 ) => updateSubscriptionById(subscription.id, { status, end_date });
 
 const subscriptionCancellationScheduledEvent = {
-  name: "subscriptionCancellationScheduled",
   handler,
   triggerConditions: ({
     stripeEventType,

@@ -14,7 +14,6 @@ const handler = async (
   });
 
 const termsChangedEvent = {
-  name: "termsChanged",
   handler,
   emailTemplateId: "d-306b9c3260cd4337b3528ee2e847bb31",
   triggerConditions: ({

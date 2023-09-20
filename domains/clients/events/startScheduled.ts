@@ -22,7 +22,6 @@ const handler = async (
 };
 
 const startScheduledEvent = {
-  name: "startScheduled",
   handler,
   triggerConditions: ({
     stripeEventType,

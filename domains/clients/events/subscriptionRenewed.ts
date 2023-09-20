@@ -11,7 +11,6 @@ const handler = (
 ) => updateClientSubscriptionById(subscription.id, { status, end_date });
 
 const subscriptionRenewedEvent = {
-  name: "subscriptionRenewed",
   handler,
   emailTemplateId: "d-664503562b62462d9931a694b35c5155",
   triggerConditions: ({
