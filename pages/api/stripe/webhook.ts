@@ -14,20 +14,20 @@ import { Client, Coach } from "@/types/user";
 import triggerEvent from "@/app/utils/triggerEvent";
 
 const events = [
-  "platformAccessGranted",
-  "platformAccessRestored",
-  "pricingChanged",
-  "startCanceled",
-  "started",
-  "startScheduled",
-  "subscriptionAutoRenewed",
-  "subscriptionCancellationScheduled",
-  "subscriptionCancelled",
-  "subscriptionRenewed",
-  "termsChanged",
-  "paymentAuthenticationRequired",
-  "paymentFailed",
-  "paymentSucceeded",
+  "clients.platformAccessGranted",
+  "clients.platformAccessRestored",
+  "clients.pricingChanged",
+  "clients.startCanceled",
+  "clients.started",
+  "clients.startScheduled",
+  "clients.subscriptionAutoRenewed",
+  "clients.subscriptionCancellationScheduled",
+  "clients.subscriptionCancelled",
+  "clients.subscriptionRenewed",
+  "clients.termsChanged",
+  "clients.paymentAuthenticationRequired",
+  "clients.paymentFailed",
+  "clients.paymentSucceeded",
 ];
 
 export const config = {
@@ -123,8 +123,10 @@ export default async function handler(
 
       try {
         for (const event of events) {
+          const [domain, eventName] = event.split(".");
+
           const { default: eventDefinition } = await import(
-            `@/domains/clients/events/${event}`
+            `@/domains/${domain}/events/${eventName}`
           );
 
           if (

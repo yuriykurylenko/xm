@@ -14,8 +14,10 @@ const triggerEvent = async (
   }: { subscription: Subscription; client: Client; coach: Coach },
   data?: any
 ) => {
+  const [domain, eventName] = name.split(".");
+
   const { default: eventDefinition } = await import(
-    `@/domains/clients/events/${name}`
+    `@/domains/${domain}/events/${eventName}`
   );
 
   if (!eventDefinition) {
