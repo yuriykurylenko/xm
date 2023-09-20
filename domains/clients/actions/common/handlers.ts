@@ -1,6 +1,5 @@
 import StripeApi from "stripe";
 import { MailService } from "@sendgrid/mail";
-import { format } from "date-fns";
 
 import {
   createClientSubscription,

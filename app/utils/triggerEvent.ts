@@ -3,8 +3,6 @@ import { Client, Coach } from "@/types/user";
 
 import sgMail from "@/initializers/sgMail";
 
-import { format } from "date-fns";
-
 const triggerEvent = async (
   name: string,
   {
