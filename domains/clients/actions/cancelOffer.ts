@@ -35,7 +35,6 @@ const cancelOfferAction: Action<Client> = {
   icon: faXmark,
   show: (client: Client) => client.status === "offerSent",
   apiHandler,
-  apiOperation: "cancelOffer",
   onComplete,
   dialogTitle: "Cancel {{full_name}}'s offer",
   dialogTitleBulk: "Cancel {{n}} clients' offers",

@@ -69,7 +69,6 @@ const cancelSubscriptionAction: Action<Client> = {
     ["past_due", "unpaid", "active", "trialing"].includes(
       client.subscription_status as string
     ),
-  apiOperation: "cancelSubscription",
   apiHandler,
   onComplete,
   DialogForm: () => DialogForm({}),

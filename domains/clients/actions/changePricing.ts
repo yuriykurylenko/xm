@@ -12,7 +12,6 @@ const changePricingAction: Action<Client> = {
   icon: faDollarSign,
   show: (client: Client) =>
     client.status === "client" && client.end_date === null,
-  apiOperation: "changePricing",
   apiHandler: changePriceOrRenewSubscription,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     PriceField({ items, coach: user as Coach }),

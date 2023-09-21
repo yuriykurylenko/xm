@@ -39,7 +39,6 @@ const cancelStartAction: Action<Client> = {
   titleBulk: "Cancel start",
   icon: faXmark,
   show: (client: Client) => client.status === "starting",
-  apiOperation: "cancelStart",
   apiHandler,
   onComplete,
   dialogTitle: "Cancel {{full_name}}'s start",

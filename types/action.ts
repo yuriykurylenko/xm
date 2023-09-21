@@ -11,7 +11,6 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   show: (item: T) => boolean;
   handler?: (itemId: UUID, data: D) => Promise<U>;
   apiHandler?: (itemId: UUID, data?: D, context?: any) => Promise<U>;
-  apiOperation?: string;
   onComplete?: (setFilterStatus?: (filterStatus: string) => void) => void;
   DialogForm?: React.ComponentType<{ items: T[]; user: Client | Coach }>;
   dialogTitle: string;

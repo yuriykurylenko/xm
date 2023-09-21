@@ -14,7 +14,6 @@ const sendOfferWhenEndedAction: Action<Client> = {
   titleBulk: "Send new offers",
   icon: faRotate,
   show: (client: Client) => client.status === "ended",
-  apiOperation: "sendOfferWhenEnded",
   apiHandler: sendOffer,
   onComplete: onSendOfferComplete,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>

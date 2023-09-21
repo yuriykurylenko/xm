@@ -14,7 +14,6 @@ const sendOfferAction: Action<Client> = {
   titleBulk: "Send offers",
   icon: faPaperPlane,
   show: (client: Client) => client.status === "lead",
-  apiOperation: "sendOffer",
   apiHandler: sendOffer,
   onComplete: onSendOfferComplete,
   DialogForm: ({ items, user }: { items: Client[]; user: any }) =>

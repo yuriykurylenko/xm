@@ -21,7 +21,6 @@ const revokeAccessAction: Action<Client> = {
     !["starting", "client"].includes(client.status as string) &&
     client.access_revoked_at == null &&
     client.user_id != null,
-  apiOperation: "revokeAccess",
   apiHandler,
   dialogTitle: "Revoke access for {{full_name}}",
   dialogTitleBulk: "Revoke access for {{n}} clients",

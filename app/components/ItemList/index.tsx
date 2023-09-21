@@ -107,11 +107,11 @@ const ItemList = <T extends { id: UUID | string }>({
       try {
         const modules = await Promise.all(
           actions.map(async (action) => {
-            const module = await import(
+            const actionModule = await import(
               `@/domains/${domain}/actions/${action}`
             );
             return {
-              ...module,
+              ...actionModule,
               name: action,
             };
           })
@@ -232,10 +232,7 @@ const ItemList = <T extends { id: UUID | string }>({
       try {
         const { error } = action.handler
           ? await action.handler(item.id, data)
-          : await axios.put(
-              `/api/clients/${item.id}/${action.apiOperation}`,
-              data
-            );
+          : await axios.put(`/api/clients/${item.id}/${action.name}`, data);
 
         if (error) {
           return { error };

@@ -21,7 +21,6 @@ const archiveAction: Action<Client> = {
   show: (client: Client) =>
     client.status === "lead" || client.subscription_status === "canceled",
   apiHandler,
-  apiOperation: "archive",
   dialogTitle: "Archive {{full_name}}",
   dialogTitleBulk: "Archive {{n}} clients",
   dialogText: "Are you sure you would like to archive {{full_name}}?",

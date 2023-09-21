@@ -12,7 +12,6 @@ const renewSubscriptionAction: Action<Client> = {
   icon: faRotate,
   show: (client: Client) =>
     client.status === "client" && client.end_date != null,
-  apiOperation: "renewSubscription",
   apiHandler: changePriceOrRenewSubscription,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     PriceField({ items, coach: user as Coach }),

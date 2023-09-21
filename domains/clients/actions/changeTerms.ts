@@ -107,7 +107,6 @@ const changeTermsAction: Action<Client> = {
   titleBulk: "Change terms",
   icon: faRotate,
   show: (client: Client) => client.status === "starting",
-  apiOperation: "changeTerms",
   apiHandler,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     ClientTermsFormFields({ items, coach: user as Coach }),
