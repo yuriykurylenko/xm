@@ -61,8 +61,7 @@ const apiHandler = async (
 const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
   setFilterStatus && setFilterStatus("ended");
 
-const endSubscriptionAction: Action<Client> = {
-  name: "endSubscription",
+const cancelSubscriptionAction: Action<Client> = {
   title: "End client",
   titleBulk: "End clients",
   icon: faXmark,
@@ -70,7 +69,7 @@ const endSubscriptionAction: Action<Client> = {
     ["past_due", "unpaid", "active", "trialing"].includes(
       client.subscription_status as string
     ),
-  apiOperation: "endSubscription",
+  apiOperation: "cancelSubscription",
   apiHandler,
   onComplete,
   DialogForm: () => DialogForm({}),
@@ -84,4 +83,4 @@ const endSubscriptionAction: Action<Client> = {
     "If you choose not to end the subscriptions immediately, your clients will stop at the end of their respective monthly billing cycles.",
 };
 
-export default endSubscriptionAction;
+export default cancelSubscriptionAction;

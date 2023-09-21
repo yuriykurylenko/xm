@@ -106,11 +106,20 @@ const ItemList = <T extends { id: UUID | string }>({
     const loadActions = async () => {
       try {
         const modules = await Promise.all(
-          actions.map(
-            (action) => import(`@/domains/${domain}/actions/${action}`)
-          )
+          actions.map(async (action) => {
+            const module = await import(
+              `@/domains/${domain}/actions/${action}`
+            );
+            return {
+              ...module,
+              name: action,
+            };
+          })
         );
-        setActionDefinitions(modules.map((module) => module.default));
+
+        setActionDefinitions(
+          modules.map((module) => ({ name: module.name, ...module.default }))
+        );
       } catch (error) {
         console.error("Error loading modules:", error);
       }
@@ -199,17 +208,19 @@ const ItemList = <T extends { id: UUID | string }>({
     setFilterText(value);
   };
 
-  const enhancedActions = actionDefinitions.map((action: { name: string }) => ({
-    ...action,
-    handler: (itemId?: UUID | UUID[]) => {
-      if (itemId) {
-        setSelectedItems(
-          items.filter((i: T) => [itemId].flat().includes(i.id as UUID))
-        );
-      }
-      setOpenActionDialogs([action.name]);
-    },
-  }));
+  const enhancedActions = actionDefinitions.map(
+    (action: { name?: string }) => ({
+      ...action,
+      handler: (itemId?: UUID | UUID[]) => {
+        if (itemId) {
+          setSelectedItems(
+            items.filter((i: T) => [itemId].flat().includes(i.id as UUID))
+          );
+        }
+        setOpenActionDialogs([action.name as string]);
+      },
+    })
+  );
 
   const handleCloseDialog = () => {
     setSelectedItems([]);

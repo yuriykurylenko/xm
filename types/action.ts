@@ -4,7 +4,7 @@ import { Client, Coach } from "@/types/user";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
 export type Action<T extends { id: UUID | string }, D = any, U = any> = {
-  name: string;
+  name?: string;
   title: string;
   titleBulk: string;
   icon: IconDefinition;

@@ -40,17 +40,17 @@
 
 .action-btn-sendOffer:hover,
 .action-btn-resendOffer:hover,
-.action-btn-changeStartingSubscription:hover,
-.action-btn-changeSubscriptionAmount:hover,
+.action-btn-changeTerms:hover,
+.action-btn-changePricing:hover,
 .action-btn-renewSubscription:hover,
-.action-btn-sendOfferToEndedClient:hover {
+.action-btn-sendOfferWhenEnded:hover {
   color: #56d779;
 }
 
 .action-btn-archive:hover,
-.action-btn-endSubscription:hover,
+.action-btn-cancelSubscription:hover,
 .action-btn-revokeAccess:hover,
 .action-btn-cancelOffer:hover,
-.action-btn-cancelSubscriptionSchedule:hover {
+.action-btn-cancelStart:hover {
   color: #d75656;
 }

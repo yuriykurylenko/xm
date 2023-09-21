@@ -30,7 +30,6 @@ const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
   setFilterStatus && setFilterStatus("lead");
 
 const cancelOfferAction: Action<Client> = {
-  name: "cancelOffer",
   title: "Cancel offer",
   titleBulk: "Cancel offers",
   icon: faXmark,

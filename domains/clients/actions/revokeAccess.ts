@@ -14,7 +14,6 @@ const apiHandler = async (clientId: UUID) => {
 };
 
 const revokeAccessAction: Action<Client> = {
-  name: "revokeAccess",
   title: "Revoke platform access",
   titleBulk: "Revoke access",
   icon: faPowerOff,

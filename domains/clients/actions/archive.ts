@@ -15,7 +15,6 @@ const apiHandler = async (clientId: UUID) => {
 };
 
 const archiveAction: Action<Client> = {
-  name: "archive",
   title: "Archive",
   titleBulk: "Archive",
   icon: faTrash,

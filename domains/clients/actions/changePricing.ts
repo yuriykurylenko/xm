@@ -6,14 +6,13 @@ import { changePriceOrRenewSubscription } from "@/domains/clients/actions/common
 
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
-const changeSubscriptionAmountAction: Action<Client> = {
-  name: "changeSubscriptionAmount",
+const changePricingAction: Action<Client> = {
   title: "Change client's monthly price",
   titleBulk: "Change price",
   icon: faDollarSign,
   show: (client: Client) =>
     client.status === "client" && client.end_date === null,
-  apiOperation: "changeSubscriptionAmount",
+  apiOperation: "changePricing",
   apiHandler: changePriceOrRenewSubscription,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     PriceField({ items, coach: user as Coach }),
@@ -27,4 +26,4 @@ const changeSubscriptionAmountAction: Action<Client> = {
     "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again.",
 };
 
-export default changeSubscriptionAmountAction;
+export default changePricingAction;

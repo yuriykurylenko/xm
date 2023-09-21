@@ -10,7 +10,6 @@ import {
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 const resendOfferAction: Action<Client> = {
-  name: "resendOffer",
   title: "Send a new offer",
   titleBulk: "Send new offers",
   icon: faRotate,

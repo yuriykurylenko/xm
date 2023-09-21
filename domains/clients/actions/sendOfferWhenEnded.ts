@@ -9,13 +9,12 @@ import {
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
-const sendOfferToEndedClientAction: Action<Client> = {
-  name: "sendOfferToEndedClient",
+const sendOfferWhenEndedAction: Action<Client> = {
   title: "Send a new offer",
   titleBulk: "Send new offers",
   icon: faRotate,
   show: (client: Client) => client.status === "ended",
-  apiOperation: "sendOfferToEndedClient",
+  apiOperation: "sendOfferWhenEnded",
   apiHandler: sendOffer,
   onComplete: onSendOfferComplete,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
@@ -30,4 +29,4 @@ const sendOfferToEndedClientAction: Action<Client> = {
     "Your clients will receive an email with the link to subscribe and pay your specified amount monthly.",
 };
 
-export default sendOfferToEndedClientAction;
+export default sendOfferWhenEndedAction;

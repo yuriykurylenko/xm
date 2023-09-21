@@ -34,13 +34,12 @@ const apiHandler = async (
 const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
   setFilterStatus && setFilterStatus("lead");
 
-const cancelSubscriptionScheduleAction: Action<Client> = {
-  name: "cancelSubscriptionSchedule",
+const cancelStartAction: Action<Client> = {
   title: "Cancel starting client",
   titleBulk: "Cancel start",
   icon: faXmark,
   show: (client: Client) => client.status === "starting",
-  apiOperation: "cancelSubscriptionSchedule",
+  apiOperation: "cancelStart",
   apiHandler,
   onComplete,
   dialogTitle: "Cancel {{full_name}}'s start",
@@ -49,4 +48,4 @@ const cancelSubscriptionScheduleAction: Action<Client> = {
   dialogTextBulk: "Are you sure you would like to cancel {{n}} clients' start?",
 };
 
-export default cancelSubscriptionScheduleAction;
+export default cancelStartAction;

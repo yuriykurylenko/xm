@@ -10,7 +10,6 @@ import {
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 const sendOfferAction: Action<Client> = {
-  name: "sendOffer",
   title: "Send offer",
   titleBulk: "Send offers",
   icon: faPaperPlane,

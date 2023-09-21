@@ -102,13 +102,12 @@ const apiHandler = async (
   return { data: clietSubscription, error };
 };
 
-const changeStartingSubscriptionAction: Action<Client> = {
-  name: "changeStartingSubscription",
+const changeTermsAction: Action<Client> = {
   title: "Change client's terms",
   titleBulk: "Change terms",
   icon: faRotate,
   show: (client: Client) => client.status === "starting",
-  apiOperation: "changeStartingSubscription",
+  apiOperation: "changeTerms",
   apiHandler,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     ClientTermsFormFields({ items, coach: user as Coach }),
@@ -123,4 +122,4 @@ const changeStartingSubscriptionAction: Action<Client> = {
     "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again.",
 };
 
-export default changeStartingSubscriptionAction;
+export default changeTermsAction;

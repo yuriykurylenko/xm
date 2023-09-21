@@ -7,7 +7,6 @@ import { changePriceOrRenewSubscription } from "./common/handlers";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
 const renewSubscriptionAction: Action<Client> = {
-  name: "renewSubscription",
   title: "Renew client's subscription",
   titleBulk: "Renew subscriptions",
   icon: faRotate,
