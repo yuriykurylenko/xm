@@ -4,11 +4,8 @@ import { useRouter } from "next/router";
 
 import useAuth from "@/app/hooks/useAuth";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";
-import {
-  fetchClientById,
-  fetchCoachById,
-  fetchSubscriptionById,
-} from "@/app/utils/api";
+import { fetchClientById, fetchSubscriptionById } from "@/app/utils/api";
+import { fetch as fetchCoachById } from "@/domains/coaches/model";
 import PageContainer from "@/app/components/PageContainer";
 import { Coach, Client } from "@/types/user";
 import { UUID } from "crypto";

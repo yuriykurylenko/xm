@@ -6,11 +6,8 @@ import Form from "@/app/components/Form";
 
 import useAuth from "@/app/hooks/useAuth";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";
-import {
-  fetchClientById,
-  fetchCoachById,
-  fetchSubscriptionById,
-} from "@/app/utils/api";
+import { fetchClientById, fetchSubscriptionById } from "@/app/utils/api";
+import { fetch as fetchCoachById } from "@/domains/coaches/model";
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
