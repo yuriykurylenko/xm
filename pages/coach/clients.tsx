@@ -54,15 +54,15 @@ const Clients = ({ user }: { user: Coach }) => {
           fetchItems={fetchClients}
           actions={[
             "sendOffer",
-            "changeStartingSubscription",
-            "changeSubscriptionAmount",
+            "changeTerms",
+            "changePricing",
             "renewSubscription",
             "resendOffer",
-            "sendOfferToEndedClient",
+            "sendOfferWhenEnded",
             "revokeAccess",
             "cancelOffer",
-            "cancelSubscriptionSchedule",
-            "endSubscription",
+            "cancelStart",
+            "cancelSubscription",
             "archive",
           ]}
           SearchInputComponent={SearchInput}
