@@ -169,11 +169,10 @@ export const createClientSubscription = async (
     startDate && startOfUtcDay(new Date(startDate)) > startOfUtcDay(new Date())
       ? startOfUtcDay(new Date(startDate))
       : null;
-  let price;
 
   await updateSubscriptionByClientId(clientId, { archived_at: new Date() });
 
-  price = await findOrCreateStripePrice(stripe, {
+  const price = await findOrCreateStripePrice(stripe, {
     product: coach.stripe_product_id,
     interval: "month",
     unit_amount: monthlyAmount * 100,
