@@ -1,7 +1,8 @@
 import { useState, useEffect, SetStateAction } from "react";
 import supabase from "@/initializers/supabaseClient";
 import { Client, Coach, User } from "@/types/user";
-import { createCoach, updateClientById } from "@/app/utils/api";
+import { updateClientById } from "@/app/utils/api";
+import { create as createCoach } from "@/domains/coaches/model";
 
 interface CoachSignUpParams {
   email: string;

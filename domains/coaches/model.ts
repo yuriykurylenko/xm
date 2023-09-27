@@ -1,5 +1,6 @@
 import { fetchClientById } from "@/app/utils/api";
 import supabase from "@/initializers/supabaseClient";
+import { CoachInput } from "@/types/user";
 import { UUID } from "crypto";
 
 export const fetch = (id: UUID) =>
@@ -15,3 +16,21 @@ export const fetchByClientId = async (clientId: UUID) => {
   }
   return fetch(data.coach_id);
 };
+
+export const create = ({
+  user_id,
+  full_name,
+  email,
+  monthly_subscription_amount,
+  subscription_currency,
+}: CoachInput) =>
+  supabase
+    .from("coaches")
+    .insert({
+      user_id,
+      full_name,
+      email,
+      monthly_subscription_amount,
+      subscription_currency,
+    })
+    .select();
