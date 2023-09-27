@@ -8,11 +8,11 @@ import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import {
   createClientSubscription,
-  fetchCoachByClientId,
   fetchSubscriptionByClientId,
   startOfUtcDay,
 } from "@/app/utils/api";
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
+import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 
 const apiHandler = async (
   clientId: UUID,

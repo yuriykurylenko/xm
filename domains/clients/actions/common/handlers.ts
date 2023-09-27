@@ -4,11 +4,11 @@ import { MailService } from "@sendgrid/mail";
 import {
   createClientSubscription,
   fetchClientById,
-  fetchCoachByClientId,
   fetchSubscriptionsByClientId,
   updateClientById,
   updateClientSubscriptionById,
 } from "@/app/utils/api";
+import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 
 import { updateStripeSubscription } from "@/app/utils/api/stripe";
 import { UUID } from "crypto";

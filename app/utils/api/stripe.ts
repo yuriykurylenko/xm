@@ -10,10 +10,11 @@ import StripeApi from "stripe";
 import axios from "axios";
 import { UUID } from "crypto";
 import {
-  fetchCoachByClientId,
   fetchSubscriptionByStripeSubscriptionId,
   updateClientSubscriptionByStripeSubscriptionId,
 } from "@/app/utils/api";
+
+import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 
 const createStripeSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/stripe/setup_intent", { email });

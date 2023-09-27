@@ -2,7 +2,7 @@ import * as React from "react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import withAuth from "@/app/hoc/withAuth";
-import { fetchCoachById } from "@/app/utils/api";
+import { fetch as fetchCoachById } from "@/domains/coaches/model";
 import styles from "@/app/styles/home.module.css";
 import { Client, Coach } from "@/types/user";
 import { UUID } from "crypto";

@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import { fetchCoachBySlug } from "@/app/utils/api";
+import { fetchBySlug as fetchCoachBySlug } from "@/domains/coaches/model";
 import PageContainer from "@/app/components/PageContainer";
 import withAuth from "@/app/hoc/withAuth";
 import { ClientApplicationPageProps } from "@/types/ClientApplicationPageProps";

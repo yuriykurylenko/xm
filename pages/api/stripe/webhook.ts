@@ -2,12 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { stripe } from "@/initializers/stripe";
 import { buffer } from "micro";
-import {
-  fetchClientById,
-  fetchCoachByClientId,
-  fetchSubscriptionById,
-} from "@/app/utils/api";
-import sgMail from "@sendgrid/mail";
+import { fetchClientById, fetchSubscriptionById } from "@/app/utils/api";
+import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
@@ -45,7 +41,6 @@ export default async function handler(
     const sig = req.headers["stripe-signature"] as string;
 
     let stripeEvent: Stripe.Event;
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
     try {
       stripeEvent = stripe.webhooks.constructEvent(

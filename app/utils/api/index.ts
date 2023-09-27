@@ -4,6 +4,7 @@ import supabase from "@/initializers/supabaseClient";
 import { UUID } from "crypto";
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
 import StripeApi from "stripe";
+import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 
 export const startOfUtcDay = (date: Date) => {
   return new Date(
@@ -11,22 +12,8 @@ export const startOfUtcDay = (date: Date) => {
   ).toISOString();
 };
 
-export const fetchCoachById = (id: UUID) =>
-  supabase.from("coaches").select("*").eq("id", id).single();
-
-export const fetchCoachBySlug = (slug: string) =>
-  supabase.from("coaches").select("*").eq("slug", slug).single();
-
 export const fetchClientById = (clientId: UUID) =>
   supabase.from("clients").select("*").eq("id", clientId).single();
-
-export const fetchCoachByClientId = async (clientId: UUID) => {
-  const { data, error } = await fetchClientById(clientId);
-  if (error) {
-    return { data, error };
-  }
-  return fetchCoachById(data.coach_id);
-};
 
 export const fetchClientsByCoachId = async (
   coachId: UUID,
@@ -122,24 +109,6 @@ export const createClient = ({ full_name, email, coach_id }: ClientInput) =>
         coach_id,
       },
     ])
-    .select();
-
-export const createCoach = ({
-  user_id,
-  full_name,
-  email,
-  monthly_subscription_amount,
-  subscription_currency,
-}: CoachInput) =>
-  supabase
-    .from("coaches")
-    .insert({
-      user_id,
-      full_name,
-      email,
-      monthly_subscription_amount,
-      subscription_currency,
-    })
     .select();
 
 export const createClientSubscription = async (
