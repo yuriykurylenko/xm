@@ -1,6 +1,7 @@
-import { updateClientById } from "@/app/utils/api";
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
+
+import { update as updateClientById } from "@/domains/clients/model";
 
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";

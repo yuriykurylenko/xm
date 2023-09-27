@@ -1,19 +1,22 @@
 import * as React from "react";
 import Head from "next/head";
-import withAuth from "@/app/hoc/withAuth";
-import { fetchClientsByCoachId } from "@/app/utils/api";
-import FilterBar from "@/app/components/FilterBar";
 
+import { Coach, Client } from "@/types/user";
+import { UUID } from "crypto";
+
+import { fetchAllByCoachId as fetchClientsByCoachId } from "@/domains/clients/model";
+
+import withAuth from "@/app/hoc/withAuth";
+
+import FilterBar from "@/app/components/FilterBar";
 import ItemList from "@/app/components/ItemList";
+import SearchInput from "@/app/components/SearchInput";
+
 import ClientCard from "@/domains/clients/components/ListCard";
 import EmptyList, {
   EmptyListProps,
 } from "@/domains/clients/components/EmptyList";
-import { Coach, Client } from "@/types/user";
-import { UUID } from "crypto";
-
 import ClientsListHeader from "@/domains/clients/components/ListHeader";
-import SearchInput from "@/app/components/SearchInput";
 
 const Clients = ({ user }: { user: Coach }) => {
   const fetchClients = async (

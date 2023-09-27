@@ -6,7 +6,8 @@ import Form from "@/app/components/Form";
 
 import useAuth from "@/app/hooks/useAuth";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";
-import { fetchClientById, fetchSubscriptionById } from "@/app/utils/api";
+import { fetchSubscriptionById } from "@/app/utils/api";
+import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetch as fetchCoachById } from "@/domains/coaches/model";
 import Input from "@/app/components/Form/Input";
 import Button from "@/app/components/Form/Button";

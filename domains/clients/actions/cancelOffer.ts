@@ -1,7 +1,6 @@
-import {
-  updateClientById,
-  updateSubscriptionByClientId,
-} from "@/app/utils/api";
+import { updateSubscriptionByClientId } from "@/app/utils/api";
+import { update as updateClientById } from "@/domains/clients/model";
+
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";

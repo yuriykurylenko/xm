@@ -1,7 +1,8 @@
-import { fetchClientById } from "@/app/utils/api";
 import db from "@/initializers/supabaseClient";
 import { CoachInput } from "@/types/user";
 import { UUID } from "crypto";
+
+import { fetch as fetchClientById } from "@/domains/clients/model";
 
 export const fetch = (id: UUID) =>
   db.from("coaches").select("*").eq("id", id).single();

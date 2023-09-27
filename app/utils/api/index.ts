@@ -1,5 +1,4 @@
-import { Subscription, SubscriptionInput } from "@/types/subscription";
-import { ClientInput } from "@/types/user";
+import { SubscriptionInput } from "@/types/subscription";
 import supabase from "@/initializers/supabaseClient";
 import { UUID } from "crypto";
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
@@ -10,67 +9,6 @@ export const startOfUtcDay = (date: Date) => {
   return new Date(
     Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
   ).toISOString();
-};
-
-export const fetchClientById = (clientId: UUID) =>
-  supabase.from("clients").select("*").eq("id", clientId).single();
-
-export const fetchClientsByCoachId = async (
-  coachId: UUID,
-  page: number = 1,
-  filterStatus: string = "all",
-  filterText: string = "",
-  sortColumn: string = "updated_at",
-  sortDirection: "asc" | "desc" = "desc"
-) => {
-  const itemsPerPage = 20;
-  const offset = (page - 1) * itemsPerPage;
-
-  let query = supabase
-    .from("clients")
-    .select(
-      "*, subscriptions (status, updated_at, monthly_amount, currency, trial_period_days, archived_at)"
-    )
-    .eq("coach_id", coachId)
-    .is("archived_at", null);
-
-  let totalQuery = supabase
-    .from("clients")
-    .select("id", { count: "exact" })
-    .eq("coach_id", coachId)
-    .is("archived_at", null);
-
-  if (filterStatus !== "all") {
-    query = query.eq("status", filterStatus);
-    totalQuery = totalQuery.eq("status", filterStatus);
-  }
-
-  if (filterText) {
-    query = query.ilike("full_name", `%${filterText}%`);
-    totalQuery = totalQuery.ilike("full_name", `%${filterText}%`);
-  }
-
-  if (sortColumn) {
-    query = query.order(sortColumn, { ascending: sortDirection === "asc" });
-  }
-
-  const response = await query.range(offset, offset + itemsPerPage - 1);
-  const total = await totalQuery;
-
-  if (response.data) {
-    response.data = response.data.map((client) => ({
-      ...client,
-      subscription: client.subscriptions
-        .filter((s: Subscription) => s.archived_at == null)
-        .sort(
-          (s1: Subscription, s2: Subscription) =>
-            new Date(s2.updated_at as Date).getTime() -
-            new Date(s1.updated_at as Date).getTime()
-        )[0],
-    }));
-  }
-
-  return { ...response, total: total.count };
 };
 
 export const fetchSubscriptionById = (subscriptionId: UUID | string) =>
@@ -98,18 +36,6 @@ export const fetchSubscriptionByStripeSubscriptionId = (
     .eq("stripe_subscription_id", stripeSubscriptionId)
     .is("archived_at", null)
     .single();
-
-export const createClient = ({ full_name, email, coach_id }: ClientInput) =>
-  supabase
-    .from("clients")
-    .insert([
-      {
-        full_name,
-        email,
-        coach_id,
-      },
-    ])
-    .select();
 
 export const createClientSubscription = async (
   clientId: UUID,
@@ -187,9 +113,6 @@ export const updateClientSubscriptionByStripeSubscriptionId = (
     .select()
     .single();
 
-export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
-  supabase.from("clients").update(data).eq("id", clientId).select().single();
-
 export const updateSubscriptionByClientId = async (
   clientId: UUID | string,
   data: SubscriptionInput
@@ -205,20 +128,6 @@ export const updateSubscriptionById = async (
   data: SubscriptionInput
 ) =>
   supabase.from("subscriptions").update(data).eq("id", subscriptionId).select();
-
-export const activateClient = async (subscriptionId: UUID) => {
-  const { data: subscription, error } = await fetchSubscriptionById(
-    subscriptionId
-  );
-
-  if (error) {
-    return { data: subscription, error };
-  }
-  await updateClientById(subscription.client_id, {
-    status:
-      new Date(subscription.start_date) <= new Date() ? "client" : "starting",
-  });
-};
 
 export async function fetchSubscriptionsByClientId(clientId: UUID | string) {
   try {

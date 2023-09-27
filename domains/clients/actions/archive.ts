@@ -1,7 +1,7 @@
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 
-import { updateClientById } from "@/app/utils/api";
+import { update as updateClientById } from "@/domains/clients/model";
 
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";

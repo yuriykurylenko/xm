@@ -1,7 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { createClient } from "@/app/utils/api";
+
+import { create as createClient } from "@/domains/clients/model";
 import { fetchBySlug as fetchCoachBySlug } from "@/domains/coaches/model";
 
 import Form from "@/app/components/Form";

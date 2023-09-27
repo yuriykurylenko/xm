@@ -1,10 +1,11 @@
 import Head from "next/head";
+import { fetchSubscriptionById } from "@/app/utils/api";
 import {
-  activateClient,
-  fetchClientById,
-  fetchSubscriptionById,
-} from "@/app/utils/api";
+  activate as activateClient,
+  fetch as fetchClientById,
+} from "@/domains/clients/model";
 import { fetch as fetchCoachById } from "@/domains/coaches/model";
+
 import CheckoutForm from "@/app/components/CheckoutForm";
 import router from "next/router";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";

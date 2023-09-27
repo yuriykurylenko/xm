@@ -1,7 +1,6 @@
-import {
-  updateClientById,
-  updateClientSubscriptionById,
-} from "@/app/utils/api";
+import { updateClientSubscriptionById } from "@/app/utils/api";
+import { update as updateClientById } from "@/domains/clients/model";
+
 import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
