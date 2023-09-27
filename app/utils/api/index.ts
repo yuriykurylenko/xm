@@ -190,9 +190,6 @@ export const updateClientSubscriptionByStripeSubscriptionId = (
 export const updateClientById = (clientId: UUID | string, data: ClientInput) =>
   supabase.from("clients").update(data).eq("id", clientId).select().single();
 
-export const updateCoachById = (coachId: UUID | string, data: CoachInput) =>
-  supabase.from("coaches").update(data).eq("id", coachId).select().single();
-
 export const updateSubscriptionByClientId = async (
   clientId: UUID | string,
   data: SubscriptionInput

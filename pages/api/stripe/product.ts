@@ -2,7 +2,7 @@ import { stripe } from "@/initializers/stripe";
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { createStripeProductForCoach } from "@/app/utils/api/stripe";
-import { updateCoachById } from "@/app/utils/api";
+import { update as updateCoachById } from "@/domains/coaches/model";
 import { fetch as fetchCoachById } from "@/domains/coaches/model";
 import { Coach } from "@/types/user";
 

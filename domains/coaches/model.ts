@@ -34,3 +34,6 @@ export const create = ({
       subscription_currency,
     })
     .select();
+
+export const update = (id: UUID | string, data: CoachInput) =>
+  supabase.from("coaches").update(data).eq("id", id).select().single();
