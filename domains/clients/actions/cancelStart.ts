@@ -1,6 +1,6 @@
 import StripeApi from "stripe";
 
-import { cancelStripeSubscriptionSchedule } from "@/app/utils/api/stripe";
+import { cancelStripeSubscriptionSchedule } from "@/app/utils/stripe";
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
