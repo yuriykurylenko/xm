@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 
 import useAuth from "@/app/hooks/useAuth";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";
-import { fetchSubscriptionById } from "@/app/utils/api";
+
+import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetch as fetchCoachById } from "@/domains/coaches/model";
 import PageContainer from "@/app/components/PageContainer";
@@ -18,7 +19,7 @@ interface SubscriptionSuccessPageProps extends AuthProps {
 }
 
 const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
-  const { user, clientSignUp } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   // TODO: fix apparently not fetching the user after signing up

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { fetchSubscriptionById } from "@/app/utils/api";
+import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import {
   activate as activateClient,
   fetch as fetchClientById,
