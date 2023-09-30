@@ -9,7 +9,6 @@ import { UUID } from "crypto";
 import Handlebars from "handlebars";
 import axios from "axios";
 import useAuth from "@/app/hooks/useAuth";
-import { Client, Coach } from "@/types/user";
 import { Action } from "@/types/action";
 
 type FilterOption = {
@@ -126,7 +125,7 @@ const ItemList = <T extends { id: UUID | string }>({
     };
 
     loadActions();
-  }, []);
+  }, [actions, domain]);
 
   const prepareData = async () => {
     setIsListLoaded(false);
