@@ -1,4 +1,4 @@
-import { updateClientSubscriptionById } from "@/app/utils/api";
+import { update as updateSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import { update as updateClientById } from "@/domains/clients/model";
 
 import { StripeEventParams } from "@/types/StripeEventParams";
@@ -11,7 +11,7 @@ const handler = async (
   coach: Coach,
   { status, end_date }: { status: string; end_date: Date | null }
 ) => {
-  await updateClientSubscriptionById(subscription.id, {
+  await updateSubscriptionById(subscription.id, {
     status,
     end_date,
   });

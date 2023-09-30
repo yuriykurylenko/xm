@@ -1,4 +1,4 @@
-import { updateClientSubscriptionById } from "@/app/utils/api";
+import { update as updateSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
@@ -8,7 +8,7 @@ const handler = (
   client: Client,
   coach: Coach,
   { status, end_date }: { status: string; end_date: Date | null }
-) => updateClientSubscriptionById(subscription.id, { status, end_date });
+) => updateSubscriptionById(subscription.id, { status, end_date });
 
 const subscriptionRenewedEvent = {
   handler,

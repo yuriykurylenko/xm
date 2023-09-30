@@ -75,7 +75,7 @@ export const Input: FC<InputProps> = ({
         (defaultValue && new Date(defaultValue as Date)) || new Date()
       );
     }
-  }, [setValue, defaultValue]);
+  }, [setValue, defaultValue, name, type]);
 
   const inputValidation = {
     ...validations[type],

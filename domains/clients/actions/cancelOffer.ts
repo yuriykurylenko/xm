@@ -1,10 +1,11 @@
-import { updateSubscriptionByClientId } from "@/app/utils/api";
+// import { updateSubscriptionByClientId } from "@/app/utils/api";
 import { update as updateClientById } from "@/domains/clients/model";
 
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
+import { updateByClientId as updateSubscriptionByClientId } from "@/domains/clients/domains/subscriptions/model";
 
 const apiHandler = async (clientId: UUID) => {
   const { error } = await updateSubscriptionByClientId(clientId, {

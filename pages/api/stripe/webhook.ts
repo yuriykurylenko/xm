@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 import { stripe } from "@/initializers/stripe";
 import { buffer } from "micro";
-import { fetchSubscriptionById } from "@/app/utils/api";
+import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import { Subscription } from "@/types/subscription";

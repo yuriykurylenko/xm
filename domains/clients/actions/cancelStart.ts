@@ -5,7 +5,7 @@ import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
-import { fetchSubscriptionsByClientId } from "@/app/utils/api";
+import { fetchAllByClientId as fetchSubscriptionsByClientId } from "@/domains/clients/domains/subscriptions/model";
 
 const apiHandler = async (
   clientId: UUID,

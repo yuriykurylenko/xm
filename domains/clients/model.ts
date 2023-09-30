@@ -1,4 +1,4 @@
-import { fetchSubscriptionById } from "@/app/utils/api";
+import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import db from "@/initializers/supabaseClient";
 import { Subscription } from "@/types/subscription";
 import { ClientInput } from "@/types/user";

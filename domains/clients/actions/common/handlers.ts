@@ -2,10 +2,10 @@ import StripeApi from "stripe";
 import { MailService } from "@sendgrid/mail";
 
 import {
-  createClientSubscription,
-  fetchSubscriptionsByClientId,
-  updateClientSubscriptionById,
-} from "@/app/utils/api";
+  create as createClientSubscription,
+  fetchAllByClientId as fetchSubscriptionsByClientId,
+  update as updateSubscriptionById,
+} from "@/domains/clients/domains/subscriptions/model";
 
 import {
   fetch as fetchClientById,
@@ -54,7 +54,7 @@ export const changePriceOrRenewSubscription = async (
       stripe
     );
 
-    await updateClientSubscriptionById(subscription.id, {
+    await updateSubscriptionById(subscription.id, {
       monthly_amount: monthlyAmount * 100,
       currency,
     });

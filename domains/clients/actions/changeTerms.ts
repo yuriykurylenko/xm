@@ -6,13 +6,13 @@ import { ClientTermsFormFields } from "@/domains/clients/actions/common/componen
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
-import {
-  createClientSubscription,
-  fetchSubscriptionByClientId,
-  startOfUtcDay,
-} from "@/app/utils/api";
+import { startOfUtcDay } from "@/app/utils/api";
 import { findOrCreateStripePrice } from "@/app/utils/api/stripe";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
+import {
+  create as createSubscription,
+  fetchByClientId as fetchSubscriptionByClientId,
+} from "@/domains/clients/domains/subscriptions/model";
 
 const apiHandler = async (
   clientId: UUID,
@@ -44,7 +44,7 @@ const apiHandler = async (
   const { data: subscription } = await fetchSubscriptionByClientId(clientId);
   const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
 
-  const { data: clietSubscription, error } = await createClientSubscription(
+  const { data: clietSubscription, error } = await createSubscription(
     clientId,
     {
       monthlyAmount: monthlyAmount,
