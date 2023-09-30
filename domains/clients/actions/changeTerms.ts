@@ -6,7 +6,7 @@ import { ClientTermsFormFields } from "@/domains/clients/actions/common/componen
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
-import { startOfUtcDay } from "@/app/utils/api";
+import { startOfUtcDay } from "@/app/utils/dateTime";
 import { findOrCreateStripePrice } from "@/app/utils/stripe";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import {

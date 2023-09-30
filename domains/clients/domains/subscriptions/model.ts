@@ -4,7 +4,7 @@ import { UUID } from "crypto";
 import { findOrCreateStripePrice } from "@/app/utils/stripe";
 import StripeApi from "stripe";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
-import { startOfUtcDay } from "@/app/utils/api";
+import { startOfUtcDay } from "@/app/utils/dateTime";
 
 export const fetch = (id: UUID | string) =>
   db
