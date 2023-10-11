@@ -1,6 +1,7 @@
 import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
 import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
+import { create as createStripeSubscription } from "@/integrations/stripe/subscription";
 import { update as updateStripeCustomer } from "@/integrations/stripe/customer";
 import { attach as attachStripePaymentMethodToCustomer } from "@/integrations/stripe/paymentMethod";
 
@@ -48,12 +49,12 @@ export default async function handler(
       res.status(200).json(subscriptionSchedule);
     } else {
       // Create the subscription
-      const subscription = await stripe.subscriptions.create({
-        customer: customerId,
-        items: [{ price: priceId, quantity }],
-        expand: ["latest_invoice.payment_intent"],
+      const subscription = await createStripeSubscription(stripe, {
+        customerId,
+        priceId,
+        quantity,
         metadata,
-        trial_period_days: trialPeriodDays,
+        trialPeriodDays,
       });
 
       res.status(200).json(subscription);

@@ -10,33 +10,28 @@ import {
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import { findOrCreate as findOrCreatePrice } from "@/integrations/stripe/price";
 
-const create = ({
-  customerId,
-  paymentMethodId,
-  quantity,
-  priceId,
-  metadata,
-  trialPeriodDays,
-  startDate,
-}: {
-  customerId: string;
-  paymentMethodId: string | PaymentMethod | null;
-  quantity: number;
-  priceId?: string;
-  metadata?: {
-    subscription_id: UUID;
-  };
-  trialPeriodDays?: number;
-  startDate?: Date;
-}) =>
-  axios.post("/api/stripe/subscription", {
+export const create = (
+  stripe: StripeApi,
+  {
     customerId,
-    paymentMethodId,
-    quantity,
-    priceId: priceId || "price_1N6JeAA4j0lnvK9GaP833Peg",
-    metadata,
+    priceId,
+    quantity = 1,
     trialPeriodDays,
-    startDate,
+    metadata,
+  }: {
+    customerId: string;
+    priceId: string;
+    quantity: number;
+    trialPeriodDays: number;
+    metadata: { subscription_id: UUID };
+  }
+) =>
+  stripe.subscriptions.create({
+    customer: customerId,
+    items: [{ price: priceId, quantity }],
+    expand: ["latest_invoice.payment_intent"],
+    metadata,
+    trial_period_days: trialPeriodDays,
   });
 
 export const createAndConfirm = async (
@@ -56,15 +51,18 @@ export const createAndConfirm = async (
   }
 ) => {
   try {
-    const { data: stripeSubscription } = await create({
-      customerId,
-      paymentMethodId,
-      quantity: 1,
-      priceId: stripe_price_id,
-      metadata,
-      trialPeriodDays: trial_period_days,
-      startDate: start_date,
-    });
+    const { data: stripeSubscription } = await axios.post(
+      "/api/stripe/subscription",
+      {
+        customerId,
+        paymentMethodId,
+        quantity: 1,
+        priceId: stripe_price_id || "price_1N6JeAA4j0lnvK9GaP833Peg",
+        metadata,
+        trialPeriodDays: trial_period_days,
+        startDate: start_date,
+      }
+    );
 
     const paymentIntent = stripeSubscription.latest_invoice?.payment_intent;
 
