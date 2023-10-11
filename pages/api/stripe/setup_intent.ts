@@ -1,6 +1,5 @@
 import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
-import { create as createStripeCustomer } from "@/integrations/stripe/customer";
 import { create as createStripeSetupIntent } from "@/integrations/stripe/setupIntent";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -8,14 +7,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const { email } = req.body;
 
-      const customer = await createStripeCustomer(stripe, { email });
       const setupIntent = await createStripeSetupIntent(stripe, {
-        customerId: customer.id,
+        email,
       });
 
       res.status(200).send({
         client_secret: setupIntent.client_secret,
-        customer_id: customer.id,
+        customer_id: setupIntent.customer,
       });
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err });

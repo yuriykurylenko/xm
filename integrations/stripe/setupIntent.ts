@@ -1,10 +1,12 @@
-import axios from "axios";
 import StripeApi from "stripe";
+import { create as createCustomer } from "@/integrations/stripe/customer";
 
-export const create = (
+export const create = async (
   stripe: StripeApi,
-  { customerId }: { customerId: string }
-) =>
-  stripe.setupIntents.create({
-    customer: customerId,
+  { email }: { email: string }
+) => {
+  const customer = await createCustomer(stripe, { email });
+  return await stripe.setupIntents.create({
+    customer: customer.id,
   });
+};
