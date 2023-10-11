@@ -10,6 +10,9 @@ import {
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import { findOrCreate as findOrCreatePrice } from "@/integrations/stripe/price";
 
+export const fetch = (stripe: StripeApi, id: string) =>
+  stripe.subscriptions.retrieve(id);
+
 export const create = (
   stripe: StripeApi,
   {

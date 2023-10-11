@@ -5,6 +5,11 @@ import { buffer } from "micro";
 import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
+
+import { fetch as fetchStripeSubscriptionById } from "@/integrations/stripe/subscription";
+import { fetch as fetchStripeInvoiceById } from "@/integrations/stripe/invoice";
+import { fetch as fetchStripeChargeById } from "@/integrations/stripe/charge";
+
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
@@ -66,19 +71,19 @@ export default async function handler(
       "subscription_schedule",
     ].includes(eventObject.object)
       ? eventObject
-      : await stripe.subscriptions.retrieve(eventObject.subscription);
+      : await fetchStripeSubscriptionById(stripe, eventObject.subscription);
 
     const stripeInvoice =
       eventObject.object === "invoice"
         ? eventObject
         : eventObject.latest_invoice
-        ? await stripe.invoices.retrieve(eventObject.latest_invoice)
+        ? await fetchStripeInvoiceById(stripe, eventObject.latest_invoice)
         : null;
 
     const stripeCharge =
       eventObject.object === "invoice"
         ? eventObject.charge &&
-          (await stripe.charges.retrieve(eventObject.charge as string))
+          (await fetchStripeChargeById(stripe, eventObject.charge as string))
         : null;
 
     const clientSubscription =
