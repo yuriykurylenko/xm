@@ -7,7 +7,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { JSX } from "react";
-import { handleStripeCardAndSubscriptionSetup } from "@/integrations/stripe";
+import { handleCardAndSubscriptionSetup as handleStripeCardAndSubscriptionSetup } from "@/integrations/stripe";
 
 import styles from "@/app/components/Form/styles.module.css";
 import Form from "@/app/components/Form";

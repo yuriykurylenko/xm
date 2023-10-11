@@ -16,10 +16,10 @@ import {
   updateByStripeSubscriptionId as updateClientSubscriptionByStripeSubscriptionId,
 } from "@/domains/clients/domains/subscriptions/model";
 
-const createStripeSetupIntent = ({ email }: { email: string }) =>
+const createSetupIntent = ({ email }: { email: string }) =>
   axios.post("/api/stripe/setup_intent", { email });
 
-const confirmStripeCardSetup = async (
+const confirmCardSetup = async (
   stripe: Stripe | null,
   StripeCardElementInstance: StripeCardElement | null,
   stripeClientSecret: string,
@@ -43,7 +43,7 @@ const confirmStripeCardSetup = async (
   return { data: setupIntent || null, error: error || null };
 };
 
-const createStripeSubscription = ({
+const createSubscription = ({
   customerId,
   paymentMethodId,
   quantity,
@@ -72,7 +72,7 @@ const createStripeSubscription = ({
     startDate,
   });
 
-const createAndConfirmStripeSubscription = async (
+const createAndConfirmSubscription = async (
   stripe: Stripe | null,
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,
@@ -89,7 +89,7 @@ const createAndConfirmStripeSubscription = async (
   }
 ) => {
   try {
-    const { data: stripeSubscription } = await createStripeSubscription({
+    const { data: stripeSubscription } = await createSubscription({
       customerId,
       paymentMethodId,
       quantity: 1,
@@ -143,7 +143,7 @@ const createAndConfirmStripeSubscription = async (
   return { data: null, error: null };
 };
 
-export const handleStripeCardAndSubscriptionSetup = async (
+export const handleCardAndSubscriptionSetup = async (
   stripe: Stripe | null,
   StripeCardElementInstance: StripeCardElement | null,
   {
@@ -164,11 +164,11 @@ export const handleStripeCardAndSubscriptionSetup = async (
 ) => {
   const {
     data: { client_secret, customer_id },
-  } = await createStripeSetupIntent({
+  } = await createSetupIntent({
     email,
   });
 
-  const { data: setupIntentData, error } = await confirmStripeCardSetup(
+  const { data: setupIntentData, error } = await confirmCardSetup(
     stripe,
     StripeCardElementInstance,
     client_secret,
@@ -183,7 +183,7 @@ export const handleStripeCardAndSubscriptionSetup = async (
 
   if (setupIntentData && setupIntentData.status === "succeeded") {
     const { data: subscriptionData, error } =
-      await createAndConfirmStripeSubscription(
+      await createAndConfirmSubscription(
         stripe,
         customer_id,
         setupIntentData.payment_method,
@@ -196,7 +196,7 @@ export const handleStripeCardAndSubscriptionSetup = async (
   return { data: null, error };
 };
 
-export const createStripeProductForCoach = async (
+export const createProductForCoach = async (
   stripe: StripeApi,
   coach: Coach
 ) => {
@@ -208,7 +208,7 @@ export const createStripeProductForCoach = async (
   return { data: product };
 };
 
-const createStripePriceForProduct = async (
+const createPriceForProduct = async (
   stripe: StripeApi,
   {
     product,
@@ -232,7 +232,7 @@ const createStripePriceForProduct = async (
   return { data: price };
 };
 
-export const findOrCreateStripePrice = async (
+export const findOrCreatePrice = async (
   stripe: StripeApi,
   {
     product,
@@ -258,7 +258,7 @@ export const findOrCreateStripePrice = async (
   );
 
   if (!existingPrice) {
-    const { data: price } = await createStripePriceForProduct(stripe, {
+    const { data: price } = await createPriceForProduct(stripe, {
       product,
       unit_amount,
       interval,
@@ -269,7 +269,7 @@ export const findOrCreateStripePrice = async (
   return existingPrice;
 };
 
-export const updateStripeSubscription = async (
+export const updateSubscription = async (
   {
     stripeSubscriptionId,
     monthlyAmount,
@@ -295,7 +295,7 @@ export const updateStripeSubscription = async (
     const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
 
     if (isActiveSubscription) {
-      const price = await findOrCreateStripePrice(stripe, {
+      const price = await findOrCreatePrice(stripe, {
         product: coach?.stripe_product_id,
         unit_amount: monthlyAmount,
         interval: "month",
@@ -334,7 +334,7 @@ export const updateStripeSubscription = async (
   }
 };
 
-export const cancelStripeSubscription = async (
+export const cancelSubscription = async (
   stripeSubscriptionId: string,
   endImmediately: boolean,
   accessAfterEndDate: boolean,
@@ -354,7 +354,7 @@ export const cancelStripeSubscription = async (
   return canceledSubscription;
 };
 
-export const cancelStripeSubscriptionSchedule = (
+export const cancelSubscriptionSchedule = (
   stripeSubscriptionScheduleId: string,
   stripe: StripeApi
 ) => stripe.subscriptionSchedules.cancel(stripeSubscriptionScheduleId);
