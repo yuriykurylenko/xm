@@ -115,7 +115,6 @@ export const update = async (
     stripeSubscriptionId,
     monthlyAmount,
     currency,
-
     isActiveSubscription,
   }: {
     stripeSubscriptionId: string;
