@@ -96,7 +96,7 @@ export default function useAuth() {
         return { data: null, error: insertError };
       }
 
-      const { data: product } = await axios.post("/api/stripe/product", {
+      const { data: product } = await axios.post("/api/integrations/stripe/product", {
         name: `${profile[0].full_name} - coaching subscription`,
       });
 
