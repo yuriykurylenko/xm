@@ -4,6 +4,8 @@ import { Client, Coach, User } from "@/types/user";
 
 import { update as updateClientById } from "@/domains/clients/model";
 import { create as createCoach } from "@/domains/coaches/model";
+import { update as updateCoachById } from "@/domains/coaches/model";
+import axios from "axios";
 
 interface CoachSignUpParams {
   email: string;
@@ -94,19 +96,13 @@ export default function useAuth() {
         return { data: null, error: insertError };
       }
 
-      const response = await fetch("/api/stripe/product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ coach_id: profile[0]?.id }),
+      const { data: product } = await axios.post("/api/stripe/product", {
+        name: `${profile[0].full_name} - coaching subscription`,
       });
 
-      if (!response.ok) {
-        const { error: createStripePriceError } = await response.json();
-        setError(createStripePriceError);
-        return { data: null, error: createStripePriceError };
-      }
+      await updateCoachById(profile[0].id, {
+        stripe_product_id: product.id,
+      });
 
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
