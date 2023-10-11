@@ -1,5 +1,6 @@
 import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
+import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,28 +34,17 @@ export default async function handler(
       let trialEndDate = new Date(startDate);
       trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
 
-      const subscriptionSchedule = await stripe.subscriptionSchedules.create({
-        customer: customerId,
-        start_date: Math.floor(new Date(startDate).getTime() / 1000),
-        end_behavior: "release",
-        phases: [
-          {
-            trial_end:
-              trialPeriodDays > 0
-                ? Math.floor(trialEndDate.getTime() / 1000)
-                : undefined,
-            items: [
-              {
-                price: priceId,
-                quantity,
-                metadata,
-              },
-            ],
-            metadata,
-          },
-        ],
-        metadata,
-      });
+      const subscriptionSchedule = await createStripeSubscriptionSchedule(
+        stripe,
+        {
+          customerId,
+          startDate: new Date(startDate),
+          trialPeriodDays,
+          priceId,
+          quantity: 1,
+          metadata,
+        }
+      );
 
       res.status(200).json(subscriptionSchedule);
     } else {

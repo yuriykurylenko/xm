@@ -14,6 +14,7 @@ import {
 } from "@/domains/clients/domains/subscriptions/model";
 import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/price";
 import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
+import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 
 const apiHandler = async (
   clientId: UUID,
@@ -72,33 +73,16 @@ const apiHandler = async (
     currency,
   });
 
-  const metadata = {
-    subscription_id: clietSubscription?.id,
-    updated: true,
-  };
-
-  await stripe.subscriptionSchedules.create({
-    // @ts-ignore
-    customer,
-    start_date: Math.floor(new Date(utcStartDate).getTime() / 1000),
-    end_behavior: "release",
-    phases: [
-      {
-        trial_end:
-          trialPeriodDays > 0
-            ? Math.floor(trialEndDate.getTime() / 1000)
-            : undefined,
-        items: [
-          {
-            price: price.id,
-            quantity: 1,
-            metadata,
-          },
-        ],
-        metadata,
-      },
-    ],
-    metadata,
+  await createStripeSubscriptionSchedule(stripe, {
+    customerId: customer,
+    startDate: new Date(utcStartDate),
+    trialPeriodDays,
+    priceId: price,
+    quantity: 1,
+    metadata: {
+      subscription_id: clietSubscription?.id,
+      updated: true,
+    },
   });
 
   return { data: clietSubscription, error };
