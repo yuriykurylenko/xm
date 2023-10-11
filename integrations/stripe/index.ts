@@ -1,9 +1,9 @@
 import { Stripe, StripeCardElement } from "@stripe/stripe-js";
 import { UUID } from "crypto";
 
-import { create as createSetupIntent } from "@/integrations/stripe/setupIntent";
 import { confirm as confirmCardSetup } from "@/integrations/stripe/cardSetup";
 import { createAndConfirm as createAndConfirmSubscription } from "@/integrations/stripe/subscription";
+import axios from "axios";
 
 export const handleCardAndSubscriptionSetup = async (
   stripe: Stripe | null,
@@ -26,9 +26,7 @@ export const handleCardAndSubscriptionSetup = async (
 ) => {
   const {
     data: { client_secret, customer_id },
-  } = await createSetupIntent({
-    email,
-  });
+  } = await axios.post("/api/stripe/setup_intent", { email });
 
   const { data: setupIntentData, error } = await confirmCardSetup(
     stripe,

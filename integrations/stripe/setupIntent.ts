@@ -1,4 +1,10 @@
 import axios from "axios";
+import StripeApi from "stripe";
 
-export const create = ({ email }: { email: string }) =>
-  axios.post("/api/stripe/setup_intent", { email });
+export const create = (
+  stripe: StripeApi,
+  { customerId }: { customerId: string }
+) =>
+  stripe.setupIntents.create({
+    customer: customerId,
+  });

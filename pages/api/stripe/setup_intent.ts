@@ -1,22 +1,18 @@
 import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
+import { create as createStripeCustomer } from "@/integrations/stripe/customer";
+import { create as createStripeSetupIntent } from "@/integrations/stripe/setupIntent";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
       const { email } = req.body;
 
-      // Create a new customer in Stripe
-      const customer = await stripe.customers.create({
-        email: email,
+      const customer = await createStripeCustomer(stripe, { email });
+      const setupIntent = await createStripeSetupIntent(stripe, {
+        customerId: customer.id,
       });
 
-      // Create a SetupIntent for the customer
-      const setupIntent = await stripe.setupIntents.create({
-        customer: customer.id,
-      });
-
-      // Send the client secret to the client to set up the payment method
       res.status(200).send({
         client_secret: setupIntent.client_secret,
         customer_id: customer.id,
