@@ -7,12 +7,13 @@ import { ClientTermsFormFields } from "@/domains/clients/actions/common/componen
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { startOfUtcDay } from "@/app/utils/dateTime";
-import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/price";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import {
   create as createSubscription,
   fetchByClientId as fetchSubscriptionByClientId,
 } from "@/domains/clients/domains/subscriptions/model";
+import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/price";
+import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 
 const apiHandler = async (
   clientId: UUID,
@@ -59,8 +60,9 @@ const apiHandler = async (
     return { data: clietSubscription, error };
   }
 
-  const { customer } = await stripe.subscriptionSchedules.cancel(
-    subscription?.stripe_subscription_id
+  const { customer } = await cancelStripeSubscriptionSchedule(
+    subscription?.stripe_subscription_id,
+    stripe
   );
 
   const price = await findOrCreateStripePrice(stripe, {
