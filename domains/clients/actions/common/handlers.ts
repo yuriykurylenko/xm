@@ -13,7 +13,7 @@ import {
 } from "@/domains/clients/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 
-import { updateSubscription as updateStripeSubscription } from "@/integrations/stripe";
+import { update as updateStripeSubscription } from "@/integrations/stripe/subscription";
 import { UUID } from "crypto";
 import { Subscription } from "@/types/subscription";
 

@@ -7,7 +7,7 @@ import { ClientTermsFormFields } from "@/domains/clients/actions/common/componen
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { startOfUtcDay } from "@/app/utils/dateTime";
-import { findOrCreatePrice as findOrCreateStripePrice } from "@/integrations/stripe";
+import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/price";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import {
   create as createSubscription,

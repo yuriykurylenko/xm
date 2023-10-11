@@ -5,7 +5,7 @@ import { Client } from "@/types/user";
 
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
-import { cancelSubscription as cancelStripeSubscription } from "@/integrations/stripe";
+import { cancel as cancelStripeSubscription } from "@/integrations/stripe/subscription";
 import Input from "@/app/components/Form/Input";
 import { fetchAllByClientId as fetchSubscriptionsByClientId } from "@/domains/clients/domains/subscriptions/model";
 
