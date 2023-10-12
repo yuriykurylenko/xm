@@ -2,7 +2,6 @@ import { SubscriptionInput } from "@/types/subscription";
 import db from "@/initializers/supabaseClient";
 import { UUID } from "crypto";
 import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/price";
-import StripeApi from "stripe";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import { startOfUtcDay } from "@/app/utils/dateTime";
 

@@ -1,5 +1,4 @@
 import { UUID } from "crypto";
-import StripeApi from "stripe";
 
 import { create as createSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 import { create as createSubscription } from "@/integrations/stripe/subscription";

@@ -1,5 +1,3 @@
-import StripeApi from "stripe";
-
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 
