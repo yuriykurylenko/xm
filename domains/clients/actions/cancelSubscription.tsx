@@ -29,8 +29,7 @@ const apiHandler = async (
   data: {
     endImmediately: boolean;
     accessAfterEndDate: boolean;
-  },
-  { stripe }: { stripe: StripeApi }
+  }
 ) => {
   const { endImmediately, accessAfterEndDate } = data;
   const { data: subscriptions } = await fetchSubscriptionsByClientId(
