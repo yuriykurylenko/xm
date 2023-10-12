@@ -1,6 +1,6 @@
 import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
-import { attach as attachStripePaymentMethodToCustomer } from "@/integrations/stripe/paymentMethod";
+import { create as attachStripePaymentMethodToCustomer } from "@/integrations/stripe/customerPaymentMethod";
 
 export default async function handler(
   req: NextApiRequest,

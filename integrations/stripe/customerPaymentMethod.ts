@@ -1,7 +1,7 @@
 import StripeApi from "stripe";
 import { update as updateStripeCustomer } from "@/integrations/stripe/customer";
 
-export const attach = async (
+export const create = async (
   stripe: StripeApi,
   {
     paymentMethodId,

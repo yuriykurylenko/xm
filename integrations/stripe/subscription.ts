@@ -54,7 +54,7 @@ export const createAndConfirm = async (
   }
 ) => {
   try {
-    await axios.post("/api/integrations/stripe/paymentMethod", {
+    await axios.post("/api/integrations/stripe/customerPaymentMethod", {
       customerId,
       paymentMethodId,
     });
