@@ -1,6 +1,5 @@
 import { PaymentMethod, Stripe } from "@stripe/stripe-js";
 import StripeApi from "stripe";
-import axios from "axios";
 import { UUID } from "crypto";
 
 import {
@@ -9,6 +8,7 @@ import {
 } from "@/domains/clients/domains/subscriptions/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import { findOrCreate as findOrCreatePrice } from "@/integrations/stripe/price";
+import createStripeObject from "@/app/utils/createStripeObject";
 
 export const fetch = (stripe: StripeApi, id: string) =>
   stripe.subscriptions.retrieve(id);
@@ -54,13 +54,13 @@ export const createAndConfirm = async (
   }
 ) => {
   try {
-    await axios.post("/api/integrations/stripe/customerPaymentMethod", {
+    await createStripeObject("customerPaymentMethod", {
       customerId,
       paymentMethodId,
     });
 
-    const { data: stripeSubscription } = await axios.post(
-      "/api/integrations/stripe/subscriptionOrSubscriptionSchedule",
+    const { data: stripeSubscription } = await createStripeObject(
+      "subscriptionOrSubscriptionSchedule",
       {
         customerId,
         paymentMethodId,
