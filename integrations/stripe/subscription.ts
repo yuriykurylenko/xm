@@ -1,4 +1,3 @@
-import { PaymentMethod, Stripe } from "@stripe/stripe-js";
 import StripeApi from "stripe";
 import { UUID } from "crypto";
 
@@ -8,7 +7,6 @@ import {
 } from "@/domains/clients/domains/subscriptions/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import { findOrCreate as findOrCreatePrice } from "@/integrations/stripe/price";
-import createStripeObject from "@/app/utils/createStripeObject";
 
 export const fetch = (stripe: StripeApi, id: string) =>
   stripe.subscriptions.retrieve(id);
@@ -36,85 +34,6 @@ export const create = (
     metadata,
     trial_period_days: trialPeriodDays,
   });
-
-export const createAndConfirm = async (
-  stripe: Stripe | null,
-  customerId: string,
-  paymentMethodId: string | PaymentMethod | null,
-  {
-    stripe_price_id,
-    metadata,
-    trial_period_days,
-    start_date,
-  }: {
-    stripe_price_id?: string;
-    metadata?: { subscription_id: UUID };
-    trial_period_days?: number;
-    start_date?: Date;
-  }
-) => {
-  try {
-    await createStripeObject("customerPaymentMethod", {
-      customerId,
-      paymentMethodId,
-    });
-
-    const { data: stripeSubscription } = await createStripeObject(
-      "subscriptionOrSubscriptionSchedule",
-      {
-        customerId,
-        paymentMethodId,
-        quantity: 1,
-        priceId: stripe_price_id || "price_1N6JeAA4j0lnvK9GaP833Peg",
-        metadata,
-        trialPeriodDays: trial_period_days,
-        startDate: start_date,
-      }
-    );
-
-    const paymentIntent = stripeSubscription.latest_invoice?.payment_intent;
-
-    if (paymentIntent) {
-      if (paymentIntent.status === "succeeded") {
-        return {
-          data: { success: true, stripeSubscription: stripeSubscription },
-          error: null,
-        };
-      } else if (paymentIntent.status === "requires_action") {
-        const paymentIntentResult = await stripe?.confirmCardPayment(
-          paymentIntent.client_secret
-        );
-        if (paymentIntentResult?.error) {
-          return { data: null, error: paymentIntentResult.error };
-        } else if (
-          paymentIntentResult?.paymentIntent &&
-          paymentIntentResult.paymentIntent.status === "succeeded"
-        ) {
-          return {
-            data: {
-              success: true,
-              stripeSubscription,
-            },
-            error: null,
-          };
-        }
-      } else if (paymentIntent.last_payment_error) {
-        return { data: null, error: paymentIntent.last_payment_error };
-      }
-    } else {
-      return {
-        data: {
-          success: true,
-          stripeSubscription,
-        },
-        error: null,
-      };
-    }
-  } catch (error) {
-    return { data: null, error: { message: "Error creating subscription" } };
-  }
-  return { data: null, error: null };
-};
 
 export const update = async (
   {
