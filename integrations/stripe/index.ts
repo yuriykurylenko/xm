@@ -26,7 +26,7 @@ export const handleCardAndSubscriptionSetup = async (
 ) => {
   const {
     data: { client_secret, customer_id },
-  } = await axios.post("/api/integrations/stripe/setup_intent", { email });
+  } = await axios.post("/api/integrations/stripe/setupIntent", { email });
 
   const { data: setupIntentData, error } = await confirmCardSetup(
     stripe,
