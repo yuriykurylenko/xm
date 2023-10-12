@@ -60,7 +60,7 @@ export const createAndConfirm = async (
     });
 
     const { data: stripeSubscription } = await axios.post(
-      "/api/integrations/stripe/subscription",
+      "/api/integrations/stripe/subscriptionOrSubscriptionSchedule",
       {
         customerId,
         paymentMethodId,

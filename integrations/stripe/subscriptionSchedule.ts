@@ -25,7 +25,7 @@ export const create = async (
   let trialEndDate = new Date(startDate);
   trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
 
-  await stripe.subscriptionSchedules.create({
+  return await stripe.subscriptionSchedules.create({
     // @ts-ignore
     customer: customerId,
     start_date: Math.floor(new Date(startDate).getTime() / 1000),
