@@ -12,5 +12,5 @@ export const attach = async (
     customer: customerId,
   });
 
-  await updateStripeCustomer(stripe, { customerId, paymentMethodId });
+  return await updateStripeCustomer(stripe, { customerId, paymentMethodId });
 };

@@ -2,7 +2,6 @@ import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
 import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 import { create as createStripeSubscription } from "@/integrations/stripe/subscription";
-import { attach as attachStripePaymentMethodToCustomer } from "@/integrations/stripe/paymentMethod";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,19 +10,12 @@ export default async function handler(
   if (req.method === "POST") {
     const {
       customerId,
-      paymentMethodId,
       priceId,
       quantity,
       metadata,
       trialPeriodDays,
       startDate,
     } = req.body;
-
-    // Attach the payment method to the customer
-    await attachStripePaymentMethodToCustomer(stripe, {
-      paymentMethodId,
-      customerId,
-    });
 
     // Check if the start date is in the future
     if (startDate && new Date(startDate) > new Date()) {
@@ -37,7 +29,7 @@ export default async function handler(
           startDate: new Date(startDate),
           trialPeriodDays,
           priceId,
-          quantity: 1,
+          quantity,
           metadata,
         }
       );
