@@ -11,10 +11,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         email,
       });
 
-      res.status(200).send({
-        client_secret: setupIntent.client_secret,
-        customer_id: setupIntent.customer,
-      });
+      res.status(200).send(setupIntent);
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err });
     }
