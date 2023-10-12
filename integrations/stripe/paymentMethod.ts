@@ -1,12 +1,16 @@
 import StripeApi from "stripe";
+import { update as updateStripeCustomer } from "@/integrations/stripe/customer";
 
-export const attach = (
+export const attach = async (
   stripe: StripeApi,
   {
     paymentMethodId,
     customerId,
   }: { paymentMethodId: string; customerId: string }
-) =>
-  stripe.paymentMethods.attach(paymentMethodId, {
+) => {
+  await stripe.paymentMethods.attach(paymentMethodId, {
     customer: customerId,
   });
+
+  await updateStripeCustomer(stripe, { customerId, paymentMethodId });
+};

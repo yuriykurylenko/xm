@@ -1,7 +1,7 @@
 import { Stripe, StripeCardElement } from "@stripe/stripe-js";
 import { UUID } from "crypto";
 
-import { confirm as confirmCardSetup } from "@/integrations/stripe/cardSetup";
+import { confirm as confirmCardSetup } from "@/integrations/stripe/setupIntent";
 import { createAndConfirm as createAndConfirmSubscription } from "@/integrations/stripe/subscription";
 import axios from "axios";
 

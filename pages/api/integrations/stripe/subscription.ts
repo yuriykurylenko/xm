@@ -2,7 +2,6 @@ import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
 import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 import { create as createStripeSubscription } from "@/integrations/stripe/subscription";
-import { update as updateStripeCustomer } from "@/integrations/stripe/customer";
 import { attach as attachStripePaymentMethodToCustomer } from "@/integrations/stripe/paymentMethod";
 
 export default async function handler(
@@ -25,9 +24,6 @@ export default async function handler(
       paymentMethodId,
       customerId,
     });
-
-    // Set the default payment method on the customer
-    await updateStripeCustomer(stripe, { customerId, paymentMethodId });
 
     // Check if the start date is in the future
     if (startDate && new Date(startDate) > new Date()) {
