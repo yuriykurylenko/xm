@@ -148,9 +148,7 @@ export const update = async (
         currency,
       });
 
-      const subscription = await stripe.subscriptions.retrieve(
-        stripeSubscriptionId
-      );
+      const subscription = await fetch(stripe, stripeSubscriptionId);
 
       const stripeSubscription = await stripe.subscriptions.update(
         stripeSubscriptionId,
