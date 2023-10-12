@@ -5,7 +5,7 @@ import { Client, Coach, User } from "@/types/user";
 import { update as updateClientById } from "@/domains/clients/model";
 import { create as createCoach } from "@/domains/coaches/model";
 import { update as updateCoachById } from "@/domains/coaches/model";
-import axios from "axios";
+import createStripeObject from "@/app/utils/createStripeObject";
 
 interface CoachSignUpParams {
   email: string;
@@ -96,12 +96,9 @@ export default function useAuth() {
         return { data: null, error: insertError };
       }
 
-      const { data: product } = await axios.post(
-        "/api/integrations/stripe/product",
-        {
-          name: `${profile[0].full_name} - coaching subscription`,
-        }
-      );
+      const { data: product } = await createStripeObject("product", {
+        name: `${profile[0].full_name} - coaching subscription`,
+      });
 
       await updateCoachById(profile[0].id, {
         stripe_product_id: product.id,
