@@ -44,8 +44,7 @@ export const create = async (
     trialPeriodDays: number;
     startDate?: Date | string | null;
     stripeSubscriptionId?: string | null;
-  },
-  stripe: StripeApi
+  }
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);
 
@@ -60,7 +59,7 @@ export const create = async (
 
   await updateByClientId(clientId, { archived_at: new Date() });
 
-  const price = await findOrCreateStripePrice(stripe, {
+  const price = await findOrCreateStripePrice({
     product: coach.stripe_product_id,
     interval: "month",
     unit_amount: monthlyAmount * 100,

@@ -1,27 +1,25 @@
 import { UUID } from "crypto";
 import StripeApi from "stripe";
+import { stripe } from "@/initializers/stripe";
 
-export const create = async (
-  stripe: StripeApi,
-  {
-    customerId,
-    startDate,
-    trialPeriodDays,
-    priceId,
-    quantity,
-    metadata,
-  }: {
-    customerId: string | StripeApi.Customer | StripeApi.DeletedCustomer;
-    startDate: Date;
-    trialPeriodDays: number;
-    priceId: StripeApi.Price;
-    quantity: number;
-    metadata: {
-      subscription_id: UUID;
-      updated?: boolean;
-    };
-  }
-) => {
+export const create = async ({
+  customerId,
+  startDate,
+  trialPeriodDays,
+  priceId,
+  quantity,
+  metadata,
+}: {
+  customerId: string | StripeApi.Customer | StripeApi.DeletedCustomer;
+  startDate: Date;
+  trialPeriodDays: number;
+  priceId: string;
+  quantity: number;
+  metadata: {
+    subscription_id: UUID;
+    updated?: boolean;
+  };
+}) => {
   let trialEndDate = new Date(startDate);
   trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
 
@@ -50,7 +48,5 @@ export const create = async (
   });
 };
 
-export const cancel = (
-  stripeSubscriptionScheduleId: string,
-  stripe: StripeApi
-) => stripe.subscriptionSchedules.cancel(stripeSubscriptionScheduleId);
+export const cancel = (stripeSubscriptionScheduleId: string) =>
+  stripe.subscriptionSchedules.cancel(stripeSubscriptionScheduleId);

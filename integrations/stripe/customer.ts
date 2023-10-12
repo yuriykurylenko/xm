@@ -1,17 +1,17 @@
-import StripeApi from "stripe";
+import { stripe } from "@/initializers/stripe";
 
-export const create = (stripe: StripeApi, { email }: { email: string }) =>
+export const create = ({ email }: { email: string }) =>
   stripe.customers.create({
     email,
   });
 
-export const update = (
-  stripe: StripeApi,
-  {
-    customerId,
-    paymentMethodId,
-  }: { customerId: string; paymentMethodId: string }
-) =>
+export const update = ({
+  customerId,
+  paymentMethodId,
+}: {
+  customerId: string;
+  paymentMethodId: string;
+}) =>
   stripe.customers.update(customerId, {
     invoice_settings: {
       default_payment_method: paymentMethodId,

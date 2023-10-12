@@ -44,8 +44,7 @@ const apiHandler = async (
       await cancelStripeSubscription(
         subscription.stripe_subscription_id,
         endImmediately,
-        accessAfterEndDate,
-        stripe
+        accessAfterEndDate
       );
     } catch (error) {
       return {

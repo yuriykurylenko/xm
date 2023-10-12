@@ -30,8 +30,7 @@ const apiHandler = async (
     trialPeriodDays?: number;
     trialPeriod?: boolean;
     startDate: Date;
-  },
-  { stripe }: { stripe: StripeApi }
+  }
 ) => {
   const utcStartDate =
     startDate && startOfUtcDay(new Date(startDate)) > startOfUtcDay(new Date())
@@ -53,8 +52,7 @@ const apiHandler = async (
       currency,
       trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
       startDate: utcStartDate,
-    },
-    stripe
+    }
   );
 
   if (error) {
@@ -62,22 +60,21 @@ const apiHandler = async (
   }
 
   const { customer } = await cancelStripeSubscriptionSchedule(
-    subscription?.stripe_subscription_id,
-    stripe
+    subscription?.stripe_subscription_id
   );
 
-  const price = await findOrCreateStripePrice(stripe, {
+  const price = await findOrCreateStripePrice({
     product: coach?.stripe_product_id,
     unit_amount: monthlyAmount * 100,
     interval: "month",
     currency,
   });
 
-  await createStripeSubscriptionSchedule(stripe, {
+  await createStripeSubscriptionSchedule({
     customerId: customer,
     startDate: new Date(utcStartDate),
     trialPeriodDays,
-    priceId: price,
+    priceId: price.id,
     quantity: 1,
     metadata: {
       subscription_id: clietSubscription?.id,

@@ -237,7 +237,6 @@ const ItemList = <T extends { id: UUID | string }>({
           return { error };
         }
       } catch (e: any) {
-        console.log(e);
         return (
           e.response?.data || { error: { message: "Something went wrong" } }
         );

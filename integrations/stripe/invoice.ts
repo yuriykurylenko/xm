@@ -1,4 +1,3 @@
-import StripeApi from "stripe";
+import { stripe } from "@/initializers/stripe";
 
-export const fetch = (stripe: StripeApi, id: string) =>
-  stripe.invoices.retrieve(id);
+export const fetch = (id: string) => stripe.invoices.retrieve(id);

@@ -1,5 +1,5 @@
-import StripeApi from "stripe";
 import { UUID } from "crypto";
+import { stripe } from "@/initializers/stripe";
 
 import {
   fetchByStripeSubscriptionId as fetchSubscriptionByStripeSubscriptionId,
@@ -8,25 +8,21 @@ import {
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import { findOrCreate as findOrCreatePrice } from "@/integrations/stripe/price";
 
-export const fetch = (stripe: StripeApi, id: string) =>
-  stripe.subscriptions.retrieve(id);
+export const fetch = (id: string) => stripe.subscriptions.retrieve(id);
 
-export const create = (
-  stripe: StripeApi,
-  {
-    customerId,
-    priceId,
-    quantity = 1,
-    trialPeriodDays,
-    metadata,
-  }: {
-    customerId: string;
-    priceId: string;
-    quantity: number;
-    trialPeriodDays: number;
-    metadata: { subscription_id: UUID };
-  }
-) =>
+export const create = ({
+  customerId,
+  priceId,
+  quantity = 1,
+  trialPeriodDays,
+  metadata,
+}: {
+  customerId: string;
+  priceId: string;
+  quantity: number;
+  trialPeriodDays: number;
+  metadata: { subscription_id: UUID };
+}) =>
   stripe.subscriptions.create({
     customer: customerId,
     items: [{ price: priceId, quantity }],
@@ -35,39 +31,36 @@ export const create = (
     trial_period_days: trialPeriodDays,
   });
 
-export const update = async (
-  {
-    stripeSubscriptionId,
-    monthlyAmount,
-    currency,
-    isActiveSubscription,
-  }: {
-    stripeSubscriptionId: string;
-    metadata?: {
-      subscription_id: UUID;
-    };
-    monthlyAmount: number;
-    currency: string;
-    trialPeriodDays?: number;
-    startDate?: Date | string | null;
-    isActiveSubscription?: boolean;
-  },
-  stripe: StripeApi
-) => {
+export const update = async ({
+  stripeSubscriptionId,
+  monthlyAmount,
+  currency,
+  isActiveSubscription,
+}: {
+  stripeSubscriptionId: string;
+  metadata?: {
+    subscription_id: UUID;
+  };
+  monthlyAmount: number;
+  currency: string;
+  trialPeriodDays?: number;
+  startDate?: Date | string | null;
+  isActiveSubscription?: boolean;
+}) => {
   try {
     const { data: subscription } =
       await fetchSubscriptionByStripeSubscriptionId(stripeSubscriptionId);
     const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
 
     if (isActiveSubscription) {
-      const price = await findOrCreatePrice(stripe, {
+      const price = await findOrCreatePrice({
         product: coach?.stripe_product_id,
         unit_amount: monthlyAmount,
         interval: "month",
         currency,
       });
 
-      const subscription = await fetch(stripe, stripeSubscriptionId);
+      const subscription = await fetch(stripeSubscriptionId);
 
       const stripeSubscription = await stripe.subscriptions.update(
         stripeSubscriptionId,
@@ -100,8 +93,7 @@ export const update = async (
 export const cancel = async (
   stripeSubscriptionId: string,
   endImmediately: boolean,
-  accessAfterEndDate: boolean,
-  stripe: StripeApi
+  accessAfterEndDate: boolean
 ) => {
   const canceledSubscription = endImmediately
     ? await stripe.subscriptions.del(stripeSubscriptionId)

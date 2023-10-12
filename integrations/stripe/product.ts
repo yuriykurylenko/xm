@@ -1,4 +1,4 @@
-import StripeApi from "stripe";
+import { stripe } from "@/initializers/stripe";
 
-export const create = (stripe: StripeApi, { name }: { name: string }) =>
+export const create = ({ name }: { name: string }) =>
   stripe.products.create({ name });

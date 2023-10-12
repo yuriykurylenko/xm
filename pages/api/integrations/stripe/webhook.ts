@@ -71,19 +71,19 @@ export default async function handler(
       "subscription_schedule",
     ].includes(eventObject.object)
       ? eventObject
-      : await fetchStripeSubscriptionById(stripe, eventObject.subscription);
+      : await fetchStripeSubscriptionById(eventObject.subscription);
 
     const stripeInvoice =
       eventObject.object === "invoice"
         ? eventObject
         : eventObject.latest_invoice
-        ? await fetchStripeInvoiceById(stripe, eventObject.latest_invoice)
+        ? await fetchStripeInvoiceById(eventObject.latest_invoice)
         : null;
 
     const stripeCharge =
       eventObject.object === "invoice"
         ? eventObject.charge &&
-          (await fetchStripeChargeById(stripe, eventObject.charge as string))
+          (await fetchStripeChargeById(eventObject.charge as string))
         : null;
 
     const clientSubscription =
@@ -160,7 +160,6 @@ export default async function handler(
           );
         }
       } catch (e) {
-        console.log(e);
         return res.status(500).json({ error: "Failed to trigger events" });
       }
     }

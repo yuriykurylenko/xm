@@ -1,4 +1,3 @@
-import { stripe } from "@/initializers/stripe";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -8,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         `@/integrations/stripe/${req.query.object}`
       );
 
-      const object = await create(stripe, req.body);
+      const object = await create(req.body);
       res.status(200).send(object);
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err });

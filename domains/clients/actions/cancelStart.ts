@@ -1,5 +1,3 @@
-import StripeApi from "stripe";
-
 import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
@@ -7,18 +5,13 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { fetchAllByClientId as fetchSubscriptionsByClientId } from "@/domains/clients/domains/subscriptions/model";
 
-const apiHandler = async (
-  clientId: UUID,
-  _: any,
-  { stripe }: { stripe: StripeApi }
-) => {
+const apiHandler = async (clientId: UUID, _: any) => {
   const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
 
   for (const subscription of subscriptions || []) {
     try {
       await cancelStripeSubscriptionSchedule(
-        subscription.stripe_subscription_id,
-        stripe
+        subscription.stripe_subscription_id
       );
     } catch (error) {
       return {

@@ -1,4 +1,3 @@
-import StripeApi from "stripe";
 import { MailService } from "@sendgrid/mail";
 
 import {
@@ -25,8 +24,7 @@ export const changePriceOrRenewSubscription = async (
   }: {
     monthlyAmount: number;
     currency: string;
-  },
-  { stripe }: { stripe: StripeApi }
+  }
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);
   const { data: client } = await fetchClientById(clientId);
@@ -44,15 +42,12 @@ export const changePriceOrRenewSubscription = async (
   const subscription = subscriptions?.[0];
 
   try {
-    await updateStripeSubscription(
-      {
-        stripeSubscriptionId: subscription.stripe_subscription_id,
-        monthlyAmount: monthlyAmount * 100,
-        currency,
-        isActiveSubscription: true,
-      },
-      stripe
-    );
+    await updateStripeSubscription({
+      stripeSubscriptionId: subscription.stripe_subscription_id,
+      monthlyAmount: monthlyAmount * 100,
+      currency,
+      isActiveSubscription: true,
+    });
 
     await updateSubscriptionById(subscription.id, {
       monthly_amount: monthlyAmount * 100,
@@ -109,19 +104,15 @@ export const sendOffer = async (
     trialPeriod?: boolean;
     startDate?: Date | string | null;
   },
-  { stripe, sgMail }: { stripe: StripeApi; sgMail: MailService }
+  { sgMail }: { sgMail: MailService }
 ) => {
   const { data: subscription, error: subscriptionError } =
-    await createClientSubscription(
-      clientId as UUID,
-      {
-        monthlyAmount,
-        currency,
-        trialPeriodDays: trialPeriodDays || (trialPeriod ? 14 : 0),
-        startDate,
-      },
-      stripe
-    );
+    await createClientSubscription(clientId as UUID, {
+      monthlyAmount,
+      currency,
+      trialPeriodDays: trialPeriodDays || (trialPeriod ? 14 : 0),
+      startDate,
+    });
 
   if (subscriptionError) {
     return { subscription, error: { message: "Error creating subscription" } };

@@ -34,7 +34,6 @@ export default async function handler(
       ? res.status(500).json({ error })
       : res.status(200).json({ data: client });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ error: { message: "An unexpected error occurred" } });
