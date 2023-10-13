@@ -8,6 +8,7 @@ import {
   faHandHoldingDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { formatAmount } from "@/app/utils/currency";
 
 interface ClientCardProps {
   item: Client;
@@ -16,16 +17,6 @@ interface ClientCardProps {
   bulkOperationsAllowed: boolean;
   actions?: any;
 }
-
-// Helper function to format the subscription amount
-// TODO: abstract out
-const formatAmount = (amount: number, currency: string) => {
-  const formattedAmount = Number((amount / 100).toFixed(2));
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-  }).format(formattedAmount);
-};
 
 const ClientCard: React.FC<ClientCardProps> = ({
   item,

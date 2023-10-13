@@ -14,6 +14,7 @@ import { Coach, Client } from "@/types/user";
 import { Subscription } from "@/types/subscription";
 import { UUID } from "crypto";
 import { format } from "date-fns";
+import { formatAmount } from "@/app/utils/currency";
 
 interface SubscriptionPageProps extends AuthProps {
   subscription: Subscription;
@@ -26,15 +27,6 @@ const SubscriptionPage = ({
   client,
   coach,
 }: SubscriptionPageProps) => {
-  // Helper function to format the subscription amount
-  const formatAmount = (amount: number, currency: string) => {
-    const formattedAmount = Number((amount / 100).toFixed(2));
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-    }).format(formattedAmount);
-  };
-
   async function onSubscriptionSuccess() {
     await activateClient(subscription.id);
     router.push(`/subscription/${subscription.id}/success`);
