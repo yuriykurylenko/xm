@@ -13,8 +13,8 @@ import PageContainer from "@/app/components/PageContainer";
 import { Coach, Client } from "@/types/user";
 import { Subscription } from "@/types/subscription";
 import { UUID } from "crypto";
-import { format } from "date-fns";
 import { formatAmount } from "@/app/utils/currency";
+import { formatDate } from "@/app/utils/dateTime";
 
 interface SubscriptionPageProps extends AuthProps {
   subscription: Subscription;
@@ -49,12 +49,7 @@ const SubscriptionPage = ({
           You will now start a coaching subscription with me. Please enter your
           payment details in the form below. Your start date is{" "}
           <b>
-            {format(
-              subscription.start_date
-                ? new Date(subscription.start_date)
-                : new Date(),
-              "dd/MM/yyyy"
-            )}
+            {formatDate(subscription.start_date)}
           </b>
           , and you will be paying{" "}
           <b>

@@ -11,7 +11,7 @@ import { fetch as fetchCoachById } from "@/domains/coaches/model";
 import PageContainer from "@/app/components/PageContainer";
 import { Coach, Client } from "@/types/user";
 import { UUID } from "crypto";
-import { format } from "date-fns";
+import { formatDate } from "@/app/utils/dateTime";
 
 interface SubscriptionSuccessPageProps extends AuthProps {
   coach: Coach;
@@ -43,10 +43,7 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
           Your credit card has been processed successfully and you have signed
           up to work with <b>{coach.full_name}</b>
           {client.start_date
-            ? ` starting from ${format(
-                new Date(client.start_date),
-                "dd/MM/yyyy"
-              )}`
+            ? ` starting from ${formatDate(client.start_date)}`
             : ""}
           .
         </p>
