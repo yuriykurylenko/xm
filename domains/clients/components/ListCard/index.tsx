@@ -2,13 +2,13 @@ import styles from "@/domains/clients/components/ListCard/styles.module.css";
 import { Client } from "@/types/user";
 import { useState } from "react";
 import ActionsBar from "@/app/components/ItemList/ActionsBar";
-import { format } from "date-fns";
 import {
   faCreditCard,
   faHandHoldingDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { formatAmount } from "@/app/utils/currency";
+import { formatDate } from "@/app/utils/dateTime";
 
 interface ClientCardProps {
   item: Client;
@@ -61,14 +61,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
         {item.status !== "lead" &&
           (item.start_date && new Date(item.start_date) > new Date() ? (
             <div>
-              {format(
-                Date.UTC(
-                  new Date(item.start_date).getFullYear(),
-                  new Date(item.start_date).getMonth(),
-                  new Date(item.start_date).getDate()
-                ),
-                "dd/MM/yyyy"
-              )}{" "}
+              {formatDate(item.start_date)}{" "}
               {item.subscription?.trial_period_days ? (
                 <FontAwesomeIcon
                   icon={faHandHoldingDollar}
@@ -91,14 +84,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
                   : ""
               }
             >
-              {format(
-                Date.UTC(
-                  new Date(item.start_date).getFullYear(),
-                  new Date(item.start_date).getMonth(),
-                  new Date(item.start_date).getDate()
-                ),
-                "dd/MM/yyyy"
-              )}{" "}
+              {formatDate(item.start_date)}{" "}
               {item.status === "offerSent" && (
                 <FontAwesomeIcon
                   icon={faCreditCard}
@@ -131,15 +117,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
           ))}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
-        {item.end_date &&
-          format(
-            Date.UTC(
-              new Date(item.end_date).getFullYear(),
-              new Date(item.end_date).getMonth(),
-              new Date(item.end_date).getDate()
-            ),
-            "dd/MM/yyyy"
-          )}
+        {item.end_date && formatDate(item.end_date)}
       </div>
       <div className={`${styles["column"]} ${styles["created-column"]}`}>
         {item.subscription &&

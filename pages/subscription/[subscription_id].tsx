@@ -48,10 +48,7 @@ const SubscriptionPage = ({
         <p>
           You will now start a coaching subscription with me. Please enter your
           payment details in the form below. Your start date is{" "}
-          <b>
-            {formatDate(subscription.start_date)}
-          </b>
-          , and you will be paying{" "}
+          <b>{formatDate(subscription.start_date)}</b>, and you will be paying{" "}
           <b>
             {formatAmount(subscription?.monthly_amount, subscription.currency)}
           </b>{" "}

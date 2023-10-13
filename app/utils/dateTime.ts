@@ -6,9 +6,5 @@ export const startOfUtcDay = (date: Date) => {
   ).toISOString();
 };
 
-export const formatDate = (date?: Date) => format(
-  date
-    ? new Date(date)
-    : new Date(),
-  "dd/MM/yyyy"
-)
+export const formatDate = (date?: Date) =>
+  format(date ? new Date(date) : new Date(), "dd/MM/yyyy");
