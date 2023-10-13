@@ -6,7 +6,7 @@ import {
 } from "@/domains/clients/model";
 import { fetch as fetchCoachById } from "@/domains/coaches/model";
 
-import CheckoutForm from "@/app/components/CheckoutForm";
+import CheckoutForm from "@/domains/clients/domains/subscriptions/components/CheckoutForm";
 import router from "next/router";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";
 import PageContainer from "@/app/components/PageContainer";
