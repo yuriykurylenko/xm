@@ -1,8 +1,38 @@
-import { PaymentMethod, Stripe, StripeCardElement } from "@stripe/stripe-js";
+import {
+  PaymentMethod,
+  SetupIntent,
+  Stripe,
+  StripeCardElement,
+  StripeError,
+} from "@stripe/stripe-js";
+
 import { UUID } from "crypto";
 
-import { confirm as confirmCardSetup } from "@/integrations/stripe/setupIntent";
 import createStripeObject from "@/app/utils/createStripeObject";
+
+const confirmCardSetup = async (
+  stripe: Stripe | null,
+  StripeCardElementInstance: StripeCardElement | null,
+  stripeClientSecret: string,
+  billingDetails: { name: string }
+): Promise<{ data: SetupIntent | null; error: Error | StripeError | null }> => {
+  if (!StripeCardElementInstance) {
+    return {
+      data: null,
+      error: new Error("Card Element Instance is not available"),
+    };
+  }
+
+  const { error, setupIntent } =
+    (await stripe?.confirmCardSetup(stripeClientSecret, {
+      payment_method: {
+        card: StripeCardElementInstance,
+        billing_details: billingDetails,
+      },
+    })) ?? {};
+
+  return { data: setupIntent || null, error: error || null };
+};
 
 const createAndConfirmSubscription = async (
   stripe: Stripe | null,
