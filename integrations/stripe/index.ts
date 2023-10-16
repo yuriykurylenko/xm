@@ -5,17 +5,45 @@ import {
   StripeCardElement,
   StripeError,
 } from "@stripe/stripe-js";
-
 import { UUID } from "crypto";
-
 import createStripeObject from "@/app/utils/createStripeObject";
+
+type BillingDetailsInput = { name: string };
+
+type SubscriptionInput = {
+  stripe_price_id?: string;
+  metadata?: { subscription_id: UUID };
+  trial_period_days?: number;
+  start_date?: Date;
+};
+
+type SetupResult = {
+  data: SetupIntent | null;
+  error: Error | StripeError | null;
+};
+
+type SubscriptionResult = {
+  data: { success: boolean; stripeSubscription?: any } | null;
+  error: any;
+};
+
+type CardAndSubscriptionInput = {
+  stripe_price_id?: string;
+  email: string;
+  full_name: string;
+  metadata?: { subscription_id: UUID };
+  trial_period_days: number;
+  start_date?: Date;
+};
+
+type CardAndSubscriptionResult = { data: any | null; error: any };
 
 const confirmCardSetup = async (
   stripe: Stripe | null,
   StripeCardElementInstance: StripeCardElement | null,
   stripeClientSecret: string,
-  billingDetails: { name: string }
-): Promise<{ data: SetupIntent | null; error: Error | StripeError | null }> => {
+  billingDetails: BillingDetailsInput
+): Promise<SetupResult> => {
   if (!StripeCardElementInstance) {
     return {
       data: null,
@@ -43,13 +71,8 @@ const createAndConfirmSubscription = async (
     metadata,
     trial_period_days,
     start_date,
-  }: {
-    stripe_price_id?: string;
-    metadata?: { subscription_id: UUID };
-    trial_period_days?: number;
-    start_date?: Date;
-  }
-) => {
+  }: SubscriptionInput
+): Promise<SubscriptionResult> => {
   try {
     await createStripeObject("customerPaymentMethod", {
       customerId,
@@ -117,21 +140,14 @@ export const handleCardAndSubscriptionSetup = async (
   stripe: Stripe | null,
   StripeCardElementInstance: StripeCardElement | null,
   {
-    stripe_price_id,
     email,
     full_name,
+    stripe_price_id,
     metadata,
     trial_period_days,
     start_date,
-  }: {
-    stripe_price_id?: string;
-    email: string;
-    full_name: string;
-    metadata?: { subscription_id: UUID };
-    trial_period_days: number;
-    start_date?: Date;
-  }
-) => {
+  }: CardAndSubscriptionInput
+): Promise<CardAndSubscriptionResult> => {
   const {
     data: { client_secret, customer: customerId },
   } = await createStripeObject("setupIntent", { email });
