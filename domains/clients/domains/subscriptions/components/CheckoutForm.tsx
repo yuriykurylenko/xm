@@ -53,7 +53,7 @@ const CheckoutForm = ({
           }
         );
 
-        if (data?.success) {
+        if (data && !error) {
           onSubscriptionSuccess();
         }
 

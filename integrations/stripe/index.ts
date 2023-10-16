@@ -103,8 +103,7 @@ const createAndConfirmSubscription = async (
     if (paymentIntent) {
       if (paymentIntent.status === "succeeded") {
         return {
-          // TODO: Remove success: true
-          data: { success: true, stripeSubscription: stripeSubscription },
+          data: stripeSubscription,
           error: null,
         };
       } else if (paymentIntent.status === "requires_action") {
@@ -118,10 +117,7 @@ const createAndConfirmSubscription = async (
           paymentIntentResult.paymentIntent.status === "succeeded"
         ) {
           return {
-            data: {
-              success: true,
-              stripeSubscription,
-            },
+            data: stripeSubscription,
             error: null,
           };
         }
@@ -130,10 +126,7 @@ const createAndConfirmSubscription = async (
       }
     } else {
       return {
-        data: {
-          success: true,
-          stripeSubscription,
-        },
+        data: stripeSubscription,
         error: null,
       };
     }
