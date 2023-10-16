@@ -35,33 +35,29 @@ const CheckoutForm = ({
   const onSubmit = async () => {
     try {
       if (stripe) {
-        const { data: subscriptionData, error } =
-          await handleStripeCardAndSubscriptionSetup(
-            {
-              stripePriceId,
-              email: customerEmail,
-              name: customerFullName,
-              metadata: {
-                subscription_id: subscriptionId,
-              },
-              trialPeriodDays,
-              startDate,
+        const { data, error } = await handleStripeCardAndSubscriptionSetup(
+          {
+            stripePriceId,
+            email: customerEmail,
+            name: customerFullName,
+            metadata: {
+              subscription_id: subscriptionId,
             },
-            {
-              stripe,
-              StripeCardElementInstance:
-                elements?.getElement(CardElement) || null,
-            }
-          );
+            trialPeriodDays,
+            startDate,
+          },
+          {
+            stripe,
+            StripeCardElementInstance:
+              elements?.getElement(CardElement) || null,
+          }
+        );
 
-        if (subscriptionData?.success) {
+        if (data?.success) {
           onSubscriptionSuccess();
-          return { data: subscriptionData, error };
         }
 
-        if (error) {
-          return { data: subscriptionData, error };
-        }
+        return { data, error };
       }
     } catch (error) {
       return {
