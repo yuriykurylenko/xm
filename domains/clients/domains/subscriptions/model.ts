@@ -59,9 +59,9 @@ export const create = async (
   await updateByClientId(clientId, { archived_at: new Date() });
 
   const price = await findOrCreateStripePrice({
-    product: coach.stripe_product_id,
+    productId: coach.stripe_product_id,
     interval: "month",
-    unit_amount: monthlyAmount * 100,
+    unitAmount: monthlyAmount * 100,
     currency,
   });
 

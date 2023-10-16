@@ -1,57 +1,53 @@
-import StripeApi from "stripe";
+import Stripe from "stripe";
 import { stripe } from "@/initializers/stripe";
 
-const create = async ({
-  product,
-  unit_amount,
-  interval,
-  currency,
-}: {
-  product: string;
-  interval: StripeApi.PriceCreateParams.Recurring.Interval;
-  unit_amount: number;
+type CreatePriceInput = {
+  productId: string;
+  interval: Stripe.PriceCreateParams.Recurring.Interval;
+  unitAmount: number;
   currency: string;
-}) => {
+};
+
+const create = async ({
+  productId,
+  interval,
+  unitAmount,
+  currency,
+}: CreatePriceInput): Promise<Stripe.Price> => {
   const price = await stripe.prices.create({
-    product,
-    unit_amount,
+    product: productId,
+    unit_amount: unitAmount,
     currency,
-    recurring: { interval: interval },
+    recurring: { interval },
   });
 
-  return { data: price };
+  return price;
 };
 
 export const findOrCreate = async ({
-  product,
+  productId,
   interval,
-  unit_amount,
+  unitAmount,
   currency,
-}: {
-  product: string;
-  interval: StripeApi.PriceCreateParams.Recurring.Interval;
-  unit_amount: number;
-  currency: string;
-}) => {
+}: CreatePriceInput): Promise<Stripe.Price> => {
   const prices = await stripe.prices.list({
-    product,
+    product: productId,
   });
 
   const existingPrice = prices.data.find(
     (price) =>
       price.recurring?.interval === interval &&
-      price.unit_amount === unit_amount &&
+      price.unit_amount === unitAmount &&
       price.currency.toLowerCase() === currency.toLowerCase()
   );
 
   if (!existingPrice) {
-    const { data: price } = await create({
-      product,
-      unit_amount,
+    return await create({
+      productId,
       interval,
+      unitAmount,
       currency,
     });
-    return price;
   }
   return existingPrice;
 };

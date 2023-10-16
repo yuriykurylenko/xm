@@ -62,8 +62,8 @@ const apiHandler = async (
   );
 
   const price = await findOrCreateStripePrice({
-    product: coach?.stripe_product_id,
-    unit_amount: monthlyAmount * 100,
+    productId: coach?.stripe_product_id,
+    unitAmount: monthlyAmount * 100,
     interval: "month",
     currency,
   });

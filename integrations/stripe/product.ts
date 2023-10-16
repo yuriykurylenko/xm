@@ -1,4 +1,9 @@
+import Stripe from "stripe";
 import { stripe } from "@/initializers/stripe";
 
-export const create = ({ name }: { name: string }) =>
+type CreateProductInput = {
+  name: string;
+};
+
+export const create = ({ name }: CreateProductInput): Promise<Stripe.Product> =>
   stripe.products.create({ name });

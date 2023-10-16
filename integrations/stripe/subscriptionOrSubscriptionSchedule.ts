@@ -1,16 +1,8 @@
 import { UUID } from "crypto";
-
 import { create as createSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 import { create as createSubscription } from "@/integrations/stripe/subscription";
 
-export const create = async ({
-  customerId,
-  startDate,
-  trialPeriodDays,
-  priceId,
-  quantity,
-  metadata,
-}: {
+type CreateSubscriptionOrSubscriptionScheduleInput = {
   customerId: string;
   startDate: Date;
   trialPeriodDays: number;
@@ -19,7 +11,16 @@ export const create = async ({
   metadata: {
     subscription_id: UUID;
   };
-}) => {
+};
+
+export const create = async ({
+  customerId,
+  startDate,
+  trialPeriodDays,
+  priceId,
+  quantity,
+  metadata,
+}: CreateSubscriptionOrSubscriptionScheduleInput) => {
   // Check if the start date is in the future
   if (startDate && new Date(startDate) > new Date()) {
     let trialEndDate = new Date(startDate);
@@ -37,7 +38,7 @@ export const create = async ({
     // Create the subscription
     return await createSubscription({
       customerId,
-      priceId: priceId as unknown as string,
+      priceId,
       quantity,
       metadata,
       trialPeriodDays,

@@ -59,8 +59,8 @@ export const update = async (
 
     if (isActiveSubscription) {
       const price = await findOrCreatePrice({
-        product: coach?.stripe_product_id,
-        unit_amount: monthlyAmount,
+        productId: coach?.stripe_product_id,
+        unitAmount: monthlyAmount,
         interval: "month",
         currency,
       });
