@@ -11,6 +11,8 @@ import createStripeObject from "@/app/utils/createStripeObject";
 type BillingDetailsInput = { name: string };
 
 type SubscriptionInput = {
+  customerId: string;
+  paymentMethodId: string | PaymentMethod | null;
   stripePriceId?: string;
   metadata?: { subscription_id: UUID };
   trialPeriodDays?: number;
@@ -38,11 +40,15 @@ type CardAndSubscriptionInput = {
 
 type CardAndSubscriptionResult = { data: any | null; error: any };
 
+type StripeClientContext = {
+  stripe: Stripe | null;
+  StripeCardElementInstance?: StripeCardElement | null;
+  stripeClientSecret?: string;
+};
+
 const confirmCardSetup = async (
-  stripe: Stripe | null,
-  StripeCardElementInstance: StripeCardElement | null,
-  stripeClientSecret: string,
-  billingDetails: BillingDetailsInput
+  billingDetails: BillingDetailsInput,
+  { stripe, StripeCardElementInstance, stripeClientSecret }: StripeClientContext
 ): Promise<SetupResult> => {
   if (!StripeCardElementInstance) {
     return {
@@ -52,7 +58,7 @@ const confirmCardSetup = async (
   }
 
   const { error, setupIntent } =
-    (await stripe?.confirmCardSetup(stripeClientSecret, {
+    (await stripe?.confirmCardSetup(stripeClientSecret as string, {
       payment_method: {
         card: StripeCardElementInstance,
         billing_details: billingDetails,
@@ -63,10 +69,15 @@ const confirmCardSetup = async (
 };
 
 const createAndConfirmSubscription = async (
-  stripe: Stripe | null,
-  customerId: string,
-  paymentMethodId: string | PaymentMethod | null,
-  { stripePriceId, metadata, trialPeriodDays, startDate }: SubscriptionInput
+  {
+    customerId,
+    paymentMethodId,
+    stripePriceId,
+    metadata,
+    trialPeriodDays,
+    startDate,
+  }: SubscriptionInput,
+  { stripe }: StripeClientContext
 ): Promise<SubscriptionResult> => {
   try {
     await createStripeObject("customerPaymentMethod", {
@@ -132,8 +143,6 @@ const createAndConfirmSubscription = async (
 };
 
 export const handleCardAndSubscriptionSetup = async (
-  stripe: Stripe | null,
-  StripeCardElementInstance: StripeCardElement | null,
   {
     email,
     name,
@@ -141,18 +150,21 @@ export const handleCardAndSubscriptionSetup = async (
     metadata,
     trialPeriodDays,
     startDate,
-  }: CardAndSubscriptionInput
+  }: CardAndSubscriptionInput,
+  { stripe, StripeCardElementInstance }: StripeClientContext
 ): Promise<CardAndSubscriptionResult> => {
   const {
-    data: { client_secret, customer: customerId },
+    data: { client_secret: stripeClientSecret, customer: customerId },
   } = await createStripeObject("setupIntent", { email });
 
   const { data: setupIntentData, error } = await confirmCardSetup(
-    stripe,
-    StripeCardElementInstance,
-    client_secret,
     {
       name,
+    },
+    {
+      stripe,
+      StripeCardElementInstance,
+      stripeClientSecret,
     }
   );
 
@@ -163,10 +175,15 @@ export const handleCardAndSubscriptionSetup = async (
   if (setupIntentData && setupIntentData.status === "succeeded") {
     const { data: subscriptionData, error } =
       await createAndConfirmSubscription(
-        stripe,
-        customerId,
-        setupIntentData.payment_method,
-        { stripePriceId, metadata, trialPeriodDays, startDate }
+        {
+          customerId,
+          paymentMethodId: setupIntentData.payment_method,
+          stripePriceId,
+          metadata,
+          trialPeriodDays,
+          startDate,
+        },
+        { stripe }
       );
 
     return { data: subscriptionData, error };

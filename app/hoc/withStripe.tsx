@@ -8,18 +8,24 @@ import {
 import { stripeClient } from "@/initializers/stripe";
 
 export const withStripe = (Component: React.FC<any>) => {
-  const WrappedComponent = (props: any) => {
+  const IntermediaryComponent = (props: any) => {
     const stripe = useStripe();
     const elements = useElements();
 
     return (
+      <Component
+        {...props}
+        stripe={stripe}
+        elements={elements}
+        CardElement={CardElement}
+      />
+    );
+  };
+
+  const WrappedComponent = (props: any) => {
+    return (
       <Elements stripe={stripeClient}>
-        <Component
-          {...props}
-          stripe={stripe}
-          elements={elements}
-          CardElement={CardElement}
-        />
+        <IntermediaryComponent {...props} />
       </Elements>
     );
   };

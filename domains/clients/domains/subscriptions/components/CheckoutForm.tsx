@@ -37,8 +37,6 @@ const CheckoutForm = ({
       if (stripe) {
         const { data: subscriptionData, error } =
           await handleStripeCardAndSubscriptionSetup(
-            stripe,
-            elements?.getElement(CardElement) || null,
             {
               stripePriceId,
               email: customerEmail,
@@ -48,6 +46,11 @@ const CheckoutForm = ({
               },
               trialPeriodDays,
               startDate,
+            },
+            {
+              stripe,
+              StripeCardElementInstance:
+                elements?.getElement(CardElement) || null,
             }
           );
 
