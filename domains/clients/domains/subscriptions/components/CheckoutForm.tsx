@@ -5,7 +5,6 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import { JSX } from "react";
 import { handleCardAndSubscriptionSetup as handleStripeCardAndSubscriptionSetup } from "@/integrations/stripe";
 
@@ -13,10 +12,7 @@ import styles from "@/app/components/Form/styles.module.css";
 import Form from "@/app/components/Form";
 import Button from "@/app/components/Form/Button";
 import { UUID } from "crypto";
-
-const stripePromise = loadStripe(
-  "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
-);
+import { stripeClient } from "@/initializers/stripe";
 
 interface CheckoutFormProps {
   stripePriceId?: string;
@@ -29,7 +25,7 @@ interface CheckoutFormProps {
 }
 
 const CheckoutForm = (props: JSX.IntrinsicAttributes & CheckoutFormProps) => (
-  <Elements stripe={stripePromise}>
+  <Elements stripe={stripeClient}>
     <CheckoutFormContent {...props} />
   </Elements>
 );

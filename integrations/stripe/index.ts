@@ -66,12 +66,7 @@ const createAndConfirmSubscription = async (
   stripe: Stripe | null,
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,
-  {
-    stripePriceId,
-    metadata,
-    trialPeriodDays,
-    startDate,
-  }: SubscriptionInput
+  { stripePriceId, metadata, trialPeriodDays, startDate }: SubscriptionInput
 ): Promise<SubscriptionResult> => {
   try {
     await createStripeObject("customerPaymentMethod", {
