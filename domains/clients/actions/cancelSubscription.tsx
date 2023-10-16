@@ -38,11 +38,10 @@ const apiHandler = async (
     ["active", "trialing", "past_due", "unpaid"].includes(s.status)
   )) {
     try {
-      await cancelStripeSubscription(
-        subscription.stripe_subscription_id,
+      await cancelStripeSubscription(subscription.stripe_subscription_id, {
         endImmediately,
-        accessAfterEndDate
-      );
+        accessAfterEndDate,
+      });
     } catch (error) {
       return {
         data: null,
