@@ -103,6 +103,7 @@ const createAndConfirmSubscription = async (
     if (paymentIntent) {
       if (paymentIntent.status === "succeeded") {
         return {
+          // TODO: Remove success: true
           data: { success: true, stripeSubscription: stripeSubscription },
           error: null,
         };
