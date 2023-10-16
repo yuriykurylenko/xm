@@ -2,14 +2,7 @@ import { UUID } from "crypto";
 import StripeApi from "stripe";
 import { stripe } from "@/initializers/stripe";
 
-export const create = async ({
-  customerId,
-  startDate,
-  trialPeriodDays,
-  priceId,
-  quantity,
-  metadata,
-}: {
+type CreateSubscriptionScheduleInput = {
   customerId: string | StripeApi.Customer | StripeApi.DeletedCustomer;
   startDate: Date;
   trialPeriodDays: number;
@@ -19,14 +12,23 @@ export const create = async ({
     subscription_id: UUID;
     updated?: boolean;
   };
-}) => {
+};
+
+export const create = async ({
+  customerId,
+  startDate,
+  trialPeriodDays,
+  priceId,
+  quantity = 1,
+  metadata,
+}: CreateSubscriptionScheduleInput) => {
   let trialEndDate = new Date(startDate);
   trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
 
   return await stripe.subscriptionSchedules.create({
-    // @ts-ignore
+    //@ts-ignore
     customer: customerId,
-    start_date: Math.floor(new Date(startDate).getTime() / 1000),
+    start_date: Math.floor(startDate.getTime() / 1000),
     end_behavior: "release",
     phases: [
       {
@@ -37,7 +39,7 @@ export const create = async ({
         items: [
           {
             price: priceId,
-            quantity,
+            quantity: quantity,
             metadata,
           },
         ],
