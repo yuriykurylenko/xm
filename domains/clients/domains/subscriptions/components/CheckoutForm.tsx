@@ -32,7 +32,7 @@ const CheckoutForm = ({
   elements,
   CardElement,
 }: CheckoutFormProps) => {
-  async function onSubmit() {
+  const onSubmit = async () => {
     try {
       if (stripe) {
         const { data: subscriptionData, error } =
@@ -69,7 +69,7 @@ const CheckoutForm = ({
         error: { message: "Error confirming subscription" },
       };
     }
-  }
+  };
 
   const startsNow = !startDate || new Date(startDate) <= new Date();
 
