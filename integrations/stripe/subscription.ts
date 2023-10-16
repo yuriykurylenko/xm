@@ -31,25 +31,26 @@ export const create = ({
     trial_period_days: trialPeriodDays,
   });
 
-export const update = async ({
-  stripeSubscriptionId,
-  monthlyAmount,
-  currency,
-  isActiveSubscription,
-}: {
-  stripeSubscriptionId: string;
-  metadata?: {
-    subscription_id: UUID;
-  };
-  monthlyAmount: number;
-  currency: string;
-  trialPeriodDays?: number;
-  startDate?: Date | string | null;
-  isActiveSubscription?: boolean;
-}) => {
+export const update = async (
+  id: string,
+  {
+    monthlyAmount,
+    currency,
+    isActiveSubscription,
+  }: {
+    metadata?: {
+      subscription_id: UUID;
+    };
+    monthlyAmount: number;
+    currency: string;
+    trialPeriodDays?: number;
+    startDate?: Date | string | null;
+    isActiveSubscription?: boolean;
+  }
+) => {
   try {
     const { data: subscription } =
-      await fetchSubscriptionByStripeSubscriptionId(stripeSubscriptionId);
+      await fetchSubscriptionByStripeSubscriptionId(id);
     const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
 
     if (isActiveSubscription) {
@@ -60,23 +61,20 @@ export const update = async ({
         currency,
       });
 
-      const subscription = await fetch(stripeSubscriptionId);
+      const subscription = await fetch(id);
 
-      const stripeSubscription = await stripe.subscriptions.update(
-        stripeSubscriptionId,
-        {
-          cancel_at_period_end: false,
-          // TODO: look into this
-          proration_behavior: "none",
-          items: [
-            {
-              id: subscription.items.data[0].id,
-              price: price.id,
-              quantity: 1,
-            },
-          ],
-        }
-      );
+      const stripeSubscription = await stripe.subscriptions.update(id, {
+        cancel_at_period_end: false,
+        // TODO: look into this
+        proration_behavior: "none",
+        items: [
+          {
+            id: subscription.items.data[0].id,
+            price: price.id,
+            quantity: 1,
+          },
+        ],
+      });
 
       return { data: stripeSubscription };
     }

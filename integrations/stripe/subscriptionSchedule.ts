@@ -48,5 +48,4 @@ export const create = async ({
   });
 };
 
-export const cancel = (stripeSubscriptionScheduleId: string) =>
-  stripe.subscriptionSchedules.cancel(stripeSubscriptionScheduleId);
+export const cancel = (id: string) => stripe.subscriptionSchedules.cancel(id);
