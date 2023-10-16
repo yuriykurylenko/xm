@@ -16,6 +16,8 @@ interface CheckoutFormProps {
   trialPeriodDays: number;
   startDate?: Date;
   onSubscriptionSuccess: () => void;
+  stripe: any;
+  elements: any;
 }
 
 const CheckoutForm = ({
@@ -26,10 +28,9 @@ const CheckoutForm = ({
   trialPeriodDays,
   startDate,
   onSubscriptionSuccess,
+  stripe,
+  elements
 }: CheckoutFormProps) => {
-  const stripe = useStripe();
-  const elements = useElements();
-
   async function onSubmit() {
     try {
       if (stripe) {

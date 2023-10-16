@@ -1,13 +1,21 @@
 import React from "react";
-import { Elements } from "@stripe/react-stripe-js";
+import { Elements, useElements, useStripe } from "@stripe/react-stripe-js";
 import { stripeClient } from "@/initializers/stripe";
 
 export const withStripe = (Component: React.FC<any>) => {
-  return (props: React.JSX.IntrinsicAttributes) => {
+  const WrappedComponent = (props: any) => {
+    const stripe = useStripe();
+    const elements = useElements();
+    
     return (
       <Elements stripe={stripeClient}>
-        <Component {...props} />
+        <Component {...props} stripe={stripe} elements={elements} />
       </Elements>
     );
   };
+  WrappedComponent.displayName = `withStripe(${
+    Component.displayName || Component.name || "Component"
+  })`;
+
+  return WrappedComponent;
 };
