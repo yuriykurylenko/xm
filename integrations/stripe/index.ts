@@ -11,10 +11,10 @@ import createStripeObject from "@/app/utils/createStripeObject";
 type BillingDetailsInput = { name: string };
 
 type SubscriptionInput = {
-  stripe_price_id?: string;
+  stripePriceId?: string;
   metadata?: { subscription_id: UUID };
-  trial_period_days?: number;
-  start_date?: Date;
+  trialPeriodDays?: number;
+  startDate?: Date;
 };
 
 type SetupResult = {
@@ -28,12 +28,12 @@ type SubscriptionResult = {
 };
 
 type CardAndSubscriptionInput = {
-  stripe_price_id?: string;
+  stripePriceId?: string;
   email: string;
-  full_name: string;
+  name: string;
   metadata?: { subscription_id: UUID };
-  trial_period_days: number;
-  start_date?: Date;
+  trialPeriodDays: number;
+  startDate?: Date;
 };
 
 type CardAndSubscriptionResult = { data: any | null; error: any };
@@ -67,10 +67,10 @@ const createAndConfirmSubscription = async (
   customerId: string,
   paymentMethodId: string | PaymentMethod | null,
   {
-    stripe_price_id,
+    stripePriceId,
     metadata,
-    trial_period_days,
-    start_date,
+    trialPeriodDays,
+    startDate,
   }: SubscriptionInput
 ): Promise<SubscriptionResult> => {
   try {
@@ -85,10 +85,10 @@ const createAndConfirmSubscription = async (
         customerId,
         paymentMethodId,
         quantity: 1,
-        priceId: stripe_price_id || "price_1N6JeAA4j0lnvK9GaP833Peg",
+        priceId: stripePriceId || "price_1N6JeAA4j0lnvK9GaP833Peg",
         metadata,
-        trialPeriodDays: trial_period_days,
-        startDate: start_date,
+        trialPeriodDays: trialPeriodDays,
+        startDate: startDate,
       }
     );
 
@@ -141,11 +141,11 @@ export const handleCardAndSubscriptionSetup = async (
   StripeCardElementInstance: StripeCardElement | null,
   {
     email,
-    full_name,
-    stripe_price_id,
+    name,
+    stripePriceId,
     metadata,
-    trial_period_days,
-    start_date,
+    trialPeriodDays,
+    startDate,
   }: CardAndSubscriptionInput
 ): Promise<CardAndSubscriptionResult> => {
   const {
@@ -157,7 +157,7 @@ export const handleCardAndSubscriptionSetup = async (
     StripeCardElementInstance,
     client_secret,
     {
-      name: full_name,
+      name,
     }
   );
 
@@ -171,7 +171,7 @@ export const handleCardAndSubscriptionSetup = async (
         stripe,
         customerId,
         setupIntentData.payment_method,
-        { stripe_price_id, metadata, trial_period_days, start_date }
+        { stripePriceId, metadata, trialPeriodDays, startDate }
       );
 
     return { data: subscriptionData, error };

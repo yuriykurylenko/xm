@@ -42,8 +42,8 @@ export const changePriceOrRenewSubscription = async (
   const subscription = subscriptions?.[0];
 
   try {
-    await updateStripeSubscription({
-      stripeSubscriptionId: subscription.stripe_subscription_id,
+    await updateStripeSubscription(
+      subscription.stripe_subscription_id, {
       monthlyAmount: monthlyAmount * 100,
       currency,
       isActiveSubscription: true,

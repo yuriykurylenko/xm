@@ -54,14 +54,14 @@ const CheckoutFormContent = ({
             stripe,
             elements?.getElement(CardElement) || null,
             {
-              stripe_price_id: stripePriceId,
+              stripePriceId,
               email: customerEmail,
-              full_name: customerFullName,
+              name: customerFullName,
               metadata: {
                 subscription_id: subscriptionId,
               },
-              trial_period_days: trialPeriodDays,
-              start_date: startDate,
+              trialPeriodDays,
+              startDate,
             }
           );
 
