@@ -1,5 +1,4 @@
 import * as React from "react";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { handleCardAndSubscriptionSetup as handleStripeCardAndSubscriptionSetup } from "@/integrations/stripe";
 
 import styles from "@/app/components/Form/styles.module.css";
@@ -18,6 +17,7 @@ interface CheckoutFormProps {
   onSubscriptionSuccess: () => void;
   stripe: any;
   elements: any;
+  CardElement: any;
 }
 
 const CheckoutForm = ({
@@ -29,7 +29,8 @@ const CheckoutForm = ({
   startDate,
   onSubscriptionSuccess,
   stripe,
-  elements
+  elements,
+  CardElement,
 }: CheckoutFormProps) => {
   async function onSubmit() {
     try {

@@ -1,15 +1,25 @@
 import React from "react";
-import { Elements, useElements, useStripe } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  CardElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 import { stripeClient } from "@/initializers/stripe";
 
 export const withStripe = (Component: React.FC<any>) => {
   const WrappedComponent = (props: any) => {
     const stripe = useStripe();
     const elements = useElements();
-    
+
     return (
       <Elements stripe={stripeClient}>
-        <Component {...props} stripe={stripe} elements={elements} />
+        <Component
+          {...props}
+          stripe={stripe}
+          elements={elements}
+          CardElement={CardElement}
+        />
       </Elements>
     );
   };
