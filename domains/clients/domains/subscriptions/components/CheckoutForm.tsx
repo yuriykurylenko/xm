@@ -1,18 +1,12 @@
 import * as React from "react";
-import {
-  CardElement,
-  Elements,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
-import { JSX } from "react";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { handleCardAndSubscriptionSetup as handleStripeCardAndSubscriptionSetup } from "@/integrations/stripe";
 
 import styles from "@/app/components/Form/styles.module.css";
 import Form from "@/app/components/Form";
 import Button from "@/app/components/Form/Button";
 import { UUID } from "crypto";
-import { stripeClient } from "@/initializers/stripe";
+import { withStripe } from "@/app/hoc/withStripe";
 
 interface CheckoutFormProps {
   stripePriceId?: string;
@@ -24,13 +18,7 @@ interface CheckoutFormProps {
   onSubscriptionSuccess: () => void;
 }
 
-const CheckoutForm = (props: JSX.IntrinsicAttributes & CheckoutFormProps) => (
-  <Elements stripe={stripeClient}>
-    <CheckoutFormContent {...props} />
-  </Elements>
-);
-
-const CheckoutFormContent = ({
+const CheckoutForm = ({
   stripePriceId,
   customerEmail,
   customerFullName,
@@ -110,4 +98,4 @@ const CheckoutFormContent = ({
   );
 };
 
-export default CheckoutForm;
+export default withStripe(CheckoutForm);
