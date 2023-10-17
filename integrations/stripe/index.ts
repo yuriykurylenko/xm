@@ -3,10 +3,12 @@ import {
   SetupIntent,
   Stripe,
   StripeCardElement,
+  StripeElements,
   StripeError,
 } from "@stripe/stripe-js";
 import { UUID } from "crypto";
 import createStripeObject from "@/app/utils/createStripeObject";
+import { CardElementComponent } from "@stripe/react-stripe-js";
 
 type BillingDetailsInput = { name: string };
 
@@ -40,8 +42,10 @@ type CardAndSubscriptionInput = {
 
 type CardAndSubscriptionResult = { data: any | null; error: any };
 
-type StripeClientContext = {
+export type StripeClientContext = {
   stripe: Stripe | null;
+  elements?: StripeElements;
+  CardElement?: CardElementComponent;
   StripeCardElementInstance?: StripeCardElement | null;
   stripeClientSecret?: string;
 };

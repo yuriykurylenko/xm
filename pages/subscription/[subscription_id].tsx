@@ -15,6 +15,7 @@ import { Subscription } from "@/types/subscription";
 import { UUID } from "crypto";
 import { formatAmount } from "@/app/utils/currency";
 import { formatDate } from "@/app/utils/dateTime";
+import ActionForm from "@/app/components/Form/ActionForm";
 
 interface SubscriptionPageProps extends AuthProps {
   subscription: Subscription;
@@ -66,7 +67,7 @@ const SubscriptionPage = ({
           Sincerely, <br />
           {coach?.full_name}
         </p>
-        <CheckoutForm
+        {/* <CheckoutForm
           stripePriceId={subscription.stripe_price_id}
           customerEmail={client.email}
           customerFullName={client.full_name}
@@ -74,7 +75,8 @@ const SubscriptionPage = ({
           subscriptionId={subscription.id}
           trialPeriodDays={subscription.trial_period_days}
           startDate={subscription.start_date}
-        />
+        /> */}
+        <ActionForm action="clients.subscriptions.confirmSubscription" />
       </PageContainer>
     </div>
   );

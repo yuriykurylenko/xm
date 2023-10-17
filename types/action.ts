@@ -17,6 +17,8 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
   ) => void | Promise<void>;
   DialogForm?: React.ComponentType<{ items: T[]; user: Client | Coach }>;
   Form?: React.ComponentType<{}>;
+  formHoc?: any;
+  submittingText?: string;
   dialogTitle?: string;
   dialogTitleBulk?: string;
   dialogText?: string;
