@@ -6,7 +6,6 @@ import { Subscription } from "@/types/subscription";
 import router from "next/router";
 
 import { activate as activateClient } from "@/domains/clients/model";
-import { UUID } from "crypto";
 
 const FormComponent = () => (
   <div className={styles["input-container"]}>
