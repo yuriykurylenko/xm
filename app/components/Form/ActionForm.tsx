@@ -1,5 +1,7 @@
 import { UUID } from "crypto";
 import React, { useEffect, useState } from "react";
+import Form from "@/app/components/Form";
+import Button from "./Button";
 
 interface ActionFormProps {
   action: string;
@@ -32,7 +34,16 @@ const ActionForm: React.FC<ActionFormProps> = ({ action }) => {
     return <div>Loading...</div>;
   }
 
-  const EnhancedForm = actionConfig.formHoc(actionConfig.Form);
+  const CustomForm = () => (
+    <Form onSubmit={actionConfig.handler}>
+      <actionConfig.Form />
+      <Button type="submit" submittingText={actionConfig.submittingText}>
+        {actionConfig.title}
+      </Button>
+    </Form>
+  );
+
+  const EnhancedForm = actionConfig.formHoc(CustomForm);
   return <EnhancedForm />;
 };
 
