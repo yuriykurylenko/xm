@@ -37,9 +37,9 @@ const confirmSubscriptionAction: Action<Subscription> = {
   show: (subscription: Subscription) =>
     !subscription.start_date || new Date(subscription.start_date) <= new Date(),
   Form: FormComponent,
-  onComplete: async (subscription: Subscription | undefined) => {
-    await activateClient(subscription?.id as UUID);
-    router.push(`/subscription/${subscription?.id}/success`);
+  onComplete: async (subscription: Subscription) => {
+    await activateClient(subscription.id);
+    router.push(`/subscription/${subscription.id}/success`);
   },
 };
 
