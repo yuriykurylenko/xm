@@ -5,6 +5,7 @@ import { update as updateClientById } from "@/domains/clients/model";
 
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 const apiHandler = async (clientId: UUID) => {
   const { data, error } = await updateClientById(clientId as UUID, {
@@ -23,6 +24,7 @@ const revokeAccessAction: Action<Client> = {
     client.access_revoked_at == null &&
     client.user_id != null,
   apiHandler,
+  onComplete,
   dialogTitle: "Revoke access for {{full_name}}",
   dialogTitleBulk: "Revoke access for {{n}} clients",
   dialogText:

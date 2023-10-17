@@ -4,9 +4,12 @@ import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { fetchAllByClientId as fetchSubscriptionsByClientId } from "@/domains/clients/domains/subscriptions/model";
+import { fetch as fetchClientById } from "@/domains/clients/model";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 const apiHandler = async (clientId: UUID, _: any) => {
   const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
+  const { data: client } = await fetchClientById(clientId);
 
   for (const subscription of subscriptions || []) {
     try {
@@ -15,17 +18,14 @@ const apiHandler = async (clientId: UUID, _: any) => {
       );
     } catch (error) {
       return {
-        data: null,
+        data: client,
         error: { message: "Error cancelling client's start" },
       };
     }
   }
 
-  return { data: subscriptions, error: null };
+  return { data: client, error: null };
 };
-
-const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
-  setFilterStatus && setFilterStatus("lead");
 
 const cancelStartAction: Action<Client> = {
   title: "Cancel starting client",

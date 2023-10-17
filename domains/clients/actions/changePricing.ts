@@ -2,7 +2,10 @@ import { Action } from "@/types/action";
 import { Client, Coach } from "@/types/user";
 
 import { PriceField } from "@/domains/clients/actions/common/components/DialogForms/PriceField";
-import { changePriceOrRenewSubscription } from "@/domains/clients/actions/common/handlers";
+import {
+  changePriceOrRenewSubscription,
+  onComplete,
+} from "@/domains/clients/actions/common/handlers";
 
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
@@ -13,6 +16,7 @@ const changePricingAction: Action<Client> = {
   show: (client: Client) =>
     client.status === "client" && client.end_date === null,
   apiHandler: changePriceOrRenewSubscription,
+  onComplete,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     PriceField({ items, coach: user as Coach }),
   dialogTitle: "Change price for {{full_name}}",

@@ -1,4 +1,3 @@
-// import { updateSubscriptionByClientId } from "@/app/utils/api";
 import { update as updateClientById } from "@/domains/clients/model";
 
 import { Action } from "@/types/action";
@@ -6,6 +5,7 @@ import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { updateByClientId as updateSubscriptionByClientId } from "@/domains/clients/domains/subscriptions/model";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 const apiHandler = async (clientId: UUID) => {
   const { error } = await updateSubscriptionByClientId(clientId, {
@@ -25,9 +25,6 @@ const apiHandler = async (clientId: UUID) => {
     end_date: null,
   });
 };
-
-const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
-  setFilterStatus && setFilterStatus("lead");
 
 const cancelOfferAction: Action<Client> = {
   title: "Cancel offer",

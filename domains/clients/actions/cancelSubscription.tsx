@@ -6,6 +6,8 @@ import { UUID } from "crypto";
 import { cancel as cancelStripeSubscription } from "@/integrations/stripe/subscription";
 import Input from "@/app/components/Form/Input";
 import { fetchAllByClientId as fetchSubscriptionsByClientId } from "@/domains/clients/domains/subscriptions/model";
+import { fetch as fetchClientById } from "@/domains/clients/model";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 const DialogForm: React.FC = () => (
   <>
@@ -33,6 +35,7 @@ const apiHandler = async (
   const { data: subscriptions } = await fetchSubscriptionsByClientId(
     clientId as string
   );
+  const { data: client } = await fetchClientById(clientId);
 
   for (const subscription of (subscriptions || []).filter((s) =>
     ["active", "trialing", "past_due", "unpaid"].includes(s.status)
@@ -42,19 +45,15 @@ const apiHandler = async (
         endImmediately,
         accessAfterEndDate,
       });
+      return { data: client };
     } catch (error) {
       return {
-        data: null,
+        data: client,
         error: { message: "Error cancelling client's subscription" },
       };
     }
   }
-
-  return { data: subscriptions, error: null };
 };
-
-const onComplete = (setFilterStatus?: (filterStatus: string) => void) =>
-  setFilterStatus && setFilterStatus("ended");
 
 const cancelSubscriptionAction: Action<Client> = {
   title: "End client",

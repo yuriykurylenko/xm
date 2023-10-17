@@ -2,7 +2,10 @@ import { Action } from "@/types/action";
 import { Client, Coach } from "@/types/user";
 
 import { PriceField } from "@/domains/clients/actions/common/components/DialogForms/PriceField";
-import { changePriceOrRenewSubscription } from "./common/handlers";
+import {
+  changePriceOrRenewSubscription,
+  onComplete,
+} from "@/domains/clients/actions/common/handlers";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
@@ -13,6 +16,7 @@ const renewSubscriptionAction: Action<Client> = {
   show: (client: Client) =>
     client.status === "client" && client.end_date != null,
   apiHandler: changePriceOrRenewSubscription,
+  onComplete,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     PriceField({ items, coach: user as Coach }),
   dialogTitle: "Renew {{full_name}}'s subscription",

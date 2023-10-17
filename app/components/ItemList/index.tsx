@@ -227,15 +227,17 @@ const ItemList = <T extends { id: UUID | string }>({
   };
 
   const handleConfirmAction = async (action: any, data?: any) => {
+    let updatedItem;
     for (const item of selectedItems) {
       try {
-        const { error } = action.handler
+        const { data: newItem, error } = action.handler
           ? await action.handler(item.id, data)
           : await axios.put(`/api/clients/${item.id}/${action.name}`, data);
 
         if (error) {
           return { error };
         }
+        updatedItem = newItem;
       } catch (e: any) {
         return (
           e.response?.data || { error: { message: "Something went wrong" } }
@@ -245,7 +247,7 @@ const ItemList = <T extends { id: UUID | string }>({
 
     handleCloseDialog();
     await prepareData();
-    action.onComplete && action.onComplete(setFilterStatus);
+    action.onComplete && action.onComplete(updatedItem, setFilterStatus);
 
     return { error: null };
   };

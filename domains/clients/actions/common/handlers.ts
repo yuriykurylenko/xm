@@ -15,6 +15,7 @@ import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model
 import { update as updateStripeSubscription } from "@/integrations/stripe/subscription";
 import { UUID } from "crypto";
 import { Subscription } from "@/types/subscription";
+import { Client } from "@/types/user";
 
 export const changePriceOrRenewSubscription = async (
   clientId: UUID,
@@ -55,7 +56,7 @@ export const changePriceOrRenewSubscription = async (
 
     return { data: client, error: null };
   } catch (e) {
-    return { data: null, error: { message: "Error updating client terms" } };
+    return { data: client, error: { message: "Error updating client terms" } };
   }
 };
 
@@ -127,6 +128,7 @@ export const sendOffer = async (
   return { data, error };
 };
 
-export const onSendOfferComplete = (
+export const onComplete = (
+  client: Client,
   setFilterStatus?: (filterStatus: string) => void
-) => setFilterStatus && setFilterStatus("offerSent");
+) => setFilterStatus && setFilterStatus(client.status as string);

@@ -3,7 +3,7 @@ import { Client } from "@/types/user";
 
 import { ClientTermsFormFields } from "@/domains/clients/actions/common/components/DialogForms/TermsFields";
 import {
-  onSendOfferComplete,
+  onComplete,
   sendOffer,
 } from "@/domains/clients/actions/common/handlers";
 
@@ -15,7 +15,7 @@ const sendOfferAction: Action<Client> = {
   icon: faPaperPlane,
   show: (client: Client) => client.status === "lead",
   apiHandler: sendOffer,
-  onComplete: onSendOfferComplete,
+  onComplete,
   DialogForm: ({ items, user }: { items: Client[]; user: any }) =>
     ClientTermsFormFields({ items, coach: user }),
   dialogTitle: "Send offer to {{full_name}}",

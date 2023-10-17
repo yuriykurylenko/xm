@@ -5,6 +5,7 @@ import { ClientTermsFormFields } from "@/domains/clients/actions/common/componen
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { startOfUtcDay } from "@/app/utils/dateTime";
+import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import {
   create as createSubscription,
@@ -13,6 +14,7 @@ import {
 import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/price";
 import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
 import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 const apiHandler = async (
   clientId: UUID,
@@ -42,8 +44,9 @@ const apiHandler = async (
 
   const { data: subscription } = await fetchSubscriptionByClientId(clientId);
   const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
+  const { data: client } = await fetchClientById(clientId);
 
-  const { data: clietSubscription, error } = await createSubscription(
+  const { data: clientSubscription, error } = await createSubscription(
     clientId,
     {
       monthlyAmount: monthlyAmount,
@@ -54,7 +57,7 @@ const apiHandler = async (
   );
 
   if (error) {
-    return { data: clietSubscription, error };
+    return { data: client, error };
   }
 
   const { customer } = await cancelStripeSubscriptionSchedule(
@@ -75,12 +78,12 @@ const apiHandler = async (
     priceId: price.id,
     quantity: 1,
     metadata: {
-      subscription_id: clietSubscription?.id,
+      subscription_id: clientSubscription?.id,
       updated: true,
     },
   });
 
-  return { data: clietSubscription, error };
+  return { data: client, error };
 };
 
 const changeTermsAction: Action<Client> = {
@@ -89,6 +92,7 @@ const changeTermsAction: Action<Client> = {
   icon: faRotate,
   show: (client: Client) => client.status === "starting",
   apiHandler,
+  onComplete,
   DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
     ClientTermsFormFields({ items, coach: user as Coach }),
   dialogTitle: "Change terms for {{full_name}}",
