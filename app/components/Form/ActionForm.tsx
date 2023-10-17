@@ -40,8 +40,18 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
   }
 
   const CustomForm = (context: any) => {
+    const handler = async () => {
+      try {
+        await actionConfig.handler(item.id, context);
+        item && (await actionConfig.onComplete(item));
+        return { data: item };
+      } catch (error) {
+        return { data: item, error };
+      }
+    };
+
     return (
-      <Form onSubmit={() => actionConfig.handler(item.id, context)}>
+      <Form onSubmit={handler}>
         <actionConfig.Form />
         <Button type="submit" submittingText={actionConfig.submittingText}>
           {actionConfig.title}

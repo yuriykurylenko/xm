@@ -1,13 +1,8 @@
 import Head from "next/head";
 import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
-import {
-  activate as activateClient,
-  fetch as fetchClientById,
-} from "@/domains/clients/model";
+import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetch as fetchCoachById } from "@/domains/coaches/model";
 
-import CheckoutForm from "@/domains/clients/domains/subscriptions/components/CheckoutForm";
-import router from "next/router";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";
 import PageContainer from "@/app/components/PageContainer";
 import { Coach, Client } from "@/types/user";
@@ -28,11 +23,6 @@ const SubscriptionPage = ({
   client,
   coach,
 }: SubscriptionPageProps) => {
-  // async function onSubscriptionSuccess() {
-  //   await activateClient(subscription.id);
-  //   router.push(`/subscription/${subscription.id}/success`);
-  // }
-
   return (
     <div>
       <Head>
@@ -67,15 +57,6 @@ const SubscriptionPage = ({
           Sincerely, <br />
           {coach?.full_name}
         </p>
-        {/* <CheckoutForm
-          stripePriceId={subscription.stripe_price_id}
-          customerEmail={client.email}
-          customerFullName={client.full_name}
-          onSubscriptionSuccess={onSubscriptionSuccess}
-          subscriptionId={subscription.id}
-          trialPeriodDays={subscription.trial_period_days}
-          startDate={subscription.start_date}
-        /> */}
         <ActionForm
           action="clients.subscriptions.confirmSubscription"
           itemId={subscription.id}
