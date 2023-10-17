@@ -20,8 +20,6 @@ const ActionForm: React.FC<ActionFormProps> = ({ action }) => {
           `@/domains/${domainPath}/actions/${actionName}`
         );
         setActionConfig(actionModule);
-
-        console.log(actionModule);
       } catch (error) {
         console.error("Could not load action config:", error);
       }
@@ -34,7 +32,8 @@ const ActionForm: React.FC<ActionFormProps> = ({ action }) => {
     return <div>Loading...</div>;
   }
 
-  return <div>Action form will be rendered here.</div>;
+  const EnhancedForm = actionConfig.formHoc(actionConfig.Form);
+  return <EnhancedForm />;
 };
 
 export default ActionForm;
