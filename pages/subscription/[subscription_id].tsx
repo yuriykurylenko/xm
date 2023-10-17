@@ -28,10 +28,10 @@ const SubscriptionPage = ({
   client,
   coach,
 }: SubscriptionPageProps) => {
-  async function onSubscriptionSuccess() {
-    await activateClient(subscription.id);
-    router.push(`/subscription/${subscription.id}/success`);
-  }
+  // async function onSubscriptionSuccess() {
+  //   await activateClient(subscription.id);
+  //   router.push(`/subscription/${subscription.id}/success`);
+  // }
 
   return (
     <div>
@@ -76,7 +76,10 @@ const SubscriptionPage = ({
           trialPeriodDays={subscription.trial_period_days}
           startDate={subscription.start_date}
         /> */}
-        <ActionForm action="clients.subscriptions.confirmSubscription" />
+        <ActionForm
+          action="clients.subscriptions.confirmSubscription"
+          itemId={subscription.id}
+        />
       </PageContainer>
     </div>
   );
