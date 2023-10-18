@@ -155,7 +155,7 @@ export const handleCardAndSubscriptionSetup = async (
     data: { client_secret: stripeClientSecret, customer: customerId },
   } = await createStripeObject("setupIntent", { email });
 
-  const { data: setupIntentData, error } = await confirmCardSetup(
+  const { data: setupIntent, error: setupError } = await confirmCardSetup(
     {
       name,
     },
@@ -166,26 +166,49 @@ export const handleCardAndSubscriptionSetup = async (
     }
   );
 
-  if (error) {
-    return { data: null, error };
+  if (setupError) {
+    return { data: null, error: setupError };
   }
 
-  if (setupIntentData && setupIntentData.status === "succeeded") {
-    const { data: subscriptionData, error } =
-      await createAndConfirmSubscription(
-        {
-          customerId,
-          paymentMethodId: setupIntentData.payment_method,
-          stripePriceId,
-          metadata,
-          trialPeriodDays,
-          startDate,
-        },
-        { stripe }
-      );
+  if (setupIntent && setupIntent.status === "requires_action") {
+    const confirmResult = await stripe?.confirmCardSetup(
+      setupIntent.client_secret as string
+    );
 
-    return { data: subscriptionData, error };
+    if (!confirmResult) {
+      return { data: null, error: new Error("Failed to confirm card setup.") };
+    }
+
+    if (confirmResult.error) {
+      return { data: null, error: confirmResult.error };
+    }
+
+    if (
+      confirmResult.setupIntent &&
+      confirmResult.setupIntent.status !== "succeeded"
+    ) {
+      return {
+        data: null,
+        error: new Error("Setup did not succeed after authentication."),
+      };
+    }
+  } else if (!setupIntent || setupIntent.status !== "succeeded") {
+    return { data: null, error: new Error("Setup did not succeed.") };
   }
 
-  return { data: null, error };
+  // Proceed to create subscription if setup succeeded
+  const { data: subscriptionData, error: subscriptionError } =
+    await createAndConfirmSubscription(
+      {
+        customerId,
+        paymentMethodId: setupIntent.payment_method,
+        stripePriceId,
+        metadata,
+        trialPeriodDays,
+        startDate,
+      },
+      { stripe }
+    );
+
+  return { data: subscriptionData, error: subscriptionError };
 };

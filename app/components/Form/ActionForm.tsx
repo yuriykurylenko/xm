@@ -42,9 +42,11 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
   const CustomForm = (context: any) => {
     const handler = async () => {
       try {
-        await actionConfig.handler(item.id, context);
-        item && (await actionConfig.onComplete(item));
-        return { data: item };
+        const { error } = await actionConfig.handler(item.id, context);
+        if (!error) {
+          item && (await actionConfig.onComplete(item));
+        }
+        return { data: item, error };
       } catch (error) {
         return { data: item, error };
       }

@@ -34,8 +34,8 @@ type SubscriptionInput = {
 };
 
 type SetupResult = {
-  data: SetupIntent | null;
-  error: Error | StripeError | null;
+  data?: SetupIntent | null;
+  error?: Error | StripeError | null;
 };
 
 type SubscriptionResult = {
@@ -66,22 +66,24 @@ const confirmCardSetup = async (
   billingDetails: BillingDetailsInput,
   { stripe, StripeCardElementInstance, stripeClientSecret }: StripeClientContext
 ): Promise<SetupResult> => {
-  if (!StripeCardElementInstance) {
+  if (!stripe || !StripeCardElementInstance) {
     return {
       data: null,
-      error: new Error("Card Element Instance is not available"),
+      error: new Error("Stripe configuration is missing"),
     };
   }
 
-  const { error, setupIntent } =
-    (await stripe?.confirmCardSetup(stripeClientSecret as string, {
+  const { error, setupIntent } = await stripe.confirmCardSetup(
+    stripeClientSecret as string,
+    {
       payment_method: {
         card: StripeCardElementInstance,
         billing_details: billingDetails,
       },
-    })) ?? {};
+    }
+  );
 
-  return { data: setupIntent || null, error: error || null };
+  return { data: setupIntent, error };
 };
 
 const createAndConfirmSubscription = async (
@@ -95,6 +97,13 @@ const createAndConfirmSubscription = async (
   }: SubscriptionInput,
   { stripe }: StripeClientContext
 ): Promise<SubscriptionResult> => {
+  if (!stripe) {
+    return {
+      data: null,
+      error: new Error("Stripe configuration is missing"),
+    };
+  }
+
   try {
     await createStripeObject("customerPaymentMethod", {
       customerId,
@@ -114,37 +123,21 @@ const createAndConfirmSubscription = async (
       }
     );
 
-    const paymentIntent = stripeSubscription.latest_invoice?.payment_intent;
+    const {
+      payment_intent: { status, client_secret, last_payment_error },
+      error,
+    } = stripeSubscription.latest_invoice;
 
-    if (paymentIntent) {
-      if (paymentIntent.status === "succeeded") {
-        return {
-          data: stripeSubscription,
-          error: null,
-        };
-      } else if (paymentIntent.status === "requires_action") {
-        const paymentIntentResult = await stripe?.confirmCardPayment(
-          paymentIntent.client_secret
-        );
-        if (paymentIntentResult?.error) {
-          return { data: null, error: paymentIntentResult.error };
-        } else if (
-          paymentIntentResult?.paymentIntent &&
-          paymentIntentResult.paymentIntent.status === "succeeded"
-        ) {
-          return {
-            data: stripeSubscription,
-            error: null,
-          };
-        }
-      } else if (paymentIntent.last_payment_error) {
-        return { data: null, error: paymentIntent.last_payment_error };
-      }
-    } else {
-      return {
-        data: stripeSubscription,
-        error: null,
-      };
+    if (status === "succeeded") {
+      return { data: stripeSubscription, error };
+    } else if (status === "requires_action") {
+      const { error, paymentIntent } = await stripe.confirmCardPayment(
+        client_secret
+      );
+      console.log(error, paymentIntent);
+      return { data: stripeSubscription, error };
+    } else if (last_payment_error) {
+      return { data: stripeSubscription, error: last_payment_error };
     }
   } catch (error) {
     return { data: null, error: { message: "Error creating subscription" } };
@@ -152,7 +145,7 @@ const createAndConfirmSubscription = async (
   return { data: null, error: null };
 };
 
-const handleCardAndSubscriptionSetup = async (
+export const handleCardAndSubscriptionSetup = async (
   {
     email,
     name,
@@ -163,43 +156,44 @@ const handleCardAndSubscriptionSetup = async (
   }: CardAndSubscriptionInput,
   { stripe, StripeCardElementInstance }: StripeClientContext
 ): Promise<CardAndSubscriptionResult> => {
+  if (!stripe || !StripeCardElementInstance) {
+    return {
+      data: null,
+      error: "Stripe or StripeCardElementInstance is not available",
+    };
+  }
+
   const {
     data: { client_secret: stripeClientSecret, customer: customerId },
   } = await createStripeObject("setupIntent", { email });
 
-  const { data: setupIntentData, error } = await confirmCardSetup(
-    {
-      name,
-    },
-    {
-      stripe,
-      StripeCardElementInstance,
-      stripeClientSecret,
-    }
-  );
+  const { error, setupIntent } =
+    (await stripe.confirmCardSetup(stripeClientSecret, {
+      payment_method: {
+        card: StripeCardElementInstance,
+        billing_details: { name },
+      },
+    })) ?? {};
 
   if (error) {
     return { data: null, error };
   }
 
-  if (setupIntentData && setupIntentData.status === "succeeded") {
-    const { data: subscriptionData, error } =
-      await createAndConfirmSubscription(
-        {
-          customerId,
-          paymentMethodId: setupIntentData.payment_method,
-          stripePriceId,
-          metadata,
-          trialPeriodDays,
-          startDate,
-        },
-        { stripe }
-      );
-
-    return { data: subscriptionData, error };
+  if (setupIntent && setupIntent.status === "succeeded") {
+    return await createAndConfirmSubscription(
+      {
+        customerId,
+        paymentMethodId: setupIntent.payment_method,
+        stripePriceId,
+        metadata,
+        trialPeriodDays,
+        startDate,
+      },
+      { stripe }
+    );
+  } else {
+    return { data: null, error: new Error("Unknown setup intent status.") };
   }
-
-  return { data: null, error };
 };
 
 const handler = async (
