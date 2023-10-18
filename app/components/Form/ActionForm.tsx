@@ -1,7 +1,9 @@
-import { UUID } from "crypto";
 import React, { useEffect, useState } from "react";
 import Form from "@/app/components/Form";
 import Button from "@/app/components/Form/Button";
+import { UUID } from "crypto";
+import { fetchYaml } from "@/app/utils/fetchYaml";
+import Input from "@/app/components/Form/Input";
 
 interface ActionFormProps {
   action: string;
@@ -9,42 +11,57 @@ interface ActionFormProps {
 }
 
 const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
-  const [actionConfig, setActionConfig] = useState<any>(null);
   const [item, setItem] = useState<any>(null);
+  const [actionConfig, setActionConfig] = useState<any>(null);
+  const [formHocModule, setFormHocModule] = useState<any>(null);
+  const [formHocName, setFormHocName] = useState<string>("");
+  const [actionModule, setActionModule] = useState<any>(null);
+
+  const actionParts = action.split(".");
+  const actionName = actionParts.pop();
+  const domainPath = actionParts.join("/domains/");
 
   useEffect(() => {
-    const loadActionConfig = async () => {
+    const fetchItem = async () => {
+      const actionsConfig = await fetchYaml(
+        `/api/actions?domainPath=${domainPath}`
+      );
+
+      // @ts-ignore
+      const config = actionsConfig[actionName];
+      setActionConfig(config);
+
+      const hocName = config?.form.hoc;
+      setFormHocName(hocName);
+
+      const hocModule = await import(`@/app/hoc/${hocName}`);
+      setFormHocModule(hocModule);
+
+      const actionModule = await import(
+        `@/domains/${domainPath}/actions/${actionName}`
+      );
+      setActionModule(actionModule);
+
       try {
-        const actionParts = action.split(".");
-        const actionName = actionParts.pop();
-        const domainPath = actionParts.join("/domains/");
-
-        const { default: actionModule } = await import(
-          `@/domains/${domainPath}/actions/${actionName}`
-        );
-        setActionConfig(actionModule);
-
         const { fetch } = await import(`@/domains/${domainPath}/model`);
         const { data: item } = await fetch(itemId);
         setItem(item);
       } catch (error) {
-        console.error("Could not load action config:", error);
+        console.error("Could not load item:", error);
       }
     };
 
-    loadActionConfig();
-  }, [action]);
-
-  if (!actionConfig) {
-    return <div>Loading...</div>;
-  }
+    if (itemId) {
+      fetchItem();
+    }
+  }, [itemId, domainPath]);
 
   const CustomForm = (context: any) => {
     const handler = async () => {
       try {
-        const { error } = await actionConfig.handler(item.id, context);
+        const { error } = await actionModule.handler(item?.id, context);
         if (!error) {
-          item && (await actionConfig.onComplete(item));
+          item && (await actionModule.onComplete(item));
         }
         return { data: item, error };
       } catch (error) {
@@ -52,17 +69,24 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
       }
     };
 
-    return (
+    return actionConfig ? (
       <Form onSubmit={handler}>
-        <actionConfig.Form />
+        {actionConfig.form.inputs.map((input: any, index: number) => (
+          <Input key={index} {...input} />
+        ))}
         <Button type="submit" submittingText={actionConfig.submittingText}>
           {actionConfig.title}
         </Button>
       </Form>
+    ) : (
+      <></>
     );
   };
 
-  const EnhancedForm = actionConfig.formHoc(CustomForm);
+  const EnhancedForm = formHocModule
+    ? formHocModule[formHocName](CustomForm)
+    : () => <></>;
+
   return <EnhancedForm />;
 };
 

@@ -1,0 +1,11 @@
+confirm:
+  title: "Pay"
+  submittingText: "Processing..."
+  form:
+    hoc: withStripe
+    inputs:
+      - name: "card"
+        type: "stripeCard"
+
+  routing:
+    successPath: "/subscription/{subscription_id}/success"

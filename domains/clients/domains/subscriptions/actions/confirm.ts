@@ -1,6 +1,4 @@
-import React from "react";
 import { CardElementComponent } from "@stripe/react-stripe-js";
-import { Action } from "@/types/action";
 import { Subscription } from "@/types/subscription";
 import router from "next/router";
 
@@ -19,10 +17,6 @@ import {
   StripeError,
 } from "@stripe/stripe-js";
 import { UUID } from "crypto";
-import { withStripe } from "@/app/hoc/withStripe";
-import Input from "@/app/components/Form/Input";
-
-type BillingDetailsInput = { name: string };
 
 type SubscriptionInput = {
   customerId: string;
@@ -60,30 +54,6 @@ export type StripeClientContext = {
   CardElement?: CardElementComponent;
   StripeCardElementInstance?: StripeCardElement | null;
   stripeClientSecret?: string;
-};
-
-const confirmCardSetup = async (
-  billingDetails: BillingDetailsInput,
-  { stripe, StripeCardElementInstance, stripeClientSecret }: StripeClientContext
-): Promise<SetupResult> => {
-  if (!stripe || !StripeCardElementInstance) {
-    return {
-      data: null,
-      error: new Error("Stripe configuration is missing"),
-    };
-  }
-
-  const { error, setupIntent } = await stripe.confirmCardSetup(
-    stripeClientSecret as string,
-    {
-      payment_method: {
-        card: StripeCardElementInstance,
-        billing_details: billingDetails,
-      },
-    }
-  );
-
-  return { data: setupIntent, error };
 };
 
 const createAndConfirmSubscription = async (
@@ -195,7 +165,7 @@ export const handleCardAndSubscriptionSetup = async (
   }
 };
 
-const handler = async (
+export const handler = async (
   subscriptionId: UUID,
   { stripe, elements, CardElement }: StripeClientContext
 ) => {
@@ -232,18 +202,7 @@ const handler = async (
   }
 };
 
-const confirmSubscriptionAction: Action<Subscription> = {
-  title: "Pay",
-  submittingText: "Processing...",
-  show: (subscription: Subscription) =>
-    !subscription.start_date || new Date(subscription.start_date) <= new Date(),
-  Form: () => <Input name="card" type="stripeCard" />,
-  formHoc: withStripe,
-  handler,
-  onComplete: async (subscription: Subscription) => {
-    await activateClient(subscription.id);
-    router.push(`/subscription/${subscription.id}/success`);
-  },
+export const onComplete = async (subscription: Subscription) => {
+  await activateClient(subscription.id);
+  router.push(`/subscription/${subscription.id}/success`);
 };
-
-export default confirmSubscriptionAction;

@@ -58,7 +58,7 @@ const SubscriptionPage = ({
           {coach?.full_name}
         </p>
         <ActionForm
-          action="clients.subscriptions.confirmSubscription"
+          action="clients.subscriptions.confirm"
           itemId={subscription.id}
         />
       </PageContainer>
