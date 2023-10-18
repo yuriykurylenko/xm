@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import styles from "@/app/components/Form/styles.module.css";
+import { CardElement } from "@stripe/react-stripe-js";
 
 export type ValidationRule = {
   required?: string | boolean;
@@ -18,7 +19,8 @@ export type InputType =
   | "number"
   | "text"
   | "checkbox"
-  | "date";
+  | "date"
+  | "stripeCard";
 
 export interface InputProps {
   name: string;
@@ -60,6 +62,7 @@ export const Input: FC<InputProps> = ({
     number: {},
     checkbox: {},
     date: {},
+    stripeCard: {},
   };
 
   const {
@@ -145,6 +148,28 @@ export const Input: FC<InputProps> = ({
               }}
             />
           </label>
+        ) : type === "stripeCard" ? (
+          <div className={styles["input-container"]}>
+            <div className={styles["input"]}>
+              <CardElement
+                options={{
+                  style: {
+                    base: {
+                      fontSize: "16px",
+                      color: "#424770",
+                      "::placeholder": {
+                        color: "#707070",
+                      },
+                      backgroundColor: "#fafafa",
+                    },
+                    invalid: {
+                      color: "#9e2146",
+                    },
+                  },
+                }}
+              />
+            </div>
+          </div>
         ) : (
           inputElement
         )}

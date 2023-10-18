@@ -21,6 +21,7 @@ import {
 } from "@stripe/stripe-js";
 import { UUID } from "crypto";
 import { withStripe } from "@/app/hoc/withStripe";
+import Input from "@/app/components/Form/Input";
 
 type BillingDetailsInput = { name: string };
 
@@ -232,36 +233,12 @@ const handler = async (
   }
 };
 
-const FormComponent = () => (
-  <div className={styles["input-container"]}>
-    <div className={styles["input"]}>
-      <CardElement
-        options={{
-          style: {
-            base: {
-              fontSize: "16px",
-              color: "#424770",
-              "::placeholder": {
-                color: "#707070",
-              },
-              backgroundColor: "#fafafa",
-            },
-            invalid: {
-              color: "#9e2146",
-            },
-          },
-        }}
-      />
-    </div>
-  </div>
-);
-
 const confirmSubscriptionAction: Action<Subscription> = {
   title: "Pay",
   submittingText: "Processing...",
   show: (subscription: Subscription) =>
     !subscription.start_date || new Date(subscription.start_date) <= new Date(),
-  Form: FormComponent,
+  Form: () => <Input name="card" type="stripeCard" />,
   formHoc: withStripe,
   handler,
   onComplete: async (subscription: Subscription) => {
