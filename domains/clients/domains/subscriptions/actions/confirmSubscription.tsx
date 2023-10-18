@@ -1,6 +1,5 @@
 import React from "react";
-import { CardElement, CardElementComponent } from "@stripe/react-stripe-js";
-import styles from "@/app/components/Form/styles.module.css";
+import { CardElementComponent } from "@stripe/react-stripe-js";
 import { Action } from "@/types/action";
 import { Subscription } from "@/types/subscription";
 import router from "next/router";
