@@ -134,7 +134,6 @@ const createAndConfirmSubscription = async (
       const { error, paymentIntent } = await stripe.confirmCardPayment(
         client_secret
       );
-      console.log(error, paymentIntent);
       return { data: stripeSubscription, error };
     } else if (last_payment_error) {
       return { data: stripeSubscription, error: last_payment_error };
