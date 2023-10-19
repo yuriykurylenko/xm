@@ -1,7 +1,7 @@
 import withAuth from "@/app/hoc/withAuth";
 
-const Home = () => {
+const HomePage = () => {
   return null;
 };
 
-export default withAuth(Home, ["coach", "client"]);
+export default withAuth(HomePage, ["coach", "client"]);

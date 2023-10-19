@@ -7,7 +7,7 @@ import styles from "@/app/styles/home.module.css";
 import { Client, Coach } from "@/types/user";
 import { UUID } from "crypto";
 
-const Home = ({ user }: { user: Client }) => {
+const HomePage = ({ user }: { user: Client }) => {
   const [coach, setCoach] = useState<Coach | null>(null);
 
   useEffect(() => {
@@ -38,4 +38,4 @@ const Home = ({ user }: { user: Client }) => {
   );
 };
 
-export default withAuth(Home, ["client"]);
+export default withAuth(HomePage, ["client"]);

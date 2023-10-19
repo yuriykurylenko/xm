@@ -2,7 +2,7 @@ import withAuth from "@/app/hoc/withAuth";
 import { Coach } from "@/types/user";
 import Head from "next/head";
 
-const Home = ({ user }: { user: Coach }) => {
+const HomePage = ({ user }: { user: Coach }) => {
   return (
     <>
       <Head>
@@ -14,4 +14,4 @@ const Home = ({ user }: { user: Coach }) => {
   );
 };
 
-export default withAuth(Home, ["coach"]);
+export default withAuth(HomePage, ["coach"]);

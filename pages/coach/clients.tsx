@@ -18,7 +18,7 @@ import EmptyList, {
 } from "@/domains/clients/components/EmptyList";
 import ClientsListHeader from "@/domains/clients/components/ListHeader";
 
-const Clients = ({ user }: { user: Coach }) => {
+const ClientsPage = ({ user }: { user: Coach }) => {
   const fetchClients = async (
     page: number,
     filterStatus: string,
@@ -81,4 +81,4 @@ const Clients = ({ user }: { user: Coach }) => {
   );
 };
 
-export default withAuth(Clients, ["coach"]);
+export default withAuth(ClientsPage, ["coach"]);

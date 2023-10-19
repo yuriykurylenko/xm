@@ -17,7 +17,7 @@ type LoginFormData = {
   password: string;
 };
 
-const Login = () => {
+const LoginPage = () => {
   const { logIn, user } = useAuth();
   const router = useRouter();
 
@@ -58,4 +58,4 @@ const Login = () => {
   );
 };
 
-export default withAuth(Login, ["anonymous"]);
+export default withAuth(LoginPage, ["anonymous"]);

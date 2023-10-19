@@ -15,7 +15,7 @@ interface SubscriptionSuccessPageProps extends AuthProps {
   client: Client;
 }
 
-const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
+const CreateAccountPage = ({ coach, client }: SubscriptionSuccessPageProps) => {
   return (
     <div>
       <Head>
@@ -43,7 +43,7 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
   );
 };
 
-export default withAuth(Success, ["anonymous"]);
+export default withAuth(CreateAccountPage, ["anonymous"]);
 
 export async function getServerSideProps(context: {
   params: { subscription_id: UUID };
