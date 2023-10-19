@@ -1,4 +1,4 @@
-import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
+import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
 import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";

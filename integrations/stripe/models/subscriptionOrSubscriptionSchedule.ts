@@ -1,6 +1,6 @@
 import { UUID } from "crypto";
-import { create as createSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
-import { create as createSubscription } from "@/integrations/stripe/subscription";
+import { create as createSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
+import { create as createSubscription } from "@/integrations/stripe/models/subscription";
 
 type CreateSubscriptionOrSubscriptionScheduleInput = {
   customerId: string;

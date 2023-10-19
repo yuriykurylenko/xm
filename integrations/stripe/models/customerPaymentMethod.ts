@@ -1,5 +1,5 @@
 import { stripe } from "@/initializers/stripe";
-import { update as updateStripeCustomer } from "@/integrations/stripe/customer";
+import { update as updateStripeCustomer } from "@/integrations/stripe/models/customer";
 import Stripe from "stripe";
 
 type CreateCustomerPaymentMethodInput = {

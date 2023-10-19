@@ -5,7 +5,7 @@ import {
   updateByStripeSubscriptionId as updateClientSubscriptionByStripeSubscriptionId,
 } from "@/domains/clients/domains/subscriptions/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
-import { findOrCreate as findOrCreatePrice } from "@/integrations/stripe/price";
+import { findOrCreate as findOrCreatePrice } from "@/integrations/stripe/models/price";
 
 type CreateSubscriptionInput = {
   customerId: string;

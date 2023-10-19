@@ -11,9 +11,9 @@ import {
   create as createSubscription,
   fetchByClientId as fetchSubscriptionByClientId,
 } from "@/domains/clients/domains/subscriptions/model";
-import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/price";
-import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
-import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/subscriptionSchedule";
+import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/models/price";
+import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
+import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
 import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 const apiHandler = async (

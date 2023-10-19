@@ -3,7 +3,7 @@ import { Client } from "@/types/user";
 
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
-import { cancel as cancelStripeSubscription } from "@/integrations/stripe/subscription";
+import { cancel as cancelStripeSubscription } from "@/integrations/stripe/models/subscription";
 import Input from "@/app/components/Form/Input";
 import { fetchAllByClientId as fetchSubscriptionsByClientId } from "@/domains/clients/domains/subscriptions/model";
 import { fetch as fetchClientById } from "@/domains/clients/model";

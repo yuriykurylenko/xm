@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { stripe } from "@/initializers/stripe";
-import { create as createCustomer } from "@/integrations/stripe/customer";
+import { create as createCustomer } from "@/integrations/stripe/models/customer";
 
 type CreateSetupIntentInput = {
   email: string;

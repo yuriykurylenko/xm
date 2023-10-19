@@ -6,9 +6,9 @@ import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscr
 import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 
-import { fetch as fetchStripeSubscriptionById } from "@/integrations/stripe/subscription";
-import { fetch as fetchStripeInvoiceById } from "@/integrations/stripe/invoice";
-import { fetch as fetchStripeChargeById } from "@/integrations/stripe/charge";
+import { fetch as fetchStripeSubscriptionById } from "@/integrations/stripe/models/subscription";
+import { fetch as fetchStripeInvoiceById } from "@/integrations/stripe/models/invoice";
+import { fetch as fetchStripeChargeById } from "@/integrations/stripe/models/charge";
 
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
