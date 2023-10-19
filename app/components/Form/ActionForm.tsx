@@ -4,6 +4,7 @@ import Button from "@/app/components/Form/Button";
 import { UUID } from "crypto";
 import Input from "@/app/components/Form/Input";
 import axios from "axios";
+import FormSkeleton from "./FormSkeleton";
 
 interface ActionFormProps {
   action: string;
@@ -102,7 +103,7 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
   };
 
   if (!actionConfig || (formHocName && !formHocModule)) {
-    return null;
+    return <FormSkeleton />;
   }
 
   const EnhancedForm = formHocModule
