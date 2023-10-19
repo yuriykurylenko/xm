@@ -33,10 +33,13 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
         setActionConfig(config);
 
         const hocName = config?.form.hoc;
-        setFormHocName(hocName);
 
-        const hocModule = await import(`@/app/hoc/${hocName}`);
-        setFormHocModule(hocModule);
+        if (hocName) {
+          setFormHocName(hocName);
+
+          const hocModule = await import(`@/app/hoc/${hocName}`);
+          setFormHocModule(hocModule);
+        }
 
         const actionModule = await import(
           `@/domains/${domainPath}/actions/${actionName}`
@@ -89,9 +92,13 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
     );
   };
 
+  if (!actionConfig || (formHocName && !formHocModule)) {
+    return null;
+  }
+
   const EnhancedForm = formHocModule
     ? formHocModule[formHocName](CustomForm)
-    : () => <></>;
+    : CustomForm;
 
   return <EnhancedForm />;
 };

@@ -14,6 +14,7 @@ import { Client, ClientInput } from "@/types/user";
 import { ClientApplicationPageProps } from "@/types/ClientApplicationPageProps";
 import { ClientApplicationPageContext } from "@/types/ClientApplicationPageContext";
 import { UUID } from "crypto";
+import ActionForm from "@/app/components/Form/ActionForm";
 
 const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
   const router = useRouter();
@@ -41,13 +42,15 @@ const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
         </title>
       </Head>
       <PageContainer title={`Apply to work with ${coach?.full_name}`}>
-        <Form<Client> onSubmit={onSubmit}>
+        {/* <Form<Client> onSubmit={onSubmit}>
           <Input name="full_name" placeholder="Full Name" required />
           <Input name="email" placeholder="Email" type="email" required />
           <Button type="submit" submittingText="Submitting..">
             Apply
           </Button>
-        </Form>
+        </Form> */}
+
+        <ActionForm action="clients.apply" />
       </PageContainer>
     </div>
   );

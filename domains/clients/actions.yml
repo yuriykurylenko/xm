@@ -1,0 +1,17 @@
+apply:
+  title: "Apply"
+  submittingText: "Submitting..."
+  form:
+    inputs:
+      - name: "full_name"
+        type: "text"
+        placeholder: "Full Name"
+        required: true
+
+      - name: "email"
+        type: "email"
+        placeholder: "Email"
+        required: true
+
+  routing:
+    successPath: "/{coachSlug}/success"

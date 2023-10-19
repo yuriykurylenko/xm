@@ -8,4 +8,4 @@ confirm:
         type: "stripeCard"
 
   routing:
-    successPath: "/subscription/{subscription_id}/success"
+    successPath: "/subscription/{id}/success"
