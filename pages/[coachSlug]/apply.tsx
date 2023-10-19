@@ -1,39 +1,15 @@
 import React from "react";
-import { useRouter } from "next/router";
 import Head from "next/head";
 
-import { create as createClient } from "@/domains/clients/model";
 import { fetchBySlug as fetchCoachBySlug } from "@/domains/coaches/model";
 
-import Form from "@/app/components/Form";
 import withAuth from "@/app/hoc/withAuth";
-import Input from "@/app/components/Form/Input";
-import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
-import { Client, ClientInput } from "@/types/user";
 import { ClientApplicationPageProps } from "@/types/ClientApplicationPageProps";
 import { ClientApplicationPageContext } from "@/types/ClientApplicationPageContext";
-import { UUID } from "crypto";
 import ActionForm from "@/app/components/Form/ActionForm";
 
 const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
-  const router = useRouter();
-
-  const onSubmit = async (data: ClientInput) => {
-    const { full_name, email } = data;
-    const { data: client, error } = await createClient({
-      full_name,
-      email,
-      coach_id: coach.id as UUID,
-    });
-
-    if (client) {
-      router.push(`/${coach.slug}/success`);
-    }
-
-    return { data: client, error };
-  };
-
   return (
     <div>
       <Head>
@@ -42,14 +18,6 @@ const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
         </title>
       </Head>
       <PageContainer title={`Apply to work with ${coach.full_name}`}>
-        {/* <Form<Client> onSubmit={onSubmit}>
-          <Input name="full_name" placeholder="Full Name" required />
-          <Input name="email" placeholder="Email" type="email" required />
-          <Button type="submit" submittingText="Submitting..">
-            Apply
-          </Button>
-        </Form> */}
-
         <ActionForm action="clients.apply" values={{ coach_id: coach.id }} />
       </PageContainer>
     </div>
