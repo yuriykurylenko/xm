@@ -5,7 +5,7 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { stripeClient } from "@/initializers/stripe";
+import { stripeClient } from "@/integrations/stripe/initializer";
 
 export const withStripe = (Component: React.FC<any>) => {
   const IntermediaryComponent = (props: any) => {

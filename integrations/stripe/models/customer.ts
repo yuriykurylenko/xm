@@ -1,4 +1,4 @@
-import { stripe } from "@/initializers/stripe";
+import { stripe } from "@/integrations/stripe/initializer";
 import Stripe from "stripe";
 
 type CreateCustomerInput = {

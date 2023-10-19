@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { stripe } from "@/initializers/stripe";
+import { stripe } from "@/integrations/stripe/initializer";
 import { create as createCustomer } from "@/integrations/stripe/models/customer";
 
 type CreateSetupIntentInput = {

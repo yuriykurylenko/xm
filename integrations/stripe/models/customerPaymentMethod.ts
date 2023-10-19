@@ -1,4 +1,4 @@
-import { stripe } from "@/initializers/stripe";
+import { stripe } from "@/integrations/stripe/initializer";
 import { update as updateStripeCustomer } from "@/integrations/stripe/models/customer";
 import Stripe from "stripe";
 

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { UUID } from "crypto";
-import { stripe } from "@/initializers/stripe";
+import { stripe } from "@/integrations/stripe/initializer";
 import sgMail from "@/initializers/sgMail";
 
 export default async function handler(

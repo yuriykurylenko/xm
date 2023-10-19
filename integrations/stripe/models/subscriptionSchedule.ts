@@ -1,6 +1,6 @@
 import { UUID } from "crypto";
 import StripeApi from "stripe";
-import { stripe } from "@/initializers/stripe";
+import { stripe } from "@/integrations/stripe/initializer";
 
 type CreateSubscriptionScheduleInput = {
   customerId: string | StripeApi.Customer | StripeApi.DeletedCustomer;

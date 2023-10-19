@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { stripe } from "@/initializers/stripe";
+import { stripe } from "@/integrations/stripe/initializer";
 
 type CreatePriceInput = {
   productId: string;

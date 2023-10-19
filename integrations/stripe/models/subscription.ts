@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { stripe } from "@/initializers/stripe";
+import { stripe } from "@/integrations/stripe/initializer";
 import {
   fetchByStripeSubscriptionId as fetchSubscriptionByStripeSubscriptionId,
   updateByStripeSubscriptionId as updateClientSubscriptionByStripeSubscriptionId,
