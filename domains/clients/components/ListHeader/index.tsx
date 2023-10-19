@@ -12,6 +12,7 @@ interface ClientsListHeaderProps {
   sortDirection: "asc" | "desc";
   actions: any;
   totalItemsCount: number;
+  user?: any;
 }
 
 const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
@@ -22,6 +23,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
   sortDirection,
   actions,
   totalItemsCount,
+  user,
 }) => {
   const handleBulkSelectChange = () => {
     onBulkSelect();
@@ -51,6 +53,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
               actions={actions}
               selectedItems={selectedItems}
               showTitles
+              user={user}
             />
           </div>
           <div
@@ -125,16 +128,8 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
           </div>
           <div
             className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
-            // onClick={() => onSort("user_id")}
           >
             <span>Account</span>
-            {/* <span className={styles["sorting-icon"]}>
-              <SortIcon
-                sortColumn={sortColumn}
-                column="user_id"
-                sortDirection={sortDirection}
-              />
-            </span> */}
           </div>
           <div
             className={`${styles["header-column"]} ${styles["header-column-actions"]}`}

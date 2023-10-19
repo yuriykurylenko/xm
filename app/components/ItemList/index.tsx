@@ -2,14 +2,9 @@ import * as React from "react";
 import styles from "@/app/components/ItemList/styles.module.css";
 import { useEffect, useState } from "react";
 import Pagination from "@/app/components/ItemList/Pagination";
-import ActionDialog from "../ActionDialog";
 import ItemSkeleton from "@/app/components/ItemList/ItemSkeleton";
 import { UUID } from "crypto";
-
-import Handlebars from "handlebars";
-import axios from "axios";
 import useAuth from "@/app/hooks/useAuth";
-import { Action } from "@/types/action";
 
 type FilterOption = {
   value: string;
@@ -44,6 +39,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
     selectedItems: T[];
     actions: any;
     totalItemsCount: number;
+    user?: any;
   }>;
   CardComponent: React.ComponentType<{
     item: T;
@@ -52,6 +48,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
     bulkOperationsAllowed: boolean;
     actions?: any;
     filterStatus: string;
+    user?: any;
   }>;
   EmptyListComponent?: React.ComponentType<{
     isSearchResult: boolean;
@@ -72,7 +69,6 @@ const ItemList = <T extends { id: UUID | string }>({
 }: ItemListProps<T>) => {
   const { user } = useAuth();
 
-  const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
   const [filterStatus, setFilterStatus] = useState<string>(
     filterStatusOptions && FilterBarComponent
       ? filterStatusOptions[0].value
@@ -96,38 +92,6 @@ const ItemList = <T extends { id: UUID | string }>({
   const [sortColumn, setSortColumn] = useState("updated_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [isListLoaded, setIsListLoaded] = useState<boolean>(false);
-
-  const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
-
-  useEffect(() => {
-    const loadActions = async () => {
-      try {
-        const modules = await Promise.all(
-          actions.map(async (action) => {
-            const actionParts = action.split(".");
-            const actionName = actionParts.pop();
-            const domainPath = actionParts.join("/domains/");
-
-            const actionModule = await import(
-              `@/domains/${domainPath}/actions/${actionName}`
-            );
-            return {
-              ...actionModule,
-              name: actionName,
-            };
-          })
-        );
-
-        setActionDefinitions(
-          modules.map((module) => ({ name: module.name, ...module.default }))
-        );
-      } catch (error) {
-        console.error("Error loading modules:", error);
-      }
-    };
-
-    loadActions();
-  }, [actions]);
 
   const prepareData = async () => {
     setIsListLoaded(false);
@@ -209,51 +173,6 @@ const ItemList = <T extends { id: UUID | string }>({
     setFilterText(value);
   };
 
-  const enhancedActions = actionDefinitions.map(
-    (action: { name?: string }) => ({
-      ...action,
-      handler: (itemId?: UUID | UUID[]) => {
-        if (itemId) {
-          setSelectedItems(
-            items.filter((i: T) => [itemId].flat().includes(i.id as UUID))
-          );
-        }
-        setOpenActionDialogs([action.name as string]);
-      },
-    })
-  );
-
-  const handleCloseDialog = () => {
-    setSelectedItems([]);
-    setOpenActionDialogs([]);
-  };
-
-  const handleConfirmAction = async (action: any, data?: any) => {
-    let updatedItem;
-    for (const item of selectedItems) {
-      try {
-        const { data: newItem, error } = action.handler
-          ? await action.handler(item.id, data)
-          : await axios.put(`/api/clients/${item.id}/${action.name}`, data);
-
-        if (error) {
-          return { error };
-        }
-        updatedItem = newItem;
-      } catch (e: any) {
-        return (
-          e.response?.data || { error: { message: "Something went wrong" } }
-        );
-      }
-    }
-
-    handleCloseDialog();
-    await prepareData();
-    action.onComplete && action.onComplete(updatedItem, setFilterStatus);
-
-    return { error: null };
-  };
-
   const searchPlaceholder =
     filterStatus != "all"
       ? `Search in ${
@@ -289,11 +208,12 @@ const ItemList = <T extends { id: UUID | string }>({
         <HeaderComponent
           onBulkSelect={onItemsBulkSelect}
           selectedItems={selectedItems}
-          actions={enhancedActions}
+          actions={actions}
           onSort={handleSort}
           sortColumn={sortColumn}
           sortDirection={sortDirection}
           totalItemsCount={filterCounts[filterStatus]}
+          user={user}
         />
       )}
       {isListLoaded && items ? (
@@ -308,8 +228,9 @@ const ItemList = <T extends { id: UUID | string }>({
                 selectedItems={selectedItems}
                 bulkOperationsAllowed={true}
                 onSelect={() => onItemSelect(item)}
-                actions={enhancedActions}
+                actions={actions}
                 filterStatus={filterStatus}
+                user={user}
               />
             ))}
             <Pagination
@@ -318,61 +239,6 @@ const ItemList = <T extends { id: UUID | string }>({
               onNextPage={handleNextPage}
               onPrevPage={handlePrevPage}
             />
-            {actionDefinitions.map((action: any) => {
-              const dialogTitleTemplate = Handlebars.compile(
-                action.dialogTitle
-              );
-              const dialogTitleBulkTemplate = Handlebars.compile(
-                action.dialogTitleBulk
-              );
-              const dialogTextTemplate = Handlebars.compile(
-                action.dialogText || ""
-              );
-              const dialogTextBulkTemplate = Handlebars.compile(
-                action.dialogTextBulk || ""
-              );
-              const dialogInfoTextTemplate = Handlebars.compile(
-                action.dialogInfoText || ""
-              );
-              const dialogInfoTextBulkTemplate = Handlebars.compile(
-                action.dialogInfoTextBulk || ""
-              );
-
-              return (
-                openActionDialogs.includes(action.name) && (
-                  <ActionDialog
-                    key={action.name}
-                    onConfirm={(data?: any) =>
-                      handleConfirmAction(action, data)
-                    }
-                    onCancel={handleCloseDialog}
-                    title={
-                      selectedItems.length === 1
-                        ? dialogTitleTemplate(selectedItems[0])
-                        : dialogTitleBulkTemplate({ n: selectedItems.length })
-                    }
-                    text={
-                      selectedItems.length === 1
-                        ? dialogTextTemplate(selectedItems[0])
-                        : dialogTextBulkTemplate({
-                            n: selectedItems.length,
-                          })
-                    }
-                    infoText={
-                      selectedItems.length === 1
-                        ? dialogInfoTextTemplate(selectedItems[0])
-                        : dialogInfoTextBulkTemplate({
-                            n: selectedItems.length,
-                          })
-                    }
-                  >
-                    {action.DialogForm && (
-                      <action.DialogForm items={selectedItems} user={user} />
-                    )}
-                  </ActionDialog>
-                )
-              );
-            })}
           </>
         )
       ) : (

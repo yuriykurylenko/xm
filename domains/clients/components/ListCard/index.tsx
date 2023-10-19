@@ -1,5 +1,5 @@
 import styles from "@/domains/clients/components/ListCard/styles.module.css";
-import { Client } from "@/types/user";
+import { Client, Coach } from "@/types/user";
 import { useState } from "react";
 import ActionsBar from "@/app/components/ItemList/ActionsBar";
 import {
@@ -16,6 +16,7 @@ interface ClientCardProps {
   onSelect: () => void;
   bulkOperationsAllowed: boolean;
   actions?: any;
+  user?: Coach;
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({
@@ -24,6 +25,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
   onSelect,
   bulkOperationsAllowed = false,
   actions,
+  user,
 }) => {
   const [selected, setSelected] = useState(false);
 
@@ -154,7 +156,11 @@ const ClientCard: React.FC<ClientCardProps> = ({
       <div
         className={`${styles["column"]} ${styles["actions-column"]} ${styles["button-container"]}`}
       >
-        <ActionsBar<Client> actions={actions} selectedItems={[item]} />
+        <ActionsBar<Client>
+          actions={actions}
+          selectedItems={[item]}
+          user={user}
+        />
       </div>
     </div>
   );
