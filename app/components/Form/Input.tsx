@@ -18,6 +18,7 @@ export type InputType =
   | "password"
   | "number"
   | "text"
+  | "price"
   | "checkbox"
   | "date"
   | "stripeCard"
@@ -66,6 +67,7 @@ export const Input: FC<InputProps> = ({
     },
     text: {},
     number: {},
+    price: {},
     checkbox: {},
     date: {},
     stripeCard: {},
@@ -121,14 +123,35 @@ export const Input: FC<InputProps> = ({
     <>
       <div
         className={`${type !== "hidden" ? styles["input-container"] : ""} ${
-          className || ""
-        }`}
+          type === "price" ? styles["price-input"] : ""
+        } ${className || ""}`}
       >
         {type === "checkbox" ? (
           <label>
             {inputElement}
             {placeholder}
           </label>
+        ) : type === "price" ? (
+          <Controller
+            control={control}
+            name={name}
+            rules={inputValidation}
+            defaultValue={defaultValue}
+            render={({ field }) => (
+              <input
+                className={`${styles["input"]} ${
+                  errors[name] ? styles["error"] : ""
+                }`}
+                type="number"
+                min={0}
+                step={1}
+                max={max}
+                placeholder={placeholder}
+                disabled={disabled}
+                {...field}
+              />
+            )}
+          />
         ) : type === "date" ? (
           <label>
             <span className={styles["datepicker-label"]}>{placeholder}</span>

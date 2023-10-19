@@ -32,6 +32,7 @@ export type UserInput = {
   full_name?: string;
   email?: string;
   user_id?: UUID | string | null;
+  password?: string;
 };
 
 export type ClientInput = UserInput & {

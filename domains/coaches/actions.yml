@@ -1,0 +1,25 @@
+createAccount:
+  title: "Sign up"
+  form:
+    hoc: withAuthFunctions
+    submittingText: "Signing up..."
+    inputs:
+      - name: "full_name"
+        type: "text"
+        placeholder: "Full Name"
+        required: true
+
+      - name: "email"
+        type: "email"
+        placeholder: "Email"
+        required: true
+
+      - name: "password"
+        type: "password"
+        placeholder: "Password"
+        required: true
+
+      - name: "monthly_subscription_amount"
+        type: "price"
+        placeholder: "Monthly price"
+        required: true
