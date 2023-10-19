@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import Form from "@/app/components/Form";
 import Button from "@/app/components/Form/Button";
 import { UUID } from "crypto";
-import { fetchYaml } from "@/app/utils/fetchYaml";
 import Input from "@/app/components/Form/Input";
+import axios from "axios";
 
 interface ActionFormProps {
   action: string;
@@ -22,26 +22,30 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
   const domainPath = actionParts.join("/domains/");
 
   useEffect(() => {
-    const fetchItem = async () => {
-      const actionsConfig = await fetchYaml(
+    const fetchConfig = async () => {
+      const { data: actionsConfig } = await axios.get(
         `/api/actions?domainPath=${domainPath}`
       );
 
-      // @ts-ignore
-      const config = actionsConfig[actionName];
-      setActionConfig(config);
+      if (actionsConfig) {
+        // @ts-ignore
+        const config = actionsConfig[actionName];
+        setActionConfig(config);
 
-      const hocName = config?.form.hoc;
-      setFormHocName(hocName);
+        const hocName = config?.form.hoc;
+        setFormHocName(hocName);
 
-      const hocModule = await import(`@/app/hoc/${hocName}`);
-      setFormHocModule(hocModule);
+        const hocModule = await import(`@/app/hoc/${hocName}`);
+        setFormHocModule(hocModule);
 
-      const actionModule = await import(
-        `@/domains/${domainPath}/actions/${actionName}`
-      );
-      setActionModule(actionModule);
+        const actionModule = await import(
+          `@/domains/${domainPath}/actions/${actionName}`
+        );
+        setActionModule(actionModule);
+      }
+    };
 
+    const fetchItem = async () => {
       try {
         const { fetch } = await import(`@/domains/${domainPath}/model`);
         const { data: item } = await fetch(itemId);
@@ -50,6 +54,8 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
         console.error("Could not load item:", error);
       }
     };
+
+    fetchConfig();
 
     if (itemId) {
       fetchItem();
