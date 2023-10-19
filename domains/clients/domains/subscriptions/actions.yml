@@ -1,8 +1,8 @@
 confirm:
   title: "Pay"
-  submittingText: "Processing..."
   form:
     hoc: withStripe
+    submittingText: "Processing..."
     inputs:
       - name: "card"
         type: "stripeCard"

@@ -1,7 +1,7 @@
 apply:
   title: "Apply"
-  submittingText: "Submitting..."
   form:
+    submittingText: "Submitting..."
     inputs:
       - name: "full_name"
         type: "text"
@@ -21,9 +21,9 @@ apply:
 
 createAccount:
   title: "Create account"
-  submittingText: "Creating account..."
   form:
     hoc: withAuthFunctions
+    submittingText: "Creating account..."
     inputs:
       - name: "email"
         type: "email"
@@ -34,6 +34,3 @@ createAccount:
         type: "password"
         placeholder: "Password"
         required: true
-
-      - name: "clientId"
-        type: "hidden"

@@ -92,7 +92,7 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
             defaultValue={values?.[input.name] ?? ""}
           />
         ))}
-        <Button type="submit" submittingText={actionConfig.submittingText}>
+        <Button type="submit" submittingText={actionConfig.form.submittingText}>
           {actionConfig.title}
         </Button>
       </Form>
