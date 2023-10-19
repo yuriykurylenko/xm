@@ -75,7 +75,8 @@ export const create = ({ full_name, email, coach_id }: ClientInput) =>
         coach_id,
       },
     ])
-    .select();
+    .select()
+    .single();
 
 export const update = (clientId: UUID | string, data: ClientInput) =>
   db.from("clients").update(data).eq("id", clientId).select().single();

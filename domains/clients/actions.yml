@@ -13,5 +13,8 @@ apply:
         placeholder: "Email"
         required: true
 
+      - name: "coach_id"
+        type: "hidden"
+
   routing:
     successPath: "/{coachSlug}/success"

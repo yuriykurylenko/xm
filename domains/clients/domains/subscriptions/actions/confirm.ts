@@ -167,6 +167,7 @@ export const handleCardAndSubscriptionSetup = async (
 
 export const handler = async (
   subscriptionId: UUID,
+  _data: {},
   { stripe, elements, CardElement }: StripeClientContext
 ) => {
   const { data: subscription } = await fetchSubscriptionById(subscriptionId);
@@ -192,7 +193,7 @@ export const handler = async (
         }
       );
 
-      return { data, error };
+      return { data: subscription, error };
     }
   } catch (error) {
     return {

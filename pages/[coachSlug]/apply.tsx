@@ -41,7 +41,7 @@ const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
           {coach.full_name ? `${coach.full_name} | Application` : "Loading..."}
         </title>
       </Head>
-      <PageContainer title={`Apply to work with ${coach?.full_name}`}>
+      <PageContainer title={`Apply to work with ${coach.full_name}`}>
         {/* <Form<Client> onSubmit={onSubmit}>
           <Input name="full_name" placeholder="Full Name" required />
           <Input name="email" placeholder="Email" type="email" required />
@@ -50,7 +50,7 @@ const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
           </Button>
         </Form> */}
 
-        <ActionForm action="clients.apply" />
+        <ActionForm action="clients.apply" values={{ coach_id: coach.id }} />
       </PageContainer>
     </div>
   );

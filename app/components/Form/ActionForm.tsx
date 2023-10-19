@@ -8,9 +8,10 @@ import axios from "axios";
 interface ActionFormProps {
   action: string;
   itemId?: UUID;
+  values?: any;
 }
 
-const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
+const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
   const [item, setItem] = useState<any>(null);
   const [actionConfig, setActionConfig] = useState<any>(null);
   const [formHocModule, setFormHocModule] = useState<any>(null);
@@ -66,11 +67,15 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
   }, [itemId, domainPath]);
 
   const CustomForm = (context: any) => {
-    const handler = async () => {
+    const handler = async (data: any) => {
       try {
-        const { error } = await actionModule.handler(item?.id, context);
-        if (!error) {
-          item && (await actionModule.onComplete(item));
+        const { data: newItem, error } = await actionModule.handler(
+          item?.id,
+          data,
+          context
+        );
+        if ((newItem || item) && !error) {
+          await actionModule.onComplete(newItem || item);
         }
         return { data: item, error };
       } catch (error) {
@@ -81,7 +86,11 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId }) => {
     return actionConfig ? (
       <Form onSubmit={handler}>
         {actionConfig.form.inputs.map((input: any, index: number) => (
-          <Input key={index} {...input} />
+          <Input
+            key={index}
+            {...input}
+            defaultValue={values?.[input.name] ?? ""}
+          />
         ))}
         <Button type="submit" submittingText={actionConfig.submittingText}>
           {actionConfig.title}

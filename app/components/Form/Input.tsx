@@ -20,7 +20,8 @@ export type InputType =
   | "text"
   | "checkbox"
   | "date"
-  | "stripeCard";
+  | "stripeCard"
+  | "hidden";
 
 export interface InputProps {
   name: string;
@@ -63,6 +64,7 @@ export const Input: FC<InputProps> = ({
     checkbox: {},
     date: {},
     stripeCard: {},
+    hidden: {},
   };
 
   const {
@@ -112,7 +114,11 @@ export const Input: FC<InputProps> = ({
 
   return (
     <>
-      <div className={`${styles["input-container"]} ${className || ""}`}>
+      <div
+        className={`${type !== "hidden" ? styles["input-container"] : ""} ${
+          className || ""
+        }`}
+      >
         {type === "checkbox" ? (
           <label>
             {inputElement}
@@ -149,33 +155,33 @@ export const Input: FC<InputProps> = ({
             />
           </label>
         ) : type === "stripeCard" ? (
-          <div className={styles["input-container"]}>
-            <div className={styles["input"]}>
-              <CardElement
-                options={{
-                  style: {
-                    base: {
-                      fontSize: "16px",
-                      color: "#424770",
-                      "::placeholder": {
-                        color: "#707070",
-                      },
-                      backgroundColor: "#fafafa",
+          <div className={styles["input"]}>
+            <CardElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: "16px",
+                    color: "#424770",
+                    "::placeholder": {
+                      color: "#707070",
                     },
-                    invalid: {
-                      color: "#9e2146",
-                    },
+                    backgroundColor: "#fafafa",
                   },
-                }}
-              />
-            </div>
+                  invalid: {
+                    color: "#9e2146",
+                  },
+                },
+              }}
+            />
           </div>
         ) : (
           inputElement
         )}
-        <p className={styles["error-message"]}>
-          <>{errors[name] ? errors[name]?.message : ""}</>
-        </p>
+        {!["hidden", "stripeCard"].includes(type) && (
+          <p className={styles["error-message"]}>
+            <>{errors[name] ? errors[name]?.message : ""}</>
+          </p>
+        )}
       </div>
     </>
   );
