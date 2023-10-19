@@ -6,5 +6,5 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 });
 
 export const stripeClient = loadStripe(
-  "pk_test_51N6HZNA4j0lnvK9GqLarvD4YNR2ZZJ9RG3fgSOK2xusHtHm14gy4or8hgDwT6U0TMeIuwfcYivZxOjb6nUqyzTNa00OCIYPhGm"
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
 );

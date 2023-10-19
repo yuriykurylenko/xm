@@ -4,7 +4,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "POST") {
     try {
       const { create } = await import(
-        `@/integrations/stripe/${req.query.object}`
+        `@/integrations/stripe/models/${req.query.object}`
       );
 
       const object = await create(req.body);
