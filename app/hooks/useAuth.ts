@@ -14,7 +14,7 @@ interface CoachSignUpParams {
   monthly_subscription_amount: number;
 }
 
-interface ClientSignUpParams {
+export interface ClientSignUpParams {
   email: string;
   password: string;
   clientId: string;

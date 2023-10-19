@@ -1,50 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Head from "next/head";
-import { useRouter } from "next/router";
 
-import Form from "@/app/components/Form";
-
-import useAuth from "@/app/hooks/useAuth";
 import withAuth, { AuthProps } from "@/app/hoc/withAuth";
 import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetch as fetchCoachById } from "@/domains/coaches/model";
-import Input from "@/app/components/Form/Input";
-import Button from "@/app/components/Form/Button";
 import PageContainer from "@/app/components/PageContainer";
 import { Coach, Client } from "@/types/user";
 import { UUID } from "crypto";
+import ActionForm from "@/app/components/Form/ActionForm";
 
 interface SubscriptionSuccessPageProps extends AuthProps {
   coach: Coach;
   client: Client;
 }
 
-interface ClientSignUpFormData {
-  email: string;
-  password: string;
-}
-
 const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
-  const { user, clientSignUp } = useAuth();
-  const router = useRouter();
-
-  // TODO: fix apparently not fetching the user after signing up
-  useEffect(() => {
-    if (user) {
-      router.reload();
-    }
-  }, [user, router]);
-
-  const onSubmit = (data: ClientSignUpFormData) => {
-    const { password } = data;
-    return clientSignUp({
-      email: client.email,
-      password,
-      clientId: client.id as UUID,
-    });
-  };
-
   return (
     <div>
       <Head>
@@ -53,38 +24,20 @@ const Success = ({ coach, client }: SubscriptionSuccessPageProps) => {
         </title>
       </Head>
       <PageContainer title={`Thank you, ${client.full_name}!`}>
-        <Form<ClientSignUpFormData> onSubmit={onSubmit}>
-          <p>
-            Your payment has been processed successfully and you have signed up
-            to work with <b>{coach.full_name}</b>. We appreciate your business
-            and look forward to supporting you on your coaching journey.
-          </p>
-          <p>
-            Now you can create your account and get access to exclusive
-            materials.
-          </p>
-          <Input
-            name="email"
-            type="email"
-            defaultValue={client.email}
-            disabled
-          />
-          <Input
-            name="password"
-            placeholder="Password"
-            type="password"
-            required
-            validation={{
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters long",
-              },
-            }}
-          />
-          <Button type="submit" submittingText="Creating account...">
-            Create account
-          </Button>
-        </Form>
+        <p>
+          Your payment has been processed successfully and you have signed up to
+          work with <b>{coach.full_name}</b>. We appreciate your business and
+          look forward to supporting you on your coaching journey.
+        </p>
+        <p>
+          Now you can create your account and get access to exclusive materials.
+        </p>
+
+        <ActionForm
+          action="clients.createAccount"
+          itemId={client.id}
+          values={{ email: client.email }}
+        />
       </PageContainer>
     </div>
   );

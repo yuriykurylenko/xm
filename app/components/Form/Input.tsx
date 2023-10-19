@@ -58,7 +58,12 @@ export const Input: FC<InputProps> = ({
         message: "Invalid email address",
       },
     },
-    password: {},
+    password: {
+      minLength: {
+        value: 8,
+        message: "Password must be at least 8 characters long",
+      },
+    },
     text: {},
     number: {},
     checkbox: {},

@@ -18,3 +18,22 @@ apply:
 
   routing:
     successPath: "/{coachSlug}/success"
+
+createAccount:
+  title: "Create account"
+  submittingText: "Creating account..."
+  form:
+    hoc: withAuthFunctions
+    inputs:
+      - name: "email"
+        type: "email"
+        placeholder: "Email"
+        disabled: true
+
+      - name: "password"
+        type: "password"
+        placeholder: "Password"
+        required: true
+
+      - name: "clientId"
+        type: "hidden"
