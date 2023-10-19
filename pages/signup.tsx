@@ -6,7 +6,7 @@ import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
 import ActionForm from "@/app/components/Form/ActionForm";
 
-const Signup = () => (
+const SignupPage = () => (
   <>
     <Head>
       <title>Coaching | Sign up</title>
@@ -20,4 +20,4 @@ const Signup = () => (
   </>
 );
 
-export default withAuth(Signup, ["anonymous"]);
+export default withAuth(SignupPage, ["anonymous"]);
