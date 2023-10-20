@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/domains/clients/components/ListHeader/styles.module.css";
-import ActionsBar from "@/app/components/ItemList/ActionsBar";
+import ActionsBar from "@/app/components/ActionsBar";
 import { Client } from "@/types/user";
 import SortIcon from "@/app/components/SortIcon";
 

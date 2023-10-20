@@ -1,7 +1,7 @@
 import styles from "@/domains/clients/components/ListCard/styles.module.css";
 import { Client, Coach } from "@/types/user";
 import { useState } from "react";
-import ActionsBar from "@/app/components/ItemList/ActionsBar";
+import ActionsBar from "@/app/components/ActionsBar";
 import {
   faCreditCard,
   faHandHoldingDollar,

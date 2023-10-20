@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/ItemList/ActionsBar/styles.module.css";
+import styles from "@/app/components/ActionsBar/styles.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
-import ActionDialog from "../../ActionDialog";
+import ActionDialog from "@/app/components/ActionDialog";
 import axios from "axios";
 import Handlebars from "handlebars";
 
