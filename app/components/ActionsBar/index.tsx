@@ -8,11 +8,13 @@ import ActionDialog from "@/app/components/ActionDialog";
 import axios from "axios";
 import Handlebars from "handlebars";
 
+import * as icons from "@fortawesome/free-solid-svg-icons";
+
 interface Action<T> {
   name: string;
   title: string;
   titleBulk: string;
-  icon: IconDefinition;
+  icon: string;
   handler: (itemIds: UUID[]) => void;
   onClick: (itemIds: UUID[]) => void;
   show: (item: T | T[]) => boolean;
@@ -37,29 +39,40 @@ const ActionsBar = <T extends { id: UUID }>({
   useEffect(() => {
     const loadActions = async () => {
       try {
-        const modules = await Promise.all(
-          actions.map(async (action) => {
-            const actionParts = action.split(".");
-            const actionName = actionParts.pop();
-            const domainPath = actionParts.join("/domains/");
+        const actionBreakdowns = actions.map((action) => {
+          const actionParts = action.split(".");
+          const actionName = actionParts.pop();
+          const domainPath = actionParts.join("/domains/");
 
-            const actionModule = await import(
-              `@/domains/${domainPath}/actions/${actionName}`
-            );
-            return {
-              ...actionModule,
-              name: actionName,
-            };
-          })
-        );
+          return { domainPath, actionName };
+        });
+
+        const actionConfigs = (
+          await Promise.all(
+            actionBreakdowns.map(async ({ domainPath, actionName }) => {
+              return {
+                configResponse: await axios.get(
+                  `/api/actions?domainPath=${domainPath}`
+                ),
+                name: actionName,
+                module: await import(
+                  `@/domains/${domainPath}/actions/${actionName}`
+                ),
+              };
+            })
+          )
+        ).map(({ name, configResponse: { data: config }, module }) => ({
+          name,
+          ...config[name as string],
+          handler: module.handler,
+          show: module.show,
+        }));
 
         setActionDefinitions(
-          modules
-            .map((module) => ({ name: module.name, ...module.default }))
-            .map((action: Action<T>) => ({
-              ...action,
-              onClick: () => setOpenActionDialogs([action.name as string]),
-            }))
+          actionConfigs.map((action: Action<T>) => ({
+            ...action,
+            onClick: () => setOpenActionDialogs([action.name as string]),
+          }))
         );
       } catch (error) {
         console.error("Error loading modules:", error);
@@ -77,7 +90,7 @@ const ActionsBar = <T extends { id: UUID }>({
     let updatedItem;
     for (const item of selectedItems) {
       try {
-        const { data: newItem, error } = action.handler
+        const { data: newItem, error } = !action.useApi
           ? await action.handler(item.id, data)
           : await axios.put(`/api/clients/${item.id}/${action.name}`, data);
 
@@ -113,7 +126,7 @@ const ActionsBar = <T extends { id: UUID }>({
                   ? undefined
                   : selectedItems.length === 1
                   ? action.title
-                  : action.titleBulk
+                  : action.titleBulk || action.title
               }
               key={index}
             >
@@ -126,28 +139,29 @@ const ActionsBar = <T extends { id: UUID }>({
                 }
               >
                 <FontAwesomeIcon
-                  icon={action.icon}
+                  //@ts-ignore
+                  icon={icons[action.icon]}
                   className={styles["action-btn-icon"]}
                 />
-                {showTitles ? action.titleBulk : null}
+                {showTitles ? action.titleBulk || action.title : null}
               </BasicButton>
             </span>
           )
       )}
       {actionDefinitions.map((action: any) => {
-        const dialogTitleTemplate = Handlebars.compile(action.dialogTitle);
+        const dialogTitleTemplate = Handlebars.compile(action.dialog.title);
         const dialogTitleBulkTemplate = Handlebars.compile(
-          action.dialogTitleBulk
+          action.dialog.titleBulk
         );
-        const dialogTextTemplate = Handlebars.compile(action.dialogText || "");
+        const dialogTextTemplate = Handlebars.compile(action.dialog.text || "");
         const dialogTextBulkTemplate = Handlebars.compile(
-          action.dialogTextBulk || ""
+          action.dialog.textBulk || ""
         );
         const dialogInfoTextTemplate = Handlebars.compile(
-          action.dialogInfoText || ""
+          action.dialog.infoText || ""
         );
         const dialogInfoTextBulkTemplate = Handlebars.compile(
-          action.dialogInfoTextBulk || ""
+          action.dialog.infoTextBulk || ""
         );
 
         return (

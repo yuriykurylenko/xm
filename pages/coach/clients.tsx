@@ -54,16 +54,16 @@ const ClientsPage = ({ user }: { user: Coach }) => {
         ]}
         fetchItems={fetchClients}
         actions={[
-          "clients.sendOffer",
-          "clients.changeTerms",
-          "clients.changePricing",
-          "clients.renewSubscription",
-          "clients.resendOffer",
-          "clients.sendOfferWhenEnded",
-          "clients.revokeAccess",
-          "clients.cancelOffer",
-          "clients.cancelStart",
-          "clients.cancelSubscription",
+          // "clients.sendOffer",
+          // "clients.changeTerms",
+          // "clients.changePricing",
+          // "clients.renewSubscription",
+          // "clients.resendOffer",
+          // "clients.sendOfferWhenEnded",
+          // "clients.revokeAccess",
+          // "clients.cancelOffer",
+          // "clients.cancelStart",
+          // "clients.cancelSubscription",
           "clients.archive",
         ]}
         SearchInputComponent={SearchInput}

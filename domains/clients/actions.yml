@@ -34,3 +34,13 @@ createAccount:
         type: "password"
         placeholder: "Password"
         required: true
+
+archive:
+  title: "Archive"
+  icon: faTrash
+  useApi: true
+  dialog:
+    title: "Archive {{full_name}}"
+    titleBulk: "Archive {{n}} clients"
+    text: "Are you sure you would like to archive {{full_name}}?"
+    textBulk: "Are you sure you would like to archive {{n}} clients?"

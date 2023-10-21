@@ -16,20 +16,17 @@ export default async function handler(
   const data = req.body;
 
   try {
-    const { default: actionDefinition } = await import(
-      `@/domains/clients/actions/${action}`
-    );
-    const actionHandler = actionDefinition?.apiHandler;
+    // TODO: ensure domain path can be used
+    const { handler } = await import(`@/domains/clients/actions/${action}`);
 
-    if (!actionHandler) {
+    if (!handler) {
       return res.status(404).end("Not Found");
     }
 
-    const { data: client, error } = await actionHandler(
-      clientId as UUID,
-      data,
-      { stripe, sgMail }
-    );
+    const { data: client, error } = await handler(clientId as UUID, data, {
+      stripe,
+      sgMail,
+    });
     return error
       ? res.status(500).json({ error })
       : res.status(200).json(client);
