@@ -22,14 +22,14 @@ interface ActionsBarProps<T> {
   actions: string[];
   selectedItems: T[];
   showTitles?: boolean;
-  user?: any;
+  context?: any;
 }
 
 const ActionsBar = <T extends { id: UUID }>({
   actions,
   selectedItems,
   showTitles = false,
-  user,
+  context,
 }: ActionsBarProps<T>) => {
   const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
@@ -177,7 +177,7 @@ const ActionsBar = <T extends { id: UUID }>({
               }
             >
               {action.DialogForm && (
-                <action.DialogForm items={selectedItems} user={user} />
+                <action.DialogForm items={selectedItems} values={context} />
               )}
             </ActionDialog>
           )

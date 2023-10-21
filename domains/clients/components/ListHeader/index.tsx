@@ -53,7 +53,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
               actions={actions}
               selectedItems={selectedItems}
               showTitles
-              user={user}
+              context={{ coach: user }}
             />
           </div>
           <div

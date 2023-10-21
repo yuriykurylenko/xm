@@ -1,5 +1,5 @@
 import { Action } from "@/types/action";
-import { Client, Coach } from "@/types/user";
+import { Client } from "@/types/user";
 import { ClientTermsFormFields } from "@/domains/clients/actions/common/components/DialogForms/TermsFields";
 
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
@@ -93,8 +93,8 @@ const changeTermsAction: Action<Client> = {
   show: (client: Client) => client.status === "starting",
   apiHandler,
   onComplete,
-  DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
-    ClientTermsFormFields({ items, coach: user as Coach }),
+  DialogForm: ({ items, values }: { items: Client[]; values: any }) =>
+    ClientTermsFormFields({ items, values }),
   dialogTitle: "Change terms for {{full_name}}",
   dialogTitleBulk: "Change terms {{n}} clients",
   dialogText: "Please specify the new price and start date for {{full_name}}.",

@@ -1,5 +1,4 @@
 import { UUID } from "crypto";
-import { Client, Coach } from "@/types/user";
 
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
@@ -15,7 +14,7 @@ export type Action<T extends { id: UUID | string }, D = any, U = any> = {
     item: T,
     setFilterStatus?: (filterStatus: string) => void
   ) => void | Promise<void>;
-  DialogForm?: React.ComponentType<{ items: T[]; user: Client | Coach }>;
+  DialogForm?: React.ComponentType<{ items: T[]; values: any }>;
   Form?: React.ComponentType<{}>;
   formHoc?: any;
   submittingText?: string;

@@ -3,10 +3,13 @@ import PriceInput from "@/app/components/Form/PriceInput";
 
 type PriceFieldProps = {
   items: Client[];
-  coach: Coach;
+  values: { coach: Coach };
 };
 
-export const PriceField: React.FC<PriceFieldProps> = ({ items, coach }) => (
+export const PriceField: React.FC<PriceFieldProps> = ({
+  items,
+  values: { coach },
+}) => (
   <PriceInput
     name="monthlyAmount"
     placeholder="Monthly price"

@@ -1,15 +1,15 @@
-import { Client, Coach } from "@/types/user";
+import { Client } from "@/types/user";
 import PriceInput from "@/app/components/Form/PriceInput";
 import Input from "@/app/components/Form/Input";
 
 type ClientTermsFormFieldsProps = {
   items: Client[];
-  coach: Coach;
+  values: any;
 };
 
 export const ClientTermsFormFields: React.FC<ClientTermsFormFieldsProps> = ({
   items,
-  coach,
+  values: { coach },
 }) => (
   <>
     <PriceInput

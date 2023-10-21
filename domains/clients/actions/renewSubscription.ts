@@ -1,5 +1,5 @@
 import { Action } from "@/types/action";
-import { Client, Coach } from "@/types/user";
+import { Client } from "@/types/user";
 
 import { PriceField } from "@/domains/clients/actions/common/components/DialogForms/PriceField";
 import {
@@ -17,8 +17,8 @@ const renewSubscriptionAction: Action<Client> = {
     client.status === "client" && client.end_date != null,
   apiHandler: changePriceOrRenewSubscription,
   onComplete,
-  DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
-    PriceField({ items, coach: user as Coach }),
+  DialogForm: ({ items, values }: { items: Client[]; values: any }) =>
+    PriceField({ items, values }),
   dialogTitle: "Renew {{full_name}}'s subscription",
   dialogTitleBulk: "Renew {{n}} clients' subscriptions",
   dialogText: "Please specify the new price for {{full_name}} if applies.",

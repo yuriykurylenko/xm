@@ -159,7 +159,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
         <ActionsBar<Client>
           actions={actions}
           selectedItems={[item]}
-          user={user}
+          context={{ coach: user }}
         />
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { Action } from "@/types/action";
-import { Client, Coach } from "@/types/user";
+import { Client } from "@/types/user";
 
 import { ClientTermsFormFields } from "@/domains/clients/actions/common/components/DialogForms/TermsFields";
 import {
@@ -16,8 +16,8 @@ const resendOfferAction: Action<Client> = {
   show: (client: Client) => client.status === "offerSent",
   apiHandler: sendOffer,
   onComplete,
-  DialogForm: ({ items, user }: { items: Client[]; user: Client | Coach }) =>
-    ClientTermsFormFields({ items, coach: user as Coach }),
+  DialogForm: ({ items, values }: { items: Client[]; values: any }) =>
+    ClientTermsFormFields({ items, values }),
   dialogTitle: "Send a new offer to {{full_name}}",
   dialogTitleBulk: "Send new offers to {{n}} clients",
   dialogText: "Please specify the new price and start date for {{full_name}}.",

@@ -16,8 +16,8 @@ const sendOfferAction: Action<Client> = {
   show: (client: Client) => client.status === "lead",
   apiHandler: sendOffer,
   onComplete,
-  DialogForm: ({ items, user }: { items: Client[]; user: any }) =>
-    ClientTermsFormFields({ items, coach: user }),
+  DialogForm: ({ items, values }: { items: Client[]; values: any }) =>
+    ClientTermsFormFields({ items, values }),
   dialogTitle: "Send offer to {{full_name}}",
   dialogTitleBulk: "Send offers to {{n}} clients",
   dialogText: "Please specify the price and start date for {{full_name}}.",
