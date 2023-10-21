@@ -9,7 +9,7 @@ type ClientTermsFormFieldsProps = {
 
 export const ClientTermsFormFields: React.FC<ClientTermsFormFieldsProps> = ({
   items,
-  values: { coach },
+  values: { monthly_amount },
 }) => (
   <>
     <PriceInput
@@ -18,9 +18,8 @@ export const ClientTermsFormFields: React.FC<ClientTermsFormFieldsProps> = ({
       required
       defaultValue={
         items.length === 1
-          ? (items[0]?.subscription?.monthly_amount ||
-              coach.monthly_subscription_amount) / 100
-          : coach.monthly_subscription_amount / 100
+          ? (items[0]?.subscription?.monthly_amount || monthly_amount) / 100
+          : monthly_amount / 100
       }
     />
     <Input

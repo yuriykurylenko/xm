@@ -3,12 +3,12 @@ import PriceInput from "@/app/components/Form/PriceInput";
 
 type PriceFieldProps = {
   items: Client[];
-  values: { coach: Coach };
+  values: { coach: Coach; monthly_amount: number };
 };
 
 export const PriceField: React.FC<PriceFieldProps> = ({
   items,
-  values: { coach },
+  values: { monthly_amount },
 }) => (
   <PriceInput
     name="monthlyAmount"
@@ -16,9 +16,8 @@ export const PriceField: React.FC<PriceFieldProps> = ({
     required
     defaultValue={
       items.length === 1
-        ? (items[0]?.subscription?.monthly_amount ||
-            coach.monthly_subscription_amount) / 100
-        : coach.monthly_subscription_amount / 100
+        ? (items[0]?.subscription?.monthly_amount || monthly_amount) / 100
+        : monthly_amount / 100
     }
   />
 );
