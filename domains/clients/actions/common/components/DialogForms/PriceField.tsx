@@ -3,7 +3,7 @@ import PriceInput from "@/app/components/Form/PriceInput";
 
 type PriceFieldProps = {
   items: Client[];
-  values: { coach: Coach; monthly_amount: number };
+  values: { monthly_amount: number };
 };
 
 export const PriceField: React.FC<PriceFieldProps> = ({
