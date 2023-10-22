@@ -66,3 +66,14 @@ cancelStart:
     titleBulk: "Cancel {{n}} clients' start"
     text: "Are you sure you would like to cancel {{full_name}}'s start?"
     textBulk: "Are you sure you would like to cancel {{n}} clients' start?"
+
+revokeAccess:
+  title: "Revoke platform access"
+  titleBulk: "Revoke access"
+  icon: faPowerOff
+  useApi: true
+  dialog:
+    title: "Revoke access for {{full_name}}"
+    titleBulk: "Revoke access for {{n}} clients"
+    text: "Are you sure you would like to revoke platform access for {{full_name}}?"
+    textBulk: "Are you sure you would like to revoke platform access for {{n}} clients?"
