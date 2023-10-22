@@ -1,13 +1,10 @@
 import { update as updateClientById } from "@/domains/clients/model";
 
-import { Action } from "@/types/action";
 import { Client } from "@/types/user";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import { updateByClientId as updateSubscriptionByClientId } from "@/domains/clients/domains/subscriptions/model";
-import { onComplete } from "@/domains/clients/actions/common/handlers";
 
-const apiHandler = async (clientId: UUID) => {
+export const handler = async (clientId: UUID) => {
   const { error } = await updateSubscriptionByClientId(clientId, {
     archived_at: new Date(),
     start_date: null,
@@ -26,18 +23,4 @@ const apiHandler = async (clientId: UUID) => {
   });
 };
 
-const cancelOfferAction: Action<Client> = {
-  title: "Cancel offer",
-  titleBulk: "Cancel offers",
-  icon: faXmark,
-  show: (client: Client) => client.status === "offerSent",
-  apiHandler,
-  onComplete,
-  dialogTitle: "Cancel {{full_name}}'s offer",
-  dialogTitleBulk: "Cancel {{n}} clients' offers",
-  dialogText: "Are you sure you would like to cancel {{full_name}}'s offer?",
-  dialogTextBulk:
-    "Are you sure you would like to cancel {{n}} clients' offers?",
-};
-
-export default cancelOfferAction;
+export const show = (client: Client) => client.status === "offerSent";
