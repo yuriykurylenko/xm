@@ -1,85 +1,8 @@
-import { Subscription } from "@/types/subscription";
 import { Client } from "@/types/user";
-import { MailService } from "@sendgrid/mail";
-import { UUID } from "crypto";
-
-import { create as createClientSubscription } from "@/domains/clients/domains/subscriptions/model";
-
-import {
-  fetch as fetchClientById,
-  update as updateClientById,
-} from "@/domains/clients/model";
-import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
+import { sendOffer } from "@/domains/clients/actions/common/handlers";
 
 export const show = (client: Client) => client.status === "lead";
-
-const sendPaymentLink = async (
-  subscription: Subscription,
-  sgMail: MailService
-) => {
-  const { data: client } = await fetchClientById(subscription.client_id);
-  const { data: coach } = await fetchCoachByClientId(subscription.client_id);
-
-  if (client && coach) {
-    await sgMail.send({
-      to: client.email,
-      from: "yuriy.kurylenko@gmail.com",
-      templateId: "d-cd682145f2884174bd1721ac483355b9",
-      dynamicTemplateData: {
-        client_name: client?.full_name,
-        coach_name: coach?.full_name,
-        amount: subscription.monthly_amount / 100,
-        currency: subscription.currency,
-        payment_link: `https://coaching-ten.vercel.app/subscription/${subscription.id}`,
-        trial_period_days: subscription.trial_period_days,
-        start_date:
-          !subscription.start_date ||
-          new Date(subscription.start_date) < new Date()
-            ? new Date()
-            : new Date(subscription.start_date),
-      },
-    });
-  }
-};
-
-export const handler = async (
-  clientId: UUID,
-  {
-    monthlyAmount,
-    currency = "USD",
-    trialPeriodDays,
-    trialPeriod,
-    startDate,
-  }: {
-    monthlyAmount: number;
-    currency: string;
-    trialPeriodDays?: number;
-    trialPeriod?: boolean;
-    startDate?: Date | string | null;
-  },
-  { sgMail }: { sgMail: MailService }
-) => {
-  const { data: subscription, error: subscriptionError } =
-    await createClientSubscription(clientId as UUID, {
-      monthlyAmount,
-      currency,
-      trialPeriodDays: trialPeriodDays || (trialPeriod ? 14 : 0),
-      startDate,
-    });
-
-  if (subscriptionError) {
-    return { subscription, error: { message: "Error creating subscription" } };
-  }
-
-  if (subscription) {
-    await sendPaymentLink(subscription as Subscription, sgMail);
-  }
-
-  const { data, error } = await updateClientById(clientId as UUID, {
-    status: "offerSent",
-  });
-  return { data, error };
-};
+export const handler = sendOffer;
 
 export const onComplete = (
   client: Client,
