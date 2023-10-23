@@ -123,3 +123,30 @@ changePricing:
           type: price
           placeholder: Monthly price
           required: true
+
+changeTerms:
+  title: "Change client's terms"
+  titleBulk: "Change terms"
+  icon: faRotate
+  useApi: true
+  dialog:
+    title: "Change terms for {{full_name}}"
+    titleBulk: "Change terms {{n}} clients"
+    text: "Please specify the new price and start date for {{full_name}}."
+    textBulk: "Please specify the new price and start date for your clients."
+    infoText: "{{full_name}} will receive an email confirming the change of the terms but would not need to add their credit card again."
+    infoTextBulk: "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again."
+    form:
+      inputs:
+        - name: monthlyAmount
+          type: price
+          placeholder: Monthly price
+          required: true
+
+        - name: startDate
+          type: date
+          placeholder: Start date
+
+        - name: trialPeriod
+          type: checkbox
+          placeholder: "Offer trial period (14 days)"
