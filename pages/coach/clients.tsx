@@ -58,7 +58,7 @@ const ClientsPage = ({ user }: { user: Coach }) => {
           "clients.changeTerms",
           "clients.changePricing",
           // "clients.renewSubscription",
-          // "clients.resendOffer",
+          "clients.resendOffer",
           // "clients.sendOfferWhenEnded",
           "clients.revokeAccess",
           "clients.cancelOffer",

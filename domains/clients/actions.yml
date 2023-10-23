@@ -172,3 +172,30 @@ cancelSubscription:
         - name: accessAfterEndDate
           type: checkbox
           placeholder: "Allow platform access after the end of the engagement"
+
+resendOffer:
+  title: "Send a new offer"
+  titleBulk: "Send new offers"
+  icon: faRotate
+  useApi: true
+  dialog:
+    title: "Send a new offer to {{full_name}}"
+    titleBulk: "Send new offers to {{n}} clients"
+    text: "Please specify the new price and start date for {{full_name}}."
+    textBulk: "Please specify the new price and start date for your clients."
+    infoText: "{{full_name}} will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offer to them will be canceled."
+    infoTextBulk: "Your clients will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled"
+    form:
+      inputs:
+        - name: monthlyAmount
+          type: price
+          placeholder: Monthly price
+          required: true
+
+        - name: startDate
+          type: date
+          placeholder: Start date
+
+        - name: trialPeriod
+          type: checkbox
+          placeholder: "Offer trial period (14 days)"
