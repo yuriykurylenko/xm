@@ -150,3 +150,25 @@ changeTerms:
         - name: trialPeriod
           type: checkbox
           placeholder: "Offer trial period (14 days)"
+
+cancelSubscription:
+  title: "End client"
+  titleBulk: "End clients"
+  icon: faXmark
+  useApi: true
+  dialog:
+    title: "End {{full_name}}'s subscription"
+    titleBulk: "End {{n}} clients"
+    text: "Are you sure you would like to end {{full_name}}?"
+    textBulk: "Are you sure you would like to end {{n}} clients?"
+    infoText: "If you choose not to end the subscription immediately, {{full_name}} will stop at the end of their monthly billing cycle."
+    infoTextBulk: "If you choose not to end the subscriptions immediately, your clients will stop at the end of their respective monthly billing cycles."
+    form:
+      inputs:
+        - name: endImmediately
+          type: checkbox
+          placeholder: "End immediately"
+
+        - name: accessAfterEndDate
+          type: checkbox
+          placeholder: "Allow platform access after the end of the engagement"
