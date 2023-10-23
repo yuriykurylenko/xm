@@ -47,26 +47,44 @@ const ActionsBar = <T extends { id: UUID }>({
           return { domainPath, actionName };
         });
 
+        const actionConfigObjects = await Promise.all(
+          [...new Set(actionBreakdowns.map((ab) => ab.domainPath))].map(
+            async (domainPath) => {
+              const { data: actions } = await axios.get(
+                `/api/actions?domainPath=${domainPath}`
+              );
+              const actionConfigs = {};
+
+              for (const key of Object.keys(actions)) {
+                // @ts-ignore
+                actionConfigs[`${domainPath}.${key}`] = actions[key];
+              }
+              return actionConfigs;
+            }
+          )
+        );
+
         const actionConfigs = (
           await Promise.all(
-            actionBreakdowns.map(async ({ domainPath, actionName }) => {
-              return {
-                configResponse: await axios.get(
-                  `/api/actions?domainPath=${domainPath}`
-                ),
-                name: actionName,
-                module: await import(
-                  `@/domains/${domainPath}/actions/${actionName}`
-                ),
-              };
-            })
+            actionBreakdowns.map(async ({ domainPath, actionName }) => ({
+              // @ts-ignore
+              config: actionConfigObjects[0][`${domainPath}.${actionName}`],
+              path: `${domainPath}.${actionName}`,
+              name: actionName,
+              module: await import(
+                `@/domains/${domainPath}/actions/${actionName}`
+              ),
+            }))
           )
-        ).map(({ name, configResponse: { data: config }, module }) => ({
-          name,
-          ...config[name as string],
-          handler: module.handler,
-          show: module.show,
-        }));
+        )
+          .map(({ name, path, config, module }) => ({
+            path,
+            name,
+            ...config,
+            handler: module.handler,
+            show: module.show,
+          }))
+          .filter((actionConfig) => actions.includes(actionConfig.path));
 
         setActionDefinitions(
           actionConfigs.map((action: Action<T>) => ({
