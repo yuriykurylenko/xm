@@ -104,3 +104,22 @@ sendOffer:
         - name: trialPeriod
           type: checkbox
           placeholder: "Offer trial period (14 days)"
+
+changePricing:
+  title: "Change client's monthly price"
+  titleBulk: "Change price"
+  icon: faDollarSign
+  useApi: true
+  dialog:
+    title: "Change price for {{full_name}}"
+    titleBulk: "Change price for {{n}} clients"
+    text: "Please specify the new price for {{full_name}}."
+    textBulk: "Please specify the new price for your clients."
+    infoText: "{{full_name}} will receive an email confirming the change of the terms but would not need to add their credit card again."
+    infoTextBulk: "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again."
+    form:
+      inputs:
+        - name: monthlyAmount
+          type: price
+          placeholder: Monthly price
+          required: true

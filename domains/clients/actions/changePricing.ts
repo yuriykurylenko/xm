@@ -1,32 +1,8 @@
-import { Action } from "@/types/action";
 import { Client } from "@/types/user";
 
-import { PriceField } from "@/domains/clients/actions/common/components/DialogForms/PriceField";
-import {
-  changePriceOrRenewSubscription,
-  onComplete,
-} from "@/domains/clients/actions/common/handlers";
+import { changePriceOrRenewSubscription } from "@/domains/clients/actions/common/handlers";
 
-import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
+export const show = (client: Client) =>
+  client.status === "client" && client.end_date === null;
 
-const changePricingAction: Action<Client> = {
-  title: "Change client's monthly price",
-  titleBulk: "Change price",
-  icon: faDollarSign,
-  show: (client: Client) =>
-    client.status === "client" && client.end_date === null,
-  apiHandler: changePriceOrRenewSubscription,
-  onComplete,
-  DialogForm: ({ items, values }: { items: Client[]; values: any }) =>
-    PriceField({ items, values }),
-  dialogTitle: "Change price for {{full_name}}",
-  dialogTitleBulk: "Change price for {{n}} clients",
-  dialogText: "Please specify the new price for {{full_name}}.",
-  dialogTextBulk: "Please specify the new price for your clients.",
-  dialogInfoText:
-    "{{full_name}} will receive an email confirming the change of the terms but would not need to add their credit card again.",
-  dialogInfoTextBulk:
-    "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again.",
-};
-
-export default changePricingAction;
+export const handler = changePriceOrRenewSubscription;
