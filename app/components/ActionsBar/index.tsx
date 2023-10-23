@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import BasicButton from "@/app/components/BasicButton";
 import styles from "@/app/components/ActionsBar/styles.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { UUID } from "crypto";
 import ActionDialog from "@/app/components/ActionDialog";
 import axios from "axios";
 import Handlebars from "handlebars";
 
 import * as icons from "@fortawesome/free-solid-svg-icons";
+import ActionDialogForm from "@/app/components/Form/ActionDialogForm";
 
 interface Action<T> {
   name: string;
@@ -190,8 +190,12 @@ const ActionsBar = <T extends { id: UUID }>({
                     })
               }
             >
-              {action.DialogForm && (
-                <action.DialogForm items={selectedItems} values={context} />
+              {action.dialog.form && (
+                <ActionDialogForm
+                  actionConfig={action}
+                  items={selectedItems}
+                  values={context}
+                />
               )}
             </ActionDialog>
           )

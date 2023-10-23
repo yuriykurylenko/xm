@@ -77,3 +77,30 @@ revokeAccess:
     titleBulk: "Revoke access for {{n}} clients"
     text: "Are you sure you would like to revoke platform access for {{full_name}}?"
     textBulk: "Are you sure you would like to revoke platform access for {{n}} clients?"
+
+sendOffer:
+  title: "Send offer"
+  titleBulk: "Send offers"
+  icon: faPaperPlane
+  useApi: true
+  dialog:
+    title: "Send offer to {{full_name}}"
+    titleBulk: "Send offers to {{n}} clients"
+    text: "Please specify the price and start date for {{full_name}}."
+    textBulk: "Please specify the price and start date for your clients."
+    infoText: "{{full_name}} will receive an email with the link to subscribe and pay your specified amount monthly."
+    infoTextBulk: "Your clients will receive an email with the link to subscribe and pay your specified amount monthly."
+    form:
+      inputs:
+        - name: monthlyAmount
+          type: price
+          placeholder: Monthly price
+          required: true
+
+        - name: startDate
+          type: date
+          placeholder: Start date
+
+        - name: trialPeriod
+          type: checkbox
+          placeholder: "Offer trial period (14 days)"

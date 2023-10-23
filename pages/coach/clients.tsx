@@ -54,7 +54,7 @@ const ClientsPage = ({ user }: { user: Coach }) => {
         ]}
         fetchItems={fetchClients}
         actions={[
-          // "clients.sendOffer",
+          "clients.sendOffer",
           // "clients.changeTerms",
           // "clients.changePricing",
           // "clients.renewSubscription",
