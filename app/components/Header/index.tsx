@@ -59,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({ menu }) => {
                   <li
                     key={item.link}
                     className={`${
-                      router.asPath === item.link ? styles["active"] : ""
+                      router.route === item.link ? styles["active"] : ""
                     }`}
                   >
                     <Link href={item.link}>{item.label}</Link>
