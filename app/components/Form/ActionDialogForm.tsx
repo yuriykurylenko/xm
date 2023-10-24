@@ -13,7 +13,6 @@ const ActionDialogForm: React.FC<ActionFormProps> = ({
   items,
   values,
 }) => {
-  console.log(values);
   const [formHocModule, setFormHocModule] = useState<any>(null);
   const [formHocName, setFormHocName] = useState<string>("");
 

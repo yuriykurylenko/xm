@@ -1,5 +1,6 @@
 import BasicButton from "@/app/components/BasicButton";
 import styles from "@/app/components/FilterBar/styles.module.css";
+import router from "next/router";
 
 interface FilterBarProps {
   filterStatus: string;
@@ -18,7 +19,10 @@ const FilterBar: React.FC<FilterBarProps> = ({
         <BasicButton
           key={option.value}
           type="button"
-          onClick={() => setFilterStatus(option.value)}
+          onClick={() => {
+            setFilterStatus(option.value);
+            router.push(`?status=${option.value}`);
+          }}
           className={`${styles["filter-btn"]} ${
             filterStatus === option.value || (index === 0 && !filterStatus)
               ? styles["filter-btn-active"]
