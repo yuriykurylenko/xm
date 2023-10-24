@@ -8,7 +8,6 @@ describe("FilterBar Component", () => {
       <FilterBar
         filterOptions={[{ name: "Option 1", value: "option1" }]}
         filterStatus=""
-        setFilterStatus={() => {}}
       />
     );
 

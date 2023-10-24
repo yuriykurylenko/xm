@@ -31,7 +31,6 @@ interface ItemListProps<T extends { id: UUID | string }> {
   }>;
   FilterBarComponent?: React.ComponentType<{
     filterStatus: string;
-    setFilterStatus: (status: string) => void;
     filterOptions: FilterOption[];
   }>;
   HeaderComponent?: React.ComponentType<{
@@ -124,17 +123,9 @@ const ItemList = <T extends { id: UUID | string }>({
   useEffect(() => {
     if (filterState?.status) {
       setFilterStatus(filterState.status as string);
+      setPage(1);
     }
   }, [filterState]);
-
-  const changeFilterStatus = (status: string) => {
-    if (status !== filterStatus) {
-      setIsListLoaded(false);
-    }
-    setFilterStatus(status);
-    setPage(1);
-    setSelectedItems([]);
-  };
 
   const updateFilterCounts = async () => {
     const counts: Record<string, number> = {};
@@ -210,7 +201,6 @@ const ItemList = <T extends { id: UUID | string }>({
               count: filterCounts[option.value],
             }))}
             filterStatus={filterStatus}
-            setFilterStatus={changeFilterStatus}
           />
         )}
       </div>

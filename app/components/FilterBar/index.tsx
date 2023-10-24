@@ -4,13 +4,11 @@ import router from "next/router";
 
 interface FilterBarProps {
   filterStatus: string;
-  setFilterStatus: (status: string) => void;
   filterOptions: { value: string; name: string; count?: number }[];
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({
   filterStatus,
-  setFilterStatus,
   filterOptions,
 }) => {
   return (
