@@ -1,6 +1,7 @@
 import { Client } from "@/types/user";
 import { update as updateClientById } from "@/domains/clients/model";
 import { UUID } from "crypto";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 export const show = (client: Client) =>
   client.status === "lead" || client.subscription_status === "canceled";
@@ -12,3 +13,5 @@ export const handler = async (clientId: UUID) => {
 
   return { data, error };
 };
+
+export { onComplete };

@@ -11,6 +11,7 @@ import {
 import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/models/price";
 import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
 import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 export const show = (client: Client) => client.status === "starting";
 
@@ -88,3 +89,5 @@ export const handler = async (
 
   return { data: client, error };
 };
+
+export { onComplete };

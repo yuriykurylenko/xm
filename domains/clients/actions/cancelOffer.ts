@@ -3,6 +3,7 @@ import { update as updateClientById } from "@/domains/clients/model";
 import { Client } from "@/types/user";
 import { UUID } from "crypto";
 import { updateByClientId as updateSubscriptionByClientId } from "@/domains/clients/domains/subscriptions/model";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 export const handler = async (clientId: UUID) => {
   const { error } = await updateSubscriptionByClientId(clientId, {
@@ -24,3 +25,5 @@ export const handler = async (clientId: UUID) => {
 };
 
 export const show = (client: Client) => client.status === "offerSent";
+
+export { onComplete };

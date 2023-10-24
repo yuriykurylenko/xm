@@ -83,6 +83,7 @@ const ActionsBar = <T extends { id: UUID }>({
             ...config,
             handler: module.handler,
             show: module.show,
+            onComplete: module.onComplete,
           }))
           .filter((actionConfig) => actions.includes(actionConfig.path));
 

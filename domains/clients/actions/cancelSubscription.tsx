@@ -4,6 +4,7 @@ import { UUID } from "crypto";
 import { cancel as cancelStripeSubscription } from "@/integrations/stripe/models/subscription";
 import { fetchAllByClientId as fetchSubscriptionsByClientId } from "@/domains/clients/domains/subscriptions/model";
 import { fetch as fetchClientById } from "@/domains/clients/model";
+import { onComplete } from "@/domains/clients/actions/common/handlers";
 
 export const handler = async (
   clientId: UUID,
@@ -40,3 +41,5 @@ export const show = (client: Client) =>
   ["past_due", "unpaid", "active", "trialing"].includes(
     client.subscription_status as string
   );
+
+export { onComplete };
