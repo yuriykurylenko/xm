@@ -92,16 +92,16 @@ sendOffer:
     infoTextBulk: "Your clients will receive an email with the link to subscribe and pay your specified amount monthly."
     form:
       inputs:
-        - name: monthlyAmount
+        - name: monthly_amount
           type: price
           placeholder: Monthly price
           required: true
 
-        - name: startDate
+        - name: start_date
           type: date
           placeholder: Start date
 
-        - name: trialPeriod
+        - name: trial_period_days
           type: checkbox
           placeholder: "Offer trial period (14 days)"
 
@@ -119,7 +119,7 @@ changePricing:
     infoTextBulk: "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again."
     form:
       inputs:
-        - name: monthlyAmount
+        - name: monthly_amount
           type: price
           placeholder: Monthly price
           required: true
@@ -138,16 +138,16 @@ changeTerms:
     infoTextBulk: "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again."
     form:
       inputs:
-        - name: monthlyAmount
+        - name: monthly_amount
           type: price
           placeholder: Monthly price
           required: true
 
-        - name: startDate
+        - name: start_date
           type: date
           placeholder: Start date
 
-        - name: trialPeriod
+        - name: trial_period_days
           type: checkbox
           placeholder: "Offer trial period (14 days)"
 
@@ -187,16 +187,16 @@ resendOffer:
     infoTextBulk: "Your clients will receive an email with the link to subscribe and pay your specified amount monthly. Your previous offers to them will be canceled"
     form:
       inputs:
-        - name: monthlyAmount
+        - name: monthly_amount
           type: price
           placeholder: Monthly price
           required: true
 
-        - name: startDate
+        - name: start_date
           type: date
           placeholder: Start date
 
-        - name: trialPeriod
+        - name: trial_period_days
           type: checkbox
           placeholder: "Offer trial period (14 days)"
 
@@ -214,16 +214,16 @@ sendOfferWhenEnded:
     infoTextBulk: "Your clients will receive an email with the link to subscribe and pay your specified amount monthly."
     form:
       inputs:
-        - name: monthlyAmount
+        - name: monthly_amount
           type: price
           placeholder: Monthly price
           required: true
 
-        - name: startDate
+        - name: start_date
           type: date
           placeholder: Start date
 
-        - name: trialPeriod
+        - name: trial_period_days
           type: checkbox
           placeholder: "Offer trial period (14 days)"
 
@@ -241,7 +241,7 @@ renewSubscription:
     infoTextBulk: "Your clients' subscriptions will be renewed. You can specify the new price for them. They will receive an email confirming the change of the terms but would not need to add their credit card again."
     form:
       inputs:
-        - name: monthlyAmount
+        - name: monthly_amount
           type: price
           placeholder: Monthly price
           required: true
