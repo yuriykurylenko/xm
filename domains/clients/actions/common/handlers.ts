@@ -92,26 +92,26 @@ const sendPaymentLink = async (
 export const sendOffer = async (
   clientId: UUID,
   {
-    monthlyAmount,
+    monthly_amount,
     currency = "USD",
-    trialPeriodDays,
-    trialPeriod,
-    startDate,
+    trial_period_days,
+    trial_period,
+    start_date,
   }: {
-    monthlyAmount: number;
+    monthly_amount: number;
     currency: string;
-    trialPeriodDays?: number;
-    trialPeriod?: boolean;
-    startDate?: Date | string | null;
+    trial_period_days?: number;
+    trial_period?: boolean;
+    start_date?: Date | string | null;
   },
   { sgMail }: { sgMail: MailService }
 ) => {
   const { data: subscription, error: subscriptionError } =
     await createClientSubscription(clientId as UUID, {
-      monthlyAmount,
+      monthly_amount,
       currency,
-      trialPeriodDays: trialPeriodDays || (trialPeriod ? 14 : 0),
-      startDate,
+      trial_period_days: trial_period_days || (trial_period ? 14 : 0),
+      start_date,
     });
 
   if (subscriptionError) {

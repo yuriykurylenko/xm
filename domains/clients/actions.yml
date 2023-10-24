@@ -101,7 +101,7 @@ sendOffer:
           type: date
           placeholder: Start date
 
-        - name: trial_period_days
+        - name: trial_period
           type: checkbox
           placeholder: "Offer trial period (14 days)"
 
@@ -147,7 +147,7 @@ changeTerms:
           type: date
           placeholder: Start date
 
-        - name: trial_period_days
+        - name: trial_period
           type: checkbox
           placeholder: "Offer trial period (14 days)"
 
@@ -196,7 +196,7 @@ resendOffer:
           type: date
           placeholder: Start date
 
-        - name: trial_period_days
+        - name: trial_period
           type: checkbox
           placeholder: "Offer trial period (14 days)"
 
@@ -223,7 +223,7 @@ sendOfferWhenEnded:
           type: date
           placeholder: Start date
 
-        - name: trial_period_days
+        - name: trial_period
           type: checkbox
           placeholder: "Offer trial period (14 days)"
 

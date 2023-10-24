@@ -32,17 +32,17 @@ export const fetchByStripeSubscriptionId = (stripeSubscriptionId: string) =>
 export const create = async (
   clientId: UUID,
   {
-    monthlyAmount,
+    monthly_amount,
     currency,
-    trialPeriodDays,
-    startDate,
-    stripeSubscriptionId,
+    trial_period_days,
+    start_date,
+    stripe_subscription_id,
   }: {
-    monthlyAmount: number;
+    monthly_amount: number;
     currency: string;
-    trialPeriodDays: number;
-    startDate?: Date | string | null;
-    stripeSubscriptionId?: string | null;
+    trial_period_days: number;
+    start_date?: Date | string | null;
+    stripe_subscription_id?: string | null;
   }
 ) => {
   const { data: coach } = await fetchCoachByClientId(clientId);
@@ -52,8 +52,9 @@ export const create = async (
   }
 
   const utcStartDate =
-    startDate && startOfUtcDay(new Date(startDate)) > startOfUtcDay(new Date())
-      ? startOfUtcDay(new Date(startDate))
+    start_date &&
+    startOfUtcDay(new Date(start_date)) > startOfUtcDay(new Date())
+      ? startOfUtcDay(new Date(start_date))
       : null;
 
   await updateByClientId(clientId, { archived_at: new Date() });
@@ -61,7 +62,7 @@ export const create = async (
   const price = await findOrCreateStripePrice({
     productId: coach.stripe_product_id,
     interval: "month",
-    unitAmount: monthlyAmount * 100,
+    unitAmount: monthly_amount * 100,
     currency,
   });
 
@@ -70,12 +71,12 @@ export const create = async (
     .insert([
       {
         client_id: clientId,
-        monthly_amount: monthlyAmount * 100,
+        monthly_amount: monthly_amount * 100,
         currency,
         stripe_price_id: price.id,
-        trial_period_days: trialPeriodDays,
+        trial_period_days,
         start_date: utcStartDate,
-        stripe_subscription_id: stripeSubscriptionId,
+        stripe_subscription_id,
       },
     ])
     .select()

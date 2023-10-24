@@ -17,28 +17,29 @@ export const show = (client: Client) => client.status === "starting";
 export const handler = async (
   clientId: UUID,
   {
-    monthlyAmount,
+    monthly_amount,
     currency = "USD",
-    trialPeriodDays,
-    trialPeriod,
-    startDate,
+    trial_period_days,
+    trial_period,
+    start_date,
   }: {
-    monthlyAmount: number;
+    monthly_amount: number;
     currency: string;
-    trialPeriodDays?: number;
-    trialPeriod?: boolean;
-    startDate: Date;
+    trial_period_days?: number;
+    trial_period?: boolean;
+    start_date: Date;
   }
 ) => {
   const utcStartDate =
-    startDate && startOfUtcDay(new Date(startDate)) > startOfUtcDay(new Date())
-      ? startOfUtcDay(new Date(startDate))
+    start_date &&
+    startOfUtcDay(new Date(start_date)) > startOfUtcDay(new Date())
+      ? startOfUtcDay(new Date(start_date))
       : startOfUtcDay(new Date());
 
-  trialPeriodDays = trialPeriodDays || (trialPeriod ? 14 : 0);
+  trial_period_days = trial_period_days || (trial_period ? 14 : 0);
 
   let trialEndDate = new Date(utcStartDate);
-  trialEndDate.setDate(trialEndDate.getDate() + trialPeriodDays);
+  trialEndDate.setDate(trialEndDate.getDate() + trial_period_days);
 
   const { data: subscription } = await fetchSubscriptionByClientId(clientId);
   const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
@@ -47,10 +48,14 @@ export const handler = async (
   const { data: clientSubscription, error } = await createSubscription(
     clientId,
     {
-      monthlyAmount: monthlyAmount,
+      monthly_amount,
       currency,
-      trialPeriodDays: trialPeriodDays ? trialPeriodDays : trialPeriod ? 14 : 0,
-      startDate: utcStartDate,
+      trial_period_days: trial_period_days
+        ? trial_period_days
+        : trial_period
+        ? 14
+        : 0,
+      start_date: utcStartDate,
     }
   );
 
@@ -64,7 +69,7 @@ export const handler = async (
 
   const price = await findOrCreateStripePrice({
     productId: coach?.stripe_product_id,
-    unitAmount: monthlyAmount * 100,
+    unitAmount: monthly_amount * 100,
     interval: "month",
     currency,
   });
@@ -72,7 +77,7 @@ export const handler = async (
   await createStripeSubscriptionSchedule({
     customerId: customer,
     startDate: new Date(utcStartDate),
-    trialPeriodDays,
+    trialPeriodDays: trial_period_days,
     priceId: price.id,
     quantity: 1,
     metadata: {
