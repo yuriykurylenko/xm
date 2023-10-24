@@ -122,7 +122,9 @@ const ItemList = <T extends { id: UUID | string }>({
   }, [page, filterStatus, filterText, sortColumn, sortDirection]);
 
   useEffect(() => {
-    setFilterStatus(filterState?.status as string);
+    if (filterState?.status) {
+      setFilterStatus(filterState.status as string);
+    }
   }, [filterState]);
 
   const changeFilterStatus = (status: string) => {
