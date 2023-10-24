@@ -125,7 +125,7 @@ const ActionsBar = <T extends { id: UUID }>({
     }
 
     handleCloseDialog();
-    action.onComplete && action.onComplete(updatedItem, () => {});
+    action.onComplete && action.onComplete(updatedItem);
 
     return { error: null };
   };

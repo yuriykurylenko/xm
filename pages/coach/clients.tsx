@@ -20,8 +20,6 @@ import ClientsListHeader from "@/domains/clients/components/ListHeader";
 import router from "next/router";
 
 const ClientsPage = ({ user }: { user: Coach }) => {
-  console.log(router.query);
-
   const fetchClients = async (
     page: number,
     filterStatus: string,

@@ -16,6 +16,7 @@ import { update as updateStripeSubscription } from "@/integrations/stripe/models
 import { UUID } from "crypto";
 import { Subscription } from "@/types/subscription";
 import { Client } from "@/types/user";
+import router from "next/router";
 
 export const changePriceOrRenewSubscription = async (
   clientId: UUID,
@@ -128,7 +129,5 @@ export const sendOffer = async (
   return { data, error };
 };
 
-export const onComplete = (
-  client: Client,
-  setFilterStatus?: (filterStatus: string) => void
-) => setFilterStatus && setFilterStatus(client.status as string);
+export const onComplete = (client: Client) =>
+  router.push(`?status=${client.status as string}`);
