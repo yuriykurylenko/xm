@@ -20,10 +20,10 @@ import { Client } from "@/types/user";
 export const changePriceOrRenewSubscription = async (
   clientId: UUID,
   {
-    monthlyAmount,
+    monthly_amount,
     currency = "USD",
   }: {
-    monthlyAmount: number;
+    monthly_amount: number;
     currency: string;
   }
 ) => {
@@ -44,13 +44,13 @@ export const changePriceOrRenewSubscription = async (
 
   try {
     await updateStripeSubscription(subscription.stripe_subscription_id, {
-      monthlyAmount: monthlyAmount * 100,
+      monthlyAmount: monthly_amount * 100,
       currency,
       isActiveSubscription: true,
     });
 
     await updateSubscriptionById(subscription.id, {
-      monthly_amount: monthlyAmount * 100,
+      monthly_amount: monthly_amount * 100,
       currency,
     });
 
