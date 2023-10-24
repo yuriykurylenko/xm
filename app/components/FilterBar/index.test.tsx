@@ -14,21 +14,4 @@ describe("FilterBar Component", () => {
 
     expect(getByText("Option 1")).toBeInTheDocument();
   });
-
-  it("handles filter options correctly", () => {
-    const setFilterStatus = jest.fn();
-    const { getByText } = render(
-      <FilterBar
-        filterOptions={[
-          { name: "Option 1", value: "option1" },
-          { name: "Option 2", value: "option2" },
-        ]}
-        filterStatus=""
-        setFilterStatus={setFilterStatus}
-      />
-    );
-    fireEvent.click(getByText("Option 1"));
-
-    expect(setFilterStatus).toHaveBeenCalledWith("option1");
-  });
 });

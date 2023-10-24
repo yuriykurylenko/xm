@@ -20,7 +20,6 @@ const FilterBar: React.FC<FilterBarProps> = ({
           key={option.value}
           type="button"
           onClick={() => {
-            setFilterStatus(option.value);
             router.push(`?status=${option.value}`);
           }}
           className={`${styles["filter-btn"]} ${

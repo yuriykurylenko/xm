@@ -14,6 +14,9 @@ type FilterOption = {
 interface ItemListProps<T extends { id: UUID | string }> {
   title: string;
   filterStatusOptions: FilterOption[];
+  filterState?: {
+    [key: string]: string | string[] | undefined;
+  };
   fetchItems: (
     page: number,
     filterStatus: string,
@@ -59,6 +62,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
 const ItemList = <T extends { id: UUID | string }>({
   title,
   filterStatusOptions,
+  filterState,
   fetchItems,
   SearchInputComponent,
   FilterBarComponent,
@@ -71,7 +75,7 @@ const ItemList = <T extends { id: UUID | string }>({
 
   const [filterStatus, setFilterStatus] = useState<string>(
     filterStatusOptions && FilterBarComponent
-      ? filterStatusOptions[0].value
+      ? (filterState?.status as string) || filterStatusOptions[0].value
       : "all"
   );
   const [filterText, setFilterText] = useState<string>("");
@@ -116,6 +120,10 @@ const ItemList = <T extends { id: UUID | string }>({
       await prepareData();
     })();
   }, [page, filterStatus, filterText, sortColumn, sortDirection]);
+
+  useEffect(() => {
+    setFilterStatus(filterState?.status as string);
+  }, [filterState]);
 
   const changeFilterStatus = (status: string) => {
     if (status !== filterStatus) {

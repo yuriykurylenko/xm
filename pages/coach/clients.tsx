@@ -55,6 +55,7 @@ const ClientsPage = ({ user }: { user: Coach }) => {
           { value: "client", name: "Active" },
           { value: "ended", name: "Ended" },
         ]}
+        filterState={router.query}
         fetchItems={fetchClients}
         actions={[
           "clients.sendOffer",
