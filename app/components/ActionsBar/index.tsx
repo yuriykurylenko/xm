@@ -9,6 +9,7 @@ import Handlebars from "handlebars";
 
 import * as icons from "@fortawesome/free-solid-svg-icons";
 import ActionDialogForm from "@/app/components/Form/ActionDialogForm";
+import useConfig from "@/app/hooks/useConfig";
 
 interface Action<T> {
   name: string;
@@ -35,6 +36,9 @@ const ActionsBar = <T extends { id: UUID }>({
 }: ActionsBarProps<T>) => {
   const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
+
+  const config = useConfig();
+  console.log(config);
 
   useEffect(() => {
     const loadActions = async () => {

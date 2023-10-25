@@ -1,13 +1,14 @@
 import React from "react";
 import Header from "@/app/components/Header";
 import { LayoutProps } from "@/types/LayoutProps";
+import ConfigProvider from "@/app/hooks/useConfig/Provider";
 
 const ClientLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div>
+    <ConfigProvider>
       <Header />
       <div className="main-content">{children}</div>
-    </div>
+    </ConfigProvider>
   );
 };
 

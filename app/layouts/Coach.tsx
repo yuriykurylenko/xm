@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "@/app/components/Header";
 import { LayoutProps } from "@/types/LayoutProps";
+import ConfigProvider from "@/app/hooks/useConfig/Provider";
 
 const CoachLayout: React.FC<LayoutProps> = ({ children }) => {
   const menu = [
@@ -9,10 +10,10 @@ const CoachLayout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div>
+    <ConfigProvider>
       <Header menu={menu} />
       <div className="main-content">{children}</div>
-    </div>
+    </ConfigProvider>
   );
 };
 
