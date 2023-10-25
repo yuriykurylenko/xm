@@ -37,8 +37,7 @@ const ActionsBar = <T extends { id: UUID }>({
   const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
 
-  const config = useConfig();
-  console.log(config);
+  const actionsConfig = useConfig();
 
   useEffect(() => {
     const loadActions = async () => {
@@ -51,28 +50,10 @@ const ActionsBar = <T extends { id: UUID }>({
           return { domainPath, actionName };
         });
 
-        const actionConfigObjects = await Promise.all(
-          [...new Set(actionBreakdowns.map((ab) => ab.domainPath))].map(
-            async (domainPath) => {
-              const { data: actions } = await axios.get(
-                `/api/actions?domainPath=${domainPath}`
-              );
-              const actionConfigs = {};
-
-              for (const key of Object.keys(actions)) {
-                // @ts-ignore
-                actionConfigs[`${domainPath}.${key}`] = actions[key];
-              }
-              return actionConfigs;
-            }
-          )
-        );
-
         const actionConfigs = (
           await Promise.all(
             actionBreakdowns.map(async ({ domainPath, actionName }) => ({
-              // @ts-ignore
-              config: actionConfigObjects[0][`${domainPath}.${actionName}`],
+              config: actionsConfig[`${domainPath}.${actionName}`],
               path: `${domainPath}.${actionName}`,
               name: actionName,
               module: await import(
