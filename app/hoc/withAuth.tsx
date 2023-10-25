@@ -38,6 +38,7 @@ export default function withAuth<P extends AuthProps>(
     }
 
     if (role === "coach" && supportedRoles.includes("coach")) {
+      console.log("CoachLayout")
       return (
         <CoachLayout>
           <Component {...props} user={user} />

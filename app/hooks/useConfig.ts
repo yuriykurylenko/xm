@@ -1,4 +1,3 @@
-// useConfig.ts
 import { useContext } from "react";
 import ConfigContext from "@/app/hooks/useConfig/context";
 
