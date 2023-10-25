@@ -8,7 +8,7 @@ const platformAccessGrantedEvent = {
     stripeSubscription,
     client,
   }: StripeEventParams) =>
-    stripeSubscription.status === "active" &&
+    ["active", "trialing"].includes(stripeSubscription.status) &&
     !client.user_id &&
     (stripeEventType === "customer.subscription.created" ||
       (stripeEventType === "customer.subscription.updated" &&
