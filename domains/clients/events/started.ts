@@ -28,12 +28,10 @@ const handler = async (
     current_period_end_date,
   });
 
-  if (["active", "trialing"].includes(status)) {
-    await updateClientById(client.id, {
-      status: "client",
-      access_revoked_at: null,
-    });
-  }
+  await updateClientById(client.id, {
+    status: "client",
+    access_revoked_at: null,
+  });
 };
 
 const startedEvent = {
@@ -43,7 +41,7 @@ const startedEvent = {
     stripeEventPreviousAttributes,
     stripeSubscription,
   }: StripeEventParams) =>
-    stripeSubscription.status === "active" &&
+    ["active", "trialing"].includes(stripeSubscription.status) &&
     (stripeEventType === "customer.subscription.created" ||
       (stripeEventType === "customer.subscription.updated" &&
         stripeEventPreviousAttributes?.status)),
