@@ -13,7 +13,6 @@ const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
     const fetchConfig = async () => {
       try {
         const { data } = await axios.get("/api/config/actions");
-        console.log(data)
         setConfig(data);
       } catch (error) {
         console.error("Failed to fetch config:", error);
