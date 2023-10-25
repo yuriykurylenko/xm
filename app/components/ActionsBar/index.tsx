@@ -53,7 +53,7 @@ const ActionsBar = <T extends { id: UUID }>({
         const actionConfigs = (
           await Promise.all(
             actionBreakdowns.map(async ({ domainPath, actionName }) => ({
-              config: actionsConfig[`${domainPath}.${actionName}`],
+              config: actionsConfig?.[`${domainPath}.${actionName}`],
               path: `${domainPath}.${actionName}`,
               name: actionName,
               module: await import(
