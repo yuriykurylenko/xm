@@ -5,6 +5,7 @@ import { UUID } from "crypto";
 import Input from "@/app/components/Form/Input";
 import axios from "axios";
 import FormSkeleton from "./FormSkeleton";
+import useConfig from "@/app/hooks/useConfig";
 
 interface ActionFormProps {
   action: string;
@@ -19,19 +20,17 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
   const [formHocName, setFormHocName] = useState<string>("");
   const [actionModule, setActionModule] = useState<any>(null);
 
+  const actionsConfig = useConfig();
+
   const actionParts = action.split(".");
   const actionName = actionParts.pop();
   const domainPath = actionParts.join("/domains/");
 
   useEffect(() => {
     const fetchConfig = async () => {
-      const { data: actionsConfig } = await axios.get(
-        `/api/actions?domainPath=${domainPath}`
-      );
-
       if (actionsConfig) {
         // @ts-ignore
-        const config = actionsConfig[actionName];
+        const config = actionsConfig[action];
         setActionConfig(config);
 
         const hocName = config?.form.hoc;
@@ -65,7 +64,7 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
     if (itemId) {
       fetchItem();
     }
-  }, [itemId, domainPath]);
+  }, [itemId, domainPath, actionsConfig]);
 
   const CustomForm = (context: any) => {
     const handler = async (data: any) => {
