@@ -83,8 +83,10 @@ const ActionsBar = <T extends { id: UUID }>({
       }
     };
 
-    loadActions();
-  }, [actions]);
+    if (actionsConfig) {
+      loadActions();
+    }
+  }, [actions, actionsConfig]);
 
   const handleCloseDialog = () => {
     setOpenActionDialogs([]);
