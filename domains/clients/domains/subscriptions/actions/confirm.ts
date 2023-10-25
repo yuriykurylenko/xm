@@ -93,6 +93,10 @@ const createAndConfirmSubscription = async (
       }
     );
 
+    if (!stripeSubscription.latest_invoice?.amount_due) {
+      return { data: stripeSubscription, error: null }
+    }
+
     const {
       payment_intent: { status, client_secret, last_payment_error },
       error,
@@ -101,7 +105,7 @@ const createAndConfirmSubscription = async (
     if (status === "succeeded") {
       return { data: stripeSubscription, error };
     } else if (status === "requires_action") {
-      const { error, paymentIntent } = await stripe.confirmCardPayment(
+      const { error } = await stripe.confirmCardPayment(
         client_secret
       );
       return { data: stripeSubscription, error };
