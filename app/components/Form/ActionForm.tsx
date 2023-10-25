@@ -29,7 +29,6 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
   useEffect(() => {
     const fetchConfig = async () => {
       if (actionsConfig) {
-        // @ts-ignore
         const config = actionsConfig[action];
         setActionConfig(config);
 
