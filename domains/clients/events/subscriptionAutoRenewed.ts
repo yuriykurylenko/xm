@@ -3,7 +3,7 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const handler = (
+export const handler = (
   subscription: Subscription,
   client: Client,
   coach: Coach,
@@ -13,6 +13,9 @@ const handler = (
     current_period_end_date:
       current_period_end_date && new Date(current_period_end_date),
   });
+
+export const triggerConditions = ({ stripeEventType }: StripeEventParams) =>
+  stripeEventType === "invoice.created";
 
 const subscriptionAutoRenewedEvent = {
   handler,

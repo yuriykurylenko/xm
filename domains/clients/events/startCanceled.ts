@@ -5,7 +5,7 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const handler = async (
+export const handler = async (
   subscription: Subscription,
   client: Client,
   coach: Coach
@@ -20,6 +20,15 @@ const handler = async (
     status: "lead",
   });
 };
+
+export const triggerConditions = ({
+  stripeEventType,
+  subscription,
+}: StripeEventParams) =>
+  stripeEventType === "subscription_schedule.canceled" &&
+  !subscription.archived_at &&
+  subscription.start_date &&
+  new Date(subscription.start_date) >= new Date();
 
 const startCanceledEvent = {
   handler,

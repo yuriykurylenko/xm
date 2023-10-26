@@ -1,0 +1,23 @@
+paymentAuthenticationRequired:
+  emailTemplateId: "d-f467666dc085418ba8904d165d5f5a2b"
+
+paymentFailed:
+  emailTemplateId: "d-5e885ef0588e46b8b976eeaece239819"
+
+paymentSucceeded:
+  emailTemplateId: "d-fee4c2f687e54d9e97b5068673742efd"
+
+platformAccessGranted:
+  emailTemplateId: "d-bb7a32cfdef545308aea0cf7bbbee901"
+
+platformAccessRestored:
+  emailTemplateId: "d-f33881ff79f24f07a10820b49bdc1713"
+
+pricingChanged:
+  emailTemplateId: "d-776524b90fc34aa387b8337205142e8c"
+
+subscriptionRenewed:
+  emailTemplateId: "d-664503562b62462d9931a694b35c5155"
+
+termsChangedEvent:
+  emailTemplateId: "d-306b9c3260cd4337b3528ee2e847bb31"

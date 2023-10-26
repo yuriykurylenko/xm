@@ -5,7 +5,7 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const handler = async (
+export const handler = async (
   subscription: Subscription,
   client: Client,
   coach: Coach,
@@ -21,6 +21,9 @@ const handler = async (
     access_revoked_at: !subscription.access_after_end_date ? new Date() : null,
   });
 };
+
+export const triggerConditions = ({ stripeEventType }: StripeEventParams) =>
+  stripeEventType === "customer.subscription.deleted";
 
 const subscriptionCancelledEvent = {
   handler,

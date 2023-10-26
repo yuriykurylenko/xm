@@ -5,7 +5,7 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const handler = async (
+export const handler = async (
   subscription: Subscription,
   client: Client,
   coach: Coach,
@@ -19,6 +19,13 @@ const handler = async (
     status: "starting",
   });
 };
+
+export const triggerConditions = ({
+  stripeEventType,
+  stripeSubscription,
+}: StripeEventParams) =>
+  stripeEventType === "subscription_schedule.created" &&
+  !stripeSubscription.metadata?.updated;
 
 const startScheduledEvent = {
   handler,

@@ -5,7 +5,7 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-const handler = async (
+export const handler = async (
   subscription: Subscription,
   client: Client,
   coach: Coach,
@@ -33,6 +33,16 @@ const handler = async (
     access_revoked_at: null,
   });
 };
+
+export const triggerConditions = ({
+  stripeEventType,
+  stripeEventPreviousAttributes,
+  stripeSubscription,
+}: StripeEventParams) =>
+  ["active", "trialing"].includes(stripeSubscription.status) &&
+  (stripeEventType === "customer.subscription.created" ||
+    (stripeEventType === "customer.subscription.updated" &&
+      stripeEventPreviousAttributes?.status));
 
 const startedEvent = {
   handler,
