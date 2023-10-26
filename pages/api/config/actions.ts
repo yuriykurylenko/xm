@@ -5,8 +5,8 @@ import yaml from "js-yaml";
 
 const domainsDir = path.join(process.cwd(), "domains");
 
-const getActionsFromDir = (dir: string, domainPath: string[] = []): any => {
-  let actions = {};
+const getConfigFromDir = (dir: string, domainPath: string[] = []): any => {
+  let config = {};
 
   // Read all files and directories in the current directory
   const items = fs.readdirSync(dir);
@@ -19,30 +19,37 @@ const getActionsFromDir = (dir: string, domainPath: string[] = []): any => {
       // If it's a 'domains' directory, don't add it to the domain path
       const newDomainPath =
         item !== "domains" ? [...domainPath, item] : domainPath;
-      actions = {
-        ...actions,
-        ...getActionsFromDir(currentPath, newDomainPath),
-      };
-    } else if (item === "actions.yml") {
-      const fileContents = fs.readFileSync(currentPath, "utf8");
-      const actionData = yaml.load(fileContents);
 
-      for (const actionName in actionData as any) {
-        const fullActionName = [...domainPath, actionName].join(".");
+      const dirConfig = getConfigFromDir(currentPath, newDomainPath);
+
+      config = {
         // @ts-ignore
-        actions[fullActionName] = actionData[actionName];
+        actions: { ...config.actions, ...dirConfig.actions },
+        // @ts-ignore
+        events: { ...config.events, ...dirConfig.events },
+      };
+    } else if (["actions.yml", "events.yml"].includes(item)) {
+      const fileContents = fs.readFileSync(currentPath, "utf8");
+      const actionEventData = yaml.load(fileContents);
+
+      for (const actionEventName in actionEventData as any) {
+        const fullActionName = [...domainPath, actionEventName].join(".");
+        // @ts-ignore
+        config[item.split(".")[0]][fullActionName] =
+          actionEventData[actionEventName];
       }
     }
   });
 
-  return actions;
+  return config;
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const actions = getActionsFromDir(domainsDir);
-    res.status(200).json(actions);
+    const config = getConfigFromDir(domainsDir);
+    res.status(200).json(config);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Failed to fetch actions" });
   }
 };

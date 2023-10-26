@@ -37,7 +37,8 @@ const ActionsBar = <T extends { id: UUID }>({
   const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
 
-  const actionsConfig = useConfig();
+  // @ts-ignore
+  const config = useConfig();
 
   useEffect(() => {
     const loadActions = async () => {
@@ -53,7 +54,7 @@ const ActionsBar = <T extends { id: UUID }>({
         const actionConfigs = (
           await Promise.all(
             actionBreakdowns.map(async ({ domainPath, actionName }) => ({
-              config: actionsConfig?.[`${domainPath}.${actionName}`],
+              config: config?.actions?.[`${domainPath}.${actionName}`],
               path: `${domainPath}.${actionName}`,
               name: actionName,
               module: await import(
@@ -83,10 +84,10 @@ const ActionsBar = <T extends { id: UUID }>({
       }
     };
 
-    if (actionsConfig) {
+    if (config?.actions) {
       loadActions();
     }
-  }, [actions, actionsConfig]);
+  }, [actions, config]);
 
   const handleCloseDialog = () => {
     setOpenActionDialogs([]);

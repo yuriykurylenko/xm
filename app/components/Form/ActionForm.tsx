@@ -28,8 +28,8 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
 
   useEffect(() => {
     const fetchConfig = async () => {
-      if (actionsConfig) {
-        const config = actionsConfig[action];
+      if (actionsConfig?.actions) {
+        const config = actionsConfig?.actions[action];
         setActionConfig(config);
 
         const hocName = config?.form.hoc;

@@ -1,6 +1,9 @@
 import { createContext } from "react";
 
-type ConfigType = Record<string, any> | null;
+type ConfigType = {
+  actions: Record<string, any>;
+  events: Record<string, any>;
+} | null;
 const ConfigContext = createContext<ConfigType>(null);
 
 export default ConfigContext;
