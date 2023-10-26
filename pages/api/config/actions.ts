@@ -36,6 +36,7 @@ const getConfigFromDir = (dir: string, domainPath: string[] = []): any => {
         const fullActionName = [...domainPath, actionEventName].join(".");
         // @ts-ignore
         config[item.split(".")[0]][fullActionName] =
+          // @ts-ignore
           actionEventData[actionEventName];
       }
     }
