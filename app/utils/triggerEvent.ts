@@ -15,11 +15,14 @@ const triggerEvent = async (
   data?: any,
   context?: any
 ) => {
-  const [domain, eventName] = name.split(".");
-
   const { events } = config;
+
+  const eventParts = name.split(".");
+  const eventName = eventParts.pop();
+  const domainPath = eventParts.join("/domains/");
+
   const { default: eventDefinition } = await import(
-    `@/domains/${domain}/events/${eventName}`
+    `@/domains/${domainPath}/events/${eventName}`
   );
 
   if (!eventDefinition) {
