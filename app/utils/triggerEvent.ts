@@ -1,5 +1,6 @@
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
+import config from "@/app/utils/config";
 
 import sgMail from "@/initializers/sgMail";
 import axios from "axios";
@@ -16,10 +17,7 @@ const triggerEvent = async (
 ) => {
   const [domain, eventName] = name.split(".");
 
-  const {
-    data: { events },
-  } = await axios.get("/api/config/actions");
-
+  const { events } = config;
   const { default: eventDefinition } = await import(
     `@/domains/${domain}/events/${eventName}`
   );
