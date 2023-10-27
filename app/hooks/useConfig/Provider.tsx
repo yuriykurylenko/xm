@@ -7,7 +7,10 @@ interface ConfigProviderProps {
 }
 
 const ConfigProvider: React.FC<ConfigProviderProps> = ({ children }) => {
-  const [config, setConfig] = useState<Record<string, any> | null>(null);
+  const [config, setConfig] = useState<{
+    actions: Record<string, any>;
+    events: Record<string, any>;
+  } | null>(null);
 
   useEffect(() => {
     const fetchConfig = async () => {
