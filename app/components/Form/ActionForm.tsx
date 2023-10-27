@@ -3,7 +3,6 @@ import Form from "@/app/components/Form";
 import Button from "@/app/components/Form/Button";
 import { UUID } from "crypto";
 import Input from "@/app/components/Form/Input";
-import axios from "axios";
 import FormSkeleton from "./FormSkeleton";
 import useConfig from "@/app/hooks/useConfig";
 
