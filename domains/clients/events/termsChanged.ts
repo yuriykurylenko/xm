@@ -3,7 +3,7 @@ import { StripeEventParams } from "@/types/StripeEventParams";
 import { Subscription } from "@/types/subscription";
 import { Client, Coach } from "@/types/user";
 
-export const handler = async (
+export const handler = (
   subscription: Subscription,
   client: Client,
   coach: Coach,
