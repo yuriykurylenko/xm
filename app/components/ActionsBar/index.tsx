@@ -55,6 +55,7 @@ const ActionsBar = <T extends { id: UUID }>({
           await Promise.all(
             actionBreakdowns.map(async ({ domainPath, actionName }) => ({
               config: config?.actions?.[`${domainPath}.${actionName}`],
+              domainPath,
               path: `${domainPath}.${actionName}`,
               name: actionName,
               module: await import(
@@ -63,7 +64,8 @@ const ActionsBar = <T extends { id: UUID }>({
             }))
           )
         )
-          .map(({ name, path, config, module }) => ({
+          .map(({ name, domainPath, path, config, module }) => ({
+            domainPath,
             path,
             name,
             ...config,
@@ -99,7 +101,10 @@ const ActionsBar = <T extends { id: UUID }>({
       try {
         const { data: newItem, error } = !action.useApi
           ? await action.handler(item.id, data)
-          : await axios.put(`/api/clients/${item.id}/${action.name}`, data);
+          : await axios.put(
+              `/api/${action.domainPath}/${item.id}/${action.name}`,
+              data
+            );
 
         if (error) {
           return { error };
