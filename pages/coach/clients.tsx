@@ -64,7 +64,7 @@ const ClientsPage = ({ user }: { user: Coach }) => {
           "clients.sendOfferWhenEnded",
           "clients.revokeAccess",
           "clients.cancelOffer",
-          "clients.cancelStart",
+          "clients.subscriptions.cancelStart",
           "clients.subscriptions.cancel",
           "clients.archive",
         ]}

@@ -96,3 +96,14 @@ changePricing:
           type: price
           placeholder: Monthly price
           required: true
+
+cancelStart:
+  title: "Cancel starting client"
+  titleBulk: "Cancel start"
+  icon: faXmark
+  useApi: true
+  dialog:
+    title: "Cancel {{full_name}}'s start"
+    titleBulk: "Cancel {{n}} clients' start"
+    text: "Are you sure you would like to cancel {{full_name}}'s start?"
+    textBulk: "Are you sure you would like to cancel {{n}} clients' start?"
