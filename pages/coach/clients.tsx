@@ -65,7 +65,7 @@ const ClientsPage = ({ user }: { user: Coach }) => {
           "clients.revokeAccess",
           "clients.cancelOffer",
           "clients.cancelStart",
-          "clients.cancelSubscription",
+          "clients.subscriptions.cancel",
           "clients.archive",
         ]}
         SearchInputComponent={SearchInput}
