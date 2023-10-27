@@ -19,5 +19,5 @@ pricingChanged:
 subscriptionRenewed:
   emailTemplateId: "d-664503562b62462d9931a694b35c5155"
 
-termsChangedEvent:
+termsChanged:
   emailTemplateId: "d-306b9c3260cd4337b3528ee2e847bb31"

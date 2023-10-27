@@ -57,13 +57,13 @@ const ClientsPage = ({ user }: { user: Coach }) => {
         fetchItems={fetchClients}
         actions={[
           "clients.sendOffer",
-          "clients.subscriptions.changeTerms",
-          "clients.subscriptions.changePricing",
-          "clients.subscriptions.renew",
           "clients.resendOffer",
           "clients.sendOfferWhenEnded",
           "clients.revokeAccess",
           "clients.cancelOffer",
+          "clients.subscriptions.changeTerms",
+          "clients.subscriptions.changePricing",
+          "clients.subscriptions.renew",
           "clients.subscriptions.cancelStart",
           "clients.subscriptions.cancel",
           "clients.archive",
