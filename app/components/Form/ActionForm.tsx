@@ -20,7 +20,7 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
   const [formHocName, setFormHocName] = useState<string>("");
   const [actionModule, setActionModule] = useState<any>(null);
 
-  const actionsConfig = useConfig();
+  const config = useConfig();
 
   const actionParts = action.split(".");
   const actionName = actionParts.pop();
@@ -28,11 +28,11 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
 
   useEffect(() => {
     const fetchConfig = async () => {
-      if (actionsConfig?.actions) {
-        const config = actionsConfig?.actions[action];
+      if (config?.actions) {
+        const actionsConfig = config?.actions[action];
         setActionConfig(config);
 
-        const hocName = config?.form.hoc;
+        const hocName = actionsConfig?.form.hoc;
 
         if (hocName) {
           setFormHocName(hocName);
@@ -63,7 +63,7 @@ const ActionForm: React.FC<ActionFormProps> = ({ action, itemId, values }) => {
     if (itemId) {
       fetchItem();
     }
-  }, [itemId, domainPath, actionsConfig]);
+  }, [itemId, domainPath, config]);
 
   const CustomForm = (context: any) => {
     const handler = async (data: any) => {
