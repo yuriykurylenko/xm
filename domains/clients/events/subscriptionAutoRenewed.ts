@@ -16,11 +16,3 @@ export const handler = (
 
 export const triggerConditions = ({ stripeEventType }: StripeEventParams) =>
   stripeEventType === "invoice.created";
-
-const subscriptionAutoRenewedEvent = {
-  handler,
-  triggerConditions: ({ stripeEventType }: StripeEventParams) =>
-    stripeEventType === "invoice.created",
-};
-
-export default subscriptionAutoRenewedEvent;

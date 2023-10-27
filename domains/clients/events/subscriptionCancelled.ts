@@ -24,11 +24,3 @@ export const handler = async (
 
 export const triggerConditions = ({ stripeEventType }: StripeEventParams) =>
   stripeEventType === "customer.subscription.deleted";
-
-const subscriptionCancelledEvent = {
-  handler,
-  triggerConditions: ({ stripeEventType }: StripeEventParams) =>
-    stripeEventType === "customer.subscription.deleted",
-};
-
-export default subscriptionCancelledEvent;

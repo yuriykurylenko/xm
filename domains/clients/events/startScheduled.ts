@@ -26,15 +26,3 @@ export const triggerConditions = ({
 }: StripeEventParams) =>
   stripeEventType === "subscription_schedule.created" &&
   !stripeSubscription.metadata?.updated;
-
-const startScheduledEvent = {
-  handler,
-  triggerConditions: ({
-    stripeEventType,
-    stripeSubscription,
-  }: StripeEventParams) =>
-    stripeEventType === "subscription_schedule.created" &&
-    !stripeSubscription.metadata?.updated,
-};
-
-export default startScheduledEvent;

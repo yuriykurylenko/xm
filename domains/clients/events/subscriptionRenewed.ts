@@ -16,16 +16,3 @@ export const triggerConditions = ({
 }: StripeEventParams) =>
   stripeEventType === "customer.subscription.updated" &&
   stripeEventPreviousAttributes.cancel_at_period_end;
-
-const subscriptionRenewedEvent = {
-  handler,
-  emailTemplateId: "d-664503562b62462d9931a694b35c5155",
-  triggerConditions: ({
-    stripeEventType,
-    stripeEventPreviousAttributes,
-  }: StripeEventParams) =>
-    stripeEventType === "customer.subscription.updated" &&
-    stripeEventPreviousAttributes.cancel_at_period_end,
-};
-
-export default subscriptionRenewedEvent;

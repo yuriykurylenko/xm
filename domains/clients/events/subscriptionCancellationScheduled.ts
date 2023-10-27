@@ -17,16 +17,3 @@ export const triggerConditions = ({
   stripeEventType === "customer.subscription.updated" &&
   stripeSubscription.current_period_end &&
   stripeSubscription.cancel_at_period_end;
-
-const subscriptionCancellationScheduledEvent = {
-  handler,
-  triggerConditions: ({
-    stripeEventType,
-    stripeSubscription,
-  }: StripeEventParams) =>
-    stripeEventType === "customer.subscription.updated" &&
-    stripeSubscription.current_period_end &&
-    stripeSubscription.cancel_at_period_end,
-};
-
-export default subscriptionCancellationScheduledEvent;

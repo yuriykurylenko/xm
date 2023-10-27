@@ -3,7 +3,6 @@ import { Client, Coach } from "@/types/user";
 import config from "@/app/utils/config";
 
 import sgMail from "@/initializers/sgMail";
-import axios from "axios";
 
 const triggerEvent = async (
   name: string,
@@ -21,25 +20,20 @@ const triggerEvent = async (
   const eventName = eventParts.pop();
   const domainPath = eventParts.join("/domains/");
 
-  const { default: eventDefinition } = await import(
+  const { handler, triggerConditions } = await import(
     `@/domains/${domainPath}/events/${eventName}`
   );
 
-  if (!eventDefinition) {
+  if (!handler && !triggerConditions && !events[name]) {
     throw new Error(`Event ${name} not found.`);
   }
 
-  if (eventDefinition) {
-    if (
-      eventDefinition.triggerConditions &&
-      !eventDefinition.triggerConditions(context)
-    ) {
-      return;
-    }
+  if (triggerConditions && !triggerConditions(context)) {
+    return;
+  }
 
-    if (eventDefinition.handler) {
-      await eventDefinition.handler(subscription, client, coach, data);
-    }
+  if (handler) {
+    await handler(subscription, client, coach, data);
   }
 
   if (events[name]?.emailTemplateId) {

@@ -43,18 +43,3 @@ export const triggerConditions = ({
   (stripeEventType === "customer.subscription.created" ||
     (stripeEventType === "customer.subscription.updated" &&
       stripeEventPreviousAttributes?.status));
-
-const startedEvent = {
-  handler,
-  triggerConditions: ({
-    stripeEventType,
-    stripeEventPreviousAttributes,
-    stripeSubscription,
-  }: StripeEventParams) =>
-    ["active", "trialing"].includes(stripeSubscription.status) &&
-    (stripeEventType === "customer.subscription.created" ||
-      (stripeEventType === "customer.subscription.updated" &&
-        stripeEventPreviousAttributes?.status)),
-};
-
-export default startedEvent;

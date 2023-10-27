@@ -29,14 +29,3 @@ export const triggerConditions = ({
   !subscription.archived_at &&
   subscription.start_date &&
   new Date(subscription.start_date) >= new Date();
-
-const startCanceledEvent = {
-  handler,
-  triggerConditions: ({ stripeEventType, subscription }: StripeEventParams) =>
-    stripeEventType === "subscription_schedule.canceled" &&
-    !subscription.archived_at &&
-    subscription.start_date &&
-    new Date(subscription.start_date) >= new Date(),
-};
-
-export default startCanceledEvent;

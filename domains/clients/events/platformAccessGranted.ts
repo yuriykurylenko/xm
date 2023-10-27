@@ -11,20 +11,3 @@ export const triggerConditions = ({
   (stripeEventType === "customer.subscription.created" ||
     (stripeEventType === "customer.subscription.updated" &&
       stripeEventPreviousAttributes?.status));
-
-const platformAccessGrantedEvent = {
-  emailTemplateId: "d-bb7a32cfdef545308aea0cf7bbbee901",
-  triggerConditions: ({
-    stripeEventType,
-    stripeEventPreviousAttributes,
-    stripeSubscription,
-    client,
-  }: StripeEventParams) =>
-    ["active", "trialing"].includes(stripeSubscription.status) &&
-    !client.user_id &&
-    (stripeEventType === "customer.subscription.created" ||
-      (stripeEventType === "customer.subscription.updated" &&
-        stripeEventPreviousAttributes?.status)),
-};
-
-export default platformAccessGrantedEvent;
