@@ -9,3 +9,22 @@ confirm:
 
   routing:
     successPath: "/subscription/{id}/success"
+
+renew:
+  title: "Renew client's subscription"
+  titleBulk: "Renew subscriptions"
+  icon: faRotate
+  useApi: true
+  dialog:
+    title: "Renew {{full_name}}'s subscription"
+    titleBulk: "Renew {{n}} clients' subscriptions"
+    text: "Please specify the new price for {{full_name}} if applies."
+    textBulk: "Please specify the new price for your clients if applies."
+    infoText: "Your client's subscription will be renewed. You can specify the new price for {{full_name}}. They will receive an email confirming the change of the terms but would not need to add their credit card again."
+    infoTextBulk: "Your clients' subscriptions will be renewed. You can specify the new price for them. They will receive an email confirming the change of the terms but would not need to add their credit card again."
+    form:
+      inputs:
+        - name: monthly_amount
+          type: price
+          placeholder: Monthly price
+          required: true

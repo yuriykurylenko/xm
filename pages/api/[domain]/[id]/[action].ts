@@ -11,12 +11,16 @@ export default async function handler(
     return res.status(405).end("Method Not Allowed");
   }
 
-  const { domain, id, action } = req.query;
+  const { domain: domainPath, id, action } = req.query;
   const data = req.body;
 
   try {
     // TODO: ensure domain path can be used
-    const { handler } = await import(`@/domains/${domain}/actions/${action}`);
+    const { handler } = await import(
+      `@/domains/${(domainPath as string)
+        ?.split(".")
+        .join("/domains/")}/actions/${action}`
+    );
 
     if (!handler) {
       return res.status(404).end("Not Found");

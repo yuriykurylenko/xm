@@ -54,9 +54,17 @@ const ActionsBar = <T extends { id: UUID }>({
         const actionConfigs = (
           await Promise.all(
             actionBreakdowns.map(async ({ domainPath, actionName }) => ({
-              config: config?.actions?.[`${domainPath.split("/").join(".")}.${actionName}`],
-              domainPath,
-              path: `${domainPath}.${actionName}`,
+              config:
+                config?.actions?.[
+                  `${domainPath
+                    .split("/")
+                    .join(".")
+                    .replaceAll("domains.", "")}.${actionName}`
+                ],
+              path: `${domainPath
+                .split("/")
+                .join(".")
+                .replaceAll("domains.", "")}`,
               name: actionName,
               module: await import(
                 `@/domains/${domainPath}/actions/${actionName}`
@@ -64,8 +72,7 @@ const ActionsBar = <T extends { id: UUID }>({
             }))
           )
         )
-          .map(({ name, domainPath, path, config, module }) => ({
-            domainPath,
+          .map(({ name, path, config, module }) => ({
             path,
             name,
             ...config,
@@ -73,7 +80,9 @@ const ActionsBar = <T extends { id: UUID }>({
             show: module.show,
             onComplete: module.onComplete,
           }))
-          .filter((actionConfig) => actions.includes(actionConfig.path));
+          .filter((actionConfig) =>
+            actions.includes(`${actionConfig.path}.${actionConfig.name}`)
+          );
 
         setActionDefinitions(
           actionConfigs.map((action: Action<T>) => ({
@@ -102,7 +111,7 @@ const ActionsBar = <T extends { id: UUID }>({
         const { data: newItem, error } = !action.useApi
           ? await action.handler(item.id, data)
           : await axios.put(
-              `/api/${action.domainPath}/${item.id}/${action.name}`,
+              `/api/${action.path}/${item.id}/${action.name}`,
               data
             );
 

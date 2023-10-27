@@ -160,7 +160,6 @@ export default async function handler(
           );
         }
       } catch (e) {
-        console.log(e);
         return res.status(500).json({ error: "Failed to trigger events" });
       }
     }
