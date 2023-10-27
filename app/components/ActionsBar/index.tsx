@@ -54,7 +54,7 @@ const ActionsBar = <T extends { id: UUID }>({
         const actionConfigs = (
           await Promise.all(
             actionBreakdowns.map(async ({ domainPath, actionName }) => ({
-              config: config?.actions?.[`${domainPath}.${actionName}`],
+              config: config?.actions?.[`${domainPath.split("/").join(".")}.${actionName}`],
               domainPath,
               path: `${domainPath}.${actionName}`,
               name: actionName,
