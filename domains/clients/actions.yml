@@ -56,17 +56,6 @@ cancelOffer:
     text: "Are you sure you would like to cancel {{full_name}}'s offer?"
     textBulk: "Are you sure you would like to cancel {{n}} clients' offers?"
 
-cancelStart:
-  title: "Cancel starting client"
-  titleBulk: "Cancel start"
-  icon: faXmark
-  useApi: true
-  dialog:
-    title: "Cancel {{full_name}}'s start"
-    titleBulk: "Cancel {{n}} clients' start"
-    text: "Are you sure you would like to cancel {{full_name}}'s start?"
-    textBulk: "Are you sure you would like to cancel {{n}} clients' start?"
-
 revokeAccess:
   title: "Revoke platform access"
   titleBulk: "Revoke access"
@@ -104,74 +93,6 @@ sendOffer:
         - name: trial_period
           type: checkbox
           placeholder: "Offer trial period (14 days)"
-
-changePricing:
-  title: "Change client's monthly price"
-  titleBulk: "Change price"
-  icon: faDollarSign
-  useApi: true
-  dialog:
-    title: "Change price for {{full_name}}"
-    titleBulk: "Change price for {{n}} clients"
-    text: "Please specify the new price for {{full_name}}."
-    textBulk: "Please specify the new price for your clients."
-    infoText: "{{full_name}} will receive an email confirming the change of the terms but would not need to add their credit card again."
-    infoTextBulk: "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again."
-    form:
-      inputs:
-        - name: monthly_amount
-          type: price
-          placeholder: Monthly price
-          required: true
-
-changeTerms:
-  title: "Change client's terms"
-  titleBulk: "Change terms"
-  icon: faRotate
-  useApi: true
-  dialog:
-    title: "Change terms for {{full_name}}"
-    titleBulk: "Change terms {{n}} clients"
-    text: "Please specify the new price and start date for {{full_name}}."
-    textBulk: "Please specify the new price and start date for your clients."
-    infoText: "{{full_name}} will receive an email confirming the change of the terms but would not need to add their credit card again."
-    infoTextBulk: "Your clients will receive an email confirming the change of the terms but would not need to add their credit card again."
-    form:
-      inputs:
-        - name: monthly_amount
-          type: price
-          placeholder: Monthly price
-          required: true
-
-        - name: start_date
-          type: date
-          placeholder: Start date
-
-        - name: trial_period
-          type: checkbox
-          placeholder: "Offer trial period (14 days)"
-
-cancelSubscription:
-  title: "End client"
-  titleBulk: "End clients"
-  icon: faXmark
-  useApi: true
-  dialog:
-    title: "End {{full_name}}'s subscription"
-    titleBulk: "End {{n}} clients"
-    text: "Are you sure you would like to end {{full_name}}?"
-    textBulk: "Are you sure you would like to end {{n}} clients?"
-    infoText: "If you choose not to end the subscription immediately, {{full_name}} will stop at the end of their monthly billing cycle."
-    infoTextBulk: "If you choose not to end the subscriptions immediately, your clients will stop at the end of their respective monthly billing cycles."
-    form:
-      inputs:
-        - name: endImmediately
-          type: checkbox
-          placeholder: "End immediately"
-
-        - name: accessAfterEndDate
-          type: checkbox
-          placeholder: "Allow platform access after the end of the engagement"
 
 resendOffer:
   title: "Send a new offer"
@@ -226,22 +147,3 @@ sendOfferWhenEnded:
         - name: trial_period
           type: checkbox
           placeholder: "Offer trial period (14 days)"
-
-renewSubscription:
-  title: "Renew client's subscription"
-  titleBulk: "Renew subscriptions"
-  icon: faRotate
-  useApi: true
-  dialog:
-    title: "Renew {{full_name}}'s subscription"
-    titleBulk: "Renew {{n}} clients' subscriptions"
-    text: "Please specify the new price for {{full_name}} if applies."
-    textBulk: "Please specify the new price for your clients if applies."
-    infoText: "Your client's subscription will be renewed. You can specify the new price for {{full_name}}. They will receive an email confirming the change of the terms but would not need to add their credit card again."
-    infoTextBulk: "Your clients' subscriptions will be renewed. You can specify the new price for them. They will receive an email confirming the change of the terms but would not need to add their credit card again."
-    form:
-      inputs:
-        - name: monthly_amount
-          type: price
-          placeholder: Monthly price
-          required: true
