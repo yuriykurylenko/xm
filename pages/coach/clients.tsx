@@ -46,6 +46,7 @@ const ClientsPage = ({ user }: { user: Coach }) => {
       </Head>
       <ItemList<Client>
         title="Clients"
+        domain="clients"
         filterStatusOptions={[
           { value: "lead", name: "Leads" },
           { value: "offerSent", name: "Sent Offers" },

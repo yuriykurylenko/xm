@@ -6,6 +6,7 @@ import { UUID } from "crypto";
 import ActionDialog from "@/app/components/ActionDialog";
 import axios from "axios";
 import Handlebars from "handlebars";
+import pluralize from "pluralize";
 
 import * as icons from "@fortawesome/free-solid-svg-icons";
 import ActionDialogForm from "@/app/components/Form/ActionDialogForm";
@@ -23,6 +24,7 @@ interface Action<T> {
 
 interface ActionsBarProps<T> {
   actions: string[];
+  domain: string;
   selectedItems: T[];
   showTitles?: boolean;
   context?: any;
@@ -30,6 +32,7 @@ interface ActionsBarProps<T> {
 
 const ActionsBar = <T extends { id: UUID }>({
   actions,
+  domain,
   selectedItems,
   showTitles = false,
   context,
@@ -64,6 +67,7 @@ const ActionsBar = <T extends { id: UUID }>({
                 .split("/")
                 .join(".")
                 .replaceAll("domains.", "")}`,
+              domainPath,
               name: actionName,
               module: await import(
                 `@/domains/${domainPath}/actions/${actionName}`
@@ -71,8 +75,9 @@ const ActionsBar = <T extends { id: UUID }>({
             }))
           )
         )
-          .map(({ name, path, config, module }) => ({
+          .map(({ name, path, domainPath, config, module }) => ({
             path,
+            domainPath,
             name,
             ...config,
             handler: module.handler,
@@ -106,13 +111,22 @@ const ActionsBar = <T extends { id: UUID }>({
   const handleConfirmAction = async (action: any, data?: any) => {
     let updatedItem;
     for (const item of selectedItems) {
+      let id;
+      if (domain === action.path.split(".").pop()) {
+        id = item.id;
+      } else {
+        const model = await import(`@/domains/${action.domainPath}/model`);
+        const { data: domainItem } = await model.fetchBy(
+          `${pluralize.singular(domain)}_id`,
+          item.id
+        );
+        id = domainItem.id;
+      }
+
       try {
         const { data: newItem, error } = !action.useApi
           ? await action.handler(item.id, data)
-          : await axios.put(
-              `/api/${action.path}/${item.id}/${action.name}`,
-              data
-            );
+          : await axios.put(`/api/${action.path}/${id}/${action.name}`, data);
 
         if (error) {
           return { error };

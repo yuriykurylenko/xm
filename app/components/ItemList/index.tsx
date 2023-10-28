@@ -13,6 +13,7 @@ type FilterOption = {
 
 interface ItemListProps<T extends { id: UUID | string }> {
   title: string;
+  domain: string;
   filterStatusOptions: FilterOption[];
   filterState?: {
     [key: string]: string | string[] | undefined;
@@ -45,6 +46,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
   }>;
   CardComponent: React.ComponentType<{
     item: T;
+    domain: string;
     selectedItems: T[];
     onSelect: () => void;
     bulkOperationsAllowed: boolean;
@@ -60,6 +62,7 @@ interface ItemListProps<T extends { id: UUID | string }> {
 
 const ItemList = <T extends { id: UUID | string }>({
   title,
+  domain,
   filterStatusOptions,
   filterState,
   fetchItems,
@@ -224,6 +227,7 @@ const ItemList = <T extends { id: UUID | string }>({
             {items.map((item, index) => (
               <CardComponent
                 key={index}
+                domain={domain}
                 item={item}
                 selectedItems={selectedItems}
                 bulkOperationsAllowed={true}

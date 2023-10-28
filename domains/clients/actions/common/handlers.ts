@@ -4,9 +4,11 @@ import {
   create as createClientSubscription,
   fetchAllByClientId as fetchSubscriptionsByClientId,
   update as updateSubscriptionById,
+  fetch as fetchSubscriptionById,
 } from "@/domains/clients/domains/subscriptions/model";
 
 import {
+  fetchBy as fetchClientBy,
   fetch as fetchClientById,
   update as updateClientById,
 } from "@/domains/clients/model";
@@ -19,7 +21,7 @@ import { Client } from "@/types/user";
 import router from "next/router";
 
 export const changePriceOrRenewSubscription = async (
-  clientId: UUID,
+  subscriptionId: UUID,
   {
     monthly_amount,
     currency = "USD",
@@ -28,36 +30,26 @@ export const changePriceOrRenewSubscription = async (
     currency: string;
   }
 ) => {
-  const { data: coach } = await fetchCoachByClientId(clientId);
-  const { data: client } = await fetchClientById(clientId);
-
-  if (!coach) {
-    return { data: null, error: { message: "Coach not found" } };
-  }
-
-  const { data: subscriptions } = await fetchSubscriptionsByClientId(clientId);
-
-  if (!subscriptions?.length) {
-    return { data: null, error: { message: "Client subscription not found" } };
-  }
-
-  const subscription = subscriptions?.[0];
+  const { data: subscription } = await fetchSubscriptionById(subscriptionId);
 
   try {
-    await updateStripeSubscription(subscription.stripe_subscription_id, {
+    await updateStripeSubscription(subscription?.stripe_subscription_id, {
       monthlyAmount: monthly_amount * 100,
       currency,
       isActiveSubscription: true,
     });
 
-    await updateSubscriptionById(subscription.id, {
+    await updateSubscriptionById(subscription?.id, {
       monthly_amount: monthly_amount * 100,
       currency,
     });
 
-    return { data: client, error: null };
+    return { data: subscription, error: null };
   } catch (e) {
-    return { data: client, error: { message: "Error updating client terms" } };
+    return {
+      data: subscription,
+      error: { message: "Error updating client terms" },
+    };
   }
 };
 
