@@ -50,6 +50,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
         <>
           <div className={styles["header-column"]}>
             <ActionsBar<Client>
+              domain="clients"
               actions={actions}
               selectedItems={selectedItems}
               showTitles
