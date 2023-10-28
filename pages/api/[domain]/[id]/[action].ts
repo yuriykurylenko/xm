@@ -15,7 +15,6 @@ export default async function handler(
   const data = req.body;
 
   try {
-    // TODO: ensure domain path can be used
     const { handler } = await import(
       `@/domains/${(domainPath as string)
         ?.split(".")
