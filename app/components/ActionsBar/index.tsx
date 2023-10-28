@@ -62,7 +62,7 @@ const ActionsBar = <T extends { id: UUID }>({
               .join(".")
               .replaceAll("domains.", "")}.${actionName}`;
 
-            const module = await import(
+            const actionModule = await import(
               `@/domains/${domainPath}/actions/${actionName}`
             );
             const model = await import(`@/domains/${domainPath}/model`);
@@ -72,7 +72,7 @@ const ActionsBar = <T extends { id: UUID }>({
               domainPath,
               name: actionName,
               ...config?.actions?.[configKey],
-              show: module.show,
+              show: actionModule.show,
               model,
             };
           })
