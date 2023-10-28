@@ -14,6 +14,8 @@ import useConfig from "@/app/hooks/useConfig";
 
 interface Action<T> {
   name: string;
+  path: string;
+  domainPath?: string;
   title: string;
   titleBulk: string;
   icon: string;
@@ -53,43 +55,55 @@ const ActionsBar = <T extends { id: UUID }>({
           return { domainPath, actionName };
         });
 
-        const actionConfigs = (
-          await Promise.all(
-            actionBreakdowns.map(async ({ domainPath, actionName }) => ({
-              config:
-                config?.actions?.[
-                  `${domainPath
-                    .split("/")
-                    .join(".")
-                    .replaceAll("domains.", "")}.${actionName}`
-                ],
-              path: `${domainPath
-                .split("/")
-                .join(".")
-                .replaceAll("domains.", "")}`,
+        const actionConfigs = await Promise.all(
+          actionBreakdowns.map(async ({ domainPath, actionName }) => {
+            const configKey = `${domainPath
+              .split("/")
+              .join(".")
+              .replaceAll("domains.", "")}.${actionName}`;
+
+            const module = await import(
+              `@/domains/${domainPath}/actions/${actionName}`
+            );
+            const model = await import(`@/domains/${domainPath}/model`);
+
+            return {
+              path: configKey.split(".").slice(0, -1).join("."),
               domainPath,
               name: actionName,
-              module: await import(
-                `@/domains/${domainPath}/actions/${actionName}`
-              ),
-            }))
-          )
-        )
-          .map(({ name, path, domainPath, config, module }) => ({
-            path,
-            domainPath,
-            name,
-            ...config,
-            handler: module.handler,
-            show: module.show,
-            onComplete: module.onComplete,
-          }))
-          .filter((actionConfig) =>
-            actions.includes(`${actionConfig.path}.${actionConfig.name}`)
-          );
+              ...config?.actions?.[configKey],
+              show: module.show,
+              model,
+            };
+          })
+        );
+
+        const showResultsForAllConfigs = await Promise.all(
+          actionConfigs.map(async (actionConfig) => {
+            return Promise.all(
+              selectedItems.map(async (item) => {
+                if (domain === actionConfig.path.split(".").pop()) {
+                  return actionConfig.show(item);
+                } else {
+                  const { data: domainItem } = await actionConfig.model.fetchBy(
+                    `${pluralize.singular(domain)}_id`,
+                    item.id
+                  );
+                  return actionConfig.show(domainItem);
+                }
+              })
+            );
+          })
+        );
+
+        const filteredActionConfigs = actionConfigs.filter(
+          (actionConfig, index) =>
+            actions.includes(`${actionConfig.path}.${actionConfig.name}`) &&
+            showResultsForAllConfigs[index].every(Boolean)
+        );
 
         setActionDefinitions(
-          actionConfigs.map((action: Action<T>) => ({
+          filteredActionConfigs.map((action: Action<T>) => ({
             ...action,
             onClick: () => setOpenActionDialogs([action.name as string]),
           }))
@@ -151,37 +165,32 @@ const ActionsBar = <T extends { id: UUID }>({
         showTitles ? styles["action-buttons-container-full"] : ""
       }`}
     >
-      {actionDefinitions.map(
-        (action, index) =>
-          selectedItems.every((item) => action.show(item)) && (
-            <span
-              title={
-                showTitles
-                  ? undefined
-                  : selectedItems.length === 1
-                  ? action.title
-                  : action.titleBulk || action.title
-              }
-              key={index}
-            >
-              <BasicButton
-                className={`${styles["action-btn"]} ${
-                  styles["action-btn-" + action.name]
-                } `}
-                onClick={() =>
-                  action.onClick(selectedItems.map((item) => item.id))
-                }
-              >
-                <FontAwesomeIcon
-                  //@ts-ignore
-                  icon={icons[action.icon]}
-                  className={styles["action-btn-icon"]}
-                />
-                {showTitles ? action.titleBulk || action.title : null}
-              </BasicButton>
-            </span>
-          )
-      )}
+      {actionDefinitions.map((action, index) => (
+        <span
+          title={
+            showTitles
+              ? undefined
+              : selectedItems.length === 1
+              ? action.title
+              : action.titleBulk || action.title
+          }
+          key={index}
+        >
+          <BasicButton
+            className={`${styles["action-btn"]} ${
+              styles["action-btn-" + action.name]
+            } `}
+            onClick={() => action.onClick(selectedItems.map((item) => item.id))}
+          >
+            <FontAwesomeIcon
+              //@ts-ignore
+              icon={icons[action.icon]}
+              className={styles["action-btn-icon"]}
+            />
+            {showTitles ? action.titleBulk || action.title : null}
+          </BasicButton>
+        </span>
+      ))}
       {actionDefinitions.map((action: any) => {
         const dialogTitleTemplate = Handlebars.compile(action.dialog.title);
         const dialogTitleBulkTemplate = Handlebars.compile(

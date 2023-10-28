@@ -1,5 +1,3 @@
-import { Client } from "@/types/user";
-
 import { UUID } from "crypto";
 import { startOfUtcDay } from "@/app/utils/dateTime";
 import { fetch as fetchClientById } from "@/domains/clients/model";
@@ -12,8 +10,10 @@ import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/m
 import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
 import { create as createStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
 import { onComplete } from "@/domains/clients/actions/common/handlers";
+import { Subscription } from "@/types/subscription";
 
-export const show = (client: Client) => client.status === "starting";
+export const show = (subscription: Subscription) =>
+  subscription.status === "pending";
 
 export const handler = async (
   subscriptionId: UUID,

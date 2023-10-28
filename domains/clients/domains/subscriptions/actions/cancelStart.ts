@@ -3,6 +3,7 @@ import { Client } from "@/types/user";
 import { UUID } from "crypto";
 import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import { onComplete } from "@/domains/clients/actions/common/handlers";
+import { Subscription } from "@/types/subscription";
 
 export const handler = async (subscriptiontId: UUID, _: any) => {
   const { data: subscription } = await fetchSubscriptionById(subscriptiontId);
@@ -21,6 +22,7 @@ export const handler = async (subscriptiontId: UUID, _: any) => {
   return { data: subscription, error: null };
 };
 
-export const show = (client: Client) => client.status === "starting";
+export const show = (subscription: Subscription) =>
+  subscription.status === "pending";
 
 export { onComplete };
