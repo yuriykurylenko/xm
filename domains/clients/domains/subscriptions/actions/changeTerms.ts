@@ -6,7 +6,7 @@ import { fetch as fetchClientById } from "@/domains/clients/model";
 import { fetchByClientId as fetchCoachByClientId } from "@/domains/coaches/model";
 import {
   create as createSubscription,
-  fetchByClientId as fetchSubscriptionByClientId,
+  fetch as fetchSubscriptionById,
 } from "@/domains/clients/domains/subscriptions/model";
 import { findOrCreate as findOrCreateStripePrice } from "@/integrations/stripe/models/price";
 import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
@@ -16,7 +16,7 @@ import { onComplete } from "@/domains/clients/actions/common/handlers";
 export const show = (client: Client) => client.status === "starting";
 
 export const handler = async (
-  clientId: UUID,
+  subscriptionId: UUID,
   {
     monthly_amount,
     currency = "USD",
@@ -42,12 +42,12 @@ export const handler = async (
   let trialEndDate = new Date(utcStartDate);
   trialEndDate.setDate(trialEndDate.getDate() + trial_period_days);
 
-  const { data: subscription } = await fetchSubscriptionByClientId(clientId);
+  const { data: subscription } = await fetchSubscriptionById(subscriptionId);
   const { data: coach } = await fetchCoachByClientId(subscription?.client_id);
-  const { data: client } = await fetchClientById(clientId);
+  const { data: client } = await fetchClientById(subscription?.client_id);
 
   const { data: clientSubscription, error } = await createSubscription(
-    clientId,
+    client?.id,
     {
       monthly_amount,
       currency,
@@ -61,9 +61,10 @@ export const handler = async (
   );
 
   if (error) {
-    return { data: client, error };
+    return { data: subscription, error };
   }
 
+  // TODO: move to Stripe integration
   const { customer } = await cancelStripeSubscriptionSchedule(
     subscription?.stripe_subscription_id
   );
@@ -87,7 +88,7 @@ export const handler = async (
     },
   });
 
-  return { data: client, error };
+  return { data: subscription, error };
 };
 
 export { onComplete };
