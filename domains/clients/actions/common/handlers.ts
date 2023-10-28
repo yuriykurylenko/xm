@@ -2,13 +2,11 @@ import { MailService } from "@sendgrid/mail";
 
 import {
   create as createClientSubscription,
-  fetchAllByClientId as fetchSubscriptionsByClientId,
   update as updateSubscriptionById,
   fetch as fetchSubscriptionById,
 } from "@/domains/clients/domains/subscriptions/model";
 
 import {
-  fetchBy as fetchClientBy,
   fetch as fetchClientById,
   update as updateClientById,
 } from "@/domains/clients/model";
