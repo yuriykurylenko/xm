@@ -7,6 +7,14 @@ import { UUID } from "crypto";
 export const fetch = (id: UUID) =>
   db.from("clients").select("*").eq("id", id).single();
 
+export const fetchBy = (key: string, value: string | number) =>
+  db
+    .from("clients")
+    .select("*")
+    .eq(key, value)
+    .is("archived_at", null)
+    .single();
+
 export const fetchAllByCoachId = async (
   coachId: UUID,
   page: number = 1,

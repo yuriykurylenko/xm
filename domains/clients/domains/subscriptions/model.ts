@@ -13,6 +13,14 @@ export const fetch = (id: UUID | string) =>
     .is("archived_at", null)
     .single();
 
+export const fetchBy = (key: string, value: string | number) =>
+  db
+    .from("subscriptions")
+    .select("*")
+    .eq(key, value)
+    .is("archived_at", null)
+    .single();
+
 export const fetchByClientId = (clientId: UUID | string) =>
   db
     .from("subscriptions")

@@ -37,7 +37,6 @@ const ActionsBar = <T extends { id: UUID }>({
   const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
 
-  // @ts-ignore
   const config = useConfig();
 
   useEffect(() => {
