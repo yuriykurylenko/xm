@@ -65,7 +65,6 @@ const ActionsBar = <T extends { id: UUID }>({
             const actionModule = await import(
               `@/domains/${domainPath}/actions/${actionName}`
             );
-            const model = await import(`@/domains/${domainPath}/model`);
 
             return {
               path: configKey.split(".").slice(0, -1).join("."),
@@ -73,24 +72,21 @@ const ActionsBar = <T extends { id: UUID }>({
               name: actionName,
               ...config?.actions?.[configKey],
               show: actionModule.show,
-              model,
             };
           })
         );
 
         const showResultsForAllConfigs = await Promise.all(
           actionConfigs.map(async (actionConfig) => {
+            const childDomain = actionConfig.path.split(".").pop();
             return Promise.all(
               selectedItems.map(async (item) => {
-                if (domain === actionConfig.path.split(".").pop()) {
-                  return actionConfig.show(item);
-                } else {
-                  const { data: domainItem } = await actionConfig.model.fetchBy(
-                    `${pluralize.singular(domain)}_id`,
-                    item.id
-                  );
-                  return actionConfig.show(domainItem);
-                }
+                return actionConfig.show(
+                  domain === childDomain
+                    ? item
+                    : // @ts-ignore
+                      item[pluralize.singular(childDomain)]
+                );
               })
             );
           })
