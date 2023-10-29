@@ -11,7 +11,6 @@ import pluralize from "pluralize";
 import * as icons from "@fortawesome/free-solid-svg-icons";
 import ActionDialogForm from "@/app/components/Form/ActionDialogForm";
 import useConfig from "@/app/hooks/useConfig";
-import { dom } from "@fortawesome/fontawesome-svg-core";
 
 interface Action<T> {
   name: string;
