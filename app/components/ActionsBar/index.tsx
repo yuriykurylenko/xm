@@ -11,6 +11,7 @@ import pluralize from "pluralize";
 import * as icons from "@fortawesome/free-solid-svg-icons";
 import ActionDialogForm from "@/app/components/Form/ActionDialogForm";
 import useConfig from "@/app/hooks/useConfig";
+import { dom } from "@fortawesome/fontawesome-svg-core";
 
 interface Action<T> {
   name: string;
@@ -125,21 +126,16 @@ const ActionsBar = <T extends { id: UUID }>({
   const handleConfirmAction = async (action: any, data?: any) => {
     let updatedItem;
     for (const item of selectedItems) {
-      let id;
-      if (domain === action.path.split(".").pop()) {
-        id = item.id;
-      } else {
-        const model = await import(`@/domains/${action.domainPath}/model`);
-        const { data: domainItem } = await model.fetchBy(
-          `${pluralize.singular(domain)}_id`,
-          item.id
-        );
-        id = domainItem.id;
-      }
+      const childDomain = action.path.split(".").pop();
+      const id =
+        domain === childDomain
+          ? item.id
+          : // @ts-ignore
+            item[pluralize.singular(childDomain)]?.id;
 
       try {
         const { data: newItem, error } = !action.useApi
-          ? await action.handler(item.id, data)
+          ? await action.handler(id, data)
           : await axios.put(`/api/${action.path}/${id}/${action.name}`, data);
 
         if (error) {

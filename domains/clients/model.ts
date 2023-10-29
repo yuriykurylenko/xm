@@ -29,7 +29,7 @@ export const fetchAllByCoachId = async (
   let query = db
     .from("clients")
     .select(
-      "*, subscriptions (status, updated_at, monthly_amount, currency, trial_period_days, archived_at)"
+      "*, subscriptions (id, status, updated_at, monthly_amount, currency, trial_period_days, archived_at)"
     )
     .eq("coach_id", coachId)
     .is("archived_at", null);
