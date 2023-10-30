@@ -16,7 +16,7 @@ import ClientCard from "@/domains/clients/components/ListCard";
 import EmptyList, {
   EmptyListProps,
 } from "@/domains/clients/components/EmptyList";
-import ClientsListHeader from "@/domains/clients/components/ListHeader";
+import ClientsListHeader from "@/domains/clients/components/List/Header";
 import router from "next/router";
 
 const ClientsPage = ({ user }: { user: Coach }) => {

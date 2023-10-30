@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/domains/clients/components/ListHeader/styles.module.css";
+import styles from "@/domains/clients/components/List/styles.module.css";
 import ActionsBar from "@/app/components/ActionsBar";
 import { Client } from "@/types/user";
 import SortIcon from "@/app/components/SortIcon";
@@ -37,9 +37,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
         isBulkSelected ? styles["header-row-no-padding"] : ""
       }`}
     >
-      <div
-        className={`${styles["header-column"]} ${styles["header-column-bulk"]}`}
-      >
+      <div className={`${styles["header-column"]} ${styles["column-bulk"]}`}>
         <input
           type="checkbox"
           checked={isBulkSelected}
@@ -61,7 +59,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             />
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-selected"]}`}
+            className={`${styles["header-column"]} ${styles["column-selected"]}`}
           >
             {`${selectedItems.length} / ${totalItemsCount} selected`}
           </div>
@@ -69,12 +67,12 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
       ) : (
         <>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-avatar"]}`}
+            className={`${styles["header-column"]} ${styles["column-avatar"]}`}
           >
             &nbsp;
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-name"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["column-name"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("full_name")}
           >
             <span>Name</span>
@@ -87,7 +85,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("start_date")}
           >
             <span>Start date</span>
@@ -100,7 +98,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("end_date")}
           >
             <span>End date</span>
@@ -113,12 +111,12 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
           >
             <span>Price</span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("subscription_status")}
           >
             <span>Payment</span>
@@ -131,12 +129,12 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
           >
             <span>Account</span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-actions"]}`}
+            className={`${styles["header-column"]} ${styles["column-actions"]}`}
           >
             Actions
           </div>

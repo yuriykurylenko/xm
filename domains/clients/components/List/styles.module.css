@@ -19,11 +19,11 @@
   padding: 0 10px;
 }
 
-.header-column-sortable {
+.column-sortable {
   cursor: pointer;
 }
 
-.header-column-selected {
+.column-selected {
   width: 100%;
   max-width: 100%;
   font-weight: 600;
@@ -32,31 +32,31 @@
   color: #555555;
 }
 
-.header-column-avatar {
+.column-avatar {
   width: 30px;
   max-width: 30px;
   min-width: 30px;
   margin: 0 15px;
 }
 
-.header-row-no-padding .header-column-bulk {
+.header-row-no-padding .column-bulk {
   max-width: 30px;
   min-width: 30px;
 }
 
-.header-column-bulk input {
+.column-bulk input {
   cursor: pointer;
 }
 
-.header-column-name {
+.column-name {
   flex: 0 0 calc(100% - 760px);
 }
 
-.header-column-regular {
+.column-regular {
   flex: 0 0 120px;
 }
 
-.header-column-actions {
+.column-actions {
   flex: 0 0 80px;
 }
 
