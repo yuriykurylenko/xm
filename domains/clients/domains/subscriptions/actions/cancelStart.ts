@@ -1,5 +1,4 @@
 import { cancel as cancelStripeSubscriptionSchedule } from "@/integrations/stripe/models/subscriptionSchedule";
-import { Client } from "@/types/user";
 import { UUID } from "crypto";
 import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
 import { onComplete } from "@/domains/clients/actions/common/handlers";

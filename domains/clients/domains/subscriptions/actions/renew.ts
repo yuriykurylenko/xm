@@ -1,4 +1,3 @@
-import { Client } from "@/types/user";
 import { changePriceOrRenewSubscription } from "@/domains/clients/actions/common/handlers";
 import { onComplete } from "@/domains/clients/actions/common/handlers";
 import { Subscription } from "@/types/subscription";

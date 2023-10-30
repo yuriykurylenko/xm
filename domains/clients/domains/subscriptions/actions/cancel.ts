@@ -1,5 +1,3 @@
-import { Client } from "@/types/user";
-
 import { UUID } from "crypto";
 import { cancel as cancelStripeSubscription } from "@/integrations/stripe/models/subscription";
 import { fetch as fetchSubscriptionById } from "@/domains/clients/domains/subscriptions/model";
