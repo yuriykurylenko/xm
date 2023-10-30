@@ -12,7 +12,7 @@ import FilterBar from "@/app/components/FilterBar";
 import ItemList from "@/app/components/ItemList";
 import SearchInput from "@/app/components/SearchInput";
 
-import ClientCard from "@/domains/clients/components/ListCard";
+import ClientCard from "@/domains/clients/components/List/Card";
 import EmptyList, {
   EmptyListProps,
 } from "@/domains/clients/components/EmptyList";

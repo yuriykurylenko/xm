@@ -72,7 +72,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             &nbsp;
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["column-name"]} ${styles["column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["column-full_name"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("full_name")}
           >
             <span>Name</span>
