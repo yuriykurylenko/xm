@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import styles from "@/app/components/Form/styles.module.css";
 import { CardElement } from "@stripe/react-stripe-js";
+import { de } from "date-fns/locale";
 
 export type ValidationRule = {
   required?: string | boolean;
@@ -136,7 +137,7 @@ export const Input: FC<InputProps> = ({
             control={control}
             name={name}
             rules={inputValidation}
-            defaultValue={defaultValue}
+            defaultValue={defaultValue ? (defaultValue as number) / 100 : ""}
             render={({ field }) => (
               <input
                 className={`${styles["input"]} ${

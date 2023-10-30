@@ -198,6 +198,19 @@ const ActionsBar = <T extends { id: UUID }>({
           action.dialog.infoTextBulk || ""
         );
 
+        const childDomain = action.path.split(".").pop();
+
+        let values;
+        if (selectedItems.length > 1) {
+          values = context;
+        } else {
+          values =
+            domain === childDomain
+              ? selectedItems[0]
+              : // @ts-ignore
+                selectedItems[0][pluralize.singular(childDomain)];
+        }
+
         return (
           openActionDialogs.includes(action.name) && (
             <ActionDialog
@@ -228,7 +241,7 @@ const ActionsBar = <T extends { id: UUID }>({
                 <ActionDialogForm
                   actionConfig={action}
                   items={selectedItems}
-                  values={context}
+                  values={values}
                 />
               )}
             </ActionDialog>
