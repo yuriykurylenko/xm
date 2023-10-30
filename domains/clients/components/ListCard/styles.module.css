@@ -60,19 +60,19 @@
   cursor: pointer;
 }
 
-.bulk-column {
+.column-bulk {
   max-width: 30px;
 }
 
-.name-column {
+.column-full_name {
   flex: 0 0 calc(100% - 760px);
 }
 
-.created-column {
+.column-regular {
   flex: 0 0 120px;
 }
 
-.actions-column {
+.column-actions {
   flex: 0 0 80px;
 }
 

@@ -87,7 +87,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
             onClick={() => onSort("start_date")}
           >
             <span>Start date</span>
@@ -100,7 +100,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
             onClick={() => onSort("end_date")}
           >
             <span>End date</span>
@@ -113,12 +113,12 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
           >
             <span>Price</span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
             onClick={() => onSort("subscription_status")}
           >
             <span>Payment</span>
@@ -131,7 +131,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["header-column-created"]} ${styles["header-column-sortable"]}`}
+            className={`${styles["header-column"]} ${styles["header-column-regular"]} ${styles["header-column-sortable"]}`}
           >
             <span>Account</span>
           </div>

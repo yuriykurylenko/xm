@@ -43,7 +43,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
       }`}
     >
       {bulkOperationsAllowed && (
-        <div className={`${styles["bulk-column"]} ${styles["column"]}`}>
+        <div className={`${styles["column-bulk"]} ${styles["column"]}`}>
           <input
             type="checkbox"
             checked={isSelected}
@@ -55,11 +55,11 @@ const ClientCard: React.FC<ClientCardProps> = ({
         {item.full_name.charAt(0)}
       </div>
       <div
-        className={`${styles["item-name"]} ${styles["name-column"]} ${styles["column"]}`}
+        className={`${styles["item-name"]} ${styles["column-full_name"]} ${styles["column"]}`}
       >
         {item.full_name}
       </div>
-      <div className={`${styles["column"]} ${styles["created-column"]}`}>
+      <div className={`${styles["column"]} ${styles["column-regular"]}`}>
         {item.status !== "lead" &&
           (item.start_date && new Date(item.start_date) > new Date() ? (
             <div>
@@ -118,17 +118,17 @@ const ClientCard: React.FC<ClientCardProps> = ({
             )
           ))}
       </div>
-      <div className={`${styles["column"]} ${styles["created-column"]}`}>
+      <div className={`${styles["column"]} ${styles["column-regular"]}`}>
         {item.end_date && formatDate(item.end_date)}
       </div>
-      <div className={`${styles["column"]} ${styles["created-column"]}`}>
+      <div className={`${styles["column"]} ${styles["column-regular"]}`}>
         {item.subscription &&
           `${formatAmount(
             item.subscription.monthly_amount,
             item.subscription.currency
           )}/mo`}
       </div>
-      <div className={`${styles["column"]} ${styles["created-column"]}`}>
+      <div className={`${styles["column"]} ${styles["column-regular"]}`}>
         <div
           className={`${styles["payment-label"]} ${
             styles["payment-label-" + item.subscription_status]
@@ -139,7 +139,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
             : item.subscription_status}
         </div>
       </div>
-      <div className={`${styles["column"]} ${styles["created-column"]}`}>
+      <div className={`${styles["column"]} ${styles["column-regular"]}`}>
         <div
           className={`${styles["payment-label"]} ${
             styles[
@@ -154,7 +154,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
         </div>
       </div>
       <div
-        className={`${styles["column"]} ${styles["actions-column"]} ${styles["button-container"]}`}
+        className={`${styles["column"]} ${styles["column-actions"]} ${styles["button-container"]}`}
       >
         <ActionsBar<Client>
           actions={actions}
