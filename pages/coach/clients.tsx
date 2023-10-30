@@ -15,7 +15,7 @@ import SearchInput from "@/app/components/SearchInput";
 import ClientCard from "@/domains/clients/components/List/Card";
 import EmptyList, {
   EmptyListProps,
-} from "@/domains/clients/components/EmptyList";
+} from "@/domains/clients/components/List/Empty";
 import ClientsListHeader from "@/domains/clients/components/List/Header";
 import router from "next/router";
 

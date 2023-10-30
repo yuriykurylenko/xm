@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/domains/clients/components/EmptyList/styles.module.css";
+import styles from "@/domains/clients/components/List/styles.module.css";
 import { Coach } from "@/types/user";
 
 export interface EmptyListProps {
