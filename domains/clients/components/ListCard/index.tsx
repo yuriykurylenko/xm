@@ -12,7 +12,6 @@ import { formatDate } from "@/app/utils/dateTime";
 
 interface ClientCardProps {
   item: Client;
-  domain: string;
   selectedItems: Client[];
   onSelect: () => void;
   bulkOperationsAllowed: boolean;
@@ -22,7 +21,6 @@ interface ClientCardProps {
 
 const ClientCard: React.FC<ClientCardProps> = ({
   item,
-  domain,
   selectedItems,
   onSelect,
   bulkOperationsAllowed = false,
@@ -160,7 +158,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
       >
         <ActionsBar<Client>
           actions={actions}
-          domain={domain}
+          domain="clients"
           selectedItems={[item]}
           context={{
             monthly_amount:
@@ -168,7 +166,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
                 item.subscription?.monthly_amount / 100) ||
               (user?.monthly_subscription_amount &&
                 user?.monthly_subscription_amount / 100),
-            start_date: item.start_date,
+            start_date: item.subscription?.start_date,
             trial_period:
               item.subscription?.trial_period_days &&
               item.subscription?.trial_period_days > 0,

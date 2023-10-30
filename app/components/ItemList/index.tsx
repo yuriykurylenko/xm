@@ -46,7 +46,6 @@ interface ItemListProps<T extends { id: UUID | string }> {
   }>;
   CardComponent: React.ComponentType<{
     item: T;
-    domain: string;
     selectedItems: T[];
     onSelect: () => void;
     bulkOperationsAllowed: boolean;
@@ -227,7 +226,6 @@ const ItemList = <T extends { id: UUID | string }>({
             {items.map((item, index) => (
               <CardComponent
                 key={index}
-                domain={domain}
                 item={item}
                 selectedItems={selectedItems}
                 bulkOperationsAllowed={true}
