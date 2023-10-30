@@ -54,6 +54,7 @@ const ActionsBar = <T extends { id: UUID }>({
 
           return { domainPath, actionName };
         });
+        console.log(actionBreakdowns);
 
         const actionConfigs = await Promise.all(
           actionBreakdowns.map(async ({ domainPath, actionName }) => {
@@ -75,19 +76,20 @@ const ActionsBar = <T extends { id: UUID }>({
             };
           })
         );
+        console.log(actionConfigs);
 
         const showResultsForAllConfigs = await Promise.all(
           actionConfigs.map(async (actionConfig) => {
             const childDomain = actionConfig.path.split(".").pop();
             return Promise.all(
-              selectedItems.map(async (item) => {
-                return actionConfig.show(
-                  domain === childDomain
-                    ? item
-                    : // @ts-ignore
-                      item[pluralize.singular(childDomain)]
-                );
-              })
+              selectedItems.map(async (item) =>
+                domain === childDomain
+                  ? actionConfig.show(item)
+                  : // @ts-ignore
+                    item[pluralize.singular(childDomain)] &&
+                    // @ts-ignore
+                    actionConfig.show(item[pluralize.singular(childDomain)])
+              )
             );
           })
         );

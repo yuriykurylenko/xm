@@ -161,15 +161,8 @@ const ClientCard: React.FC<ClientCardProps> = ({
           domain="clients"
           selectedItems={[item]}
           context={{
-            monthly_amount:
-              (item.subscription?.monthly_amount &&
-                item.subscription?.monthly_amount / 100) ||
-              (user?.monthly_subscription_amount &&
-                user?.monthly_subscription_amount / 100),
-            start_date: item.subscription?.start_date,
-            trial_period:
-              item.subscription?.trial_period_days &&
-              item.subscription?.trial_period_days > 0,
+            monthly_amount: user?.monthly_subscription_amount,
+            trial_period: false,
           }}
         />
       </div>
