@@ -55,17 +55,8 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
               selectedItems={selectedItems}
               showTitles
               context={{
-                monthly_amount:
-                  (selectedItems.length === 1 &&
-                    selectedItems[0].subscription?.monthly_amount &&
-                    selectedItems[0].subscription?.monthly_amount / 100) ||
-                  user.monthly_subscription_amount / 100,
-                start_date:
-                  selectedItems.length === 1 && selectedItems[0].start_date,
-                trial_period:
-                  selectedItems.length === 1 &&
-                  selectedItems[0].subscription?.trial_period_days &&
-                  selectedItems[0].subscription?.trial_period_days > 0,
+                monthly_amount: user?.monthly_subscription_amount,
+                trial_period: false,
               }}
             />
           </div>
