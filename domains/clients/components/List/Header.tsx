@@ -37,7 +37,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
         isBulkSelected ? styles["header-row-no-padding"] : ""
       }`}
     >
-      <div className={`${styles["header-column"]} ${styles["column-bulk"]}`}>
+      <div className={`${styles["column-bulk"]}`}>
         <input
           type="checkbox"
           checked={isBulkSelected}
@@ -46,7 +46,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
       </div>
       {isBulkSelected ? (
         <>
-          <div className={styles["header-column"]}>
+          <div>
             <ActionsBar<Client>
               domain="clients"
               actions={actions}
@@ -58,21 +58,15 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
               }}
             />
           </div>
-          <div
-            className={`${styles["header-column"]} ${styles["column-selected"]}`}
-          >
+          <div className={`${styles["column-selected"]}`}>
             {`${selectedItems.length} / ${totalItemsCount} selected`}
           </div>
         </>
       ) : (
         <>
+          <div className={`${styles["column-avatar"]}`}>&nbsp;</div>
           <div
-            className={`${styles["header-column"]} ${styles["column-avatar"]}`}
-          >
-            &nbsp;
-          </div>
-          <div
-            className={`${styles["header-column"]} ${styles["column-full_name"]} ${styles["column-sortable"]}`}
+            className={`${styles["column-full_name"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("full_name")}
           >
             <span>Name</span>
@@ -85,7 +79,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("start_date")}
           >
             <span>Start date</span>
@@ -98,7 +92,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("end_date")}
           >
             <span>End date</span>
@@ -111,12 +105,12 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
           >
             <span>Price</span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("subscription_status")}
           >
             <span>Payment</span>
@@ -129,15 +123,11 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["header-column"]} ${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
           >
             <span>Account</span>
           </div>
-          <div
-            className={`${styles["header-column"]} ${styles["column-actions"]}`}
-          >
-            Actions
-          </div>
+          <div className={`${styles["column-actions"]}`}>Actions</div>
         </>
       )}
     </div>
