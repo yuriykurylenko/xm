@@ -52,7 +52,7 @@
   flex: 0 0 calc(100% - 760px);
 }
 
-.column-regular {
+.column {
   flex: 0 0 120px;
 }
 

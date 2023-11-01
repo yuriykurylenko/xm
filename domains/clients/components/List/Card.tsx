@@ -53,7 +53,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
       )}
       <div className={`${styles["avatar"]}`}>{item.full_name.charAt(0)}</div>
       <div className={`${styles["column-full_name"]}`}>{item.full_name}</div>
-      <div className={`${styles["column-regular"]}`}>
+      <div className={`${styles["column"]}`}>
         {item.status !== "lead" &&
           (item.start_date && new Date(item.start_date) > new Date() ? (
             <div>
@@ -112,17 +112,17 @@ const ClientCard: React.FC<ClientCardProps> = ({
             )
           ))}
       </div>
-      <div className={`${styles["column-regular"]}`}>
+      <div className={`${styles["column"]}`}>
         {item.end_date && formatDate(item.end_date)}
       </div>
-      <div className={`${styles["column-regular"]}`}>
+      <div className={`${styles["column"]}`}>
         {item.subscription &&
           `${formatAmount(
             item.subscription.monthly_amount,
             item.subscription.currency
           )}/mo`}
       </div>
-      <div className={`${styles["column-regular"]}`}>
+      <div className={`${styles["column"]}`}>
         <div
           className={`${styles["payment-label"]} ${
             styles["payment-label-" + item.subscription_status]
@@ -133,7 +133,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
             : item.subscription_status}
         </div>
       </div>
-      <div className={`${styles["column"]} ${styles["column-regular"]}`}>
+      <div className={`${styles["column"]}`}>
         <div
           className={`${styles["payment-label"]} ${
             styles[

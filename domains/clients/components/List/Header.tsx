@@ -79,7 +79,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("start_date")}
           >
             <span>Start date</span>
@@ -92,7 +92,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("end_date")}
           >
             <span>End date</span>
@@ -105,12 +105,12 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column"]} ${styles["column-sortable"]}`}
           >
             <span>Price</span>
           </div>
           <div
-            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column"]} ${styles["column-sortable"]}`}
             onClick={() => onSort("subscription_status")}
           >
             <span>Payment</span>
@@ -123,7 +123,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
             </span>
           </div>
           <div
-            className={`${styles["column-regular"]} ${styles["column-sortable"]}`}
+            className={`${styles["column"]} ${styles["column-sortable"]}`}
           >
             <span>Account</span>
           </div>
