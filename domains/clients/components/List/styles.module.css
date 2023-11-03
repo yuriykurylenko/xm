@@ -49,16 +49,16 @@
 }
 
 .column-full_name {
-  flex: 0 0 calc(100% - 710px);
+  flex: 0 0 calc(100% - 730px);
 }
 
 .column {
   flex: 0 0 120px;
 }
 
-/* .column-actions {
-  flex: 0 0 80px;
-} */
+.column-actions {
+  margin: auto;
+}
 
 .sorting-icon {
   margin-left: 8px;

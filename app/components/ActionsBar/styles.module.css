@@ -40,6 +40,7 @@
 .actions-menu {
   border: 1px solid #ddd;
   border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   color: #555555;
   list-style-type: none;
@@ -51,7 +52,7 @@
 
 .actions-menu .action-btn {
   text-align: left;
-  line-height: 35px;
+  line-height: 30px;
   padding: 0px 15px;
   font-size: 13px;
   border-radius: 0;

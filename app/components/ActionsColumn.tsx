@@ -196,7 +196,7 @@ const ActionsColumn = <T extends { id: UUID }>({
             }`}
             onClick={() => setPopoverVisible(!popoverVisible)}
           >
-            <FontAwesomeIcon icon={icons.faEllipsisV} />
+            <FontAwesomeIcon icon={icons.faEllipsisH} />
           </BasicButton>
         </div>
       </Popover>

@@ -3,6 +3,8 @@ import styles from "@/domains/clients/components/List/styles.module.css";
 import ActionsBar from "@/app/components/ActionsBar";
 import { Client } from "@/types/user";
 import SortIcon from "@/app/components/SortIcon";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import * as icons from "@fortawesome/free-solid-svg-icons";
 
 interface ClientsListHeaderProps {
   onBulkSelect: () => void;
@@ -123,7 +125,9 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
           <div className={`${styles["column"]} ${styles["column-sortable"]}`}>
             <span>Account</span>
           </div>
-          <div className={`${styles["column-actions"]}`}></div>
+          <div className={`${styles["column-actions"]}`}>
+            <FontAwesomeIcon icon={icons.faSlidersH} />
+          </div>
         </>
       )}
     </div>
