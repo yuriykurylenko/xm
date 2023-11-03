@@ -13,7 +13,8 @@ confirm:
 renew:
   title: "Renew client's subscription"
   titleBulk: "Renew subscriptions"
-  icon: faRotate
+  icon: 
+    name: faRotate
   useApi: true
   dialog:
     title: "Renew {{full_name}}'s subscription"
@@ -32,7 +33,8 @@ renew:
 cancel:
   title: "End client"
   titleBulk: "End clients"
-  icon: faXmark
+  icon: 
+    name: faXmark
   useApi: true
   dialog:
     title: "End {{full_name}}'s subscription"
@@ -54,7 +56,8 @@ cancel:
 changeTerms:
   title: "Change client's terms"
   titleBulk: "Change terms"
-  icon: faRotate
+  icon: 
+    name: faRotate
   useApi: true
   dialog:
     title: "Change terms for {{full_name}}"
@@ -81,7 +84,8 @@ changeTerms:
 changePricing:
   title: "Change client's monthly price"
   titleBulk: "Change price"
-  icon: faDollarSign
+  icon: 
+    name: faDollarSign
   useApi: true
   dialog:
     title: "Change price for {{full_name}}"
@@ -100,7 +104,8 @@ changePricing:
 cancelStart:
   title: "Cancel starting client"
   titleBulk: "Cancel start"
-  icon: faXmark
+  icon: 
+    name: faXmark
   useApi: true
   dialog:
     title: "Cancel {{full_name}}'s start"

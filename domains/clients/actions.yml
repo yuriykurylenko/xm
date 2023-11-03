@@ -37,7 +37,8 @@ createAccount:
 
 archive:
   title: "Archive"
-  icon: faTrash
+  icon: 
+    name: faTrash
   useApi: true
   dialog:
     title: "Archive {{full_name}}"
@@ -48,7 +49,8 @@ archive:
 cancelOffer:
   title: "Cancel offer"
   titleBulk: "Cancel offers"
-  icon: faXmark
+  icon: 
+    name: faXmark
   useApi: true
   dialog:
     title: "Cancel {{full_name}}'s offer"
@@ -59,7 +61,8 @@ cancelOffer:
 revokeAccess:
   title: "Revoke platform access"
   titleBulk: "Revoke access"
-  icon: faPowerOff
+  icon: 
+    name: faPowerOff
   useApi: true
   dialog:
     title: "Revoke access for {{full_name}}"
@@ -70,7 +73,8 @@ revokeAccess:
 sendOffer:
   title: "Send offer"
   titleBulk: "Send offers"
-  icon: faPaperPlane
+  icon: 
+    name: faPaperPlane
   useApi: true
   dialog:
     title: "Send offer to {{full_name}}"
@@ -97,7 +101,8 @@ sendOffer:
 resendOffer:
   title: "Send a new offer"
   titleBulk: "Send new offers"
-  icon: faRotate
+  icon: 
+    name: faRotate
   useApi: true
   dialog:
     title: "Send a new offer to {{full_name}}"
@@ -124,7 +129,8 @@ resendOffer:
 sendOfferWhenEnded:
   title: "Send a new offer"
   titleBulk: "Send new offers"
-  icon: faRotate
+  icon: 
+    name: faRotate
   useApi: true
   dialog:
     title: "Send a new offer to {{full_name}}"
