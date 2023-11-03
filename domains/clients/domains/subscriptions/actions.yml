@@ -36,7 +36,7 @@ cancel:
   titleBulk: "End clients"
   icon:
     name: faXmark
-    hoverColor: "#d75656"
+    hoverColor: "#ff7f7f"
   useApi: true
   dialog:
     title: "End {{full_name}}'s subscription"
@@ -60,7 +60,7 @@ changeTerms:
   titleBulk: "Change terms"
   icon:
     name: faRotate
-    hoverColor: "#56d779"
+    hoverColor: "#7c9efc"
   useApi: true
   dialog:
     title: "Change terms for {{full_name}}"
@@ -89,7 +89,7 @@ changePricing:
   titleBulk: "Change price"
   icon:
     name: faDollarSign
-    hoverColor: "#56d779"
+    hoverColor: "#7c9efc"
   useApi: true
   dialog:
     title: "Change price for {{full_name}}"
@@ -110,7 +110,7 @@ cancelStart:
   titleBulk: "Cancel start"
   icon:
     name: faXmark
-    hoverColor: "#d75656"
+    hoverColor: "#ff7f7f"
   useApi: true
   dialog:
     title: "Cancel {{full_name}}'s start"

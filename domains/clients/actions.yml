@@ -39,7 +39,7 @@ archive:
   title: "Archive"
   icon:
     name: faTrash
-    hoverColor: "#d75656"
+    hoverColor: "#ff7f7f"
   useApi: true
   dialog:
     title: "Archive {{full_name}}"
@@ -52,7 +52,7 @@ cancelOffer:
   titleBulk: "Cancel offers"
   icon:
     name: faXmark
-    hoverColor: "#d75656"
+    hoverColor: "#ff7f7f"
   useApi: true
   dialog:
     title: "Cancel {{full_name}}'s offer"
@@ -65,7 +65,7 @@ revokeAccess:
   titleBulk: "Revoke access"
   icon:
     name: faPowerOff
-    hoverColor: "#d75656"
+    hoverColor: "#ff7f7f"
   useApi: true
   dialog:
     title: "Revoke access for {{full_name}}"

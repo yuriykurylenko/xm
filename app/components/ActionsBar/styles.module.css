@@ -5,7 +5,6 @@
 
 .action-btn {
   cursor: pointer;
-  /* color: #aaa; */
   background-color: transparent;
   border: none;
   padding: 0;
@@ -36,21 +35,4 @@
 
 .action-buttons-container-full .action-btn .action-btn-icon {
   margin-right: 8px;
-}
-
-.action-btn-sendOffer:hover,
-.action-btn-resendOffer:hover,
-.action-btn-changeTerms:hover,
-.action-btn-changePricing:hover,
-.action-btn-renewSubscription:hover,
-.action-btn-sendOfferWhenEnded:hover {
-  color: #56d779;
-}
-
-.action-btn-archive:hover,
-.action-btn-cancel:hover,
-.action-btn-revokeAccess:hover,
-.action-btn-cancelOffer:hover,
-.action-btn-cancelStart:hover {
-  color: #d75656;
 }
