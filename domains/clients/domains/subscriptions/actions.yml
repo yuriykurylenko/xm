@@ -13,9 +13,7 @@ confirm:
 renew:
   title: "Renew subscription"
   titleBulk: "Renew subscriptions"
-  icon:
-    name: faRotate
-    hoverColor: "#56d779"
+  icon: faRotate
   useApi: true
   dialog:
     title: "Renew {{full_name}}'s subscription"
@@ -34,9 +32,7 @@ renew:
 cancel:
   title: "End client"
   titleBulk: "End clients"
-  icon:
-    name: faXmark
-    hoverColor: "#ff7f7f"
+  icon: faXmark
   useApi: true
   dialog:
     title: "End {{full_name}}'s subscription"
@@ -58,9 +54,7 @@ cancel:
 changeTerms:
   title: "Change terms"
   titleBulk: "Change terms"
-  icon:
-    name: faRotate
-    hoverColor: "#7c9efc"
+  icon: faRotate
   useApi: true
   dialog:
     title: "Change terms for {{full_name}}"
@@ -87,9 +81,7 @@ changeTerms:
 changePricing:
   title: "Change price"
   titleBulk: "Change price"
-  icon:
-    name: faDollarSign
-    hoverColor: "#7c9efc"
+  icon: faDollarSign
   useApi: true
   dialog:
     title: "Change price for {{full_name}}"
@@ -108,9 +100,7 @@ changePricing:
 cancelStart:
   title: "Cancel start"
   titleBulk: "Cancel start"
-  icon:
-    name: faXmark
-    hoverColor: "#ff7f7f"
+  icon: faXmark
   useApi: true
   dialog:
     title: "Cancel {{full_name}}'s start"

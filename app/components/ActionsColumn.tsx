@@ -178,7 +178,7 @@ const ActionsColumn = <T extends { id: UUID }>({
                   {action.icon && (
                     <FontAwesomeIcon
                       //@ts-ignore
-                      icon={icons[action.icon.name]}
+                      icon={icons[action.icon]}
                       className={styles["action-btn-icon"]}
                     />
                   )}
