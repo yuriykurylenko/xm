@@ -122,7 +122,7 @@
   cursor: pointer;
 }
 
-.payment-label {
+.label {
   width: fit-content;
   padding: 5px 10px;
   height: fit-content;
@@ -133,37 +133,37 @@
   border-radius: 4px;
 }
 
-.payment-label-active {
+.label-active {
   background-color: #56d779;
   color: #fff;
 }
 
-.payment-label-incomplete {
+.label-incomplete {
   background-color: #ff9999;
   color: #fff;
 }
 
-.payment-label-pending {
+.label-pending {
   background-color: #aaa;
   color: #fff;
 }
 
-.payment-label-inactive {
+.label-inactive {
   background-color: #aaa;
   color: #fff;
 }
 
-.payment-label-overdue {
+.label-overdue {
   background-color: #d75656;
   color: #fff;
 }
 
-.payment-label-trialing {
+.label-trialing {
   background-color: #d7d156;
   color: #fff;
 }
 
-.payment-label-canceled {
+.label-canceled {
   background-color: #aaa;
   color: #fff;
 }
