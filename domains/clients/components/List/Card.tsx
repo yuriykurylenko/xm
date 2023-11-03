@@ -1,7 +1,7 @@
 import styles from "@/domains/clients/components/List/styles.module.css";
 import { Client, Coach } from "@/types/user";
 import { useState } from "react";
-import ActionsBar from "@/app/components/ActionsBar";
+import ActionsColumn from "@/app/components/ActionsColumn";
 import {
   faCreditCard,
   faHandHoldingDollar,
@@ -155,7 +155,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
         </div>
       </div>
       <div className={`${styles["column-actions"]}`}>
-        <ActionsBar<Client>
+        <ActionsColumn<Client>
           actions={actions}
           domain="clients"
           selectedItems={[item]}

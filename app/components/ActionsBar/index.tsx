@@ -172,7 +172,6 @@ const ActionsBar = <T extends { id: UUID }>({
         >
           <BasicButton
             className={`${styles["action-btn"]}`}
-            style={{ color: action.icon?.hoverColor }}
             onClick={() => action.onClick(selectedItems.map((item) => item.id))}
           >
             <FontAwesomeIcon

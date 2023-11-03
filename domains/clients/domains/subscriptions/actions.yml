@@ -11,7 +11,7 @@ confirm:
     successPath: "/subscription/{id}/success"
 
 renew:
-  title: "Renew client's subscription"
+  title: "Renew subscription"
   titleBulk: "Renew subscriptions"
   icon:
     name: faRotate
@@ -56,7 +56,7 @@ cancel:
           placeholder: "Allow platform access after the end of the engagement"
 
 changeTerms:
-  title: "Change client's terms"
+  title: "Change terms"
   titleBulk: "Change terms"
   icon:
     name: faRotate
@@ -85,7 +85,7 @@ changeTerms:
           placeholder: "Offer trial period (14 days)"
 
 changePricing:
-  title: "Change client's monthly price"
+  title: "Change price"
   titleBulk: "Change price"
   icon:
     name: faDollarSign
@@ -106,7 +106,7 @@ changePricing:
           required: true
 
 cancelStart:
-  title: "Cancel starting client"
+  title: "Cancel start"
   titleBulk: "Cancel start"
   icon:
     name: faXmark

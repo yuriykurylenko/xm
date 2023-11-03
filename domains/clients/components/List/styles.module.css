@@ -49,16 +49,16 @@
 }
 
 .column-full_name {
-  flex: 0 0 calc(100% - 760px);
+  flex: 0 0 calc(100% - 710px);
 }
 
 .column {
   flex: 0 0 120px;
 }
 
-.column-actions {
+/* .column-actions {
   flex: 0 0 80px;
-}
+} */
 
 .sorting-icon {
   margin-left: 8px;
