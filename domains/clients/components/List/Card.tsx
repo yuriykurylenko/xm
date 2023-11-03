@@ -51,7 +51,9 @@ const ClientCard: React.FC<ClientCardProps> = ({
           />
         </div>
       )}
-      <div className={`${styles["avatar"]}`}>{item.full_name.charAt(0)}</div>
+      <div className={`${styles["column-avatar"]}`}>
+        <div className={`${styles["avatar"]}`}>{item.full_name.charAt(0)}</div>
+      </div>
       <div className={`${styles["column-full_name"]}`}>{item.full_name}</div>
       <div className={`${styles["column"]}`}>
         {item.status !== "lead" &&
