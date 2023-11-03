@@ -5,7 +5,7 @@
 
 .action-btn {
   cursor: pointer;
-  color: #aaa;
+  /* color: #aaa; */
   background-color: transparent;
   border: none;
   padding: 0;

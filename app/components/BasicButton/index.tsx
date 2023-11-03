@@ -9,6 +9,7 @@ interface BasicButtonProps {
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   className?: string;
+  style?: any;
 }
 
 export const BasicButton: FC<BasicButtonProps> = ({

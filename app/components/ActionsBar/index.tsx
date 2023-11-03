@@ -18,7 +18,10 @@ interface Action<T> {
   domainPath?: string;
   title: string;
   titleBulk: string;
-  icon: string;
+  icon?: {
+    name: string;
+    hoverColor: string;
+  };
   handler: (itemIds: UUID[]) => void;
   onClick: (itemIds: UUID[]) => void;
   show: (item: T | T[]) => boolean;
@@ -168,9 +171,8 @@ const ActionsBar = <T extends { id: UUID }>({
           key={index}
         >
           <BasicButton
-            className={`${styles["action-btn"]} ${
-              styles["action-btn-" + action.name]
-            } `}
+            className={`${styles["action-btn"]}`}
+            style={{ color: action.icon?.hoverColor }}
             onClick={() => action.onClick(selectedItems.map((item) => item.id))}
           >
             <FontAwesomeIcon

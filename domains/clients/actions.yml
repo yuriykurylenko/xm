@@ -37,8 +37,9 @@ createAccount:
 
 archive:
   title: "Archive"
-  icon: 
+  icon:
     name: faTrash
+    hoverColor: "#d75656"
   useApi: true
   dialog:
     title: "Archive {{full_name}}"
@@ -49,8 +50,9 @@ archive:
 cancelOffer:
   title: "Cancel offer"
   titleBulk: "Cancel offers"
-  icon: 
+  icon:
     name: faXmark
+    hoverColor: "#d75656"
   useApi: true
   dialog:
     title: "Cancel {{full_name}}'s offer"
@@ -61,8 +63,9 @@ cancelOffer:
 revokeAccess:
   title: "Revoke platform access"
   titleBulk: "Revoke access"
-  icon: 
+  icon:
     name: faPowerOff
+    hoverColor: "#d75656"
   useApi: true
   dialog:
     title: "Revoke access for {{full_name}}"
@@ -73,8 +76,9 @@ revokeAccess:
 sendOffer:
   title: "Send offer"
   titleBulk: "Send offers"
-  icon: 
+  icon:
     name: faPaperPlane
+    hoverColor: "#56d779"
   useApi: true
   dialog:
     title: "Send offer to {{full_name}}"
@@ -101,8 +105,9 @@ sendOffer:
 resendOffer:
   title: "Send a new offer"
   titleBulk: "Send new offers"
-  icon: 
+  icon:
     name: faRotate
+    hoverColor: "#56d779"
   useApi: true
   dialog:
     title: "Send a new offer to {{full_name}}"
@@ -129,8 +134,9 @@ resendOffer:
 sendOfferWhenEnded:
   title: "Send a new offer"
   titleBulk: "Send new offers"
-  icon: 
+  icon:
     name: faRotate
+    hoverColor: "#56d779"
   useApi: true
   dialog:
     title: "Send a new offer to {{full_name}}"
