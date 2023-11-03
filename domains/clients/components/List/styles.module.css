@@ -122,14 +122,6 @@
   cursor: pointer;
 }
 
-.button-container {
-  display: flex;
-}
-
-.button-container button {
-  margin-right: 0.5rem;
-}
-
 .payment-label {
   width: fit-content;
   padding: 5px 10px;

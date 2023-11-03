@@ -154,9 +154,7 @@ const ClientCard: React.FC<ClientCardProps> = ({
           {item.user_id && !item.access_revoked_at ? "active" : "inactive"}
         </div>
       </div>
-      <div
-        className={`${styles["column-actions"]} ${styles["button-container"]}`}
-      >
+      <div className={`${styles["column-actions"]}`}>
         <ActionsBar<Client>
           actions={actions}
           domain="clients"
