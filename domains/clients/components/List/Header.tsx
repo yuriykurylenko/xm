@@ -104,9 +104,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
               />
             </span>
           </div>
-          <div
-            className={`${styles["column"]} ${styles["column-sortable"]}`}
-          >
+          <div className={`${styles["column"]} ${styles["column-sortable"]}`}>
             <span>Price</span>
           </div>
           <div
@@ -122,9 +120,7 @@ const ClientsListHeader: React.FC<ClientsListHeaderProps> = ({
               />
             </span>
           </div>
-          <div
-            className={`${styles["column"]} ${styles["column-sortable"]}`}
-          >
+          <div className={`${styles["column"]} ${styles["column-sortable"]}`}>
             <span>Account</span>
           </div>
           <div className={`${styles["column-actions"]}`}>Actions</div>

@@ -52,7 +52,12 @@ const ClientCard: React.FC<ClientCardProps> = ({
         </div>
       )}
       <div className={`${styles["column-avatar"]}`}>
-        <span className={`${styles["avatar"]}`}>{item.full_name.charAt(0)}</span>
+        <span className={`${styles["avatar"]}`}>
+          {item.full_name
+            .split(" ")
+            .map((n) => n.charAt(0))
+            .join("")}
+        </span>
       </div>
       <div className={`${styles["column-full_name"]}`}>{item.full_name}</div>
       <div className={`${styles["column"]}`}>
