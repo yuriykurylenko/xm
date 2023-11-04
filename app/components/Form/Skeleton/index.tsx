@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/app/components/Form/FormSkeleton/styles.module.css";
+import styles from "@/app/components/Form/Skeleton/styles.module.css";
 
 const FormSkeleton = () => {
   return (
