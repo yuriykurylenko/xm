@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/ActionsColumn/styles.module.css";
+import styles from "@/app/components/ActionsMenu/styles.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UUID } from "crypto";
 import ActionDialog from "@/app/components/ActionDialog";
@@ -32,15 +32,13 @@ interface ActionsBarProps<T> {
   actions: string[];
   domain: string;
   selectedItems: T[];
-  showTitles?: boolean;
   context?: any;
 }
 
-const ActionsColumn = <T extends { id: UUID }>({
+const ActionsMenu = <T extends { id: UUID }>({
   actions,
   domain,
   selectedItems,
-  showTitles = false,
   context,
 }: ActionsBarProps<T>) => {
   const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
@@ -272,4 +270,4 @@ const ActionsColumn = <T extends { id: UUID }>({
   );
 };
 
-export default ActionsColumn;
+export default ActionsMenu;
