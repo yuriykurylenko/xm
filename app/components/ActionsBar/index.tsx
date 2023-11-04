@@ -176,7 +176,7 @@ const ActionsBar = <T extends { id: UUID }>({
           >
             <FontAwesomeIcon
               //@ts-ignore
-              icon={icons[action.icon.name]}
+              icon={icons[action.icon]}
               className={styles["action-btn-icon"]}
             />
             {showTitles ? action.titleBulk || action.title : null}
