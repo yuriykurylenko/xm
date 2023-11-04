@@ -1,4 +1,4 @@
-.action-btn {
+.action-menu-item {
   cursor: pointer;
   background-color: transparent;
   border: none;
@@ -9,7 +9,7 @@
   font-size: 13px;
 }
 
-.action-btn:hover {
+.action-menu-item:hover {
   background-color: transparent;
 }
 
@@ -26,7 +26,7 @@
   padding-bottom: 5px;
 }
 
-.actions-menu .action-btn {
+.actions-menu .action-menu-item {
   text-align: left;
   line-height: 30px;
   padding: 0px 15px;
@@ -50,16 +50,16 @@
   color: #555555;
 }
 
-.actions-menu .action-btn:hover {
+.actions-menu .action-menu-item:hover {
   background-color: #5683d7;
   color: #fff;
 }
 
-.action-btn {
+.action-menu-item {
   color: #555555;
 }
 
-.actions-menu .action-btn .action-btn-icon {
+.actions-menu .action-menu-item .action-btn-icon {
   margin-right: 8px;
 }
 

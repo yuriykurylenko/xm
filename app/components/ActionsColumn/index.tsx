@@ -169,7 +169,7 @@ const ActionsColumn = <T extends { id: UUID }>({
             {actionDefinitions.map((action, index) => (
               <li key={index} className={styles["actions-menu-item"]}>
                 <BasicButton
-                  className={styles["action-btn"]}
+                  className={styles["action-menu-item"]}
                   onClick={() => {
                     action.onClick(selectedItems.map((item) => item.id));
                     setPopoverVisible(false);
