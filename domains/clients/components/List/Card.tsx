@@ -1,7 +1,7 @@
 import styles from "@/domains/clients/components/List/styles.module.css";
 import { Client, Coach } from "@/types/user";
 import { useState } from "react";
-import ActionsMenu from "@/app/components/Actions/ActionsMenu";
+import ActionsMenu from "@/app/components/Actions/Menu";
 import {
   faCreditCard,
   faHandHoldingDollar,

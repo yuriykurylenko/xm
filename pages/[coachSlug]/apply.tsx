@@ -7,7 +7,7 @@ import withAuth from "@/app/hoc/withAuth";
 import PageContainer from "@/app/components/PageContainer";
 import { ClientApplicationPageProps } from "@/types/ClientApplicationPageProps";
 import { ClientApplicationPageContext } from "@/types/ClientApplicationPageContext";
-import ActionForm from "@/app/components/Actions/ActionForm";
+import ActionForm from "@/app/components/Actions/Form";
 
 const ClientApplication = ({ coach }: ClientApplicationPageProps) => {
   return (

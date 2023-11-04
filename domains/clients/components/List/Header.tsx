@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/domains/clients/components/List/styles.module.css";
-import ActionsBar from "@/app/components/Actions/ActionsBar";
+import ActionsBar from "@/app/components/Actions/Bar";
 import { Client } from "@/types/user";
 import SortIcon from "@/app/components/SortIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

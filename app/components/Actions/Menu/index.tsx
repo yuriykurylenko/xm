@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/Actions/ActionsBar/styles.module.css";
+import styles from "@/app/components/Actions/Menu/styles.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UUID } from "crypto";
-import ActionDialog from "@/app/components/Actions/ActionDialog";
+import ActionDialog from "@/app/components/Actions/Dialog";
 import axios from "axios";
 import Handlebars from "handlebars";
 import pluralize from "pluralize";
@@ -11,6 +11,7 @@ import pluralize from "pluralize";
 import * as icons from "@fortawesome/free-solid-svg-icons";
 import ActionDialogForm from "@/app/components/Form/ActionDialogForm";
 import useConfig from "@/app/hooks/useConfig";
+import { Popover } from "react-tiny-popover";
 
 interface Action<T> {
   name: string;
@@ -31,19 +32,18 @@ interface ActionsBarProps<T> {
   actions: string[];
   domain: string;
   selectedItems: T[];
-  showTitles?: boolean;
   context?: any;
 }
 
-const ActionsBar = <T extends { id: UUID }>({
+const ActionsMenu = <T extends { id: UUID }>({
   actions,
   domain,
   selectedItems,
-  showTitles = false,
   context,
 }: ActionsBarProps<T>) => {
   const [actionDefinitions, setActionDefinitions] = useState<Action<T>[]>([]);
   const [openActionDialogs, setOpenActionDialogs] = useState<string[]>([]);
+  const [popoverVisible, setPopoverVisible] = useState(false);
 
   const config = useConfig();
 
@@ -154,35 +154,50 @@ const ActionsBar = <T extends { id: UUID }>({
   };
 
   return (
-    <div
-      className={`${styles["action-buttons-container"]} ${
-        showTitles ? styles["action-buttons-container-full"] : ""
-      }`}
-    >
-      {actionDefinitions.map((action, index) => (
-        <span
-          title={
-            showTitles
-              ? undefined
-              : selectedItems.length === 1
-              ? action.title
-              : action.titleBulk || action.title
-          }
-          key={index}
-        >
+    <div>
+      <Popover
+        positions={["bottom"]}
+        align="end"
+        padding={-2}
+        isOpen={popoverVisible}
+        reposition={false}
+        onClickOutside={() => setPopoverVisible(false)}
+        content={
+          <ul className={styles["actions-menu"]}>
+            {actionDefinitions.map((action, index) => (
+              <li key={index} className={styles["actions-menu-item"]}>
+                <BasicButton
+                  className={styles["action-menu-item"]}
+                  onClick={() => {
+                    action.onClick(selectedItems.map((item) => item.id));
+                    setPopoverVisible(false);
+                  }}
+                >
+                  {action.icon && (
+                    <FontAwesomeIcon
+                      //@ts-ignore
+                      icon={icons[action.icon]}
+                      className={styles["action-btn-icon"]}
+                    />
+                  )}
+                  {action.title}
+                </BasicButton>
+              </li>
+            ))}
+          </ul>
+        }
+      >
+        <div className={styles["action-menu-btn-container"]}>
           <BasicButton
-            className={`${styles["action-btn"]}`}
-            onClick={() => action.onClick(selectedItems.map((item) => item.id))}
+            className={`${styles["action-menu-btn"]} ${
+              popoverVisible ? styles["action-menu-btn-active"] : ""
+            }`}
+            onClick={() => setPopoverVisible(!popoverVisible)}
           >
-            <FontAwesomeIcon
-              //@ts-ignore
-              icon={icons[action.icon]}
-              className={styles["action-btn-icon"]}
-            />
-            {showTitles ? action.titleBulk || action.title : null}
+            <FontAwesomeIcon icon={icons.faEllipsisH} />
           </BasicButton>
-        </span>
-      ))}
+        </div>
+      </Popover>
       {actionDefinitions.map((action: any) => {
         const dialogTitleTemplate = Handlebars.compile(action.dialog.title);
         const dialogTitleBulkTemplate = Handlebars.compile(
@@ -255,4 +270,4 @@ const ActionsBar = <T extends { id: UUID }>({
   );
 };
 
-export default ActionsBar;
+export default ActionsMenu;
