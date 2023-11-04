@@ -8,7 +8,7 @@ import { fetch as fetchCoachById } from "@/domains/coaches/model";
 import PageContainer from "@/app/components/PageContainer";
 import { Coach, Client } from "@/types/user";
 import { UUID } from "crypto";
-import ActionForm from "@/app/components/Form/ActionForm";
+import ActionForm from "@/app/components/Actions/ActionForm";
 
 interface SubscriptionSuccessPageProps extends AuthProps {
   coach: Coach;

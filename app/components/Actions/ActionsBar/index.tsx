@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import BasicButton from "@/app/components/BasicButton";
-import styles from "@/app/components/ActionsBar/styles.module.css";
+import styles from "@/app/components/Actions/ActionsBar/styles.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UUID } from "crypto";
-import ActionDialog from "@/app/components/ActionDialog";
+import ActionDialog from "@/app/components/Actions/ActionDialog";
 import axios from "axios";
 import Handlebars from "handlebars";
 import pluralize from "pluralize";

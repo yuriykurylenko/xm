@@ -6,7 +6,7 @@ import PageContainer from "@/app/components/PageContainer";
 import BasicButton from "@/app/components/BasicButton";
 import Button from "@/app/components/Form/Button";
 
-import styles from "@/app/components/ActionDialog/styles.module.css";
+import styles from "@/app/components/Actions/ActionDialog/styles.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 

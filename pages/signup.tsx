@@ -4,7 +4,7 @@ import withAuth from "@/app/hoc/withAuth";
 import Link from "next/link";
 import Head from "next/head";
 import PageContainer from "@/app/components/PageContainer";
-import ActionForm from "@/app/components/Form/ActionForm";
+import ActionForm from "@/app/components/Actions/ActionForm";
 
 const SignupPage = () => (
   <>

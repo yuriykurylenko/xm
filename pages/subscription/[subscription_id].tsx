@@ -10,7 +10,7 @@ import { Subscription } from "@/types/subscription";
 import { UUID } from "crypto";
 import { formatAmount } from "@/app/utils/currency";
 import { formatDate } from "@/app/utils/dateTime";
-import ActionForm from "@/app/components/Form/ActionForm";
+import ActionForm from "@/app/components/Actions/ActionForm";
 
 interface SubscriptionPageProps extends AuthProps {
   subscription: Subscription;
