@@ -3,7 +3,7 @@ import Form from "@/app/components/Form";
 import Button from "@/app/components/Form/Button";
 import { UUID } from "crypto";
 import Input from "@/app/components/Form/Input";
-import FormSkeleton from "@/app/components/Form/FormSkeleton";
+import FormSkeleton from "@/app/components/Form/Skeleton";
 import useConfig from "@/app/hooks/useConfig";
 
 interface ActionFormProps {

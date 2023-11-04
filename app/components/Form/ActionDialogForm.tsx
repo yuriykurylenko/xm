@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Input from "@/app/components/Form/Input";
-import FormSkeleton from "@/app/components/Form/FormSkeleton";
+import FormSkeleton from "@/app/components/Form/Skeleton";
 
 interface ActionFormProps {
   actionConfig: any;
